@@ -1,0 +1,9 @@
+{
+  "name": "@athenas/mobile-receptionist",
+  "version": "0.8.0",
+  "private": true,
+  "description": "ATHENAS Manager/Reception mobile scaffold",
+  "scripts": {
+    "lint": "node -e \"console.log('mobile-receptionist scaffold')\""
+  }
+}

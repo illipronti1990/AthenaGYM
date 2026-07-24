@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ATHENAS GYM — Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --red: #a3001e;
+      --gold: #d4af37;
+      --ink: #1a1a1a;
+      --muted: #5c5c5c;
+      --bg: #f7f3ee;
+      --panel: #fffdf9;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Source Sans 3", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at 10% 0%, rgba(163,0,30,.12), transparent 45%),
+        radial-gradient(ellipse at 90% 10%, rgba(212,175,55,.18), transparent 40%),
+        var(--bg);
+      min-height: 100vh;
+    }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
+    h1 {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(2.4rem, 5vw, 3.4rem);
+      color: var(--red);
+      margin: 0 0 .25rem;
+      letter-spacing: .02em;
+    }
+    .sub { color: var(--muted); margin-bottom: 1.5rem; }
+    .card {
+      background: var(--panel);
+      border: 1px solid rgba(163,0,30,.12);
+      padding: 1.25rem 1.4rem;
+      margin-bottom: 1rem;
+    }
+    label { display: block; font-size: .85rem; color: var(--muted); margin-top: .6rem; }
+    input {
+      width: 100%;
+      padding: .7rem .8rem;
+      border: 1px solid #d8d0c6;
+      background: #fff;
+      font: inherit;
+      margin-top: .25rem;
+    }
+    button {
+      margin-top: 1rem;
+      background: var(--red);
+      color: #fff;
+      border: 0;
+      padding: .75rem 1.2rem;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button.secondary { background: transparent; color: var(--red); border: 1px solid var(--red); margin-left: .5rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: .75rem; }
+    .kpi { padding: .9rem; background: #fff; border-left: 3px solid var(--gold); }
+    .kpi b { display: block; font-family: "Cormorant Garamond", serif; font-size: 1.5rem; color: var(--red); }
+    .kpi span { font-size: .8rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+    .hidden { display: none; }
+    .msg { color: var(--red); font-size: .9rem; min-height: 1.2rem; }
+    ul { padding-left: 1.1rem; }
+    code { background: #eee7dc; padding: .1rem .35rem; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>ATHENAS GYM</h1>
+    <p class="sub">Portal Web · Sprint 11.0 · mesma base do ERP via API</p>
+
+    <section id="login" class="card">
+      <h2>Entrar</h2>
+      <label>Usuário</label>
+      <input id="usuario" value="aluno" />
+      <label>Senha</label>
+      <input id="senha" type="password" value="123456" />
+      <div>
+        <button id="btnLogin">Entrar</button>
+      </div>
+      <p class="msg" id="loginMsg"></p>
+      <p class="sub">Demo: <code>aluno</code> / <code>professor</code> / <code>admin</code> — senha <code>123456</code></p>
+    </section>
+
+    <section id="app" class="card hidden">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;">
+        <div>
+          <h2 id="hello" style="margin:0;font-family:'Cormorant Garamond',serif;color:var(--red);">Olá</h2>
+          <p class="sub" id="perfil" style="margin:.2rem 0 0;"></p>
+        </div>
+        <button class="secondary" id="btnSair">Sair</button>
+      </div>
+      <div class="grid" id="kpis" style="margin-top:1rem;"></div>
+      <h3>Treino</h3>
+      <ul id="treino"></ul>
+      <h3>Notificações</h3>
+      <ul id="notifs"></ul>
+      <h3>Financeiro</h3>
+      <pre id="fin" style="white-space:pre-wrap;background:#fff;padding:.8rem;border:1px solid #eee;"></pre>
+    </section>
+  </div>
+
+  <script>
+    const API = localStorage.getItem("athenas_api") || "http://127.0.0.1:8002";
+
+    async function api(path, opts = {}) {
+      const headers = { "Content-Type": "application/json", ...(opts.headers || {}) };
+      const token = localStorage.getItem("athenas_token");
+      if (token) headers.Authorization = `Bearer ${token}`;
+      const res = await fetch(API + path, { ...opts, headers });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ detail: res.statusText }));
+        throw new Error(err.detail || "Erro na API");
+      }
+      return res.json();
+    }
+
+    function kpi(label, value) {
+      return `<div class="kpi"><span>${label}</span><b>${value}</b></div>`;
+    }
+
+    async function loadDashboard(user) {
+      document.getElementById("hello").textContent = `Olá, ${user.nome}`;
+      document.getElementById("perfil").textContent = `${user.perfil}${user.matricula ? " · " + user.matricula : ""}`;
+      document.getElementById("login").classList.add("hidden");
+      document.getElementById("app").classList.remove("hidden");
+
+      if (user.perfil === "Aluno" && user.matricula) {
+        const a = await api(`/alunos/${user.matricula}`);
+        const t = await api(`/alunos/${user.matricula}/treino`);
+        const n = await api("/notificacoes");
+        document.getElementById("kpis").innerHTML = [
+          kpi("Plano", a.plano || "—"),
+          kpi("Professor", a.professor || "—"),
+          kpi("Mensalidade", a.dashboard.mensalidade),
+          kpi("Frequência", a.dashboard.frequencia_mes + " dias"),
+          kpi("Objetivo", Math.round(a.dashboard.progresso * 100) + "%"),
+          kpi("Peso", a.evolucao.peso + " kg"),
+        ].join("");
+        document.getElementById("treino").innerHTML = t.itens
+          .map((i) => `<li><strong>${i.dia}</strong> — ${i.exercicio} (${i.series}x${i.reps})</li>`)
+          .join("");
+        document.getElementById("notifs").innerHTML = n
+          .map((x) => `<li>${x.mensagem}</li>`)
+          .join("");
+        document.getElementById("fin").textContent = JSON.stringify(a.financeiro, null, 2);
+      } else {
+        const g = await api("/gestor/resumo");
+        document.getElementById("kpis").innerHTML = [
+          kpi("Receita", "R$ " + g.receita.toLocaleString("pt-BR")),
+          kpi("Lucro", "R$ " + g.lucro.toLocaleString("pt-BR")),
+          kpi("Churn", g.churn + "%"),
+          kpi("A receber", "R$ " + g.a_receber.toLocaleString("pt-BR")),
+          kpi("Matrículas hoje", g.hoje.matriculas),
+          kpi("Pagamentos", g.hoje.pagamentos),
+        ].join("");
+        document.getElementById("treino").innerHTML = "<li>Use o perfil aluno para ver ficha de treino.</li>";
+        document.getElementById("notifs").innerHTML = "<li>Portal gestor conectado à API.</li>";
+        document.getElementById("fin").textContent = JSON.stringify(g, null, 2);
+      }
+    }
+
+    document.getElementById("btnLogin").onclick = async () => {
+      const msg = document.getElementById("loginMsg");
+      msg.textContent = "";
+      try {
+        const data = await api("/auth/login", {
+          method: "POST",
+          body: JSON.stringify({
+            usuario: document.getElementById("usuario").value,
+            senha: document.getElementById("senha").value,
+          }),
+        });
+        localStorage.setItem("athenas_token", data.token);
+        await loadDashboard(data);
+      } catch (e) {
+        msg.textContent = e.message;
+      }
+    };
+
+    document.getElementById("btnSair").onclick = () => {
+      localStorage.removeItem("athenas_token");
+      location.reload();
+    };
+
+    (async () => {
+      const token = localStorage.getItem("athenas_token");
+      if (!token) return;
+      try {
+        const me = await api("/me");
+        await loadDashboard(me);
+      } catch {
+        localStorage.removeItem("athenas_token");
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+Option Explicit
+
+Private Sub UserForm_Initialize()
+    Me.Caption = "ATHENAS GYM — Cadastro de Aluno"
+    Me.Tag = "0"
+    Call CarregarListas
+    Call LimparCampos
+    Me.lblStatus.Caption = ""
+    Me.lblMatricula.Caption = "(matrícula auto)"
+End Sub
+
+Private Sub CarregarListas()
+    Dim i As Long
+    On Error Resume Next
+    Call CarregarComboPlanos(Me.cmbPlano)
+    Call CarregarComboFormas(Me.cmbForma)
+    Me.cmbSexo.Clear
+    For i = 8 To 12
+        If Len(NzStr(LerCelula("15_CONFIG", "O" & i))) > 0 Then Me.cmbSexo.AddItem NzStr(LerCelula("15_CONFIG", "O" & i))
+    Next i
+    On Error GoTo 0
+End Sub
+
+Private Sub LimparCampos()
+    Me.txtNome.Value = ""
+    Me.txtCPF.Value = ""
+    Me.cmbPlano.Value = ""
+    Me.txtProfessor.Value = ""
+    Me.txtValor.Value = ""
+    Me.cmbForma.Value = "PIX"
+    Me.txtRG.Value = ""
+    Me.cmbSexo.Value = ""
+    Me.txtNascimento.Value = ""
+    Me.txtTelefone.Value = ""
+    Me.txtEmail.Value = ""
+    Me.txtCEP.Value = ""
+    Me.txtEndereco.Value = ""
+    Me.txtNumero.Value = ""
+    Me.txtBairro.Value = ""
+    Me.txtCidade.Value = CidadeAcademia()
+    Me.txtDiaVenc.Value = CStr(DiaVencimentoPadrao())
+    Me.Tag = "0"
+    Me.lblMatricula.Caption = "(matrícula auto)"
+    Me.lblStatus.Caption = ""
+End Sub
+
+Private Sub cmbPlano_Change()
+    Dim p As String
+    On Error Resume Next
+    p = NzStr(Me.cmbPlano.Value)
+    If Len(p) > 0 Then
+        Me.txtValor.Value = ValorDoPlano(p)
+        Me.txtDiaVenc.Value = CStr(DiaVencimentoDoPlano(p))
+    End If
+    On Error GoTo 0
+End Sub
+
+Private Sub txtCPF_Exit(ByVal Cancel As MSForms.ReturnBoolean)
+    Dim n As String
+    n = SomenteNumeros(NzStr(Me.txtCPF.Value))
+    If Len(n) = 11 Then Me.txtCPF.Value = FormatarCPF(n)
+End Sub
+
+Private Sub txtTelefone_Exit(ByVal Cancel As MSForms.ReturnBoolean)
+    Dim n As String
+    n = SomenteNumeros(NzStr(Me.txtTelefone.Value))
+    If Len(n) >= 10 Then Me.txtTelefone.Value = FormatarTelefone(n)
+End Sub
+
+Private Sub txtCEP_Exit(ByVal Cancel As MSForms.ReturnBoolean)
+    Dim n As String
+    n = SomenteNumeros(NzStr(Me.txtCEP.Value))
+    If Len(n) >= 7 Then Me.txtCEP.Value = FormatarCEP(n)
+End Sub
+
+Private Sub txtNascimento_Exit(ByVal Cancel As MSForms.ReturnBoolean)
+    If Len(SomenteNumeros(NzStr(Me.txtNascimento.Value))) = 8 Then
+        Me.txtNascimento.Value = FormatarDataBR(Me.txtNascimento.Value)
+    End If
+End Sub
+
+Private Sub txtRG_Exit(ByVal Cancel As MSForms.ReturnBoolean)
+    Dim n As String
+    n = SomenteNumeros(NzStr(Me.txtRG.Value))
+    If Len(n) >= 8 Then Me.txtRG.Value = FormatarRG(n)
+End Sub
+
+Private Sub btnSalvar_Click()
+    SalvarAluno Me
+End Sub
+
+Private Sub btnNovo_Click()
+    Call LimparCampos
+End Sub
+
+Private Sub btnCancelar_Click()
+    Unload Me
+End Sub

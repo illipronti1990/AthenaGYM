@@ -1,0 +1,11 @@
+Option Explicit
+
+Private Sub Worksheet_SelectionChange(ByVal Target As Range)
+    Dim idLead As Long
+    On Error Resume Next
+    If Target.Rows.Count > 1 Then Exit Sub
+    If Target.Row < 21 Or Target.Row > 35 Then Exit Sub
+    If Target.Column < 3 Or Target.Column > 11 Then Exit Sub
+    idLead = CLng(Val(Me.Range("C" & Target.Row).Value))
+    If idLead > 0 Then Call MostrarHistoricoLead
+End Sub

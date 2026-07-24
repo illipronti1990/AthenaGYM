@@ -1,0 +1,57 @@
+'use client';
+
+import { STUDENT_STATUSES, STUDENT_STATUS_LABELS } from '@athenas/shared';
+
+export type StudentFilterValues = {
+  q: string;
+  status: string;
+  unitId: string;
+};
+
+export function StudentFilters({
+  value,
+  onChange,
+  units,
+}: {
+  value: StudentFilterValues;
+  onChange: (v: StudentFilterValues) => void;
+  units: Array<{ id: string; name: string }>;
+}) {
+  return (
+    <div className="grid gap-2 sm:grid-cols-3" data-testid="student-filters">
+      <input
+        placeholder="Nome, CPF, matrícula…"
+        value={value.q}
+        onChange={(e) => onChange({ ...value, q: e.target.value })}
+        className="rounded border border-zinc-300 px-3 py-2 text-sm"
+        data-testid="student-search"
+      />
+      <select
+        value={value.status}
+        onChange={(e) => onChange({ ...value, status: e.target.value })}
+        className="rounded border border-zinc-300 px-3 py-2 text-sm"
+      >
+        <option value="">Todos os status</option>
+        {STUDENT_STATUSES.map((s) => (
+          <option key={s} value={s}>
+            {STUDENT_STATUS_LABELS[s]}
+          </option>
+        ))}
+      </select>
+      <select
+        value={value.unitId}
+        onChange={(e) => onChange({ ...value, unitId: e.target.value })}
+        className="rounded border border-zinc-300 px-3 py-2 text-sm"
+      >
+        <option value="">Todas as unidades</option>
+        {units.map((u) => (
+          <option key={u.id} value={u.id}>
+            {u.name}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+export { StudentFilters as StudentSearch };

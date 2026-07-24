@@ -1,0 +1,9 @@
+Option Explicit
+
+Private Sub Worksheet_SelectionChange(ByVal Target As Range)
+    On Error Resume Next
+    If Target.Rows.Count > 1 Then Exit Sub
+    If Target.Row >= 13 And Target.Row <= 22 And Target.Column >= 3 And Target.Column <= 9 Then
+        Call CarregarTreinoSelecionado
+    End If
+End Sub

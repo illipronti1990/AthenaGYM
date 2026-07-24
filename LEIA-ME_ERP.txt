@@ -1,0 +1,53 @@
+ATHENAS GYM — ERP em Excel (Fase 3 — Login Real)
+================================================
+
+Arquivo principal:
+  ATHENAS_GYM_ERP_COMERCIAL.xlsm
+
+DOCUMENTAÇÃO TÉCNICA
+--------------------
+  erp/docs/ARQUITETURA_ATHENAS_ERP.md
+
+IDENTIDADE VISUAL
+-----------------
+Vermelho (#A3001E) + Dourado (#D4AF37) + painéis brancos
+
+COMO ABRIR
+----------
+1. Abra ATHENAS_GYM_ERP_COMERCIAL.xlsm no Microsoft Excel.
+2. Habilite macros.
+3. Na tela 00_LOGIN clique em ENTRAR (abre o formulário frmLogin).
+4. Informe usuário e senha (senha mascarada; opção "Mostrar senha").
+
+CREDENCIAIS DEMO (senha: 123456)
+--------------------------------
+  admin       → Administrador (acesso total)
+  financeiro  → Financeiro
+  recepcao    → Recepção
+  professor   → Professor
+
+PERFIS (resumo)
+---------------
+  Administrador → tudo
+  Financeiro    → financeiro, fluxo, contas, dash financeiro (sem config)
+  Recepção      → alunos (CRUD), mensalidades/recebimentos (sem estoque/config)
+  Professor     → consultar alunos, presença, avaliação (sem financeiro)
+
+ARQUITETURA (Fase 3)
+--------------------
+  Interface: 00_LOGIN, 01_DASHBOARD, FORM_ALUNO, ...
+  Banco:     BD_USUARIOS, BD_SESSAO, BD_LOG (+ abas legadas 02_…15_)
+  VBA:       modLogin, modSessao, modPermissoes, modLog, modUtil, ModuloAthenas
+  UserForm:  frmLogin
+
+AUDITORIA
+---------
+  Toda ação importante é gravada em BD_LOG
+  (Data | Hora | Usuario | Perfil | Acao | Modulo).
+
+REGENERAR
+---------
+  cd erp
+  python gerar_erp.py
+
+  Requer: Excel + pywin32 + "Confiar no acesso ao modelo de objeto do projeto VBA".

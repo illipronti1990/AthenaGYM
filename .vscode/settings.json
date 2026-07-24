@@ -1,0 +1,7 @@
+{
+  "yaml.schemas": {
+    "./platform/infrastructure/monitoring/otel-collector.schema.json": [
+      "platform/infrastructure/monitoring/otel-collector.yaml"
+    ]
+  }
+}

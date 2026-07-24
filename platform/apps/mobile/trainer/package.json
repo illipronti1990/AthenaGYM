@@ -1,0 +1,9 @@
+{
+  "name": "@athenas/mobile-trainer",
+  "version": "0.8.0",
+  "private": true,
+  "description": "ATHENAS Trainer mobile scaffold",
+  "scripts": {
+    "lint": "node -e \"console.log('mobile-trainer scaffold — wire Expo/RN next')\""
+  }
+}

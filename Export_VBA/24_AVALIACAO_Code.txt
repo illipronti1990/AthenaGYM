@@ -1,0 +1,9 @@
+Option Explicit
+
+Private Sub Worksheet_SelectionChange(ByVal Target As Range)
+    On Error Resume Next
+    If Target.Rows.Count > 1 Then Exit Sub
+    If Target.Row >= 27 And Target.Row <= 36 And Target.Column >= 3 And Target.Column <= 10 Then
+        Call CarregarAvaliacaoSelecionada
+    End If
+End Sub

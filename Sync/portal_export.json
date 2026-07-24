@@ -1,0 +1,32 @@
+{
+  "versao": "3.0.0",
+  "atualizado": "2026-07-22T12:45:00",
+  "empresa_id": 1,
+  "alunos": [
+    {
+      "matricula": "ATH-2026-000001",
+      "nome": "Mariana Oliveira",
+      "plano": "Premium",
+      "professor": "Carlos Mendes",
+      "status": "Ativo",
+      "empresa_id": 1
+    },
+    {
+      "matricula": "ATH-2026-000002",
+      "nome": "Pedro Henrique Alves",
+      "plano": "Mensal",
+      "professor": "Ana Paula Souza",
+      "status": "Ativo",
+      "empresa_id": 1
+    },
+    {
+      "matricula": "ATH-2026-000003",
+      "nome": "Juliana Costa",
+      "plano": "Premium",
+      "professor": "Carlos Mendes",
+      "status": "Ativo",
+      "empresa_id": 1
+    }
+  ],
+  "api": "http://127.0.0.1:8002"
+}

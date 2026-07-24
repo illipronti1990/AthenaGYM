@@ -1,0 +1,30 @@
+{
+  "name": "athenas-platform",
+  "private": true,
+  "version": "0.9.0",
+  "description": "ATHENAS PLATFORM — SaaS (Sprint 8 BI Analytics)",
+  "scripts": {
+    "ports:free": "node scripts/free-ports.js",
+    "dev": "pnpm --parallel --filter @athenas/api --filter @athenas/web dev",
+    "dev:fresh": "pnpm ports:free && pnpm dev",
+    "dev:api": "pnpm --filter @athenas/api dev",
+    "dev:web": "pnpm --filter @athenas/web dev",
+    "dev:worker": "pnpm --filter @athenas/worker start:dev",
+    "dev:all": "pnpm --parallel --filter @athenas/api --filter @athenas/web --filter @athenas/worker dev",
+    "build": "pnpm -r run build",
+    "lint": "pnpm -r run lint",
+    "start:api": "pnpm --filter @athenas/api start",
+    "test:api": "pnpm --filter @athenas/api test",
+    "test:e2e": "playwright test",
+    "test": "pnpm test:api"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@9.15.0",
+  "devDependencies": {
+    "@playwright/test": "^1.49.1",
+    "@types/node": "^26.1.1",
+    "typescript": "^5.7.3"
+  }
+}

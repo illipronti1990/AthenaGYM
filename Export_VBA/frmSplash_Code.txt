@@ -1,0 +1,11 @@
+Option Explicit
+
+Private Sub UserForm_Initialize()
+    On Error Resume Next
+    Me.lblMarca.Caption = NomeAcademia()
+    Me.lblSub.Caption = "ERP " & VersaoSistema()
+    Me.lblStatus.Caption = "Carregando..."
+    Me.lblVersao.Caption = "Versão " & VersaoSistema()
+    Me.lblCopy.Caption = "© " & NomeAcademia()
+    On Error GoTo 0
+End Sub

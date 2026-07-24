@@ -1,0 +1,56 @@
+Option Explicit
+
+Private Sub Workbook_Open()
+    AplicarModoApp
+    LimparSessao
+    On Error Resume Next
+    Call SincronizarParametrosUI
+    Call RecalcularTodasContasAbertas
+    Call AtualizarDashboardFinanceiro
+    Call MostrarSplash
+    Me.Sheets("00_LOGIN").Activate
+    On Error GoTo 0
+End Sub
+
+Private Sub Workbook_SheetActivate(ByVal Sh As Object)
+    Dim nome As String
+    On Error GoTo Sai
+    nome = Sh.Name
+    If nome = "00_LOGIN" Then GoTo Sai
+    If nome = "BD_SESSAO" Or nome = "LOG" Or nome = "BD_USUARIOS" Or nome = "BD_ALUNOS" _
+        Or nome = "BD_CONTAS_RECEBER" Or nome = "BD_CONTAS_PAGAR" Or nome = "BD_LANCAMENTOS" _
+        Or nome = "BD_FLUXO_CAIXA" Or nome = "BD_PARAMETROS" Or nome = "BD_PLANOS" _
+        Or nome = "BD_FORMAS_PAGAMENTO" Or nome = "BD_STATUS" Or nome = "BD_PERMISSOES" _
+        Or nome = "BD_CORES" Or nome = "BD_METAS" Or nome = "BD_NOTIFICACOES" _
+        Or nome = "BD_EVENTOS" Or nome = "BD_PRIORIDADES" Or nome = "BD_LEADS" _
+        Or nome = "BD_CRM_HISTORICO" Or nome = "BD_RETENCAO" Or nome = "BD_CAMPANHAS" _
+        Or nome = "BD_INDICACOES" Or nome = "BD_AVALIACOES" Or nome = "BD_MEDIDAS" _
+        Or nome = "BD_TREINOS" Or nome = "BD_EXERCICIOS" Or nome = "BD_TREINO_ITENS" _
+        Or nome = "BD_FOTOS" Or nome = "BD_ACESSOS" Or nome = "BD_PRESENCAS" _
+        Or nome = "BD_UNIDADES" Or nome = "BD_PRODUTOS" Or nome = "BD_FORNECEDORES" _
+        Or nome = "BD_COMPRAS" Or nome = "BD_MOVIMENTACAO_ESTOQUE" Or nome = "BD_LOTES" _
+        Or nome = "BD_VENDAS" Or nome = "BD_VENDA_ITENS" Or nome = "BD_KITS" _
+        Or nome = "BD_KIT_ITENS" Or nome = "BD_INDICADORES" Or nome = "BD_INSIGHTS" _
+        Or nome = "BD_PREVISOES" Or nome = "BD_RISCO_RETENCAO" _
+        Or nome = "BD_CHAT" Or nome = "BD_METAS_ALUNO" Or nome = "BD_PORTAL_TOKENS" _
+        Or nome = "BD_DESAFIOS" Or nome = "BD_PUSH" _
+        Or nome = "BI_BASE" Or nome = "VERSAO" Then GoTo Sai
+    If Not SessaoAtiva() Then
+        Application.EnableEvents = False
+        Me.Sheets("00_LOGIN").Activate
+        Application.EnableEvents = True
+        MsgAviso "Faça login para continuar."
+        AbrirLogin
+        GoTo Sai
+    End If
+    If Not PodeAcessarAba(nome) Then
+        RegistrarLog "Acesso negado à aba " & nome, "Seguranca"
+        Application.EnableEvents = False
+        Me.Sheets("21_HOME").Activate
+        Application.EnableEvents = True
+        MsgErro "Acesso negado à tela: " & nome & "."
+    End If
+Sai:
+    On Error Resume Next
+    Application.EnableEvents = True
+End Sub

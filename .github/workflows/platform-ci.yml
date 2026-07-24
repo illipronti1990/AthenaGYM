@@ -1,0 +1,44 @@
+name: Platform CI
+
+on:
+  push:
+    paths:
+      - "platform/**"
+      - ".github/workflows/platform-ci.yml"
+  pull_request:
+    paths:
+      - "platform/**"
+      - ".github/workflows/platform-ci.yml"
+
+defaults:
+  run:
+    working-directory: platform
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: platform/pnpm-lock.yaml
+      - name: Install
+        run: pnpm install --frozen-lockfile
+      - name: Lint
+        run: pnpm -r run lint
+      - name: Unit tests (API)
+        run: pnpm test:api
+      - name: Build
+        run: pnpm -r run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: public-anon-key
+          NEXT_PUBLIC_API_URL: http://localhost:3001/api/v1
+          SUPABASE_URL: https://example.supabase.co
+          SUPABASE_ANON_KEY: public-anon-key
+          SUPABASE_SERVICE_ROLE_KEY: service-role-key
