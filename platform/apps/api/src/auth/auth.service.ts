@@ -38,6 +38,30 @@ export class AuthService {
     return this.authContext.getMe(user);
   }
 
+  /** Public login telemetry for security/audit (no secrets). */
+  async recordLoginEvent(
+    dto: { email: string; success: boolean; reason?: string },
+    ip?: string,
+    browser?: string,
+  ) {
+    const email = dto.email.trim().toLowerCase();
+    await this.audit.log({
+      companyId: null,
+      userId: null,
+      module: 'auth',
+      action: dto.success ? 'login.success' : 'login.failed',
+      entity: 'session',
+      ip,
+      browser,
+      metadata: {
+        email,
+        reason: dto.reason || null,
+        at: new Date().toISOString(),
+      },
+    });
+    return { ok: true };
+  }
+
   /** Local DEV login: profile lives in Supabase Postgres; JWT minted by Nest. */
   async devLogin(dto: DevLoginDto) {
     const enabled = this.config.get<string>('DEV_AUTH_ENABLED') === 'true';

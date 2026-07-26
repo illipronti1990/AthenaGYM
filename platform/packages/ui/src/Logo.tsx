@@ -1,18 +1,28 @@
 import type { CSSProperties } from 'react';
 
 type LogoVariant = 'horizontal' | 'compact';
+type LogoTone = 'brand' | 'gold' | 'white';
+
+const SRC: Record<LogoTone, { horizontal: string; compact: string }> = {
+  brand: { horizontal: 'logo.svg', compact: 'logo-small.svg' },
+  gold: { horizontal: 'logo-gold.svg', compact: 'logo-mark.svg' },
+  white: { horizontal: 'logo-white.svg', compact: 'logo-mark.svg' },
+};
 
 export function Logo({
   variant = 'horizontal',
+  tone = 'brand',
   className = '',
   href = '/brand',
 }: {
   variant?: LogoVariant;
+  tone?: LogoTone;
   className?: string;
   /** Base path for brand assets (default /brand) */
   href?: string;
 }) {
-  const src = variant === 'compact' ? `${href}/logo-small.svg` : `${href}/logo.svg`;
+  const file = variant === 'compact' ? SRC[tone].compact : SRC[tone].horizontal;
+  const src = `${href}/${file}`;
   const style: CSSProperties =
     variant === 'compact'
       ? { width: 40, height: 40, display: 'block' }
@@ -32,7 +42,7 @@ export function Logo({
       }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt="ATHENA GYM Plataforma" style={style} />
+      <img src={src} alt="ATHENA" style={style} />
     </div>
   );
 }

@@ -26,6 +26,12 @@ export interface Company {
   legalName: string | null;
   document: string | null;
   status: string;
+  logoUrl?: string | null;
+  faviconUrl?: string | null;
+  primaryColor?: string | null;
+  secondaryColor?: string | null;
+  backgroundLogin?: string | null;
+  theme?: string | null;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;

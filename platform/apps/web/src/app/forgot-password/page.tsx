@@ -1,15 +1,25 @@
-import { Logo } from '@athena/ui';
+import { LogoAthena } from '@/app/login/LogoAthena';
 import { ForgotPasswordForm } from '@/modules/auth/ForgotPasswordForm';
+import { ATHENA_PRODUCT, ATHENA_SLOGAN } from '@/app/login/constants';
+import '../login/login.css';
 
 export default function ForgotPasswordPage() {
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center gap-6 px-4">
-      <div>
-        <Logo variant="horizontal" className="!justify-start !px-0 !py-0" />
-        <h1 className="athena-h2 mt-4">Recuperar senha</h1>
-        <p className="athena-caption mt-2">ATHENA GYM Plataforma</p>
+    <main className="athena-login-page" style={{ gridTemplateColumns: '1fr' }}>
+      <div className="athena-login-panel" style={{ minHeight: '100vh' }}>
+        <section className="athena-login-card">
+          <div className="athena-login-card-head">
+            <LogoAthena tone="mark" size="mark" />
+            <h1 id="forgot-title" style={{ marginTop: 14, fontSize: '1.35rem', fontWeight: 700 }}>
+              Recuperar senha
+            </h1>
+            <p>
+              {ATHENA_PRODUCT} · {ATHENA_SLOGAN}
+            </p>
+          </div>
+          <ForgotPasswordForm />
+        </section>
       </div>
-      <ForgotPasswordForm />
     </main>
   );
 }

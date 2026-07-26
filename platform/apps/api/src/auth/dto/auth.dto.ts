@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
+  IsBoolean,
   IsEmail,
   IsIn,
   IsObject,
@@ -83,6 +84,21 @@ export class DevLoginDto {
   @IsString()
   @MinLength(6)
   password!: string;
+}
+
+export class LoginEventDto {
+  @ApiProperty({ example: 'admin@athena.gym' })
+  @IsEmail()
+  email!: string;
+
+  @ApiProperty()
+  @IsBoolean()
+  success!: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  reason?: string;
 }
 
 export class UpdateProfileDto {

@@ -11,6 +11,7 @@ import {
   useNetworkStatus,
 } from '@athena/ui';
 import { ThemeProvider } from '@/components/ThemeProvider';
+import { BrandingProvider } from '@/components/BrandingProvider';
 import { QueryProvider } from '@/lib/query-client';
 import { GlobalErrorListeners } from '@/components/ux/GlobalErrorListeners';
 
@@ -30,22 +31,24 @@ function NetworkChrome({ children }: { children: React.ReactNode }) {
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider initialTheme="system">
-      <QueryProvider>
-        <AccessibilityProvider>
-          <NetworkStatusProvider
-            healthCheckUrl={`${API_URL.replace(/\/$/, '')}/health`}
-            intervalMs={20_000}
-          >
-            <TooltipProvider>
-              <ToastProvider>
-                <PerformanceMonitor />
-                <GlobalErrorListeners />
-                <NetworkChrome>{children}</NetworkChrome>
-              </ToastProvider>
-            </TooltipProvider>
-          </NetworkStatusProvider>
-        </AccessibilityProvider>
-      </QueryProvider>
+      <BrandingProvider>
+        <QueryProvider>
+          <AccessibilityProvider>
+            <NetworkStatusProvider
+              healthCheckUrl={`${API_URL.replace(/\/$/, '')}/health`}
+              intervalMs={20_000}
+            >
+              <TooltipProvider>
+                <ToastProvider>
+                  <PerformanceMonitor />
+                  <GlobalErrorListeners />
+                  <NetworkChrome>{children}</NetworkChrome>
+                </ToastProvider>
+              </TooltipProvider>
+            </NetworkStatusProvider>
+          </AccessibilityProvider>
+        </QueryProvider>
+      </BrandingProvider>
     </ThemeProvider>
   );
 }

@@ -1,0 +1,503 @@
+/* Sprint G-1 — Premium Login */
+
+.athena-login-page {
+  --login-bg: #090909;
+  --login-card: #171717;
+  --login-red: #b10018;
+  --login-gold: #d4af37;
+  --login-text: #ffffff;
+  --login-muted: #a1a1aa;
+  --login-border: #2c2c2c;
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  background: var(--login-bg);
+  color: var(--login-text);
+  overflow: hidden;
+}
+
+.athena-login-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.athena-login-bg-red {
+  position: absolute;
+  inset: 0;
+  width: 52%;
+  background:
+    radial-gradient(circle at 30% 40%, rgba(177, 0, 24, 0.55), transparent 55%),
+    linear-gradient(160deg, #b10018 0%, #5a000c 55%, #090909 100%);
+  filter: blur(0px);
+}
+
+.athena-login-bg-blur {
+  position: absolute;
+  inset: 0;
+  width: 55%;
+  backdrop-filter: blur(28px);
+  background: rgba(9, 9, 9, 0.35);
+}
+
+.athena-login-bg-gradient {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 80% 20%, rgba(212, 175, 55, 0.08), transparent 40%),
+    linear-gradient(90deg, rgba(9, 9, 9, 0.15) 45%, #090909 72%);
+}
+
+.athena-login-bg-mark {
+  position: absolute;
+  left: 6%;
+  bottom: -8%;
+  font-size: clamp(180px, 28vw, 340px);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  color: rgba(212, 175, 55, 0.07);
+  line-height: 0.8;
+  user-select: none;
+}
+
+.athena-login-brand,
+.athena-login-panel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(24px, 5vw, 64px);
+}
+
+.athena-login-brand-inner {
+  max-width: 440px;
+  animation: athena-login-fade 280ms ease-out;
+}
+
+.athena-login-brand-name {
+  margin: 20px 0 0;
+  font-size: clamp(2.6rem, 5vw, 3.6rem);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: var(--login-text);
+  line-height: 1;
+}
+
+.athena-login-tenant {
+  margin: 8px 0 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--login-gold);
+}
+
+.athena-login-slogan {
+  margin: 14px 0 0;
+  font-size: clamp(1.15rem, 2vw, 1.45rem);
+  font-weight: 600;
+  color: var(--login-gold);
+  line-height: 1.35;
+  max-width: 18ch;
+}
+
+.athena-login-brand-desc {
+  margin: 16px 0 0;
+  color: var(--login-muted);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  max-width: 36ch;
+}
+
+.athena-login-features {
+  list-style: none;
+  margin: 28px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.athena-login-features li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--login-text);
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.athena-login-feature-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--login-gold);
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.12);
+}
+
+.athena-login-panel {
+  align-items: center;
+  gap: 24px;
+}
+
+.athena-login-card {
+  width: min(100%, 440px);
+  padding: 32px;
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--login-card) 88%, transparent);
+  border: 1px solid color-mix(in srgb, var(--login-border) 90%, var(--login-gold) 10%);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(16px);
+  animation: athena-login-rise 280ms ease-out;
+}
+
+.athena-login-card-head {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.athena-login-card-head h2 {
+  margin: 14px 0 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.athena-login-card-head p {
+  margin: 8px 0 0;
+  color: var(--login-muted);
+  font-size: 0.9rem;
+}
+
+.athena-login-form {
+  display: grid;
+  gap: 16px;
+}
+
+.athena-login-field {
+  display: grid;
+  gap: 8px;
+}
+
+.athena-login-field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--login-muted);
+}
+
+.athena-login-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.athena-login-input-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--login-muted);
+  pointer-events: none;
+}
+
+.athena-login-input {
+  width: 100%;
+  height: 48px;
+  border-radius: 12px;
+  border: 1px solid var(--login-border);
+  background: #111111;
+  color: var(--login-text);
+  padding: 0 44px 0 44px;
+  font: inherit;
+  transition:
+    border-color 200ms ease,
+    box-shadow 200ms ease,
+    background 200ms ease;
+}
+
+.athena-login-input::placeholder {
+  color: #71717a;
+}
+
+.athena-login-input:focus {
+  outline: none;
+  border-color: var(--login-gold);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.22);
+}
+
+.athena-login-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.athena-login-eye {
+  position: absolute;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--login-muted);
+  cursor: pointer;
+  transition: color 200ms ease, background 200ms ease;
+}
+
+.athena-login-eye:hover,
+.athena-login-eye:focus-visible {
+  color: var(--login-gold);
+  background: rgba(212, 175, 55, 0.08);
+  outline: none;
+}
+
+.athena-login-capslock {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--login-gold);
+}
+
+.athena-login-remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: var(--login-muted);
+}
+
+.athena-login-dev {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--login-gold);
+}
+
+.athena-login-error {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(177, 0, 24, 0.16);
+  border: 1px solid rgba(177, 0, 24, 0.45);
+  color: #fecaca;
+  font-size: 0.875rem;
+}
+
+.athena-login-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 48px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #b10018 0%, #7a0012 100%);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition:
+    transform 200ms ease,
+    filter 200ms ease,
+    box-shadow 200ms ease;
+  box-shadow: 0 10px 24px rgba(177, 0, 24, 0.28);
+}
+
+.athena-login-submit:hover:not(:disabled) {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.athena-login-submit:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 3px rgba(212, 175, 55, 0.28),
+    0 10px 24px rgba(177, 0, 24, 0.28);
+}
+
+.athena-login-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.athena-login-spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  animation: athena-login-spin 0.7s linear infinite;
+}
+
+.athena-login-forgot {
+  text-align: center;
+  color: var(--login-gold);
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: opacity 200ms ease;
+}
+
+.athena-login-forgot:hover {
+  opacity: 0.85;
+  text-decoration: underline;
+}
+
+.athena-login-footer {
+  width: min(100%, 440px);
+  text-align: center;
+  color: var(--login-muted);
+  font-size: 0.75rem;
+  display: grid;
+  gap: 8px;
+}
+
+.athena-login-footer-tenant {
+  margin: 0;
+  color: color-mix(in srgb, var(--login-gold) 80%, var(--login-muted));
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+}
+
+.athena-login-footer a {
+  color: var(--login-muted);
+  text-decoration: none;
+}
+
+.athena-login-footer a:hover {
+  color: var(--login-gold);
+}
+
+.athena-login-footer nav {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.athena-login-loader {
+  display: grid;
+  place-items: center;
+  min-height: 180px;
+}
+
+.athena-login-loader-mark {
+  animation: athena-login-pulse 1.2s ease-in-out infinite;
+}
+
+.athena-login-logo {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
+
+@keyframes athena-login-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes athena-login-fade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes athena-login-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes athena-login-pulse {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 960px) {
+  .athena-login-page {
+    grid-template-columns: 1fr;
+  }
+
+  .athena-login-bg-red,
+  .athena-login-bg-blur {
+    width: 100%;
+    height: 42%;
+  }
+
+  .athena-login-bg-gradient {
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(177, 0, 24, 0.35), transparent 50%),
+      linear-gradient(180deg, transparent 30%, #090909 58%);
+  }
+
+  .athena-login-brand {
+    padding-bottom: 8px;
+    min-height: auto;
+  }
+
+  .athena-login-brand-inner {
+    max-width: none;
+  }
+
+  .athena-login-brand-name {
+    font-size: 2.2rem;
+  }
+
+  .athena-login-slogan {
+    max-width: none;
+  }
+
+  .athena-login-features {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .athena-login-panel {
+    padding-top: 8px;
+    padding-bottom: 32px;
+  }
+}
+
+@media (max-width: 520px) {
+  .athena-login-card {
+    padding: 24px 20px;
+    border-radius: 16px;
+  }
+
+  .athena-login-features {
+    grid-template-columns: 1fr;
+  }
+
+  .athena-login-bg-mark {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .athena-login-brand-inner,
+  .athena-login-card,
+  .athena-login-loader-mark,
+  .athena-login-spinner,
+  .athena-login-submit {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -12,3 +12,5 @@ export * from './settings/types';
 export * from './dashboard/types';
 export * from './forms/types';
 export * from './datagrid/types';
+export * from './branding/types';
+export * from './branding/athena';

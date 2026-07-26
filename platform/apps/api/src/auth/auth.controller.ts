@@ -35,6 +35,7 @@ import {
   ChangePasswordDto,
   DevLoginDto,
   InviteUserDto,
+  LoginEventDto,
   ResetPasswordDto,
   UpdateProfileDto,
 } from './dto/auth.dto';
@@ -50,6 +51,23 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'Disabled or invalid credentials' })
   devLogin(@Body() dto: DevLoginDto) {
     return this.auth.devLogin(dto);
+  }
+
+  @Post('login-events')
+  @ApiOperation({ summary: 'Registrar tentativa de login (IP, navegador, horário)' })
+  loginEvent(
+    @Body() dto: LoginEventDto,
+    @Headers('x-forwarded-for') forwarded?: string,
+    @Headers('x-client-browser') clientBrowser?: string,
+    @Headers('user-agent') userAgent?: string,
+    @Req() req?: { ip?: string },
+  ) {
+    const ip =
+      (forwarded || '').split(',')[0]?.trim() ||
+      req?.ip ||
+      undefined;
+    const browser = clientBrowser || userAgent;
+    return this.auth.recordLoginEvent(dto, ip, browser);
   }
 
   @Get('me')

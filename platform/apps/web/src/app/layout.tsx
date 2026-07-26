@@ -11,11 +11,14 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: 'ATHENA GYM Plataforma',
-  description: 'SaaS oficial para academias',
+  title: 'Athena Academia · ATHENA ERP',
+  description: 'Gestão Inteligente para Academias — Athena Academia',
   icons: {
-    icon: [{ url: '/brand/favicon.svg', type: 'image/svg+xml' }],
-    apple: '/brand/logo-small.svg',
+    icon: [
+      { url: '/brand/favicon.svg', type: 'image/svg+xml' },
+      { url: '/brand/favicon.ico' },
+    ],
+    apple: '/brand/logo-mark.svg',
   },
 };
 
