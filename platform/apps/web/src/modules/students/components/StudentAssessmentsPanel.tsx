@@ -2,11 +2,24 @@
 
 import { FormEvent, useEffect, useState } from 'react';
 import type { Assessment, ProgressSummary } from '@athena/shared';
-import { Button, Card, ConfirmDialog } from '@athena/ui';
+import {
+  Button,
+  Card,
+  ConfirmDialog,
+  Form,
+  FormActions,
+  FormInput,
+  FormRow,
+  FormSection,
+  FormSelect,
+  AutoSaveIndicator,
+} from '@athena/ui';
 import { workoutsApi } from '@/modules/workouts/services/workoutsApi';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
 import { ContextualActions } from '@/components/ux/ContextualActions';
+import { formsApi } from '@/modules/forms/services/formsApi';
+import { useAutosave } from '@/hooks/useAutosave';
 
 export function StudentAssessmentsPanel({
   accessToken,
@@ -27,6 +40,20 @@ export function StudentAssessmentsPanel({
   const [saving, setSaving] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [pendingDelete, setPendingDelete] = useState<Assessment | null>(null);
+
+  const draftKey = JSON.stringify({ weight, height, bodyFat, sex });
+  const autosaveStatus = useAutosave({
+    value: draftKey,
+    enabled: Boolean(studentId),
+    onSave: async (serialized) => {
+      const payload = JSON.parse(serialized) as Record<string, unknown>;
+      await formsApi.autosave(accessToken, {
+        formKey: `assessment:${studentId}`,
+        entityId: studentId,
+        payload,
+      });
+    },
+  });
 
   async function load() {
     try {
@@ -149,62 +176,53 @@ export function StudentAssessmentsPanel({
         </div>
       ) : null}
 
-      <Card>
-        <h3 className="athena-title mb-3 text-lg">Nova avaliação</h3>
-        <form
-          onSubmit={onCreate}
-          className="flex flex-wrap items-end gap-3"
-          data-testid="student-assessment-form"
-        >
-          <label className="text-sm text-[var(--muted)]">
-            Peso (kg)
-            <input
+      <Form onSubmit={onCreate} data-testid="student-assessment-form">
+        <FormSection title="Nova avaliação" description="Medidas principais com autosave do rascunho.">
+          <div className="mb-2 flex justify-end">
+            <AutoSaveIndicator status={autosaveStatus} />
+          </div>
+          <FormRow cols={4}>
+            <FormInput
+              label="Peso (kg)"
               required
               type="number"
               step="0.1"
               value={weight}
               onChange={(e) => setWeight(e.target.value)}
-              className="athena-input mt-1 block w-24"
             />
-          </label>
-          <label className="text-sm text-[var(--muted)]">
-            Altura (cm)
-            <input
+            <FormInput
+              label="Altura (cm)"
               required
               type="number"
               step="0.1"
               value={height}
               onChange={(e) => setHeight(e.target.value)}
-              className="athena-input mt-1 block w-24"
             />
-          </label>
-          <label className="text-sm text-[var(--muted)]">
-            % Gordura
-            <input
+            <FormInput
+              label="% Gordura"
               type="number"
               step="0.1"
               value={bodyFat}
               onChange={(e) => setBodyFat(e.target.value)}
-              className="athena-input mt-1 block w-24"
             />
-          </label>
-          <label className="text-sm text-[var(--muted)]">
-            Sexo
-            <select
+            <FormSelect
+              label="Sexo"
               value={sex}
               onChange={(e) => setSex(e.target.value as typeof sex)}
-              className="athena-input mt-1 block w-auto"
-            >
-              <option value="female">Feminino</option>
-              <option value="male">Masculino</option>
-              <option value="other">Outro</option>
-            </select>
-          </label>
-          <Button type="submit" loading={saving} loadingLabel="Salvando…">
-            Salvar avaliação
-          </Button>
-        </form>
-      </Card>
+              options={[
+                { value: 'female', label: 'Feminino' },
+                { value: 'male', label: 'Masculino' },
+                { value: 'other', label: 'Outro' },
+              ]}
+            />
+          </FormRow>
+          <FormActions>
+            <Button type="submit" loading={saving} loadingLabel="Salvando…">
+              Salvar avaliação
+            </Button>
+          </FormActions>
+        </FormSection>
+      </Form>
 
       <section>
         <h3 className="athena-title mb-3 text-lg">Histórico de avaliações</h3>

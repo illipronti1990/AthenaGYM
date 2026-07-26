@@ -1,26 +1,46 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { DashboardChartPeriod, DashboardLayoutItem } from '@athena/shared';
-import { Button, ErrorState, Page, PageHeader, PageContent } from '@athena/ui';
+import {
+  Button,
+  ErrorState,
+  Page,
+  PageHeader,
+  PageContent,
+  SkeletonChart,
+  pageQualityAttrs,
+} from '@athena/ui';
 import { Settings2 } from 'lucide-react';
 import { dashboardApi } from '../services/dashboardApi';
 import { useToast } from '@/components/ui/Toast';
 import { SkeletonDashboard } from '@/components/ui/Skeleton';
+import { CACHE_TTL } from '@/lib/queryKeys';
 import { greetingEmoji } from '../utils/format';
 import { QuickActions } from './QuickActions';
 import { KpiCard } from './KpiCard';
-import { RevenueChart } from './RevenueChart';
-import { CheckinChart } from './CheckinChart';
 import { AgendaWidget } from './AgendaWidget';
-import { ActivityTimeline } from './ActivityTimeline';
 import { BirthdayWidget } from './BirthdayWidget';
 import { DuesWidget } from './DuesWidget';
 import { GoalWidget } from './GoalWidget';
 import { RankingWidget } from './RankingWidget';
 import { DashboardCustomizer } from './DashboardCustomizer';
 import { DashboardGrid, type DashboardTile } from './DashboardGrid';
+
+const RevenueChart = dynamic(
+  () => import('./RevenueChart').then((m) => ({ default: m.RevenueChart })),
+  { ssr: false, loading: () => <SkeletonChart /> },
+);
+const CheckinChart = dynamic(
+  () => import('./CheckinChart').then((m) => ({ default: m.CheckinChart })),
+  { ssr: false, loading: () => <SkeletonChart /> },
+);
+const ActivityTimeline = dynamic(
+  () => import('./ActivityTimeline').then((m) => ({ default: m.ActivityTimeline })),
+  { ssr: false, loading: () => <SkeletonChart /> },
+);
 
 export function ExecutiveDashboard({
   accessToken,
@@ -40,7 +60,8 @@ export function ExecutiveDashboard({
   const query = useQuery({
     queryKey: ['executive-dashboard', period, firstName],
     queryFn: () => dashboardApi.executive(accessToken, period, firstName),
-    refetchInterval: 30_000,
+    staleTime: CACHE_TTL.kpis,
+    refetchInterval: CACHE_TTL.kpis,
   });
 
   const saveMutation = useMutation({
@@ -123,7 +144,7 @@ export function ExecutiveDashboard({
   }
 
   return (
-    <Page data-testid="executive-dashboard">
+    <Page {...pageQualityAttrs()} data-testid="executive-dashboard">
       <PageHeader
         title={`${data?.greetingHint?.split('·')[0]?.trim() || `Olá, ${firstName}`} ${greetingEmoji()}`}
         description={`${dateLabel} · ${data?.greetingHint?.split('·')[1]?.trim() || 'Centro de comando da academia'}`}

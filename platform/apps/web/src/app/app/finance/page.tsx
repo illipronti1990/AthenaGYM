@@ -1,7 +1,8 @@
 import Link from 'next/link';
-import { Page, PageHeader, PageContent, PageFilters } from '@athena/ui';
+import { Page, PageHeader, PageContent, PageFilters, pageQualityAttrs } from '@athena/ui';
 import { requireAccessToken } from '@/lib/auth/token';
 import { FinanceDashboardPanel } from '@/modules/finance/components/FinanceDashboardPanel';
+import { FinancePrefetch } from '@/modules/finance/components/FinancePrefetch';
 
 const links = [
   ['Caixa', '/app/finance/cashflow'],
@@ -17,7 +18,8 @@ export default async function FinancePage() {
   const accessToken = await requireAccessToken();
 
   return (
-    <Page>
+    <Page {...pageQualityAttrs()}>
+      <FinancePrefetch />
       <PageHeader
         title="Financeiro"
         description="KPIs do mês corrente e atalhos operacionais."

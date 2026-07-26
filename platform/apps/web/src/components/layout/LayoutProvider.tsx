@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import { ShortcutDialog } from '@athena/ui';
 
 const SIDEBAR_KEY = 'athena_sidebar_collapsed';
 
@@ -26,9 +27,21 @@ type LayoutCtx = {
   setSearchOpen: (v: boolean) => void;
   notificationsOpen: boolean;
   setNotificationsOpen: (v: boolean) => void;
+  shortcutsOpen: boolean;
+  setShortcutsOpen: (v: boolean) => void;
 };
 
 const Ctx = createContext<LayoutCtx | null>(null);
+
+function isTypingTarget(target: EventTarget | null) {
+  if (!(target instanceof HTMLElement)) return false;
+  return (
+    target.tagName === 'INPUT' ||
+    target.tagName === 'TEXTAREA' ||
+    target.tagName === 'SELECT' ||
+    target.isContentEditable
+  );
+}
 
 export function LayoutProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -38,6 +51,7 @@ export function LayoutProvider({ children }: { children: ReactNode }) {
   const [pageLoading, setPageLoading] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [shortcutsOpen, setShortcutsOpen] = useState(false);
 
   useEffect(() => {
     try {
@@ -71,13 +85,22 @@ export function LayoutProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      const target = e.target as HTMLElement | null;
-      const typing =
-        target &&
-        (target.tagName === 'INPUT' ||
-          target.tagName === 'TEXTAREA' ||
-          target.tagName === 'SELECT' ||
-          target.isContentEditable);
+      const typing = isTypingTarget(e.target);
+
+      if (e.key === 'Escape') {
+        setSearchOpen(false);
+        setNotificationsOpen(false);
+        setShortcutsOpen(false);
+        setMobileOpen(false);
+        window.dispatchEvent(new CustomEvent('athena:escape'));
+        return;
+      }
+
+      if (!typing && (e.key === '?' || (e.shiftKey && e.key === '/'))) {
+        e.preventDefault();
+        setShortcutsOpen((v) => !v);
+        return;
+      }
 
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b' && !typing) {
         e.preventDefault();
@@ -95,13 +118,20 @@ export function LayoutProvider({ children }: { children: ReactNode }) {
           });
         }
       }
+
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         setSearchOpen((v) => !v);
       }
+
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'n' && !typing) {
         e.preventDefault();
         router.push('/app/students/new');
+      }
+
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        window.dispatchEvent(new CustomEvent('athena:save'));
       }
     }
     window.addEventListener('keydown', onKey);
@@ -122,6 +152,8 @@ export function LayoutProvider({ children }: { children: ReactNode }) {
       setSearchOpen,
       notificationsOpen,
       setNotificationsOpen,
+      shortcutsOpen,
+      setShortcutsOpen,
     }),
     [
       collapsed,
@@ -132,10 +164,16 @@ export function LayoutProvider({ children }: { children: ReactNode }) {
       openSearch,
       searchOpen,
       notificationsOpen,
+      shortcutsOpen,
     ],
   );
 
-  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
+  return (
+    <Ctx.Provider value={value}>
+      {children}
+      <ShortcutDialog open={shortcutsOpen} onClose={() => setShortcutsOpen(false)} />
+    </Ctx.Provider>
+  );
 }
 
 export function useLayout() {

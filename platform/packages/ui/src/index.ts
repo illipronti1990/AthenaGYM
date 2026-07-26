@@ -29,6 +29,76 @@ export { FloatingActionButton } from './feedback/FloatingActionButton';
 export { Page, PageHeader, PageActions, PageFilters, PageContent } from './Page';
 
 export {
+  AthenaDataGrid,
+  DataGridToolbar,
+  DataGridFilters,
+  ColumnSelector,
+  Pagination,
+  BulkActions,
+  RowMenu,
+  WorkPanels,
+  MobileCardView,
+  EmptyTable,
+  type DataGridColumn,
+  type DataGridSort,
+  type DataGridFilterDef,
+  type DataGridRowAction,
+  type DataGridBulkAction,
+  type WorkPanel,
+  type SavedFilterItem,
+  type TablePreferencesState,
+} from './datatable';
+
+export {
+  Form,
+  FormSection,
+  FormRow,
+  FormActions,
+  FormProgress,
+  ValidationMessage,
+  Textarea,
+  Checkbox,
+  Switch,
+  RadioGroup,
+  FormSelect,
+  FormInput,
+  CpfInput,
+  PhoneInput,
+  CnpjInput,
+  CepInput,
+  CurrencyInput,
+  DatePicker,
+  TimePicker,
+  Combobox,
+  FileUploader,
+  ImageUploader,
+  AvatarUpload,
+  SignaturePad,
+  Wizard,
+  StepIndicator,
+  AutoSaveIndicator,
+  onlyDigits,
+  formatCpfMask,
+  formatPhoneMask,
+  formatCepMask,
+  formatCurrencyBRL,
+  formatCurrencyInput,
+  parseCurrencyInput,
+  type UploadItem,
+  type WizardStep,
+  type FormAutosaveStatus,
+} from './forms';
+
+export { ErrorBoundary } from './ErrorBoundary';
+export { AccessibilityProvider, useAccessibility, FocusRing } from './accessibility';
+export { PageLoader, PerformanceMonitor, type PerfMetric } from './performance';
+export { NetworkStatusProvider, useNetworkStatus, ReconnectOverlay } from './network';
+export { BottomNavigation, type BottomNavItem } from './mobile';
+export { ShortcutDialog, DEFAULT_SHORTCUTS, type ShortcutItem } from './shortcuts';
+export { reportClientError, getBufferedErrors, type ClientErrorPayload } from './monitoring';
+export { PAGE_QUALITY_CHECKLIST, pageQualityAttrs, type PageQualityFlag } from './quality';
+
+export {
   athenaColors,
   athenaColorsLight,
   athenaSpacing,

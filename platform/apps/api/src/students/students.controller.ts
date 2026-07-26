@@ -54,6 +54,8 @@ export class StudentsController {
   @ApiQuery({ name: 'unitId', required: false })
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'pageSize', required: false })
+  @ApiQuery({ name: 'sort', required: false })
+  @ApiQuery({ name: 'sortDir', required: false, description: 'asc | desc' })
   list(
     @CurrentAuth() auth: AuthContext,
     @Query() query: Record<string, string | undefined>,

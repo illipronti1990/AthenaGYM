@@ -75,7 +75,22 @@ export class StudentsService {
         : ['11111111-1111-1111-1111-111111111111'];
 
     const page = Math.max(1, Number(query.page || 1));
-    const pageSize = Math.min(100, Math.max(1, Number(query.pageSize || 20)));
+    const pageSize = Math.min(200, Math.max(1, Number(query.pageSize || 20)));
+    const sortMap: Record<string, string> = {
+      fullName: 'full_name',
+      full_name: 'full_name',
+      planName: 'plan_name',
+      plan_name: 'plan_name',
+      status: 'status',
+      phone: 'phone',
+      registrationNumber: 'registration_number',
+      registration_number: 'registration_number',
+      lastAccessAt: 'last_access_at',
+      last_access_at: 'last_access_at',
+      cpf: 'cpf',
+    };
+    const sortKey = query.sort ? sortMap[query.sort] : undefined;
+    const sortDir = String(query.sortDir || 'asc').toLowerCase() === 'desc' ? false : true;
     const { items, total } = await this.repo.list({
       companyIds: ids,
       unitIds: auth.isSuperAdmin ? undefined : auth.unitIds.length ? auth.unitIds : undefined,
@@ -91,6 +106,7 @@ export class StudentsService {
       },
       page,
       pageSize,
+      sort: sortKey ? { column: sortKey, ascending: sortDir } : undefined,
     });
     return { items, total, page, pageSize };
   }

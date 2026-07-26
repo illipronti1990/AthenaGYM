@@ -33,6 +33,12 @@ export const navGroups: NavGroup[] = [
     items: [
       { href: '/app/students', label: 'Alunos', icon: athenaIcons.student, keywords: ['aluno', 'cliente'] },
       {
+        href: '/app/students/enroll',
+        label: 'Matrícula rápida',
+        icon: athenaIcons.subscriptions,
+        keywords: ['matricula', 'wizard', 'recepção'],
+      },
+      {
         href: '/app/sales/enrollments',
         label: 'Matrículas',
         icon: athenaIcons.subscriptions,

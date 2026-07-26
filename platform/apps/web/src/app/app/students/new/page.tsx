@@ -1,3 +1,5 @@
+import Link from 'next/link';
+import { Button } from '@athena/ui';
 import { requireAccessToken } from '@/lib/auth/token';
 import { apiGetMe } from '@/services/api';
 import { StudentForm } from '@/modules/students/components/StudentForm';
@@ -29,9 +31,18 @@ export default async function NewStudentPage() {
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="athena-title text-3xl">Novo aluno</h1>
-        <p className="mt-1 text-sm text-[var(--muted)]">Cadastro completo</p>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="athena-title text-3xl">Novo aluno</h1>
+          <p className="mt-1 text-sm text-[var(--muted)]">
+            Formulário inteligente com validação em tempo real e CEP automático
+          </p>
+        </div>
+        <Link href="/app/students/enroll">
+          <Button type="button" variant="secondary" size="sm">
+            Matrícula rápida (wizard)
+          </Button>
+        </Link>
       </div>
       <StudentForm
         accessToken={accessToken}

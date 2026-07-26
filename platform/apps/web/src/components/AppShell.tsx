@@ -1,5 +1,6 @@
 'use client';
 
+import { BottomNavigation } from '@athena/ui';
 import { LayoutProvider, useLayout } from '@/components/layout/LayoutProvider';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Topbar } from '@/components/layout/Topbar';
@@ -23,13 +24,14 @@ function ShellInner({
       <Sidebar userName={userName} />
       <div className="athena-main-column">
         <Topbar accessToken={accessToken} userName={userName} />
-        <main className="athena-main">
+        <main id="athena-main-content" className="athena-main" tabIndex={-1}>
           <div className="athena-main-inner">
             <PageTransition>{children}</PageTransition>
           </div>
         </main>
         <Footer />
       </div>
+      <BottomNavigation />
       <CommandPalette accessToken={accessToken} />
     </div>
   );

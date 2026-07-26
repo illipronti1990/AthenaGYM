@@ -22,6 +22,8 @@ import { SettingsModule } from './settings/settings.module';
 import { PrintsModule } from './prints/prints.module';
 import { PolishModule } from './polish/polish.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { FormsModule } from './forms/forms.module';
+import { DatagridModule } from './datagrid/datagrid.module';
 
 @Module({
   imports: [
@@ -48,6 +50,8 @@ import { DashboardModule } from './dashboard/dashboard.module';
     PrintsModule,
     PolishModule,
     DashboardModule,
+    FormsModule,
+    DatagridModule,
   ],
 })
 export class AppModule {}

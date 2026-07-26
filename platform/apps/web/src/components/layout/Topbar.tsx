@@ -1,6 +1,6 @@
 'use client';
 
-import { Menu, Search } from 'lucide-react';
+import { Keyboard, Menu, Search } from 'lucide-react';
 import { Tooltip } from '@athena/ui';
 import { useLayout } from './LayoutProvider';
 import { AppBreadcrumb } from './AppBreadcrumb';
@@ -15,7 +15,7 @@ export function Topbar({
   accessToken: string;
   userName?: string | null;
 }) {
-  const { toggleMobile, openSearch, pageLoading } = useLayout();
+  const { toggleMobile, openSearch, pageLoading, setShortcutsOpen } = useLayout();
 
   return (
     <header className="athena-topbar athena-topbar-px2" data-testid="app-topbar">
@@ -51,6 +51,17 @@ export function Topbar({
       </div>
 
       <div className="flex items-center gap-2">
+        <Tooltip content="Atalhos (?)">
+          <button
+            type="button"
+            className="athena-icon-btn"
+            onClick={() => setShortcutsOpen(true)}
+            aria-label="Abrir atalhos de teclado"
+            data-testid="open-shortcuts"
+          >
+            <Keyboard size={18} />
+          </button>
+        </Tooltip>
         <ThemeToggle />
         <NotificationPanel accessToken={accessToken} />
         <UserMenu userName={userName} />

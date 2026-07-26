@@ -1,15 +1,27 @@
 'use client';
 
-import { OfflineBanner, ToastProvider, TooltipProvider } from '@athena/ui';
+import {
+  AccessibilityProvider,
+  NetworkStatusProvider,
+  OfflineBanner,
+  PerformanceMonitor,
+  ReconnectOverlay,
+  ToastProvider,
+  TooltipProvider,
+  useNetworkStatus,
+} from '@athena/ui';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { QueryProvider } from '@/lib/query-client';
-import { useOnlineStatus } from '@/hooks/useOnlineStatus';
+import { GlobalErrorListeners } from '@/components/ux/GlobalErrorListeners';
 
-function OfflineGate({ children }: { children: React.ReactNode }) {
-  const online = useOnlineStatus();
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
+
+function NetworkChrome({ children }: { children: React.ReactNode }) {
+  const { online } = useNetworkStatus();
   return (
     <>
       <OfflineBanner online={online} />
+      <ReconnectOverlay />
       {children}
     </>
   );
@@ -17,13 +29,22 @@ function OfflineGate({ children }: { children: React.ReactNode }) {
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider initialTheme="dark">
+    <ThemeProvider initialTheme="system">
       <QueryProvider>
-        <TooltipProvider>
-          <ToastProvider>
-            <OfflineGate>{children}</OfflineGate>
-          </ToastProvider>
-        </TooltipProvider>
+        <AccessibilityProvider>
+          <NetworkStatusProvider
+            healthCheckUrl={`${API_URL.replace(/\/$/, '')}/health`}
+            intervalMs={20_000}
+          >
+            <TooltipProvider>
+              <ToastProvider>
+                <PerformanceMonitor />
+                <GlobalErrorListeners />
+                <NetworkChrome>{children}</NetworkChrome>
+              </ToastProvider>
+            </TooltipProvider>
+          </NetworkStatusProvider>
+        </AccessibilityProvider>
       </QueryProvider>
     </ThemeProvider>
   );

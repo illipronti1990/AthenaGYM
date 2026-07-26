@@ -123,9 +123,12 @@ export class StudentsRepository {
     };
     page: number;
     pageSize: number;
+    sort?: { column: string; ascending: boolean };
   }) {
     const from = (params.page - 1) * params.pageSize;
     const to = from + params.pageSize - 1;
+    const sortColumn = params.sort?.column || 'full_name';
+    const ascending = params.sort?.ascending ?? true;
     let q = this.admin()
       .from('students')
       .select(
@@ -134,7 +137,7 @@ export class StudentsRepository {
       )
       .is('deleted_at', null)
       .in('company_id', params.companyIds)
-      .order('full_name')
+      .order(sortColumn, { ascending })
       .range(from, to);
 
     if (params.unitIds?.length) q = q.in('unit_id', params.unitIds);
