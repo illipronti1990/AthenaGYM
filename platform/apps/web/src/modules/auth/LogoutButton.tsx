@@ -12,7 +12,7 @@ export function LogoutButton() {
       const supabase = createClient();
       await supabase.auth.signOut();
     } catch {
-      // ignore — DEV session may have no Supabase Auth
+      // ignore
     }
     router.push('/login');
     router.refresh();
@@ -21,7 +21,7 @@ export function LogoutButton() {
     <button
       type="button"
       onClick={logout}
-      className="rounded border border-zinc-300 px-3 py-1.5 text-sm text-zinc-700 hover:bg-zinc-50"
+      className="rounded-[10px] bg-[var(--primary)] px-3 py-1.5 text-sm font-medium text-white transition hover:bg-[var(--primary-hover)]"
     >
       Sair
     </button>

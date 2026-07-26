@@ -7,7 +7,7 @@ test.describe('IAM smoke', () => {
   test('login page shows form and invalid login feedback', async ({ page }) => {
     await page.goto(`${WEB}/login`);
     await expect(page.getByTestId('login-form')).toBeVisible();
-    await page.getByTestId('login-email').fill('nobody@athenas.gym');
+    await page.getByTestId('login-email').fill('nobody@athena.gym');
     await page.getByTestId('login-password').fill('wrong-password-123');
     await page.getByTestId('login-submit').click();
     await expect(page.getByTestId('login-error')).toBeVisible({ timeout: 15_000 });
@@ -15,7 +15,7 @@ test.describe('IAM smoke', () => {
 
   test('reset-password endpoint accepts request', async ({ request }) => {
     const res = await request.post(`${API}/auth/reset-password`, {
-      data: { email: 'nobody@athenas.gym' },
+      data: { email: 'nobody@athena.gym' },
     });
     // 200 when configured; 400 if Supabase env missing in CI — both documentable
     expect([200, 400, 500]).toContain(res.status());

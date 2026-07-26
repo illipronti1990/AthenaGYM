@@ -1,3 +1,3 @@
-# ATHENAS Manager / Reception (scaffold)
+# ATHENA Manager / Reception (scaffold)
 
 Dashboard, financeiro, check-ins, KPIs, CRM, aprovações, auditoria e notificações.

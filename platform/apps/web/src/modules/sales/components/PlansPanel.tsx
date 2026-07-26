@@ -1,7 +1,8 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import type { Plan } from '@athenas/shared';
+import type { Plan } from '@athena/shared';
+import { Button } from '@athena/ui';
 import { salesApi } from '../services/salesApi';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
@@ -47,50 +48,48 @@ export function PlansPanel({ accessToken }: { accessToken: string }) {
           placeholder="Nome"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="rounded border border-zinc-300 px-3 py-2 text-sm"
+          className="athena-input max-w-xs"
         />
         <input
           type="number"
           value={durationDays}
           onChange={(e) => setDurationDays(Number(e.target.value))}
-          className="w-28 rounded border border-zinc-300 px-3 py-2 text-sm"
+          className="athena-input w-28"
         />
         <input
           type="number"
           step="0.01"
           value={price}
           onChange={(e) => setPrice(Number(e.target.value))}
-          className="w-28 rounded border border-zinc-300 px-3 py-2 text-sm"
+          className="athena-input w-28"
         />
-        <button type="submit" className="rounded bg-[#A3001B] px-4 py-2 text-sm font-semibold text-white">
-          Adicionar
-        </button>
+        <Button type="submit">Adicionar</Button>
       </form>
       {!plans ? (
         <TableSkeleton />
       ) : (
-        <table className="min-w-full rounded border border-zinc-200 bg-white text-left text-sm">
-          <thead className="border-b bg-zinc-50">
-            <tr>
-              <th className="px-3 py-2">Plano</th>
-              <th className="px-3 py-2">Duração</th>
-              <th className="px-3 py-2">Valor</th>
-              <th className="px-3 py-2">Ativo</th>
-            </tr>
-          </thead>
-          <tbody>
-            {plans.map((p) => (
-              <tr key={p.id} className="border-b">
-                <td className="px-3 py-2">{p.name}</td>
-                <td className="px-3 py-2">{p.durationDays} dias</td>
-                <td className="px-3 py-2">
-                  {p.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                </td>
-                <td className="px-3 py-2">{p.active ? 'Sim' : 'Não'}</td>
+        <div className="athena-list overflow-x-auto">
+          <table className="athena-table">
+            <thead>
+              <tr>
+                <th>Plano</th>
+                <th>Duração</th>
+                <th>Valor</th>
+                <th>Ativo</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {plans.map((p) => (
+                <tr key={p.id}>
+                  <td>{p.name}</td>
+                  <td>{p.durationDays} dias</td>
+                  <td>{p.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+                  <td>{p.active ? 'Sim' : 'Não'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

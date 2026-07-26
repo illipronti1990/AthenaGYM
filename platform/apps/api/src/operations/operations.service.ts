@@ -6,9 +6,9 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { getAccessProvider } from '@athenas/sdk-access';
-import type { AuthContext } from '@athenas/shared';
-import { QR_TTL_SECONDS } from '@athenas/shared';
+import { getAccessProvider } from '@athena/sdk-access';
+import type { AuthContext } from '@athena/shared';
+import { QR_TTL_SECONDS } from '@athena/shared';
 import { AuthUser } from '../auth/auth.types';
 import {
   CreateCheckinDto,
@@ -62,7 +62,7 @@ export class OperationsService {
     return (
       this.config.get<string>('QR_SIGNING_SECRET') ||
       this.config.get<string>('DEV_JWT_SECRET') ||
-      'athenas-qr-dev-secret'
+      'athena-qr-dev-secret'
     );
   }
 

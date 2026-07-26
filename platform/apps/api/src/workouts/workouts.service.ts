@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { getWorkoutRecommendationService } from '@athenas/ai-sdk';
+import { getWorkoutRecommendationService } from '@athena/ai-sdk';
 import {
   calcBmi,
   calcBmr,
@@ -12,9 +12,10 @@ import {
   leanMassKg,
   slugify,
   storageProgressPath,
-} from '@athenas/exercise-engine';
-import type { AuthContext } from '@athenas/shared';
+} from '@athena/exercise-engine';
+import type { AuthContext } from '@athena/shared';
 import { AuthUser } from '../auth/auth.types';
+import { SupabaseService } from '../supabase/supabase.service';
 import {
   AiWorkoutSuggestionDto,
   CompleteSessionDto,
@@ -36,11 +37,14 @@ import {
 } from './events/workouts.events';
 import { WorkoutsRepository } from './workouts.repository';
 
+const MAX_PROGRESS_PHOTO_BYTES = 5 * 1024 * 1024;
+
 @Injectable()
 export class WorkoutsService {
   constructor(
     private readonly repo: WorkoutsRepository,
     private readonly events: EventEmitter2,
+    private readonly supabase: SupabaseService,
   ) {}
 
   private companyId(auth: AuthContext) {
@@ -337,6 +341,67 @@ export class WorkoutsService {
       photoId: photo.id,
     });
     return photo;
+  }
+
+  async deleteProgressPhoto(auth: AuthContext, photoId: string) {
+    const companyId = this.companyId(auth);
+    const photo = await this.repo.getPhoto(companyId, photoId);
+    if (!photo) throw new NotFoundException('Foto não encontrada');
+
+    const deleted = await this.repo.softDeletePhoto(companyId, photoId);
+    if (!deleted) throw new NotFoundException('Foto não encontrada');
+
+    if (photo.storagePath) {
+      const admin = this.supabase.getAdmin();
+      await admin.storage.from('student-photos').remove([photo.storagePath]);
+    }
+
+    this.events.emit(PROGRESS_UPDATED, {
+      companyId,
+      studentId: photo.studentId,
+      photoId: photo.id,
+    });
+    return { ok: true, id: photo.id };
+  }
+
+  async uploadProgressPhoto(
+    auth: AuthContext,
+    studentId: string,
+    file: Express.Multer.File | undefined,
+    type = 'front',
+  ) {
+    if (!file) throw new BadRequestException('Arquivo obrigatório');
+    if (!studentId) throw new BadRequestException('studentId obrigatório');
+    if (file.size > MAX_PROGRESS_PHOTO_BYTES) {
+      throw new BadRequestException('Foto deve ter no máximo 5MB');
+    }
+    if (!file.mimetype.startsWith('image/')) {
+      throw new BadRequestException('Arquivo deve ser imagem (jpg, png ou webp)');
+    }
+
+    const companyId = this.companyId(auth);
+    const ext = file.mimetype.includes('png')
+      ? 'png'
+      : file.mimetype.includes('webp')
+        ? 'webp'
+        : 'jpg';
+    const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const fileName = `${type || 'front'}-${stamp}.${ext}`;
+    const path = storageProgressPath(companyId, studentId, fileName);
+
+    const admin = this.supabase.getAdmin();
+    const { error } = await admin.storage
+      .from('student-photos')
+      .upload(path, file.buffer, { contentType: file.mimetype, upsert: true });
+    if (error) throw new BadRequestException(error.message);
+
+    const { data: pub } = admin.storage.from('student-photos').getPublicUrl(path);
+    return this.createProgressPhoto(auth, {
+      studentId,
+      type: type || 'front',
+      storagePath: path,
+      publicUrl: pub.publicUrl,
+    });
   }
 
   async suggestWorkout(user: AuthUser, auth: AuthContext, dto: AiWorkoutSuggestionDto) {

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { AuthContext, Permission, Role } from '@athenas/shared';
+import type { AuthContext, Permission, Role } from '@athena/shared';
 import { SupabaseService } from '../supabase/supabase.service';
 
 @Injectable()

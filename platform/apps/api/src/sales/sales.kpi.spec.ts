@@ -1,4 +1,4 @@
-import { calcConversionRate } from '@athenas/shared';
+import { calcConversionRate } from '@athena/shared';
 
 describe('sales KPIs', () => {
   it('calcConversionRate', () => {

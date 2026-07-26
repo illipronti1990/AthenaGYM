@@ -7,3 +7,5 @@ export * from './operations/types';
 export * from './workouts/types';
 export * from './engagement/types';
 export * from './analytics/types';
+export * from './platform/types';
+export * from './settings/types';

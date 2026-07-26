@@ -13,13 +13,14 @@ import {
   splitInstallments,
   type AuthContext,
   type CashDirection,
-} from '@athenas/shared';
+} from '@athena/shared';
 import { AuditService } from '../audit/audit.service';
 import { AuthUser } from '../auth/auth.types';
 import { ContractSignedEvent } from '../sales/events/sales.events';
 import {
   CreateAccountDto,
   CreateCostCenterDto,
+  UpdateAccountDto,
   CreatePayableDto,
   CreatePixDto,
   CreateReceivableDto,
@@ -86,6 +87,28 @@ export class FinanceService {
     });
   }
 
+  async updateAccount(user: AuthUser, auth: AuthContext, id: string, dto: UpdateAccountDto) {
+    const existing = await this.repo.getAccount(id);
+    if (!existing) throw new NotFoundException('Conta não encontrada');
+    this.companyIds(auth, existing.companyId);
+    const patch: Record<string, unknown> = {};
+    if (dto.bankName !== undefined) patch.bank_name = dto.bankName;
+    if (dto.agency !== undefined) patch.agency = dto.agency || null;
+    if (dto.account !== undefined) patch.account = dto.account || null;
+    if (dto.pixKey !== undefined) patch.pix_key = dto.pixKey || null;
+    if (dto.status !== undefined) patch.status = dto.status;
+    const updated = await this.repo.updateAccount(id, patch);
+    await this.audit.log({
+      companyId: existing.companyId,
+      userId: user.id,
+      module: 'finance',
+      action: 'update_account',
+      entity: 'financial_account',
+      entityId: id,
+    });
+    return updated;
+  }
+
   listCostCenters(auth: AuthContext) {
     return this.repo.listCostCenters(this.companyIds(auth));
   }
@@ -104,8 +127,8 @@ export class FinanceService {
     return this.repo.listMethods();
   }
 
-  listReceivables(auth: AuthContext) {
-    return this.repo.listReceivables(this.companyIds(auth));
+  listReceivables(auth: AuthContext, studentId?: string) {
+    return this.repo.listReceivables(this.companyIds(auth), studentId);
   }
 
   async createReceivable(user: AuthUser, auth: AuthContext, dto: CreateReceivableDto) {
@@ -347,8 +370,73 @@ export class FinanceService {
     return updated;
   }
 
-  listSubscriptions(auth: AuthContext) {
-    return this.repo.listSubscriptions(this.companyIds(auth));
+  async listSubscriptions(auth: AuthContext, studentId?: string) {
+    // Alunos com plano (ex.: Mensal) passam a gerar assinatura financeira
+    await this.syncSubscriptionsFromStudentPlans(auth);
+    return this.repo.listSubscriptions(this.companyIds(auth), studentId);
+  }
+
+  /** Cria assinatura ativa quando o aluno tem plan_name batendo com um plano comercial. */
+  async ensureSubscriptionFromPlanName(params: {
+    companyId: string;
+    studentId: string;
+    unitId?: string | null;
+    planName?: string | null;
+  }) {
+    const planName = params.planName?.trim();
+    if (!planName) return null;
+
+    const existing = await this.repo.findActiveSubscription(params.companyId, params.studentId);
+    if (existing) return existing;
+
+    const plan = await this.repo.findPlanByName(params.companyId, planName);
+    if (!plan) return null;
+
+    const amount = Number(plan.price ?? 0);
+    const durationDays = Number(plan.duration_days ?? 30);
+    const recurrence =
+      durationDays >= 360 ? 'yearly' : durationDays >= 80 ? 'quarterly' : 'monthly';
+    const nextDue = new Date();
+    if (recurrence === 'yearly') nextDue.setFullYear(nextDue.getFullYear() + 1);
+    else if (recurrence === 'quarterly') nextDue.setMonth(nextDue.getMonth() + 3);
+    else nextDue.setMonth(nextDue.getMonth() + 1);
+
+    const sub = await this.repo.insertSubscription({
+      company_id: params.companyId,
+      unit_id: params.unitId || DEV_UNIT,
+      student_id: params.studentId,
+      plan_id: String(plan.id),
+      gateway: 'stub',
+      recurrence,
+      next_due_date: nextDue.toISOString().slice(0, 10),
+      amount,
+      status: 'active',
+    });
+
+    this.events.emit(SUBSCRIPTION_CREATED, {
+      companyId: params.companyId,
+      subscriptionId: sub.id,
+      studentId: params.studentId,
+      planId: String(plan.id),
+      contractId: null,
+    });
+    return sub;
+  }
+
+  async syncSubscriptionsFromStudentPlans(auth: AuthContext) {
+    const companyIds = this.companyIds(auth);
+    const students = await this.repo.listStudentsWithPlan(companyIds);
+    let created = 0;
+    for (const s of students) {
+      const sub = await this.ensureSubscriptionFromPlanName({
+        companyId: s.company_id,
+        studentId: s.id,
+        unitId: s.unit_id,
+        planName: s.plan_name,
+      });
+      if (sub) created += 1;
+    }
+    return { scanned: students.length, ensured: created };
   }
 
   async createSubscription(user: AuthUser, auth: AuthContext, dto: CreateSubscriptionDto) {
@@ -426,6 +514,9 @@ export class FinanceService {
       qr_code: charge.qrCode,
       copy_paste: charge.copyPaste,
     });
+    if (rec.status === 'open' || rec.status === 'overdue') {
+      await this.repo.updateReceivable(rec.id, { status: 'pix_generated' });
+    }
     await this.repo.insertOutbox({
       company_id: rec.companyId,
       aggregate_type: 'payment_transaction',
@@ -458,7 +549,7 @@ export class FinanceService {
     const event = await gateway.parseWebhook(headers, rawBody);
     await this.repo.insertWebhookReceipt({
       provider,
-      signature: headers['x-athenas-signature'] || headers['asaas-access-token'] || null,
+      signature: headers['x-athena-signature'] || headers['asaas-access-token'] || null,
       payload_hash: hash,
       external_id: event.externalId || null,
     });

@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { WorkoutsDashboard } from '@athenas/shared';
+import type { WorkoutsDashboard } from '@athena/shared';
+import { Card, chartColors } from '@athena/ui';
 import { workoutsApi } from '../services/workoutsApi';
 
 export function WorkoutsDashboardPanel({ accessToken }: { accessToken: string }) {
@@ -15,24 +16,30 @@ export function WorkoutsDashboardPanel({ accessToken }: { accessToken: string })
       .catch((e) => setError(e instanceof Error ? e.message : 'erro'));
   }, [accessToken]);
 
-  if (error) return <p className="text-sm text-red-700">{error}</p>;
-  if (!data) return <p className="text-sm text-zinc-500">Carregando…</p>;
+  if (error) return <p className="text-sm text-[var(--primary-hover)]">{error}</p>;
+  if (!data) return <p className="text-sm text-[var(--muted)]">Carregando…</p>;
 
   const cards = [
-    ['Treinos ativos', data.activeWorkouts],
-    ['Concluídos hoje', data.completedToday],
-    ['Avaliações pendentes', data.pendingAssessments],
-    ['Alunos sem treino', data.studentsWithoutCurrentWorkout],
-    ['Evolução média', `${data.averageEvolutionPct > 0 ? '+' : ''}${data.averageEvolutionPct}%`],
+    ['Treinos ativos', data.activeWorkouts, chartColors.workouts],
+    ['Concluídos hoje', data.completedToday, chartColors.revenue],
+    ['Avaliações pendentes', data.pendingAssessments, chartColors.finance],
+    ['Alunos sem treino', data.studentsWithoutCurrentWorkout, chartColors.checkins],
+    [
+      'Evolução média',
+      `${data.averageEvolutionPct > 0 ? '+' : ''}${data.averageEvolutionPct}%`,
+      chartColors.revenue,
+    ],
   ] as const;
 
   return (
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-      {cards.map(([label, value]) => (
-        <div key={label} className="border-b border-zinc-200 pb-3">
-          <p className="text-xs uppercase tracking-wide text-zinc-500">{label}</p>
-          <p className="mt-1 text-2xl font-semibold text-zinc-900">{value}</p>
-        </div>
+      {cards.map(([label, value, color]) => (
+        <Card key={label} hover>
+          <p className="text-xs uppercase tracking-wide text-[var(--muted)]">{label}</p>
+          <p className="mt-2 text-2xl font-semibold" style={{ color }}>
+            {value}
+          </p>
+        </Card>
       ))}
     </div>
   );

@@ -11,7 +11,7 @@ services:
     ports:
       - '3002:3000'
     environment:
-      GF_SECURITY_ADMIN_PASSWORD: athenas
+      GF_SECURITY_ADMIN_PASSWORD: athena
     depends_on:
       - prometheus
       - loki

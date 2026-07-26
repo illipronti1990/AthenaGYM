@@ -6,15 +6,20 @@ import {
   Patch,
   Post,
   Req,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import type { AuthContext } from '@athenas/shared';
+import type { AuthContext } from '@athena/shared';
 import { CurrentAuth, CurrentUser } from '../common/decorators/current.decorators';
 import { Permissions } from '../common/decorators/rbac.decorators';
 import {
@@ -101,5 +106,24 @@ export class AuthController {
   @ApiOperation({ summary: 'Update own profile' })
   updateProfile(@CurrentUser() user: AuthUser, @Body() dto: UpdateProfileDto) {
     return this.auth.updateProfile(user, dto);
+  }
+
+  @Post('profile/avatar')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: { file: { type: 'string', format: 'binary' } },
+    },
+  })
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiOperation({ summary: 'Upload profile avatar' })
+  uploadAvatar(
+    @CurrentUser() user: AuthUser,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.auth.uploadAvatar(user, file);
   }
 }

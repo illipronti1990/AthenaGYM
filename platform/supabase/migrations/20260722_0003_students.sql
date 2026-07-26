@@ -1,4 +1,4 @@
--- ATHENAS PLATFORM Sprint 2 — Students core + backfill from legacy alunos
+-- ATHENA PLATFORM Sprint 2 — Students core + backfill from legacy alunos
 -- Does NOT drop/rename public.alunos (FastAPI Excel sync stays)
 
 -- ---------------------------------------------------------------------------

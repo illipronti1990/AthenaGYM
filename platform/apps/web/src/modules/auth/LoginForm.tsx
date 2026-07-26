@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/client';
 import { useToast } from '@/components/ui/Toast';
 import { DEV_TOKEN_COOKIE } from '@/lib/auth/constants';
 
-const REMEMBER_KEY = 'athenas.rememberEmail';
+const REMEMBER_KEY = 'athena.rememberEmail';
 const DEV_AUTH = process.env.NEXT_PUBLIC_DEV_AUTH === 'true';
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
 
@@ -29,7 +29,7 @@ export function LoginForm() {
   useEffect(() => {
     const saved = localStorage.getItem(REMEMBER_KEY);
     if (saved) setEmail(saved);
-    else if (DEV_AUTH) setEmail('teste@athenas.local');
+    else if (DEV_AUTH) setEmail('teste@athena.local');
     if (params.get('reason') === 'timeout') {
       push('Sessão expirada por inatividade', 'error');
     }
@@ -80,31 +80,35 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="flex w-full max-w-sm flex-col gap-3" data-testid="login-form">
-      <label className="text-sm font-medium text-zinc-700">
+    <form
+      onSubmit={onSubmit}
+      className="flex w-full max-w-sm flex-col gap-3 rounded-[16px] border border-[var(--border)] bg-[var(--card)] p-5"
+      data-testid="login-form"
+    >
+      <label className="text-sm font-medium text-[var(--muted)]">
         E-mail
         <input
           type="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 w-full rounded border border-zinc-300 px-3 py-2 text-zinc-900"
-          placeholder={DEV_AUTH ? 'teste@athenas.local' : 'admin@athenas.gym'}
+          className="athena-input mt-1"
+          placeholder={DEV_AUTH ? 'teste@athena.local' : 'admin@athena.gym'}
           data-testid="login-email"
         />
       </label>
-      <label className="text-sm font-medium text-zinc-700">
+      <label className="text-sm font-medium text-[var(--muted)]">
         Senha
         <input
           type="password"
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="mt-1 w-full rounded border border-zinc-300 px-3 py-2 text-zinc-900"
+          className="athena-input mt-1"
           data-testid="login-password"
         />
       </label>
-      <label className="flex items-center gap-2 text-sm text-zinc-600">
+      <label className="flex items-center gap-2 text-sm text-[var(--muted)]">
         <input
           type="checkbox"
           checked={remember}
@@ -113,40 +117,32 @@ export function LoginForm() {
         Lembrar usuário
       </label>
       {DEV_AUTH ? (
-        <p className="text-xs text-amber-700">
-          DEV auth ativo — user: teste@athenas.local / teste123 (dados no Supabase)
+        <p className="text-xs text-[var(--gold)]">
+          DEV auth ativo — user: teste@athena.local / teste123
         </p>
       ) : null}
       {error ? (
-        <p className="text-sm text-red-700" data-testid="login-error">
+        <p className="text-sm text-[var(--primary-hover)]" data-testid="login-error">
           {error}
         </p>
       ) : null}
       <button
         type="submit"
         disabled={loading}
-        className="rounded bg-[#A3001B] px-4 py-2 font-semibold text-white disabled:opacity-60"
+        className="athena-btn athena-btn-primary w-full"
         data-testid="login-submit"
       >
         {loading ? 'Entrando…' : 'Entrar'}
       </button>
-      <Link href="/forgot-password" className="text-center text-sm text-[#A3001B]">
+      <Link href="/forgot-password" className="athena-link text-center text-sm text-[var(--gold)]">
         Esqueci minha senha
       </Link>
-      <div className="mt-2 space-y-2 border-t border-zinc-200 pt-3">
-        <p className="text-xs text-zinc-500">MFA (em breve)</p>
-        <button
-          type="button"
-          disabled
-          className="w-full rounded border border-zinc-300 px-3 py-2 text-sm text-zinc-400"
-        >
+      <div className="mt-2 space-y-2 border-t border-[var(--border)] pt-3">
+        <p className="text-xs text-[var(--muted)]">MFA (em breve)</p>
+        <button type="button" disabled className="athena-btn athena-btn-ghost w-full opacity-50">
           Continuar com Google (em breve)
         </button>
-        <button
-          type="button"
-          disabled
-          className="w-full rounded border border-zinc-300 px-3 py-2 text-sm text-zinc-400"
-        >
+        <button type="button" disabled className="athena-btn athena-btn-ghost w-full opacity-50">
           Continuar com Microsoft (em breve)
         </button>
       </div>

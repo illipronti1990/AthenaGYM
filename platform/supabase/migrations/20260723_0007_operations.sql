@@ -1,4 +1,4 @@
--- ATHENAS PLATFORM Sprint 5 — Operação (Agenda, Check-in, Acesso)
+-- ATHENA PLATFORM Sprint 5 — Operação (Agenda, Check-in, Acesso)
 -- rooms, schedules, class_enrollments, waitlist, checkins, access_devices, access_logs
 
 -- ---------------------------------------------------------------------------

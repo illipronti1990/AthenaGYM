@@ -6,8 +6,8 @@ export default async function AnalyticsAiPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">IA Analytics</h1>
-        <p className="text-sm text-zinc-600">Perguntas em linguagem natural sobre KPIs e risco</p>
+        <h1 className="athena-title text-3xl">IA Analytics</h1>
+        <p className="mt-1 text-sm text-[var(--muted)]">Perguntas em linguagem natural sobre KPIs e risco</p>
       </div>
       <AiInsightsPanel accessToken={accessToken} />
     </div>

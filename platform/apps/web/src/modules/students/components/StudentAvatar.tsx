@@ -23,14 +23,14 @@ export function StudentAvatar({
         width={size}
         height={size}
         className="rounded-full object-cover"
-        style={{ width: size, height: size }}
+        style={{ width: size, height: size, border: '1px solid var(--border)' }}
       />
     );
   }
 
   return (
     <div
-      className="flex items-center justify-center rounded-full bg-[#A3001B]/10 text-sm font-semibold text-[#A3001B]"
+      className="flex items-center justify-center rounded-full border border-[var(--border)] bg-[rgba(160,0,24,0.2)] text-sm font-semibold text-[var(--gold)]"
       style={{ width: size, height: size }}
       aria-hidden
     >

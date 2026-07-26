@@ -1,4 +1,4 @@
-import type { MeResponse, Role, UserListItem, Profile } from '@athenas/shared';
+import type { MeResponse, Role, UserListItem, Profile } from '@athena/shared';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
 
@@ -78,6 +78,8 @@ export async function apiUpdateProfile(
     locale: string;
     timezone: string;
     defaultUnitId: string;
+    theme: 'light' | 'dark' | 'system';
+    preferences: Record<string, unknown>;
   }>,
 ) {
   return apiFetch<Profile>('/auth/profile', accessToken, {
@@ -101,7 +103,13 @@ export async function apiInviteUser(
     companyId?: string;
   },
 ) {
-  return apiFetch<{ token: string; acceptPath: string }>('/auth/invite', accessToken, {
+  return apiFetch<{
+    token: string;
+    acceptPath: string;
+    userId?: string;
+    temporaryPassword?: string;
+    status?: string;
+  }>('/auth/invite', accessToken, {
     method: 'POST',
     body: JSON.stringify(body),
     companyId: body.companyId,

@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import type { AuthContext } from '@athenas/shared';
+import type { AuthContext } from '@athena/shared';
 import { CurrentAuth, CurrentUser } from '../common/decorators/current.decorators';
 import { Permissions } from '../common/decorators/rbac.decorators';
 import {
@@ -174,7 +174,7 @@ export class EngagementController {
 
   @Post('ai/chat')
   @Permissions('ai.chat')
-  @ApiOperation({ summary: 'ATHENAS AI assistant (stub, role-aware answers)' })
+  @ApiOperation({ summary: 'ATHENA AI assistant (stub, role-aware answers)' })
   aiChat(@CurrentAuth() auth: AuthContext, @Body() dto: AiChatDto) {
     return this.engagement.aiChat(auth, dto);
   }

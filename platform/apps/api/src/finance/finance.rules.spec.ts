@@ -6,7 +6,7 @@ import {
   calcReceivableNet,
   calcDelinquencyRate,
   splitInstallments,
-} from '@athenas/shared';
+} from '@athena/shared';
 import { createHmac } from 'crypto';
 import { StubPaymentProvider, payloadHash } from './payments/payment-provider';
 
@@ -60,8 +60,8 @@ describe('stub payment provider hmac + idempotency hash', () => {
       receivableId: 'r1',
     });
     const sig = createHmac('sha256', 'secret').update(body).digest('hex');
-    expect(provider.verifySignature({ 'x-athenas-signature': sig }, body)).toBe(true);
-    expect(provider.verifySignature({ 'x-athenas-signature': 'bad' }, body)).toBe(false);
+    expect(provider.verifySignature({ 'x-athena-signature': sig }, body)).toBe(true);
+    expect(provider.verifySignature({ 'x-athena-signature': 'bad' }, body)).toBe(false);
     const event = await provider.parseWebhook({}, body);
     expect(event.status).toBe('paid');
     expect(payloadHash(body)).toHaveLength(64);

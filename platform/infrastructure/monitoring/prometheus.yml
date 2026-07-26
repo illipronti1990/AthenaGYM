@@ -9,7 +9,7 @@ scrape_configs:
     metrics_path: /metrics
     static_configs:
       - targets: ['otel-collector:8889']
-  - job_name: athenas-api
+  - job_name: athena-api
     metrics_path: /metrics
     static_configs:
       - targets: ['host.docker.internal:3001']

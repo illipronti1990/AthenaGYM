@@ -1,4 +1,4 @@
-import { LOYALTY_POINTS, loyaltyTier } from '@athenas/sdk-notifications';
+import { LOYALTY_POINTS, loyaltyTier } from '@athena/sdk-notifications';
 
 describe('engagement loyalty rules', () => {
   it('defines point rules', () => {

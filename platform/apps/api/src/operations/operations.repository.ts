@@ -8,7 +8,7 @@ import type {
   OperationsDashboard,
   Room,
   Schedule,
-} from '@athenas/shared';
+} from '@athena/shared';
 import { SupabaseService } from '../supabase/supabase.service';
 
 @Injectable()

@@ -1,4 +1,4 @@
--- ATHENAS PLATFORM Sprint 3 — Sales / CRM / Enrollments / Contracts
+-- ATHENA PLATFORM Sprint 3 — Sales / CRM / Enrollments / Contracts
 
 -- ---------------------------------------------------------------------------
 -- lead_sources

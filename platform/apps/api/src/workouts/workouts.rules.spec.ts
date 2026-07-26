@@ -1,4 +1,4 @@
-import { calcBmi, calcBmr, isWorkoutExpired, leanMassKg, slugify } from '@athenas/exercise-engine';
+import { calcBmi, calcBmr, isWorkoutExpired, leanMassKg, slugify } from '@athena/exercise-engine';
 
 describe('exercise-engine', () => {
   it('slugifies names', () => {

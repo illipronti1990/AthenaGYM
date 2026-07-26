@@ -8,7 +8,7 @@ import type {
   Payable,
   PaymentTransaction,
   Receivable,
-} from '@athenas/shared';
+} from '@athena/shared';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
 
@@ -26,7 +26,11 @@ async function apiFetch<T>(path: string, token: string, init?: RequestInit): Pro
 
 export const financeApi = {
   dashboard: (t: string) => apiFetch<FinanceDashboard>('/finance/dashboard', t),
-  receivables: (t: string) => apiFetch<Receivable[]>('/finance/receivables', t),
+  receivables: (t: string, studentId?: string) =>
+    apiFetch<Receivable[]>(
+      `/finance/receivables${studentId ? `?studentId=${encodeURIComponent(studentId)}` : ''}`,
+      t,
+    ),
   createReceivable: (t: string, body: Record<string, unknown>) =>
     apiFetch<Receivable>('/finance/receivables', t, { method: 'POST', body: JSON.stringify(body) }),
   receive: (t: string, id: string) =>
@@ -45,10 +49,29 @@ export const financeApi = {
     apiFetch<Payable>('/finance/payables', t, { method: 'POST', body: JSON.stringify(body) }),
   payPayable: (t: string, id: string) =>
     apiFetch<Payable>(`/finance/payables/${id}/pay`, t, { method: 'POST', body: '{}' }),
-  subscriptions: (t: string) => apiFetch<FinanceSubscription[]>('/finance/subscriptions', t),
+  subscriptions: (t: string, studentId?: string) =>
+    apiFetch<FinanceSubscription[]>(
+      `/finance/subscriptions${studentId ? `?studentId=${encodeURIComponent(studentId)}` : ''}`,
+      t,
+    ),
+  createSubscription: (t: string, body: Record<string, unknown>) =>
+    apiFetch<FinanceSubscription>('/finance/subscriptions', t, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
   cashflow: (t: string) => apiFetch<CashflowPoint[]>('/finance/cashflow', t),
   dre: (t: string) => apiFetch<DreReport>('/finance/dre', t),
   accounts: (t: string) => apiFetch<FinancialAccount[]>('/finance/accounts', t),
+  createAccount: (t: string, body: Record<string, unknown>) =>
+    apiFetch<FinancialAccount>('/finance/accounts', t, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  updateAccount: (t: string, id: string, body: Record<string, unknown>) =>
+    apiFetch<FinancialAccount>(`/finance/accounts/${id}`, t, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    }),
   costCenters: (t: string) => apiFetch<CostCenter[]>('/finance/cost-centers', t),
   importReconciliation: (t: string, body: Record<string, unknown>) =>
     apiFetch<{ statementId: string; imported: number; matched: number }>(

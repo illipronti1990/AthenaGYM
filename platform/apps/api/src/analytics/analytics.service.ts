@@ -10,8 +10,8 @@ import {
   REPORT_SOURCES,
   toCsv,
   type ExportFormat,
-} from '@athenas/sdk-bi';
-import type { AuthContext } from '@athenas/shared';
+} from '@athena/sdk-bi';
+import type { AuthContext } from '@athena/shared';
 import { AuthUser } from '../auth/auth.types';
 import {
   AiInsightsDto,

@@ -1,0 +1,318 @@
+:root {
+  --background: #0a0a0a;
+  --surface: #151515;
+  --card: #1b1b1f;
+  --primary: #a00018;
+  --primary-hover: #c1121f;
+  --gold: #d4af37;
+  --gold-light: #f4d35e;
+  --text: #ffffff;
+  --muted: #a1a1aa;
+  --border: #2b2b2b;
+  --navbar: #0b0b0d;
+  --input-bg: #151515;
+  --input-border: #333333;
+  --radius-btn: 10px;
+  --radius-card: 16px;
+  --chart-revenue: #d4af37;
+  --chart-checkins: #a00018;
+  --chart-finance: #e63946;
+  --chart-workouts: #f4d35e;
+}
+
+.athena-shell {
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--text);
+}
+
+.athena-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: var(--radius-btn);
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.55rem 1rem;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.athena-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.athena-btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+
+.athena-btn-primary:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+
+.athena-btn-secondary {
+  background: var(--card);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.athena-btn-secondary:hover:not(:disabled) {
+  background: var(--gold);
+  color: #111;
+}
+
+.athena-btn-ghost {
+  background: transparent;
+  color: var(--muted);
+  border-color: var(--border);
+}
+
+.athena-btn-ghost:hover:not(:disabled) {
+  color: var(--gold-light);
+  border-color: var(--gold);
+}
+
+.athena-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 1rem;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.athena-card-hover:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary);
+}
+
+.athena-input {
+  width: 100%;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text);
+  border-radius: var(--radius-btn);
+  padding: 0.55rem 0.75rem;
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+select.athena-input {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 2.25rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23D4AF37' d='M1.41 0L6 4.58 10.59 0 12 1.41l-6 6-6-6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  background-size: 12px 8px;
+  cursor: pointer;
+}
+
+.athena-input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+.athena-input::placeholder {
+  color: var(--muted);
+}
+
+.athena-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.15rem 0.55rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.athena-badge-primary {
+  background: rgba(160, 0, 24, 0.2);
+  color: #ff6b7a;
+}
+
+.athena-badge-gold {
+  background: rgba(212, 175, 55, 0.15);
+  color: var(--gold);
+}
+
+.athena-title {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.athena-muted {
+  color: var(--muted);
+}
+
+.athena-link {
+  color: var(--text);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.athena-link:hover {
+  color: var(--gold);
+}
+
+.athena-sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background: var(--navbar);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+
+.athena-sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem 0.85rem;
+  margin: 0.15rem 0.65rem;
+  border-radius: 10px;
+  color: var(--gold);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.15s, background 0.15s;
+}
+
+.athena-sidebar-link:hover {
+  color: var(--gold-light);
+  background: rgba(212, 175, 55, 0.06);
+}
+
+.athena-sidebar-link-active {
+  background: var(--primary);
+  color: #fff;
+}
+
+.athena-sidebar-link-active:hover {
+  background: var(--primary-hover);
+  color: #fff;
+}
+
+.athena-topbar {
+  background: var(--navbar);
+  border-bottom: 1px solid var(--border);
+}
+
+.athena-skeleton {
+  background: linear-gradient(90deg, #1b1b1f 25%, #25252b 50%, #1b1b1f 75%);
+  background-size: 200% 100%;
+  animation: athena-shimmer 1.2s infinite;
+  border-radius: 8px;
+}
+
+@keyframes athena-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.athena-empty {
+  border: 1px dashed var(--border);
+  background: var(--surface);
+  border-radius: var(--radius-card);
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+}
+
+.athena-tab {
+  border-radius: 10px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.875rem;
+  background: var(--surface);
+  color: var(--gold);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.athena-tab:hover {
+  color: var(--gold-light);
+}
+
+.athena-tab-active {
+  background: var(--primary);
+  color: #fff;
+}
+
+.athena-tab-active:hover {
+  background: var(--primary-hover);
+  color: #fff;
+}
+
+.athena-list {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--card);
+  overflow: hidden;
+}
+
+.athena-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.65rem 0.85rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.875rem;
+}
+
+.athena-list-item:last-child {
+  border-bottom: none;
+}
+
+.athena-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  background: var(--card);
+}
+
+.athena-table th {
+  text-align: left;
+  padding: 0.65rem 0.85rem;
+  color: var(--gold);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  font-weight: 700;
+}
+
+.athena-table td {
+  padding: 0.65rem 0.85rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+
+.athena-table tr:last-child td {
+  border-bottom: none;
+}
+
+.athena-chip-nav {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 10px;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  background: var(--card);
+  padding: 0.35rem 0.75rem;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+.athena-chip-nav:hover {
+  background: var(--gold);
+  color: #111;
+}

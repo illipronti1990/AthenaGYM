@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** Free localhost ports used by ATHENAS platform (3000 web, 3001 api). */
+/** Free localhost ports used by ATHENA platform (3000 web, 3001 api). */
 const { execSync } = require('child_process');
 
 const ports = process.argv.slice(2).map(Number).filter(Boolean);

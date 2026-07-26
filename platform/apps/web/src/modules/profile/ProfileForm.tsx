@@ -1,9 +1,11 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import type { Profile } from '@athenas/shared';
+import type { Profile } from '@athena/shared';
+import { Button } from '@athena/ui';
 import { apiChangePassword, apiUpdateProfile } from '@/services/api';
 import { useToast } from '@/components/ui/Toast';
+import { useTheme } from '@/components/ThemeProvider';
 
 export function ProfileForm({
   profile,
@@ -13,13 +15,44 @@ export function ProfileForm({
   accessToken: string;
 }) {
   const { push } = useToast();
+  const { setTheme } = useTheme();
   const [fullName, setFullName] = useState(profile.fullName || '');
   const [phone, setPhone] = useState(profile.phone || '');
   const [avatarUrl, setAvatarUrl] = useState(profile.avatarUrl || '');
   const [locale, setLocale] = useState(profile.locale || 'pt-BR');
   const [timezone, setTimezone] = useState(profile.timezone || 'America/Sao_Paulo');
+  const [theme, setThemeLocal] = useState(profile.theme || 'system');
+  const [notifyEmail, setNotifyEmail] = useState(
+    Boolean((profile.preferences as { notifyEmail?: boolean } | undefined)?.notifyEmail ?? true),
+  );
+  const [notifyPush, setNotifyPush] = useState(
+    Boolean((profile.preferences as { notifyPush?: boolean } | undefined)?.notifyPush ?? true),
+  );
   const [newPassword, setNewPassword] = useState('');
   const [loading, setLoading] = useState(false);
+
+  async function onUploadPhoto(file: File | null) {
+    if (!file) return;
+    setLoading(true);
+    try {
+      const form = new FormData();
+      form.append('file', file);
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
+      const res = await fetch(`${API_URL}/auth/profile/avatar`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${accessToken}` },
+        body: form,
+      });
+      if (!res.ok) throw new Error(await res.text());
+      const updated = (await res.json()) as Profile;
+      setAvatarUrl(updated.avatarUrl || '');
+      push('Foto atualizada');
+    } catch (err) {
+      push(err instanceof Error ? err.message : 'Falha no upload', 'error');
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function onSave(e: FormEvent) {
     e.preventDefault();
@@ -31,7 +64,10 @@ export function ProfileForm({
         avatarUrl,
         locale,
         timezone,
+        theme: theme as 'light' | 'dark' | 'system',
+        preferences: { notifyEmail, notifyPush },
       });
+      setTheme(theme as 'light' | 'dark' | 'system');
       if (newPassword.length >= 8) {
         await apiChangePassword(accessToken, newPassword);
         setNewPassword('');
@@ -48,22 +84,55 @@ export function ProfileForm({
     <form onSubmit={onSave} className="mx-auto max-w-lg space-y-3">
       <Field label="Nome" value={fullName} onChange={setFullName} />
       <Field label="Telefone" value={phone} onChange={setPhone} />
-      <Field label="Avatar URL" value={avatarUrl} onChange={setAvatarUrl} />
+      <label className="block text-sm">
+        <span className="mb-1 block text-[var(--muted)]">Foto</span>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => void onUploadPhoto(e.target.files?.[0] || null)}
+          className="w-full text-sm text-[var(--text)]"
+        />
+        {avatarUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={avatarUrl}
+            alt="Avatar"
+            className="mt-2 h-16 w-16 rounded-full border border-[var(--border)] object-cover"
+          />
+        ) : null}
+      </label>
+      <Field label="Foto (URL)" value={avatarUrl} onChange={setAvatarUrl} />
       <Field label="Idioma" value={locale} onChange={setLocale} />
       <Field label="Fuso horário" value={timezone} onChange={setTimezone} />
+      <label className="block text-sm">
+        <span className="mb-1 block text-[var(--muted)]">Tema</span>
+        <select
+          className="athena-input"
+          value={theme}
+          onChange={(e) => setThemeLocal(e.target.value)}
+        >
+          <option value="system">Sistema</option>
+          <option value="light">Claro</option>
+          <option value="dark">Escuro</option>
+        </select>
+      </label>
+      <label className="flex items-center gap-2 text-sm text-[var(--muted)]">
+        <input type="checkbox" checked={notifyEmail} onChange={(e) => setNotifyEmail(e.target.checked)} />
+        Notificações por e-mail
+      </label>
+      <label className="flex items-center gap-2 text-sm text-[var(--muted)]">
+        <input type="checkbox" checked={notifyPush} onChange={(e) => setNotifyPush(e.target.checked)} />
+        Notificações no app
+      </label>
       <Field
         label="Nova senha (opcional)"
         value={newPassword}
         onChange={setNewPassword}
         type="password"
       />
-      <button
-        type="submit"
-        disabled={loading}
-        className="rounded bg-[#A3001B] px-4 py-2 font-semibold text-white disabled:opacity-60"
-      >
+      <Button type="submit" disabled={loading}>
         {loading ? 'Salvando…' : 'Salvar'}
-      </button>
+      </Button>
     </form>
   );
 }
@@ -80,13 +149,13 @@ function Field({
   type?: string;
 }) {
   return (
-    <label className="block text-sm font-medium text-zinc-700">
-      {label}
+    <label className="block text-sm">
+      <span className="mb-1 block text-[var(--muted)]">{label}</span>
       <input
         type={type}
+        className="athena-input"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="mt-1 w-full rounded border border-zinc-300 px-3 py-2"
       />
     </label>
   );

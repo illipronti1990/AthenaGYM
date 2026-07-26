@@ -1,8 +1,8 @@
 {
-  "name": "@athenas/ai-service",
+  "name": "@athena/ai-service",
   "version": "0.8.0",
   "private": true,
-  "description": "ATHENAS AI assistant microservice stub",
+  "description": "ATHENA AI assistant microservice stub",
   "main": "src/main.js",
   "scripts": {
     "dev": "node src/main.js",

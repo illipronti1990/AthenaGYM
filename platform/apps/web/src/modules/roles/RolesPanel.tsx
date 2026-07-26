@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { Role } from '@athenas/shared';
+import type { Role } from '@athena/shared';
+import { Card } from '@athena/ui';
 import { apiListRoles } from '@/services/api';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
@@ -26,16 +27,16 @@ export function RolesPanel({ accessToken }: { accessToken: string }) {
   return (
     <div className="space-y-4">
       {roles.map((r) => (
-        <article key={r.id} className="rounded border border-zinc-200 bg-white p-4">
-          <h3 className="font-semibold">
+        <Card key={r.id} hover>
+          <h3 className="athena-title text-base">
             {r.name}{' '}
-            <span className="text-xs font-normal text-zinc-500">({r.slug})</span>
+            <span className="text-xs font-normal text-[var(--muted)]">({r.slug})</span>
           </h3>
-          <p className="mt-1 text-sm text-zinc-600">{r.description || '—'}</p>
-          <p className="mt-2 text-xs text-zinc-500">
+          <p className="mt-1 text-sm text-[var(--muted)]">{r.description || '—'}</p>
+          <p className="mt-2 text-xs text-[var(--text)]">
             {(r.permissions || []).map((p) => p.code).join(' · ') || 'Sem permissions'}
           </p>
-        </article>
+        </Card>
       ))}
     </div>
   );

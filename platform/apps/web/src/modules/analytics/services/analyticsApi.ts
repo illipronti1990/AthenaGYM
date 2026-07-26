@@ -5,7 +5,7 @@ import type {
   KpiItem,
   PredictionItem,
   ReportDefinition,
-} from '@athenas/shared';
+} from '@athena/shared';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
 

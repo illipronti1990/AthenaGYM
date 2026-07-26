@@ -13,6 +13,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { IsUuidString } from '../../common/validators/is-uuid-string';
 
 export class WorkoutExerciseInputDto {
   @ApiProperty()
@@ -106,7 +107,7 @@ export class CreateExerciseDto {
 
 export class CreateWorkoutDto {
   @ApiProperty()
-  @IsUUID()
+  @IsUuidString()
   studentId!: string;
 
   @ApiProperty()
@@ -213,12 +214,12 @@ export class BodyMeasurementsDto {
 
 export class CreateAssessmentDto {
   @ApiProperty()
-  @IsUUID()
+  @IsUuidString()
   studentId!: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   unitId?: string;
 
   @ApiPropertyOptional()
@@ -275,7 +276,7 @@ export class CreateAssessmentDto {
 
 export class CreateProgressPhotoDto {
   @ApiProperty()
-  @IsUUID()
+  @IsUuidString()
   studentId!: string;
 
   @ApiPropertyOptional({ default: 'front' })

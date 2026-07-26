@@ -10,8 +10,8 @@ import {
   LOYALTY_POINTS,
   loyaltyTier,
   type NotificationChannel,
-} from '@athenas/sdk-notifications';
-import type { AuthContext, AiChatResponse } from '@athenas/shared';
+} from '@athena/sdk-notifications';
+import type { AuthContext, AiChatResponse } from '@athena/shared';
 import { AuthUser } from '../auth/auth.types';
 import {
   AiChatDto,
@@ -337,7 +337,7 @@ export class EngagementService {
       return {
         provider: 'stub-assistant',
         sources,
-        answer: `Há ${count} treino(s) publicados na academia. Abra o app ATHENAS Student em Treinos para ver o treino do dia.`,
+        answer: `Há ${count} treino(s) publicados na academia. Abra o app ATHENA Student em Treinos para ver o treino do dia.`,
       };
     }
 
@@ -378,7 +378,7 @@ export class EngagementService {
       provider: 'stub-assistant',
       sources: [],
       answer:
-        'Sou o assistente ATHENAS (stub). Pergunte sobre treino do dia, avaliações atrasadas, ranking ou inadimplência.',
+        'Sou o assistente ATHENA (stub). Pergunte sobre treino do dia, avaliações atrasadas, ranking ou inadimplência.',
     };
   }
 }

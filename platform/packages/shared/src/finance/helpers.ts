@@ -1,4 +1,23 @@
-export type ReceivableStatus = 'open' | 'paid' | 'cancelled' | 'overdue' | 'refunded';
+export type ReceivableStatus =
+  | 'open'
+  | 'paid'
+  | 'cancelled'
+  | 'overdue'
+  | 'refunded'
+  | 'pix_generated';
+
+export const RECEIVABLE_STATUS_LABELS: Record<string, string> = {
+  open: 'A receber',
+  overdue: 'A receber',
+  pix_generated: 'Gerado PIX',
+  cancelled: 'Cancelado',
+  paid: 'Pago',
+  refunded: 'Estornado',
+};
+
+export function receivableStatusLabel(status: string): string {
+  return RECEIVABLE_STATUS_LABELS[status] || status;
+}
 export type PayableStatus = 'open' | 'paid' | 'cancelled';
 export type SubscriptionStatus = 'active' | 'paused' | 'cancelled' | 'past_due';
 export type SubscriptionRecurrence = 'monthly' | 'quarterly' | 'yearly';

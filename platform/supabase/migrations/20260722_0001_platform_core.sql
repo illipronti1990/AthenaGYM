@@ -1,4 +1,4 @@
--- ATHENAS PLATFORM Sprint 0 — core SaaS schema (UUID + soft delete + RLS)
+-- ATHENA PLATFORM Sprint 0 — core SaaS schema (UUID + soft delete + RLS)
 -- Parallel to legacy tables (empresas, alunos, ...). Do NOT drop legacy.
 -- Apply: Supabase SQL Editor OR scripts/apply_sql_supabase from cloud/api pointing to this file.
 
@@ -202,8 +202,8 @@ create policy memberships_select on public.memberships
 insert into public.companies (id, name, legal_name, document, status)
 values (
   '11111111-1111-1111-1111-111111111111',
-  'ATHENAS GYM',
-  'ATHENAS GYM ACADEMIA LTDA',
+  'ATHENA GYM',
+  'ATHENA GYM ACADEMIA LTDA',
   '12.345.678/0001-90',
   'active'
 )
@@ -213,7 +213,7 @@ insert into public.units (id, company_id, name, code, city, state, status)
 values (
   '22222222-2222-2222-2222-222222222222',
   '11111111-1111-1111-1111-111111111111',
-  'ATHENAS GYM Matriz',
+  'ATHENA GYM Matriz',
   'MX',
   'São Paulo',
   'SP',

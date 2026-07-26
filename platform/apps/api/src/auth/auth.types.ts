@@ -1,4 +1,4 @@
-import type { AuthContext } from '@athenas/shared';
+import type { AuthContext } from '@athena/shared';
 
 export type AuthUser = {
   id: string;

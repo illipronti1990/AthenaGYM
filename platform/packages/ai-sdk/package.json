@@ -1,5 +1,5 @@
 {
-  "name": "@athenas/ai-sdk",
+  "name": "@athena/ai-sdk",
   "version": "0.7.0",
   "private": true,
   "main": "./dist/index.js",

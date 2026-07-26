@@ -56,6 +56,8 @@ export interface Profile {
   lastLoginAt: string | null;
   locale: string | null;
   timezone: string | null;
+  theme?: 'light' | 'dark' | 'system' | string;
+  preferences?: Record<string, unknown>;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
@@ -124,6 +126,7 @@ export interface AuditLog {
   entityId: string | null;
   ip: string | null;
   browser: string | null;
+  metadata?: Record<string, unknown> | null;
   createdAt: string;
 }
 

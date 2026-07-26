@@ -9,6 +9,7 @@ import {
   MaxLength,
   Min,
 } from 'class-validator';
+import { IsUuidString } from '../../common/validators/is-uuid-string';
 
 const SCHEDULE_TYPES = [
   'class',
@@ -121,12 +122,12 @@ export class EnrollClassDto {
 
 export class CreateCheckinDto {
   @ApiProperty()
-  @IsUUID()
+  @IsUuidString()
   studentId!: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   unitId?: string;
 
   @ApiPropertyOptional()
@@ -157,12 +158,12 @@ export class CreateCheckinDto {
 
 export class GenerateQrDto {
   @ApiProperty()
-  @IsUUID()
+  @IsUuidString()
   studentId!: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   unitId?: string;
 }
 

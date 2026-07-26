@@ -5,7 +5,7 @@ import type {
   Workout,
   WorkoutTemplate,
   WorkoutsDashboard,
-} from '@athenas/shared';
+} from '@athena/shared';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
 
@@ -54,6 +54,30 @@ export const workoutsApi = {
     apiFetch<ProgressSummary>(`/progress?studentId=${studentId}`, t),
   createPhoto: (t: string, body: Record<string, unknown>) =>
     apiFetch('/progress/photos', t, { method: 'POST', body: JSON.stringify(body) }),
+  uploadPhoto: async (
+    t: string,
+    body: { studentId: string; type?: string; file: File },
+  ) => {
+    const form = new FormData();
+    form.append('file', body.file);
+    form.append('studentId', body.studentId);
+    if (body.type) form.append('type', body.type);
+    const res = await fetch(`${API_URL}/progress/photos/upload`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${t}`,
+      },
+      body: form,
+      cache: 'no-store',
+    });
+    if (!res.ok) throw new Error(`/progress/photos/upload failed (${res.status}): ${await res.text()}`);
+    return res.json();
+  },
+  deletePhoto: (t: string, id: string) =>
+    apiFetch<{ ok: boolean; id: string }>(`/progress/photos/${id}`, t, {
+      method: 'DELETE',
+    }),
   aiSuggest: (t: string, body: Record<string, unknown>) =>
     apiFetch<{ suggestionId: string; draft: Workout | null }>('/ai/workout-suggestions', t, {
       method: 'POST',

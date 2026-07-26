@@ -15,16 +15,14 @@ export default async function AnalyticsPage() {
     <div className="space-y-8">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">Business Intelligence</h1>
-          <p className="text-sm text-zinc-600">KPIs, warehouse, predições e report builder</p>
+          <h1 className="athena-title text-3xl">Business Intelligence</h1>
+          <p className="mt-1 text-sm text-[var(--muted)]">
+            KPIs, warehouse, predições e report builder
+          </p>
         </div>
-        <nav className="flex flex-wrap gap-2 text-sm">
+        <nav className="flex flex-wrap gap-2">
           {links.map(([label, href]) => (
-            <Link
-              key={href}
-              href={href}
-              className="rounded border border-zinc-300 px-3 py-1.5 hover:border-[#A3001B] hover:text-[#A3001B]"
-            >
+            <Link key={href} href={href} className="athena-chip-nav">
               {label}
             </Link>
           ))}

@@ -1,4 +1,4 @@
-# ATHENAS PLATFORM — Supabase (Sprint 0)
+# ATHENA PLATFORM — Supabase (Sprint 0)
 
 Migrations live in `migrations/`.
 
@@ -13,7 +13,7 @@ After creating an Auth user in Supabase Auth, link membership:
 
 ```sql
 insert into public.profiles (id, full_name, email)
-values ('AUTH_USER_UUID', 'Admin Athenas', 'admin@athenas.gym')
+values ('AUTH_USER_UUID', 'Admin Athena', 'admin@athena.gym')
 on conflict (id) do update set email = excluded.email;
 
 insert into public.memberships (profile_id, company_id, unit_id, role, status)

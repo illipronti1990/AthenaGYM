@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { Lead, PipelineColumn } from '@athenas/shared';
+import type { Lead, PipelineColumn } from '@athena/shared';
+import { Card } from '@athena/ui';
 import { salesApi } from '../services/salesApi';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
@@ -44,25 +45,26 @@ export function PipelineKanban({ accessToken }: { accessToken: string }) {
       {columns.map((col) => (
         <div
           key={col.stage.id}
-          className="min-w-[220px] flex-1 rounded border border-zinc-200 bg-zinc-50"
+          className="min-w-[220px] flex-1 rounded-[16px] border border-[var(--border)] bg-[var(--surface)]"
           onDragOver={(e) => e.preventDefault()}
           onDrop={() => void onDrop(col.stage.id)}
         >
-          <div className="border-b border-zinc-200 px-3 py-2 text-sm font-semibold">
+          <div className="border-b border-[var(--border)] px-3 py-2 text-sm font-semibold text-[var(--gold)]">
             {col.stage.name}{' '}
-            <span className="text-zinc-400">({col.leads.length})</span>
+            <span className="text-[var(--muted)]">({col.leads.length})</span>
           </div>
           <div className="space-y-2 p-2">
             {col.leads.map((lead) => (
-              <div
+              <Card
                 key={lead.id}
+                hover
                 draggable
                 onDragStart={() => setDragging(lead)}
-                className="cursor-grab rounded bg-white p-3 text-sm shadow-sm active:cursor-grabbing"
+                className="cursor-grab !p-3 active:cursor-grabbing"
               >
-                <p className="font-medium">{lead.fullName}</p>
-                <p className="text-xs text-zinc-500">{lead.phone || lead.email || '—'}</p>
-              </div>
+                <p className="font-medium text-[var(--text)]">{lead.fullName}</p>
+                <p className="text-xs text-[var(--muted)]">{lead.phone || lead.email || '—'}</p>
+              </Card>
             ))}
           </div>
         </div>

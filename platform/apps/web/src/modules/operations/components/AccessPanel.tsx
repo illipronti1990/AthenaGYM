@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { AccessDevice, Room } from '@athenas/shared';
+import type { AccessDevice, Room } from '@athena/shared';
 import { operationsApi } from '../services/operationsApi';
 
 export function AccessPanel({ accessToken }: { accessToken: string }) {
@@ -32,41 +32,41 @@ export function AccessPanel({ accessToken }: { accessToken: string }) {
   return (
     <div className="space-y-8">
       {msg ? <p className="text-sm text-emerald-700">{msg}</p> : null}
-      {error ? <p className="text-sm text-red-700">{error}</p> : null}
+      {error ? <p className="text-sm text-[var(--primary-hover)]">{error}</p> : null}
       <section>
-        <h2 className="mb-2 font-semibold">Dispositivos / catracas</h2>
-        <ul className="divide-y divide-zinc-200">
+        <h2 className="athena-title mb-2 text-sm">Dispositivos / catracas</h2>
+        <ul className="divide-y divide-[var(--border)]">
           {devices.map((d) => (
             <li key={d.id} className="flex items-center justify-between py-3 text-sm">
               <div>
                 <p className="font-medium">{d.name}</p>
-                <p className="text-xs text-zinc-500">
+                <p className="text-xs text-[var(--muted)]">
                   {d.provider} · {d.manufacturer || '—'} · {d.status}
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => open(d.id)}
-                className="rounded border border-zinc-300 px-2 py-1 hover:border-[#A3001B]"
+                className="athena-btn athena-btn-ghost"
               >
                 Abrir catraca
               </button>
             </li>
           ))}
           {devices.length === 0 ? (
-            <li className="py-4 text-sm text-zinc-500">Nenhum dispositivo (rode migration 0007).</li>
+            <li className="py-4 text-sm text-[var(--muted)]">Nenhum dispositivo (rode migration 0007).</li>
           ) : null}
         </ul>
       </section>
       <section>
-        <h2 className="mb-2 font-semibold">Salas</h2>
-        <ul className="divide-y divide-zinc-200 text-sm">
+        <h2 className="athena-title mb-2 text-sm">Salas</h2>
+        <ul className="divide-y divide-[var(--border)] text-sm">
           {rooms.map((r) => (
             <li key={r.id} className="flex justify-between py-2">
               <span>
                 {r.name} {r.area ? `(${r.area})` : ''}
               </span>
-              <span className="text-zinc-500">cap. {r.capacity}</span>
+              <span className="text-[var(--muted)]">cap. {r.capacity}</span>
             </li>
           ))}
         </ul>

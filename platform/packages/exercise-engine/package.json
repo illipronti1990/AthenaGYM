@@ -1,5 +1,5 @@
 {
-  "name": "@athenas/exercise-engine",
+  "name": "@athena/exercise-engine",
   "version": "0.7.0",
   "private": true,
   "main": "./dist/index.js",

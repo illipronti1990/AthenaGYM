@@ -1,8 +1,8 @@
 {
-  "name": "@athenas/mobile-student",
+  "name": "@athena/mobile-student",
   "version": "0.8.0",
   "private": true,
-  "description": "ATHENAS Student mobile scaffold — consumes platform API",
+  "description": "ATHENA Student mobile scaffold — consumes platform API",
   "scripts": {
     "lint": "node -e \"console.log('mobile-student scaffold — wire Expo/RN next')\""
   }

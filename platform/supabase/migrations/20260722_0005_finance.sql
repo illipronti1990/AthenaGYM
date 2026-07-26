@@ -1,4 +1,4 @@
--- ATHENAS PLATFORM Sprint 4 — Finance Enterprise
+-- ATHENA PLATFORM Sprint 4 — Finance Enterprise
 
 -- ---------------------------------------------------------------------------
 -- financial_accounts
@@ -534,5 +534,5 @@ on conflict (id) do update set name = excluded.name, deleted_at = null;
 
 insert into public.financial_accounts (id, company_id, unit_id, bank_name, agency, account, pix_key, status) values
   ('12121212-1212-1212-1212-121212121201', '11111111-1111-1111-1111-111111111111', '22222222-2222-2222-2222-222222222222',
-   'Banco Stub', '0001', '12345-6', 'athenas@pix.stub', 'active')
+   'Banco Stub', '0001', '12345-6', 'athena@pix.stub', 'active')
 on conflict (id) do update set bank_name = excluded.bank_name, deleted_at = null;

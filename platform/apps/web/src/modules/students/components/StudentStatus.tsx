@@ -1,21 +1,20 @@
-import { STUDENT_STATUS_LABELS, type StudentStatus } from '@athenas/shared';
+import { STUDENT_STATUS_LABELS, type StudentStatus } from '@athena/shared';
 
 const tones: Record<string, string> = {
-  lead: 'bg-sky-100 text-sky-800',
-  pre_registration: 'bg-amber-100 text-amber-900',
-  active: 'bg-emerald-100 text-emerald-800',
-  delinquent: 'bg-orange-100 text-orange-900',
-  blocked: 'bg-red-100 text-red-800',
-  cancelled: 'bg-zinc-200 text-zinc-700',
-  archived: 'bg-zinc-100 text-zinc-500',
+  lead: 'bg-[rgba(212,175,55,0.15)] text-[var(--gold)]',
+  pre_registration: 'bg-[rgba(244,211,94,0.12)] text-[var(--gold-light)]',
+  active: 'bg-[rgba(160,0,24,0.2)] text-[#ff6b7a]',
+  delinquent: 'bg-[rgba(230,57,70,0.18)] text-[#E63946]',
+  blocked: 'bg-[rgba(160,0,24,0.35)] text-white',
+  cancelled: 'bg-[var(--surface)] text-[var(--muted)]',
+  archived: 'bg-[var(--surface)] text-[var(--muted)]',
 };
 
 export function StudentStatusBadge({ status }: { status: string }) {
-  const label =
-    STUDENT_STATUS_LABELS[status as StudentStatus] || status;
+  const label = STUDENT_STATUS_LABELS[status as StudentStatus] || status;
   return (
     <span
-      className={`inline-flex rounded px-2 py-0.5 text-xs font-medium ${tones[status] || 'bg-zinc-100 text-zinc-700'}`}
+      className={`inline-flex rounded-[10px] px-2 py-0.5 text-xs font-medium ${tones[status] || 'bg-[var(--surface)] text-[var(--muted)]'}`}
       data-testid="student-status"
     >
       {label}

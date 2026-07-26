@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { AuthContext, Unit } from '@athenas/shared';
+import type { AuthContext, Unit } from '@athena/shared';
 import { SupabaseService } from '../supabase/supabase.service';
 
 function mapUnit(row: Record<string, unknown>): Unit {

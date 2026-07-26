@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { SalesDashboard } from '@athenas/shared';
+import type { SalesDashboard } from '@athena/shared';
+import { Card, chartColors } from '@athena/ui';
 import { salesApi } from '../services/salesApi';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
@@ -24,19 +25,21 @@ export function SalesDashboardPanel({ accessToken }: { accessToken: string }) {
   if (!data) return <TableSkeleton rows={4} />;
 
   const cards = [
-    { label: 'Novos leads (30d)', value: data.newLeads },
-    { label: 'Visitas agendadas', value: data.scheduledVisits },
-    { label: 'Matrículas ativas', value: data.enrollments },
-    { label: 'Conversão', value: `${data.conversionRate}%` },
+    { label: 'Novos leads (30d)', value: data.newLeads, color: chartColors.revenue },
+    { label: 'Visitas agendadas', value: data.scheduledVisits, color: chartColors.workouts },
+    { label: 'Matrículas ativas', value: data.enrollments, color: chartColors.checkins },
+    { label: 'Conversão', value: `${data.conversionRate}%`, color: chartColors.finance },
   ];
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-testid="sales-dashboard">
       {cards.map((c) => (
-        <div key={c.label} className="rounded border border-zinc-200 bg-white p-4">
-          <p className="text-xs uppercase tracking-wide text-zinc-500">{c.label}</p>
-          <p className="mt-2 text-3xl font-bold text-[#A3001B]">{c.value}</p>
-        </div>
+        <Card key={c.label} hover>
+          <p className="text-xs uppercase tracking-wide text-[var(--muted)]">{c.label}</p>
+          <p className="mt-2 text-3xl font-bold" style={{ color: c.color }}>
+            {c.value}
+          </p>
+        </Card>
       ))}
     </div>
   );

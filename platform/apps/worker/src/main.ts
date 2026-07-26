@@ -1,7 +1,11 @@
 import 'dotenv/config';
+import { createHmac } from 'crypto';
 import { createClient } from '@supabase/supabase-js';
 import { Queue, Worker } from 'bullmq';
 import IORedis from 'ioredis';
+
+/** Retry delays in minutes: 1 → 5 → 15 → 60 → 1440 → DLQ */
+const WEBHOOK_RETRY_MINUTES = [1, 5, 15, 60, 1440];
 
 const REDIS_URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
 const SUPABASE_URL = process.env.SUPABASE_URL || '';
@@ -63,7 +67,12 @@ async function drainOutbox() {
     await admin.from('outbox_events').update({ status: 'processing' }).eq('id', id);
     const eventType = String(row.event_type);
     try {
-      if (eventType.startsWith('webhook.')) {
+      if (eventType === 'platform.webhook.deliver' || eventType.startsWith('platform.webhook')) {
+        await queues.webhooks.add('deliver', row.payload, {
+          attempts: WEBHOOK_RETRY_MINUTES.length + 1,
+          backoff: { type: 'custom' },
+        });
+      } else if (eventType.startsWith('webhook.')) {
         await queues.webhooks.add('process', row.payload);
       } else if (eventType.startsWith('operations.checkin')) {
         await queues.checkins.add('checkin', row.payload);
@@ -145,7 +154,102 @@ function startWorkers() {
   new Worker(
     'webhooks',
     async (job) => {
-      log('webhook job', job.data);
+      if (job.name !== 'deliver') {
+        log('webhook job', job.data);
+        return;
+      }
+      const data = job.data as {
+        deliveryId?: string;
+        subscriptionId?: string;
+        url?: string;
+        signingSecret?: string;
+        eventType?: string;
+        payload?: Record<string, unknown>;
+        attempt?: number;
+      };
+      if (!data.url || !data.signingSecret) {
+        log('webhook deliver missing url/secret', data.deliveryId);
+        return;
+      }
+      const body = JSON.stringify({
+        id: data.deliveryId,
+        type: data.eventType,
+        data: data.payload || {},
+        createdAt: new Date().toISOString(),
+      });
+      const signature = createHmac('sha256', data.signingSecret).update(body).digest('hex');
+      const started = Date.now();
+      let statusCode = 0;
+      let errorMsg: string | null = null;
+      try {
+        const res = await fetch(data.url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Athena-Signature': `sha256=${signature}`,
+            'X-Athena-Event': String(data.eventType || ''),
+            'User-Agent': 'ATHENA-Webhooks/0.10',
+          },
+          body,
+        });
+        statusCode = res.status;
+        if (!res.ok) {
+          errorMsg = await res.text();
+          throw new Error(`HTTP ${res.status}`);
+        }
+        if (admin && data.deliveryId) {
+          await admin
+            .from('webhook_deliveries')
+            .update({
+              status: 'delivered',
+              attempts: Number(data.attempt || 0) + 1,
+              last_status_code: statusCode,
+              response_ms: Date.now() - started,
+              delivered_at: new Date().toISOString(),
+              last_error: null,
+            })
+            .eq('id', data.deliveryId);
+        }
+        log('webhook delivered', data.deliveryId);
+      } catch (e) {
+        const attempt = Number(data.attempt || 0);
+        const delayMin = WEBHOOK_RETRY_MINUTES[attempt];
+        const message = e instanceof Error ? e.message : String(e);
+        if (admin && data.deliveryId) {
+          if (delayMin == null) {
+            await admin
+              .from('webhook_deliveries')
+              .update({
+                status: 'dead',
+                attempts: attempt + 1,
+                last_status_code: statusCode || null,
+                last_error: errorMsg || message,
+                response_ms: Date.now() - started,
+              })
+              .eq('id', data.deliveryId);
+            log('webhook dead-letter', data.deliveryId);
+            return;
+          }
+          const next = new Date(Date.now() + delayMin * 60_000).toISOString();
+          await admin
+            .from('webhook_deliveries')
+            .update({
+              status: 'failed',
+              attempts: attempt + 1,
+              next_attempt_at: next,
+              last_status_code: statusCode || null,
+              last_error: errorMsg || message,
+              response_ms: Date.now() - started,
+            })
+            .eq('id', data.deliveryId);
+          await queues.webhooks.add(
+            'deliver',
+            { ...data, attempt: attempt + 1 },
+            { delay: delayMin * 60_000 },
+          );
+        }
+        log(`webhook retry in ${delayMin}m`, data.deliveryId);
+      }
     },
     { connection },
   );
@@ -303,7 +407,7 @@ async function main() {
     },
   );
   log(
-    'ATHENAS worker online — queues: outbox, webhooks, charges, emails, whatsapp, reports, reminders, checkins, access, progress, ai, push, campaigns, analytics, predictions, warehouse, exports',
+    'ATHENA worker online — queues: outbox, webhooks, charges, emails, whatsapp, reports, reminders, checkins, access, progress, ai, push, campaigns, analytics, predictions, warehouse, exports',
   );
 }
 

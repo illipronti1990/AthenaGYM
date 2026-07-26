@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import type { AuthContext } from '@athenas/shared';
+import type { AuthContext } from '@athena/shared';
 import type { Request } from 'express';
 import { CurrentAuth, CurrentUser } from '../common/decorators/current.decorators';
 import { Permissions } from '../common/decorators/rbac.decorators';
@@ -32,6 +32,7 @@ import {
   InstallmentsDto,
   ReconciliationImportDto,
   RenegotiateDto,
+  UpdateAccountDto,
   UpdateReceivableDto,
 } from './dto/finance.dto';
 import { FinanceService } from './finance.service';
@@ -67,8 +68,11 @@ export class FinanceController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, PermissionsGuard, CompanyGuard, UnitGuard)
   @Permissions('finance.read')
-  listReceivables(@CurrentAuth() auth: AuthContext) {
-    return this.finance.listReceivables(auth);
+  listReceivables(
+    @CurrentAuth() auth: AuthContext,
+    @Query('studentId') studentId?: string,
+  ) {
+    return this.finance.listReceivables(auth, studentId);
   }
 
   @Post('receivables')
@@ -193,8 +197,11 @@ export class FinanceController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, PermissionsGuard, CompanyGuard, UnitGuard)
   @Permissions('finance.read')
-  listSubscriptions(@CurrentAuth() auth: AuthContext) {
-    return this.finance.listSubscriptions(auth);
+  listSubscriptions(
+    @CurrentAuth() auth: AuthContext,
+    @Query('studentId') studentId?: string,
+  ) {
+    return this.finance.listSubscriptions(auth, studentId);
   }
 
   @Post('subscriptions')
@@ -263,6 +270,19 @@ export class FinanceController {
     @Body() dto: CreateAccountDto,
   ) {
     return this.finance.createAccount(user, auth, dto);
+  }
+
+  @Patch('accounts/:id')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, PermissionsGuard, CompanyGuard, UnitGuard)
+  @Permissions('finance.update')
+  updateAccount(
+    @CurrentUser() user: AuthUser,
+    @CurrentAuth() auth: AuthContext,
+    @Param('id') id: string,
+    @Body() dto: UpdateAccountDto,
+  ) {
+    return this.finance.updateAccount(user, auth, id, dto);
   }
 
   @Get('cost-centers')

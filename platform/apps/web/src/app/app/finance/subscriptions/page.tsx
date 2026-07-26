@@ -8,8 +8,8 @@ export default async function FinanceSubscriptionsPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Assinaturas</h1>
-        <Link href="/app/finance" className="text-sm text-[#A3001B] hover:underline">
+        <h1 className="athena-title text-3xl">Assinaturas</h1>
+        <Link href="/app/finance" className="athena-link text-sm text-[var(--gold)]">
           ← Financeiro
         </Link>
       </div>

@@ -1,4 +1,4 @@
-import { normalizeCpf, isValidCpf } from '@athenas/shared';
+import { normalizeCpf, isValidCpf } from '@athena/shared';
 
 export { normalizeCpf, isValidCpf };
 

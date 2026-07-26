@@ -1,5 +1,5 @@
 {
-  "name": "@athenas/sdk-bi",
+  "name": "@athena/sdk-bi",
   "version": "0.9.0",
   "private": true,
   "main": "./dist/index.js",

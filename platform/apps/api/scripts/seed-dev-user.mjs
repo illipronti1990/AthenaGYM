@@ -32,7 +32,7 @@ const USER_ID = '99999999-9999-9999-9999-999999999999';
 const COMPANY_ID = '11111111-1111-1111-1111-111111111111';
 const UNIT_ID = '22222222-2222-2222-2222-222222222222';
 const ROLE_ADMIN = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa2';
-const EMAIL = 'teste@athenas.local';
+const EMAIL = 'teste@athena.local';
 const PASSWORD = 'teste123';
 
 const admin = createClient(url, key, {
@@ -43,15 +43,15 @@ async function main() {
   // Ensure company/unit exist (idempotent)
   await admin.from('companies').upsert({
     id: COMPANY_ID,
-    name: 'ATHENAS GYM',
-    legal_name: 'ATHENAS GYM ACADEMIA LTDA',
+    name: 'ATHENA GYM',
+    legal_name: 'ATHENA GYM ACADEMIA LTDA',
     document: '12.345.678/0001-90',
     status: 'active',
   });
   await admin.from('units').upsert({
     id: UNIT_ID,
     company_id: COMPANY_ID,
-    name: 'ATHENAS GYM Matriz',
+    name: 'ATHENA GYM Matriz',
     code: 'MX',
     city: 'São Paulo',
     state: 'SP',

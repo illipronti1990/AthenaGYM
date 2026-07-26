@@ -1,15 +1,22 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
+import { Button } from '@athena/ui';
 import { operationsApi } from '../services/operationsApi';
+import { StudentSelect } from './StudentSelect';
+import { ExportButtons } from '@/modules/polish/components/ExportButtons';
+import { useToast } from '@/components/ui/Toast';
+import { apiGetMe } from '@/services/api';
 
 export function CheckinPanel({ accessToken }: { accessToken: string }) {
+  const { push } = useToast();
   const [studentId, setStudentId] = useState('');
+  const [unitId, setUnitId] = useState<string | undefined>();
   const [qr, setQr] = useState<string | null>(null);
+  const [qrInput, setQrInput] = useState('');
   const [expiresAt, setExpiresAt] = useState<string | null>(null);
   const [history, setHistory] = useState<Awaited<ReturnType<typeof operationsApi.checkins>>>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [ok, setOk] = useState<string | null>(null);
+  const [busy, setBusy] = useState<'manual' | 'qr' | 'validate' | null>(null);
 
   async function refreshHistory() {
     setHistory(await operationsApi.checkins(accessToken));
@@ -17,111 +24,179 @@ export function CheckinPanel({ accessToken }: { accessToken: string }) {
 
   useEffect(() => {
     refreshHistory().catch(() => undefined);
+    void apiGetMe(accessToken)
+      .then((me) => {
+        const id =
+          me.auth.defaultUnitId || me.profile.defaultUnitId || me.auth.unitIds[0] || me.units[0]?.id;
+        if (id) setUnitId(id);
+      })
+      .catch(() => undefined);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accessToken]);
 
   async function onManual(e: FormEvent) {
     e.preventDefault();
-    setError(null);
-    setOk(null);
+    if (!studentId) {
+      push('Selecione um aluno', 'error');
+      return;
+    }
+    setBusy('manual');
     try {
       const c = await operationsApi.createCheckin(accessToken, {
         studentId,
-        unitId: '22222222-2222-2222-2222-222222222222',
         method: 'manual',
+        ...(unitId ? { unitId } : {}),
       });
-      setOk(`Check-in ${c.id}`);
+      push(`Check-in manual realizado`);
+      setQr(null);
+      setQrInput('');
       await refreshHistory();
+      void c;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'erro');
+      push(err instanceof Error ? err.message : 'Falha no check-in', 'error');
+    } finally {
+      setBusy(null);
     }
   }
 
   async function onQr() {
-    setError(null);
+    if (!studentId) {
+      push('Selecione um aluno para gerar o QR', 'error');
+      return;
+    }
+    setBusy('qr');
     try {
-      const r = await operationsApi.generateQr(
-        accessToken,
-        studentId,
-        '22222222-2222-2222-2222-222222222222',
-      );
+      const r = await operationsApi.generateQr(accessToken, studentId, unitId);
       setQr(r.token);
+      setQrInput(r.token);
       setExpiresAt(r.expiresAt);
+      push('QR Code gerado (válido por 30s)');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'erro');
+      push(err instanceof Error ? err.message : 'Falha ao gerar QR', 'error');
+    } finally {
+      setBusy(null);
     }
   }
 
   async function onCheckinQr() {
-    if (!qr) return;
-    setError(null);
+    const token = qrInput.trim() || qr;
+    if (!token) {
+      push('Gere ou cole um QR Code para validar', 'error');
+      return;
+    }
+    if (!studentId) {
+      push('Selecione o aluno', 'error');
+      return;
+    }
+    setBusy('validate');
     try {
-      const c = await operationsApi.createCheckin(accessToken, {
+      await operationsApi.createCheckin(accessToken, {
         studentId,
-        unitId: '22222222-2222-2222-2222-222222222222',
         method: 'qr',
-        qrToken: qr,
+        qrToken: token,
+        ...(unitId ? { unitId } : {}),
       });
-      setOk(`Check-in QR ${c.id}`);
+      push('QR validado — check-in realizado');
+      setQr(null);
+      setQrInput('');
+      setExpiresAt(null);
       await refreshHistory();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'erro');
+      push(err instanceof Error ? err.message : 'Falha ao validar QR', 'error');
+    } finally {
+      setBusy(null);
     }
   }
 
+  const qrImageUrl = qr
+    ? `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(qr)}`
+    : null;
+
   return (
     <div className="space-y-6">
-      <form onSubmit={onManual} className="flex flex-wrap items-end gap-3">
-        <label className="text-sm">
-          Student ID
-          <input
-            className="mt-1 block w-72 rounded border border-zinc-300 px-2 py-1.5 font-mono text-xs"
-            value={studentId}
-            onChange={(e) => setStudentId(e.target.value)}
-            required
-          />
-        </label>
-        <button type="submit" className="rounded bg-[#A3001B] px-3 py-1.5 text-sm font-semibold text-white">
-          Check-in manual
-        </button>
-        <button
-          type="button"
-          onClick={onQr}
-          disabled={!studentId}
-          className="rounded border border-zinc-300 px-3 py-1.5 text-sm"
-        >
-          Gerar QR (30s)
-        </button>
-        <button
-          type="button"
-          onClick={onCheckinQr}
-          disabled={!qr}
-          className="rounded border border-zinc-300 px-3 py-1.5 text-sm"
-        >
-          Validar QR
-        </button>
+      <div className="flex justify-end">
+        <ExportButtons accessToken={accessToken} resource="checkins" />
+      </div>
+
+      <form onSubmit={onManual} className="space-y-4">
+        <StudentSelect accessToken={accessToken} value={studentId} onChange={setStudentId} />
+        <div className="flex flex-wrap gap-2">
+          <Button type="submit" disabled={busy !== null || !studentId}>
+            {busy === 'manual' ? 'Salvando…' : 'Check-in manual'}
+          </Button>
+          <Button
+            type="button"
+            variant="secondary"
+            disabled={busy !== null || !studentId}
+            onClick={() => void onQr()}
+            data-testid="generate-qr"
+          >
+            {busy === 'qr' ? 'Gerando…' : 'Gerar QR (30s)'}
+          </Button>
+          <Button
+            type="button"
+            variant="secondary"
+            disabled={busy !== null || !studentId || !(qrInput.trim() || qr)}
+            onClick={() => void onCheckinQr()}
+            data-testid="validate-qr"
+          >
+            {busy === 'validate' ? 'Validando…' : 'Validar QR'}
+          </Button>
+        </div>
       </form>
-      {qr ? (
-        <p className="break-all rounded bg-zinc-900 p-3 font-mono text-xs text-zinc-100">
-          {qr}
-          {expiresAt ? (
-            <span className="mt-2 block text-zinc-400">expira {new Date(expiresAt).toLocaleTimeString('pt-BR')}</span>
-          ) : null}
-        </p>
+
+      {qrImageUrl ? (
+        <div className="flex flex-wrap items-start gap-4 rounded-[10px] border border-[var(--border)] bg-[var(--card)] p-4">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={qrImageUrl}
+            alt="QR Code de check-in"
+            width={220}
+            height={220}
+            className="rounded bg-white p-2"
+          />
+          <div className="min-w-0 flex-1 space-y-2">
+            <p className="text-sm font-medium text-[var(--gold)]">QR Code ativo</p>
+            {expiresAt ? (
+              <p className="text-xs text-[var(--muted)]">
+                Expira às {new Date(expiresAt).toLocaleTimeString('pt-BR')}
+              </p>
+            ) : null}
+            <p className="break-all font-mono text-[10px] text-[var(--muted)]">{qr}</p>
+          </div>
+        </div>
       ) : null}
-      {ok ? <p className="text-sm text-emerald-700">{ok}</p> : null}
-      {error ? <p className="text-sm text-red-700">{error}</p> : null}
+
+      <label className="block text-sm text-[var(--muted)]">
+        Código QR (para validar)
+        <input
+          value={qrInput}
+          onChange={(e) => setQrInput(e.target.value)}
+          placeholder="Cole o token do QR aqui"
+          className="athena-input mt-1 block w-full max-w-xl font-mono text-xs"
+          data-testid="qr-token-input"
+        />
+      </label>
+
       <div>
-        <h2 className="mb-2 font-semibold">Histórico</h2>
-        <ul className="divide-y divide-zinc-200 text-sm">
-          {history.slice(0, 20).map((h) => (
-            <li key={h.id} className="flex justify-between py-2">
-              <span>
-                {h.method} · {h.direction} · {h.studentId.slice(0, 8)}…
-              </span>
-              <span className="text-zinc-500">{new Date(h.createdAt).toLocaleString('pt-BR')}</span>
-            </li>
-          ))}
-        </ul>
+        <h2 className="athena-title mb-2 text-sm">Histórico</h2>
+        {history.length === 0 ? (
+          <p className="text-sm text-[var(--muted)]">Nenhum check-in ainda.</p>
+        ) : (
+          <ul className="athena-list text-sm">
+            {history.slice(0, 20).map((h) => (
+              <li key={h.id} className="athena-list-item">
+                <span>
+                  {h.method === 'qr' ? 'QR' : h.method === 'manual' ? 'Manual' : h.method} ·{' '}
+                  {h.direction === 'in' ? 'Entrada' : 'Saída'}
+                </span>
+                <span className="text-[var(--muted)]">
+                  {new Date(h.createdAt).toLocaleString('pt-BR')}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

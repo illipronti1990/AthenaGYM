@@ -1,15 +1,19 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
   Post,
   Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import type { AuthContext } from '@athenas/shared';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
+import type { AuthContext } from '@athena/shared';
 import { CurrentAuth, CurrentUser } from '../common/decorators/current.decorators';
 import { Permissions } from '../common/decorators/rbac.decorators';
 import {
@@ -150,6 +154,27 @@ export class WorkoutsController {
   @Permissions('progress.create')
   createPhoto(@CurrentAuth() auth: AuthContext, @Body() dto: CreateProgressPhotoDto) {
     return this.workouts.createProgressPhoto(auth, dto);
+  }
+
+  @Post('progress/photos/upload')
+  @Permissions('progress.create')
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'Upload progress photo (image file)' })
+  @UseInterceptors(FileInterceptor('file'))
+  uploadPhoto(
+    @CurrentAuth() auth: AuthContext,
+    @UploadedFile() file: Express.Multer.File,
+    @Body('studentId') studentId: string,
+    @Body('type') type?: string,
+  ) {
+    return this.workouts.uploadProgressPhoto(auth, studentId, file, type || 'front');
+  }
+
+  @Delete('progress/photos/:id')
+  @Permissions('progress.create')
+  @ApiOperation({ summary: 'Delete progress photo' })
+  deletePhoto(@CurrentAuth() auth: AuthContext, @Param('id') id: string) {
+    return this.workouts.deleteProgressPhoto(auth, id);
   }
 
   @Post('ai/workout-suggestions')

@@ -1,6 +1,6 @@
 'use client';
 
-import { STUDENT_STATUSES, STUDENT_STATUS_LABELS } from '@athenas/shared';
+import { STUDENT_STATUSES, STUDENT_STATUS_LABELS } from '@athena/shared';
 
 export type StudentFilterValues = {
   q: string;
@@ -23,13 +23,13 @@ export function StudentFilters({
         placeholder="Nome, CPF, matrícula…"
         value={value.q}
         onChange={(e) => onChange({ ...value, q: e.target.value })}
-        className="rounded border border-zinc-300 px-3 py-2 text-sm"
+        className="athena-input"
         data-testid="student-search"
       />
       <select
         value={value.status}
         onChange={(e) => onChange({ ...value, status: e.target.value })}
-        className="rounded border border-zinc-300 px-3 py-2 text-sm"
+        className="athena-input"
       >
         <option value="">Todos os status</option>
         {STUDENT_STATUSES.map((s) => (
@@ -41,7 +41,7 @@ export function StudentFilters({
       <select
         value={value.unitId}
         onChange={(e) => onChange({ ...value, unitId: e.target.value })}
-        className="rounded border border-zinc-300 px-3 py-2 text-sm"
+        className="athena-input"
       >
         <option value="">Todas as unidades</option>
         {units.map((u) => (

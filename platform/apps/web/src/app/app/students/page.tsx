@@ -15,7 +15,10 @@ export default async function StudentsPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold">Alunos</h1>
+      <div>
+        <h1 className="athena-title text-3xl">Alunos</h1>
+        <p className="mt-1 text-sm text-[var(--muted)]">Cadastro e acompanhamento</p>
+      </div>
       <StudentsListPanel accessToken={accessToken} units={units} />
     </div>
   );

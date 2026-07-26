@@ -8,11 +8,14 @@ export type StudentCreatedEvent = {
   companyId: string;
   unitId: string;
   fullName: string;
+  planName?: string | null;
 };
 
 export type StudentUpdatedEvent = {
   studentId: string;
   companyId: string;
+  unitId?: string | null;
+  planName?: string | null;
 };
 
 export type StudentStatusChangedEvent = {

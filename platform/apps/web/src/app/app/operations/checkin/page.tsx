@@ -6,10 +6,10 @@ export default async function CheckinPage() {
   const accessToken = await requireAccessToken();
   return (
     <div className="space-y-4">
-      <Link href="/app/operations" className="text-sm text-[#A3001B]">
+      <Link href="/app/operations" className="athena-link text-sm text-[var(--gold)]">
         ← Operações
       </Link>
-      <h1 className="text-2xl font-bold">Check-in</h1>
+      <h1 className="athena-title text-3xl">Check-in</h1>
       <CheckinPanel accessToken={accessToken} />
     </div>
   );

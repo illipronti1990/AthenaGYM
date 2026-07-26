@@ -1,4 +1,4 @@
--- ATHENAS PLATFORM Sprint 8 — BI, Analytics e Inteligência Artificial
+-- ATHENA PLATFORM Sprint 8 — BI, Analytics e Inteligência Artificial
 -- Analytical warehouse tables live in the same Supabase project (schema analytics)
 -- to keep ops simple; ETL worker fills facts from OLTP events.
 

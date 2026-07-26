@@ -1,12 +1,17 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { STUDENT_STATUSES, STUDENT_STATUS_LABELS, formatCpf } from '@athenas/shared';
-import type { Student } from '@athenas/shared';
+import { STUDENT_STATUSES, STUDENT_STATUS_LABELS, formatCpf } from '@athena/shared';
+import type { Student } from '@athena/shared';
+import { Button, Card } from '@athena/ui';
 import { StudentAvatar } from './StudentAvatar';
 import { StudentStatusBadge } from './StudentStatus';
 import { StudentTimeline } from './StudentTimeline';
 import { StudentForm } from './StudentForm';
+import { StudentFinancePanel } from './StudentFinancePanel';
+import { StudentWorkoutsPanel } from './StudentWorkoutsPanel';
+import { StudentAssessmentsPanel } from './StudentAssessmentsPanel';
+import { EntityTimeline } from '@/modules/polish/components/EntityTimeline';
 import {
   changeStudentStatus,
   getStudent,
@@ -65,8 +70,8 @@ export function StudentProfile({
       <header className="flex flex-wrap items-center gap-4">
         <StudentAvatar name={student.fullName} photoUrl={student.photoUrl} size={72} />
         <div className="min-w-0 flex-1">
-          <h1 className="text-2xl font-bold">{student.fullName}</h1>
-          <p className="text-sm text-zinc-600">
+          <h1 className="athena-title text-2xl">{student.fullName}</h1>
+          <p className="text-sm text-[var(--muted)]">
             {student.registrationNumber}
             {student.cpf ? ` · ${formatCpf(student.cpf)}` : ''}
             {student.planName ? ` · ${student.planName}` : ' · Plano —'}
@@ -75,7 +80,7 @@ export function StudentProfile({
           <div className="mt-2 flex flex-wrap items-center gap-2">
             <StudentStatusBadge status={student.status} />
             <select
-              className="rounded border border-zinc-300 px-2 py-1 text-sm"
+              className="athena-input w-auto"
               value={student.status}
               onChange={async (e) => {
                 try {
@@ -99,18 +104,14 @@ export function StudentProfile({
                 </option>
               ))}
             </select>
-            <button
-              type="button"
-              className="rounded border border-zinc-300 px-3 py-1 text-sm"
-              onClick={() => setEditing((v) => !v)}
-            >
+            <Button type="button" variant="secondary" onClick={() => setEditing((v) => !v)}>
               {editing ? 'Cancelar edição' : 'Editar'}
-            </button>
+            </Button>
           </div>
         </div>
       </header>
 
-      <div className="flex flex-wrap gap-2 border-b border-zinc-200 pb-2">
+      <div className="flex flex-wrap gap-2 border-b border-[var(--border)] pb-2">
         {(
           [
             ['data', 'Dados'],
@@ -124,9 +125,7 @@ export function StudentProfile({
             key={id}
             type="button"
             onClick={() => setTab(id)}
-            className={`rounded px-3 py-1.5 text-sm ${
-              tab === id ? 'bg-[#A3001B] text-white' : 'bg-zinc-100'
-            }`}
+            className={`athena-tab ${tab === id ? 'athena-tab-active' : ''}`}
           >
             {label}
           </button>
@@ -162,21 +161,46 @@ export function StudentProfile({
             }}
           />
         ) : (
-          <dl className="grid gap-2 text-sm sm:grid-cols-2">
-            <Item label="E-mail" value={student.email} />
-            <Item label="Telefone" value={student.phone} />
-            <Item label="WhatsApp" value={student.whatsapp} />
-            <Item label="Último acesso" value={student.lastAccessAt} />
-            <Item label="Observações" value={student.notes} />
-          </dl>
+          <Card>
+            <dl className="grid gap-3 text-sm sm:grid-cols-2">
+              <Item label="E-mail" value={student.email} />
+              <Item label="Telefone" value={student.phone} />
+              <Item label="WhatsApp" value={student.whatsapp} />
+              <Item label="Último acesso" value={student.lastAccessAt} />
+              <Item label="Observações" value={student.notes} />
+            </dl>
+          </Card>
         ))}
 
-      {tab === 'history' && <StudentTimeline items={history} />}
+      {tab === 'history' && (
+        <div className="space-y-6">
+          <StudentTimeline items={history} />
+          <div>
+            <h3 className="athena-title mb-2 text-sm">Auditoria</h3>
+            <EntityTimeline accessToken={accessToken} entity="student" id={studentId} />
+          </div>
+        </div>
+      )}
 
-      {(tab === 'finance' || tab === 'workouts' || tab === 'assessments') && (
-        <p className="rounded border border-dashed border-zinc-300 bg-zinc-50 p-6 text-sm text-zinc-600">
-          Módulo em breve — preparado para integração futura.
-        </p>
+      {tab === 'finance' && (
+        <StudentFinancePanel
+          accessToken={accessToken}
+          studentId={student.id}
+          unitId={unitId || student.unitId}
+          planName={student.planName}
+        />
+      )}
+
+      {tab === 'workouts' && (
+        <StudentWorkoutsPanel accessToken={accessToken} studentId={student.id} />
+      )}
+
+      {tab === 'assessments' && (
+        <StudentAssessmentsPanel
+          accessToken={accessToken}
+          studentId={student.id}
+          unitId={unitId || student.unitId}
+        />
       )}
     </div>
   );
@@ -185,8 +209,8 @@ export function StudentProfile({
 function Item({ label, value }: { label: string; value: string | null | undefined }) {
   return (
     <div>
-      <dt className="text-xs uppercase tracking-wide text-zinc-500">{label}</dt>
-      <dd className="font-medium text-zinc-900">
+      <dt className="text-xs uppercase tracking-wide text-[var(--muted)]">{label}</dt>
+      <dd className="font-medium text-[var(--text)]">
         {value ? (label.includes('acesso') ? new Date(value).toLocaleString('pt-BR') : value) : '—'}
       </dd>
     </div>

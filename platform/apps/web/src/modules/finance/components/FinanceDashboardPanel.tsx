@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { FinanceDashboard } from '@athenas/shared';
+import type { FinanceDashboard } from '@athena/shared';
+import { Card, chartColors } from '@athena/ui';
 import { financeApi } from '../services/financeApi';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
@@ -33,29 +34,35 @@ export function FinanceDashboardPanel({ accessToken }: { accessToken: string }) 
     {
       label: 'Receita do mês',
       value: data.monthRevenue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+      color: chartColors.revenue,
     },
     {
       label: 'Recebido',
       value: data.received.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+      color: chartColors.workouts,
     },
     {
       label: 'A receber',
       value: data.toReceive.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+      color: chartColors.checkins,
     },
-    { label: 'Inadimplência', value: `${data.delinquencyRate}%` },
+    { label: 'Inadimplência', value: `${data.delinquencyRate}%`, color: chartColors.finance },
     {
       label: 'Fluxo de caixa',
       value: data.cashflowBalance.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+      color: chartColors.revenue,
     },
   ];
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5" data-testid="finance-dashboard">
       {cards.map((c) => (
-        <div key={c.label} className="rounded border border-zinc-200 bg-white p-4">
-          <p className="text-xs uppercase tracking-wide text-zinc-500">{c.label}</p>
-          <p className="mt-2 text-2xl font-bold text-[#A3001B]">{c.value}</p>
-        </div>
+        <Card key={c.label} hover>
+          <p className="text-xs uppercase tracking-wide text-[var(--muted)]">{c.label}</p>
+          <p className="mt-2 text-2xl font-bold" style={{ color: c.color }}>
+            {c.value}
+          </p>
+        </Card>
       ))}
     </div>
   );

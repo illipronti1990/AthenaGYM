@@ -29,9 +29,9 @@ exporters:
     verbosity: basic
   prometheus:
     endpoint: 0.0.0.0:8889
-    namespace: athenas
+    namespace: athena
     const_labels:
-      platform: athenas
+      platform: athena
     resource_to_telemetry_conversion:
       enabled: true
 

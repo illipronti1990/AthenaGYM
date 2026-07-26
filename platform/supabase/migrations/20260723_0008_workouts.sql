@@ -1,4 +1,4 @@
--- ATHENAS PLATFORM Sprint 6 — Treinos, Avaliações e Performance
+-- ATHENA PLATFORM Sprint 6 — Treinos, Avaliações e Performance
 
 -- ---------------------------------------------------------------------------
 -- exercises (global + company library)

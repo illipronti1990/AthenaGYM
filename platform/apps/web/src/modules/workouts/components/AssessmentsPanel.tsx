@@ -1,8 +1,11 @@
 'use client';
 
-import { FormEvent, useEffect, useState } from 'react';
-import type { Assessment, ProgressSummary } from '@athenas/shared';
+import { FormEvent, useEffect, useRef, useState } from 'react';
+import type { Assessment, ProgressSummary } from '@athena/shared';
+import { Button, Card } from '@athena/ui';
 import { workoutsApi } from '../services/workoutsApi';
+import { StudentSelect } from '@/modules/students/components/StudentSelect';
+import { useToast } from '@/components/ui/Toast';
 
 export function AssessmentsPanel({ accessToken }: { accessToken: string }) {
   const [items, setItems] = useState<Assessment[]>([]);
@@ -13,17 +16,28 @@ export function AssessmentsPanel({ accessToken }: { accessToken: string }) {
   const [error, setError] = useState<string | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
 
-  async function reload() {
-    setItems(await workoutsApi.assessments(accessToken, studentId || undefined));
+  async function reload(forStudentId = studentId) {
+    setItems(await workoutsApi.assessments(accessToken, forStudentId || undefined));
   }
 
   useEffect(() => {
     reload().catch((e) => setError(e instanceof Error ? e.message : 'erro'));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accessToken]);
+
+  useEffect(() => {
+    if (!studentId) return;
+    reload(studentId).catch((e) => setError(e instanceof Error ? e.message : 'erro'));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [studentId]);
 
   async function onCreate(e: FormEvent) {
     e.preventDefault();
     setError(null);
+    if (!studentId) {
+      setError('Selecione um aluno');
+      return;
+    }
     try {
       const a = await workoutsApi.createAssessment(accessToken, {
         studentId,
@@ -35,8 +49,8 @@ export function AssessmentsPanel({ accessToken }: { accessToken: string }) {
         objective: 'hipertrofia',
         measurements: { waist: 80, chest: 100 },
       });
-      setMsg(`Avaliação ${a.id} · BMI ${a.bmi}`);
-      await reload();
+      setMsg(`Avaliação salva · IMC ${a.bmi}`);
+      await reload(studentId);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'erro');
     }
@@ -44,50 +58,49 @@ export function AssessmentsPanel({ accessToken }: { accessToken: string }) {
 
   return (
     <div className="space-y-4">
-      <form onSubmit={onCreate} className="flex flex-wrap items-end gap-3">
-        <label className="text-sm">
-          Student ID
-          <input
-            className="mt-1 block w-72 rounded border border-zinc-300 px-2 py-1.5 font-mono text-xs"
+      <Card>
+        <form onSubmit={onCreate} className="flex flex-wrap items-end gap-3">
+          <StudentSelect
+            accessToken={accessToken}
             value={studentId}
-            onChange={(e) => setStudentId(e.target.value)}
-            required
+            onChange={setStudentId}
+            className="athena-input mt-1 block w-72"
           />
-        </label>
-        <label className="text-sm">
-          Peso
-          <input
-            className="mt-1 block w-20 rounded border border-zinc-300 px-2 py-1.5"
-            value={weight}
-            onChange={(e) => setWeight(e.target.value)}
-          />
-        </label>
-        <label className="text-sm">
-          Altura
-          <input
-            className="mt-1 block w-20 rounded border border-zinc-300 px-2 py-1.5"
-            value={height}
-            onChange={(e) => setHeight(e.target.value)}
-          />
-        </label>
-        <label className="text-sm">
-          % Gordura
-          <input
-            className="mt-1 block w-20 rounded border border-zinc-300 px-2 py-1.5"
-            value={bodyFat}
-            onChange={(e) => setBodyFat(e.target.value)}
-          />
-        </label>
-        <button type="submit" className="rounded bg-[#A3001B] px-3 py-1.5 text-sm font-semibold text-white">
-          Salvar avaliação
-        </button>
-      </form>
-      {msg ? <p className="text-sm text-emerald-700">{msg}</p> : null}
-      {error ? <p className="text-sm text-red-700">{error}</p> : null}
-      <ul className="divide-y divide-zinc-200 text-sm">
+          <label className="text-sm text-[var(--muted)]">
+            Peso
+            <input
+              className="athena-input mt-1 block w-20"
+              value={weight}
+              onChange={(e) => setWeight(e.target.value)}
+            />
+          </label>
+          <label className="text-sm text-[var(--muted)]">
+            Altura
+            <input
+              className="athena-input mt-1 block w-20"
+              value={height}
+              onChange={(e) => setHeight(e.target.value)}
+            />
+          </label>
+          <label className="text-sm text-[var(--muted)]">
+            % Gordura
+            <input
+              className="athena-input mt-1 block w-20"
+              value={bodyFat}
+              onChange={(e) => setBodyFat(e.target.value)}
+            />
+          </label>
+          <Button type="submit" disabled={!studentId}>
+            Salvar avaliação
+          </Button>
+        </form>
+      </Card>
+      {msg ? <p className="text-sm text-[var(--gold)]">{msg}</p> : null}
+      {error ? <p className="text-sm text-[var(--primary-hover)]">{error}</p> : null}
+      <ul className="athena-list text-sm">
         {items.map((a) => (
-          <li key={a.id} className="py-2">
-            {new Date(a.createdAt).toLocaleDateString('pt-BR')} · {a.weight}kg · BMI {a.bmi} · BF{' '}
+          <li key={a.id} className="athena-list-item text-[var(--text)]">
+            {new Date(a.createdAt).toLocaleDateString('pt-BR')} · {a.weight}kg · IMC {a.bmi} · BF{' '}
             {a.bodyFat}%
           </li>
         ))}
@@ -97,72 +110,248 @@ export function AssessmentsPanel({ accessToken }: { accessToken: string }) {
 }
 
 export function EvolutionPanel({ accessToken }: { accessToken: string }) {
+  const { push } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [studentId, setStudentId] = useState('');
   const [data, setData] = useState<ProgressSummary | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [photoName, setPhotoName] = useState('front.jpg');
+  const [photoType, setPhotoType] = useState<'front' | 'side' | 'back'>('front');
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  async function load() {
+  async function load(id = studentId) {
+    if (!id) {
+      push('Selecione um aluno', 'error');
+      return;
+    }
     setError(null);
     try {
-      setData(await workoutsApi.progress(accessToken, studentId));
+      setData(await workoutsApi.progress(accessToken, id));
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'erro');
+      const msg = e instanceof Error ? e.message : 'erro';
+      setError(msg);
+      push(msg, 'error');
     }
   }
 
+  function onPickFile(selected: File | null) {
+    if (preview) URL.revokeObjectURL(preview);
+    if (!selected) {
+      setFile(null);
+      setPreview(null);
+      return;
+    }
+    if (!selected.type.startsWith('image/')) {
+      push('Selecione uma imagem (jpg, png ou webp)', 'error');
+      return;
+    }
+    if (selected.size > 5 * 1024 * 1024) {
+      push('Imagem deve ter no máximo 5MB', 'error');
+      return;
+    }
+    setFile(selected);
+    setPreview(URL.createObjectURL(selected));
+  }
+
   async function addPhoto() {
+    if (!studentId) {
+      push('Selecione um aluno', 'error');
+      return;
+    }
+    if (!file) {
+      push('Selecione uma mídia para enviar', 'error');
+      return;
+    }
+    setSaving(true);
+    setError(null);
     try {
-      await workoutsApi.createPhoto(accessToken, {
+      await workoutsApi.uploadPhoto(accessToken, {
         studentId,
-        type: 'front',
-        storagePath: photoName,
+        type: photoType,
+        file,
       });
-      await load();
+      push('Foto enviada');
+      onPickFile(null);
+      await load(studentId);
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'erro');
+      const msg = e instanceof Error ? e.message : 'Falha ao enviar foto';
+      setError(msg);
+      push(msg, 'error');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function removePhoto(photoId: string) {
+    if (!window.confirm('Apagar esta foto da evolução?')) return;
+    setDeletingId(photoId);
+    setError(null);
+    try {
+      await workoutsApi.deletePhoto(accessToken, photoId);
+      push('Foto apagada');
+      await load(studentId);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : 'Falha ao apagar foto';
+      setError(msg);
+      push(msg, 'error');
+    } finally {
+      setDeletingId(null);
     }
   }
 
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-end gap-3">
-        <label className="text-sm">
-          Student ID
-          <input
-            className="mt-1 block w-72 rounded border border-zinc-300 px-2 py-1.5 font-mono text-xs"
-            value={studentId}
-            onChange={(e) => setStudentId(e.target.value)}
-          />
-        </label>
-        <button
-          type="button"
-          disabled={!studentId}
-          onClick={load}
-          className="rounded bg-[#A3001B] px-3 py-1.5 text-sm font-semibold text-white"
-        >
+        <StudentSelect
+          accessToken={accessToken}
+          value={studentId}
+          onChange={(id) => {
+            setStudentId(id);
+            setData(null);
+            onPickFile(null);
+          }}
+          required={false}
+          className="athena-input mt-1 block w-72"
+        />
+        <Button type="button" disabled={!studentId} onClick={() => void load()}>
           Carregar evolução
-        </button>
+        </Button>
       </div>
-      {error ? <p className="text-sm text-red-700">{error}</p> : null}
-      {data ? (
-        <div className="space-y-3 text-sm">
-          <p>
-            Δ peso: {data.weightDelta ?? '—'} · Δ BF: {data.bodyFatDelta ?? '—'} · Evolução:{' '}
-            {data.evolutionPct != null ? `${data.evolutionPct}%` : '—'}
-          </p>
-          <p>{data.assessments.length} avaliações · {data.photos.length} fotos</p>
-          <div className="flex gap-2">
+      {error ? <p className="text-sm text-[var(--primary-hover)]">{error}</p> : null}
+      {studentId ? (
+        <Card className="space-y-3 text-sm text-[var(--text)]">
+          {data ? (
+            <>
+              <p>
+                Δ peso: <span className="text-[var(--gold)]">{data.weightDelta ?? '—'}</span> · Δ BF:{' '}
+                <span className="text-[var(--gold)]">{data.bodyFatDelta ?? '—'}</span> · Evolução:{' '}
+                <span className="text-[var(--gold)]">
+                  {data.evolutionPct != null ? `${data.evolutionPct}%` : '—'}
+                </span>
+              </p>
+              <p className="text-[var(--muted)]">
+                {data.assessments.length} avaliações · {data.photos.length} fotos
+              </p>
+            </>
+          ) : (
+            <p className="text-sm text-[var(--muted)]">
+              Clique em “Carregar evolução” ou envie uma foto abaixo.
+            </p>
+          )}
+          <div className="flex flex-wrap items-end gap-2">
+            <label className="text-sm text-[var(--muted)]">
+              Tipo
+              <select
+                value={photoType}
+                onChange={(e) => setPhotoType(e.target.value as typeof photoType)}
+                className="athena-input mt-1 block w-auto"
+              >
+                <option value="front">Frente</option>
+                <option value="side">Lateral</option>
+                <option value="back">Costas</option>
+              </select>
+            </label>
             <input
-              className="rounded border border-zinc-300 px-2 py-1.5"
-              value={photoName}
-              onChange={(e) => setPhotoName(e.target.value)}
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="sr-only"
+              onChange={(e) => {
+                onPickFile(e.target.files?.[0] || null);
+                e.target.value = '';
+              }}
+              data-testid="progress-photo-input"
             />
-            <button type="button" onClick={addPhoto} className="rounded border px-2 py-1">
-              Registrar foto
-            </button>
+            <Button
+              type="button"
+              variant="secondary"
+              disabled={saving}
+              onClick={() => fileInputRef.current?.click()}
+              data-testid="select-photo"
+            >
+              Selecionar mídia
+            </Button>
+            <Button
+              type="button"
+              disabled={saving || !file}
+              onClick={() => void addPhoto()}
+              data-testid="register-photo"
+            >
+              {saving ? 'Enviando…' : 'Enviar foto'}
+            </Button>
           </div>
-        </div>
+          {preview ? (
+            <div className="flex items-start gap-3 rounded-[10px] border border-[var(--border)] bg-[var(--card)] p-3">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={preview}
+                alt="Pré-visualização"
+                className="h-28 w-28 rounded object-cover"
+              />
+              <div className="min-w-0 text-xs text-[var(--muted)]">
+                <p className="truncate text-[var(--text)]">{file?.name}</p>
+                <p>{file ? `${(file.size / 1024).toFixed(0)} KB` : ''}</p>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="mt-2"
+                  onClick={() => onPickFile(null)}
+                >
+                  Remover
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <p className="text-xs text-[var(--muted)]">
+              JPG, PNG ou WebP · máximo 5 MB
+            </p>
+          )}
+          {data && data.photos.length > 0 ? (
+            <ul className="athena-list">
+              {data.photos.map((p) => (
+                <li key={p.id} className="athena-list-item text-xs">
+                  <span className="flex min-w-0 items-center gap-2">
+                    {p.publicUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={p.publicUrl}
+                        alt={p.type}
+                        className="h-10 w-10 shrink-0 rounded object-cover"
+                      />
+                    ) : null}
+                    <span className="min-w-0">
+                      <span className="block text-[var(--text)]">
+                        {p.type === 'front'
+                          ? 'Frente'
+                          : p.type === 'side'
+                            ? 'Lateral'
+                            : p.type === 'back'
+                              ? 'Costas'
+                              : p.type}{' '}
+                        · {new Date(p.takenAt).toLocaleString('pt-BR')}
+                      </span>
+                      <span className="block truncate text-[var(--muted)]">
+                        {p.storagePath.split('/').pop()}
+                      </span>
+                    </span>
+                  </span>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="shrink-0 text-[var(--primary-hover)]"
+                    disabled={deletingId === p.id}
+                    onClick={() => void removePhoto(p.id)}
+                    data-testid={`delete-photo-${p.id}`}
+                  >
+                    {deletingId === p.id ? 'Apagando…' : 'Apagar'}
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </Card>
       ) : null}
     </div>
   );

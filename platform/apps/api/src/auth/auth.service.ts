@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SignJWT } from 'jose';
-import type { AuthContext } from '@athenas/shared';
+import type { AuthContext } from '@athena/shared';
 import { SupabaseService } from '../supabase/supabase.service';
 import { AuthContextService } from './auth-context.service';
 import { AuthUser } from './auth.types';
@@ -21,7 +21,7 @@ import {
   UpdateProfileDto,
 } from './dto/auth.dto';
 
-const DEV_TEST_EMAIL = 'teste@athenas.local';
+const DEV_TEST_EMAIL = 'teste@athena.local';
 const DEV_TEST_PASSWORD = 'teste123';
 const DEV_TEST_USER_ID = '99999999-9999-9999-9999-999999999999';
 
@@ -103,38 +103,79 @@ export class AuthService {
     const companyId = dto.companyId || auth.companyId;
     if (!companyId) throw new BadRequestException('companyId required');
 
+    const email = dto.email.trim().toLowerCase();
+    const unitId = dto.unitId || auth.defaultUnitId || null;
     const token = randomBytes(24).toString('hex');
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
 
-    const { data, error } = await admin
+    const existingInvite = await admin
       .from('invites')
-      .insert({
-        company_id: companyId,
-        unit_id: dto.unitId || null,
-        role_id: dto.roleId,
-        email: dto.email.toLowerCase(),
-        full_name: dto.fullName || null,
-        phone: dto.phone || null,
-        token,
-        status: 'pending',
-        expires_at: expiresAt,
-        invited_by: actor.id,
-      })
       .select('*')
-      .single();
+      .eq('company_id', companyId)
+      .eq('email', email)
+      .eq('status', 'pending')
+      .is('deleted_at', null)
+      .maybeSingle();
 
-    if (error || !data) {
-      throw new BadRequestException(error?.message || 'Failed to create invite');
+    let inviteRow = existingInvite.data as Record<string, unknown> | null;
+
+    if (!inviteRow) {
+      const { data, error } = await admin
+        .from('invites')
+        .insert({
+          company_id: companyId,
+          unit_id: unitId,
+          role_id: dto.roleId,
+          email,
+          full_name: dto.fullName || null,
+          phone: dto.phone || null,
+          token,
+          status: 'pending',
+          expires_at: expiresAt,
+          invited_by: actor.id,
+        })
+        .select('*')
+        .single();
+
+      if (error || !data) {
+        throw new BadRequestException(error?.message || 'Failed to create invite');
+      }
+      inviteRow = data as Record<string, unknown>;
+    } else {
+      await admin
+        .from('invites')
+        .update({
+          role_id: dto.roleId,
+          unit_id: unitId,
+          full_name: dto.fullName || inviteRow.full_name || null,
+          phone: dto.phone || inviteRow.phone || null,
+          expires_at: expiresAt,
+          invited_by: actor.id,
+        })
+        .eq('id', inviteRow.id);
+      inviteRow = {
+        ...inviteRow,
+        role_id: dto.roleId,
+        unit_id: unitId,
+        full_name: dto.fullName || inviteRow.full_name || null,
+        phone: dto.phone || inviteRow.phone || null,
+      };
     }
 
-    // Best-effort: Supabase invite email (if configured)
-    try {
-      await admin.auth.admin.inviteUserByEmail(dto.email, {
-        data: { invite_token: token, full_name: dto.fullName },
-      });
-    } catch {
-      // Invite row is source of truth; accept flow uses token
-    }
+    // Staff must appear in lists immediately (Professor select, Usuários, etc.)
+    const provisioned = await this.provisionStaff({
+      email,
+      fullName: dto.fullName || (inviteRow.full_name as string) || null,
+      phone: dto.phone || (inviteRow.phone as string) || null,
+      companyId,
+      unitId: unitId ? String(unitId) : null,
+      roleId: dto.roleId,
+    });
+
+    await admin
+      .from('invites')
+      .update({ status: 'accepted', accepted_at: new Date().toISOString() })
+      .eq('id', inviteRow.id);
 
     await this.audit.log({
       companyId,
@@ -142,18 +183,108 @@ export class AuthService {
       module: 'auth',
       action: 'invite',
       entity: 'invite',
-      entityId: String(data.id),
+      entityId: String(inviteRow.id),
       ip,
       browser,
     });
 
     return {
-      id: data.id,
-      email: data.email,
-      token,
-      expiresAt: data.expires_at,
-      status: data.status,
-      acceptPath: `/accept-invite?token=${token}`,
+      id: inviteRow.id,
+      email,
+      userId: provisioned.userId,
+      token: String(inviteRow.token || token),
+      expiresAt: expiresAt,
+      status: 'accepted',
+      acceptPath: `/accept-invite?token=${inviteRow.token || token}`,
+      temporaryPassword: provisioned.temporaryPassword,
+    };
+  }
+
+  /** Creates auth user + profile + role so the person appears in /users right away. */
+  async provisionStaff(params: {
+    email: string;
+    fullName?: string | null;
+    phone?: string | null;
+    companyId: string;
+    unitId: string | null;
+    roleId: string;
+    password?: string;
+  }) {
+    const admin = this.supabase.getAdmin();
+    const email = params.email.trim().toLowerCase();
+    const devAuth = this.config.get<string>('DEV_AUTH_ENABLED') === 'true';
+    const password =
+      params.password || (devAuth ? DEV_TEST_PASSWORD : randomBytes(12).toString('base64url'));
+    const fullName = params.fullName || email.split('@')[0];
+
+    let userId: string;
+    const { data: created, error } = await admin.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true,
+      user_metadata: { full_name: fullName },
+    });
+
+    if (error || !created.user) {
+      const listed = await admin.auth.admin.listUsers({ page: 1, perPage: 200 });
+      const existing = listed.data.users.find((u) => u.email?.toLowerCase() === email);
+      if (!existing) {
+        throw new BadRequestException(error?.message || 'Could not create user');
+      }
+      userId = existing.id;
+      if (params.password || devAuth) {
+        await admin.auth.admin.updateUserById(userId, { password });
+      }
+    } else {
+      userId = created.user.id;
+    }
+
+    await admin.from('profiles').upsert(
+      {
+        id: userId,
+        email,
+        full_name: fullName,
+        phone: params.phone || null,
+        company_id: params.companyId,
+        default_unit_id: params.unitId,
+        status: 'active',
+      },
+      { onConflict: 'id' },
+    );
+
+    await admin.from('memberships').upsert(
+      {
+        profile_id: userId,
+        company_id: params.companyId,
+        unit_id: params.unitId,
+        role: 'member',
+        status: 'active',
+      },
+      { onConflict: 'profile_id,company_id,role' },
+    );
+
+    const existingRole = await admin
+      .from('user_roles')
+      .select('id')
+      .eq('profile_id', userId)
+      .eq('role_id', params.roleId)
+      .eq('company_id', params.companyId)
+      .is('deleted_at', null)
+      .maybeSingle();
+
+    if (!existingRole.data) {
+      await admin.from('user_roles').insert({
+        profile_id: userId,
+        role_id: params.roleId,
+        company_id: params.companyId,
+        unit_id: params.unitId,
+      });
+    }
+
+    return {
+      userId,
+      email,
+      temporaryPassword: devAuth ? password : undefined,
     };
   }
 
@@ -294,6 +425,8 @@ export class AuthService {
     if (dto.locale !== undefined) patch.locale = dto.locale;
     if (dto.timezone !== undefined) patch.timezone = dto.timezone;
     if (dto.defaultUnitId !== undefined) patch.default_unit_id = dto.defaultUnitId;
+    if (dto.theme !== undefined) patch.theme = dto.theme;
+    if (dto.preferences !== undefined) patch.preferences = dto.preferences;
 
     const { data, error } = await admin
       .from('profiles')
@@ -303,5 +436,33 @@ export class AuthService {
       .single();
     if (error || !data) throw new BadRequestException(error?.message || 'Update failed');
     return this.authContext.mapProfile(data as Record<string, unknown>);
+  }
+
+  async uploadAvatar(user: AuthUser, file: Express.Multer.File | undefined) {
+    if (!file) throw new BadRequestException('Arquivo obrigatório');
+    if (file.size > 2 * 1024 * 1024) {
+      throw new BadRequestException('Foto deve ter no máximo 2MB');
+    }
+    if (!file.mimetype.startsWith('image/')) {
+      throw new BadRequestException('Arquivo deve ser imagem');
+    }
+
+    const admin = this.supabase.getAdmin();
+    const { data: profile } = await admin
+      .from('profiles')
+      .select('company_id')
+      .eq('id', user.id)
+      .maybeSingle();
+    const companyId = profile?.company_id || '11111111-1111-1111-1111-111111111111';
+    const ext = file.mimetype.includes('png') ? 'png' : 'jpg';
+    const path = `companies/${companyId}/avatars/${user.id}.${ext}`;
+
+    const { error: upErr } = await admin.storage
+      .from('logos')
+      .upload(path, file.buffer, { contentType: file.mimetype, upsert: true });
+    if (upErr) throw new BadRequestException(upErr.message);
+
+    const { data: pub } = admin.storage.from('logos').getPublicUrl(path);
+    return this.updateProfile(user, { avatarUrl: pub.publicUrl });
   }
 }

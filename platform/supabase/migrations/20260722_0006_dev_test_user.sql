@@ -1,4 +1,4 @@
--- ATHENAS PLATFORM — DEV test user (Supabase Postgres)
+-- ATHENA PLATFORM — DEV test user (Supabase Postgres)
 -- Login path: Nest POST /auth/dev-login (DEV_AUTH_ENABLED), not Supabase Auth UI.
 -- auth.users row is required because profiles.id FK references auth.users(id).
 
@@ -29,7 +29,7 @@ values (
   '99999999-9999-9999-9999-999999999999',
   'authenticated',
   'authenticated',
-  'teste@athenas.local',
+  'teste@athena.local',
   crypt('teste123', gen_salt('bf')),
   now(),
   '{"provider":"email","providers":["email"]}'::jsonb,
@@ -62,7 +62,7 @@ values (
   '99999999-9999-9999-9999-999999999999',
   jsonb_build_object(
     'sub', '99999999-9999-9999-9999-999999999999',
-    'email', 'teste@athenas.local'
+    'email', 'teste@athena.local'
   ),
   'email',
   '99999999-9999-9999-9999-999999999999',
@@ -90,7 +90,7 @@ insert into public.profiles (
 values (
   '99999999-9999-9999-9999-999999999999',
   'Usuario Teste DEV',
-  'teste@athenas.local',
+  'teste@athena.local',
   '11111111-1111-1111-1111-111111111111',
   '22222222-2222-2222-2222-222222222222',
   'active',

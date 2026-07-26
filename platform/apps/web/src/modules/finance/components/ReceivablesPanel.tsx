@@ -1,10 +1,13 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import type { Receivable } from '@athenas/shared';
+import type { Receivable } from '@athena/shared';
+import { Button } from '@athena/ui';
 import { financeApi } from '../services/financeApi';
+import { isReceivableOpen, receivableStatusLabel } from '../utils/statusLabels';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
+import { ExportButtons } from '@/modules/polish/components/ExportButtons';
 
 export function ReceivablesPanel({ accessToken }: { accessToken: string }) {
   const { push } = useToast();
@@ -40,12 +43,15 @@ export function ReceivablesPanel({ accessToken }: { accessToken: string }) {
 
   return (
     <div className="space-y-4">
+      <div className="flex justify-end">
+        <ExportButtons accessToken={accessToken} resource="receivables" />
+      </div>
       <form onSubmit={onCreate} className="flex flex-wrap gap-2">
         <input
           required
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="rounded border border-zinc-300 px-3 py-2 text-sm"
+          className="athena-input max-w-xs"
           placeholder="Descrição"
         />
         <input
@@ -53,67 +59,73 @@ export function ReceivablesPanel({ accessToken }: { accessToken: string }) {
           step="0.01"
           value={amount}
           onChange={(e) => setAmount(Number(e.target.value))}
-          className="w-28 rounded border border-zinc-300 px-3 py-2 text-sm"
+          className="athena-input w-28"
         />
         <input
           type="date"
           value={dueDate}
           onChange={(e) => setDueDate(e.target.value)}
-          className="rounded border border-zinc-300 px-3 py-2 text-sm"
+          className="athena-input w-auto"
         />
-        <button type="submit" className="rounded bg-[#A3001B] px-4 py-2 text-sm font-semibold text-white">
-          Nova cobrança
-        </button>
+        <Button type="submit">Nova cobrança</Button>
       </form>
       {!items ? (
         <TableSkeleton />
       ) : (
-        <ul className="divide-y rounded border border-zinc-200 bg-white text-sm" data-testid="receivables-list">
+        <ul className="athena-list" data-testid="receivables-list">
           {items.map((r) => (
-            <li key={r.id} className="flex flex-wrap items-center justify-between gap-2 px-3 py-2">
+            <li key={r.id} className="athena-list-item flex-wrap">
               <span>
-                {r.description} · {r.amount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} ·{' '}
-                {r.dueDate} · {r.status}
+                {r.description} ·{' '}
+                {r.amount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} · {r.dueDate} ·{' '}
+                {receivableStatusLabel(String(r.status))}
               </span>
-              <span className="flex gap-1">
-                {r.status !== 'paid' && r.status !== 'cancelled' ? (
+              <span className="flex flex-wrap gap-1">
+                {isReceivableOpen(String(r.status)) ? (
                   <>
-                    <button
+                    <Button
                       type="button"
-                      className="rounded border px-2 py-1 text-xs"
+                      variant="secondary"
+                      className="!px-2 !py-1 text-xs"
                       onClick={() => void financeApi.receive(accessToken, r.id).then(load)}
                     >
                       Receber
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       type="button"
-                      className="rounded border px-2 py-1 text-xs"
+                      variant="ghost"
+                      className="!px-2 !py-1 text-xs"
                       onClick={() =>
                         void financeApi
                           .pix(accessToken, r.id)
-                          .then((tx) => push(`PIX: ${tx.copyPaste?.slice(0, 40)}…`))
+                          .then((tx) => {
+                            push(`PIX: ${tx.copyPaste?.slice(0, 40)}…`);
+                            return load();
+                          })
                           .catch((e) => push(String(e), 'error'))
                       }
                     >
                       Gerar PIX
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       type="button"
-                      className="rounded border px-2 py-1 text-xs"
+                      variant="ghost"
+                      className="!px-2 !py-1 text-xs"
                       onClick={() => void financeApi.cancel(accessToken, r.id).then(load)}
                     >
                       Cancelar
-                    </button>
+                    </Button>
                   </>
                 ) : null}
                 {r.status === 'paid' ? (
-                  <button
+                  <Button
                     type="button"
-                    className="rounded border px-2 py-1 text-xs"
+                    variant="ghost"
+                    className="!px-2 !py-1 text-xs"
                     onClick={() => void financeApi.refund(accessToken, r.id).then(load)}
                   >
                     Estornar
-                  </button>
+                  </Button>
                 ) : null}
               </span>
             </li>

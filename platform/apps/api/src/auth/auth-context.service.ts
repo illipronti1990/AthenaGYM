@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException, ForbiddenException } from '@nestjs/common';
-import type { AuthContext, MeResponse, Profile, Role, Unit, Company, Membership } from '@athenas/shared';
+import type { AuthContext, MeResponse, Profile, Role, Unit, Company, Membership } from '@athena/shared';
 import { SupabaseService } from '../supabase/supabase.service';
 import { AuthUser } from './auth.types';
 
@@ -199,6 +199,8 @@ export class AuthContextService {
       lastLoginAt: row.last_login_at ? String(row.last_login_at) : null,
       locale: (row.locale as string) || null,
       timezone: (row.timezone as string) || null,
+      theme: (row.theme as string) || 'system',
+      preferences: (row.preferences as Record<string, unknown>) || {},
       createdAt: String(row.created_at),
       updatedAt: String(row.updated_at),
       deletedAt: row.deleted_at ? String(row.deleted_at) : null,

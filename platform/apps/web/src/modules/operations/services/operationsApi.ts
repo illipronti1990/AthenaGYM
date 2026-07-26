@@ -5,7 +5,7 @@ import type {
   OperationsDashboard,
   Room,
   Schedule,
-} from '@athenas/shared';
+} from '@athena/shared';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
 
@@ -48,7 +48,10 @@ export const operationsApi = {
   generateQr: (t: string, studentId: string, unitId?: string) =>
     apiFetch<{ token: string; expiresIn: number; expiresAt: string }>('/checkins/qr', t, {
       method: 'POST',
-      body: JSON.stringify({ studentId, unitId }),
+      body: JSON.stringify({
+        studentId,
+        ...(unitId ? { unitId } : {}),
+      }),
     }),
   devices: (t: string) => apiFetch<AccessDevice[]>('/access/devices', t),
   validateAccess: (t: string, body: Record<string, unknown>) =>

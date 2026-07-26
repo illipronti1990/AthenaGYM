@@ -7,8 +7,8 @@ import type {
   PredictionItem,
   ReportDefinition,
   ReportSchedule,
-} from '@athenas/shared';
-import { averageTicket, conversionRate, churnRate, deltaPercent } from '@athenas/sdk-bi';
+} from '@athena/shared';
+import { averageTicket, conversionRate, churnRate, deltaPercent } from '@athena/sdk-bi';
 import { SupabaseService } from '../supabase/supabase.service';
 
 @Injectable()

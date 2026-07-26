@@ -9,4 +9,4 @@ infrastructure/
   terraform/    (future) cloud IaC
 ```
 
-Prepares ATHENAS for selective microservice scale-out (`analytics-service`, `integration-hub`, `realtime-gateway`).
+Prepares ATHENA for selective microservice scale-out (`analytics-service`, `integration-hub`, `realtime-gateway`).

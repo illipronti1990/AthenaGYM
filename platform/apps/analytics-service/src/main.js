@@ -10,7 +10,7 @@ const API_URL = process.env.API_URL || 'http://localhost:3001/api/v1';
 const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && req.url === '/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ status: 'ok', service: 'athenas-analytics-service', api: API_URL }));
+    res.end(JSON.stringify({ status: 'ok', service: 'athena-analytics-service', api: API_URL }));
     return;
   }
   res.writeHead(404);
@@ -19,5 +19,5 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, () => {
   // eslint-disable-next-line no-console
-  console.log(`ATHENAS analytics-service stub on :${PORT}`);
+  console.log(`ATHENA analytics-service stub on :${PORT}`);
 });

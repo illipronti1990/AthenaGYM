@@ -6,7 +6,7 @@ import type {
   StudentDocument,
   StudentListItem,
   StudentStatusHistory,
-} from '@athenas/shared';
+} from '@athena/shared';
 import { SupabaseService } from '../supabase/supabase.service';
 
 @Injectable()

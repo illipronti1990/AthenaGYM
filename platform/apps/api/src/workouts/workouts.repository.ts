@@ -8,7 +8,7 @@ import type {
   WorkoutExercise,
   WorkoutTemplate,
   WorkoutsDashboard,
-} from '@athenas/shared';
+} from '@athena/shared';
 import { SupabaseService } from '../supabase/supabase.service';
 
 @Injectable()
@@ -330,6 +330,31 @@ export class WorkoutsRepository {
       .order('taken_at', { ascending: false });
     if (error) throw error;
     return (data || []).map((r) => this.mapPhoto(r as Record<string, unknown>));
+  }
+
+  async getPhoto(companyId: string, photoId: string) {
+    const { data, error } = await this.admin()
+      .from('progress_photos')
+      .select('*')
+      .eq('company_id', companyId)
+      .eq('id', photoId)
+      .is('deleted_at', null)
+      .maybeSingle();
+    if (error) throw error;
+    return data ? this.mapPhoto(data as Record<string, unknown>) : null;
+  }
+
+  async softDeletePhoto(companyId: string, photoId: string) {
+    const { data, error } = await this.admin()
+      .from('progress_photos')
+      .update({ deleted_at: new Date().toISOString() })
+      .eq('company_id', companyId)
+      .eq('id', photoId)
+      .is('deleted_at', null)
+      .select('*')
+      .maybeSingle();
+    if (error) throw error;
+    return data ? this.mapPhoto(data as Record<string, unknown>) : null;
   }
 
   async createSuggestion(row: Record<string, unknown>) {

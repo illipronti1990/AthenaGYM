@@ -1,1 +1,1 @@
-export type { MeResponse, Company, Unit, Profile, Membership } from '@athenas/shared';
+export type { MeResponse, Company, Unit, Profile, Membership } from '@athena/shared';

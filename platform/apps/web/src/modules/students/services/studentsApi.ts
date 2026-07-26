@@ -1,4 +1,4 @@
-import type { StudentListItem, StudentListResponse, Student } from '@athenas/shared';
+import type { StudentListItem, StudentListResponse, Student } from '@athena/shared';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
 

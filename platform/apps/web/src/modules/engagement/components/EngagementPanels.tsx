@@ -9,7 +9,8 @@ import type {
   Conversation,
   EngagementDashboard,
   RankingEntry,
-} from '@athenas/shared';
+} from '@athena/shared';
+import { Button, Card, chartColors } from '@athena/ui';
 import { engagementApi } from '../services/engagementApi';
 
 export function EngagementDashboardPanel({ accessToken }: { accessToken: string }) {
@@ -23,24 +24,26 @@ export function EngagementDashboardPanel({ accessToken }: { accessToken: string 
       .catch((e) => setError(e instanceof Error ? e.message : 'erro'));
   }, [accessToken]);
 
-  if (error) return <p className="text-sm text-red-700">{error}</p>;
-  if (!data) return <p className="text-sm text-zinc-500">Carregando…</p>;
+  if (error) return <p className="text-sm text-[var(--primary-hover)]">{error}</p>;
+  if (!data) return <p className="text-sm text-[var(--muted)]">Carregando…</p>;
 
   const cards = [
-    ['Mensagens hoje', data.messagesToday],
-    ['Push enviados', data.pushSent],
-    ['Desafios ativos', data.activeChallenges],
-    ['Alunos engajados', `${data.engagedStudentsPct}%`],
-    ['Fidelidade', data.loyaltyMembers],
+    ['Mensagens hoje', data.messagesToday, chartColors.revenue],
+    ['Push enviados', data.pushSent, chartColors.workouts],
+    ['Desafios ativos', data.activeChallenges, chartColors.checkins],
+    ['Alunos engajados', `${data.engagedStudentsPct}%`, chartColors.finance],
+    ['Fidelidade', data.loyaltyMembers, chartColors.revenue],
   ] as const;
 
   return (
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-      {cards.map(([label, value]) => (
-        <div key={label} className="border-b border-zinc-200 pb-3">
-          <p className="text-xs uppercase tracking-wide text-zinc-500">{label}</p>
-          <p className="mt-1 text-2xl font-semibold">{value}</p>
-        </div>
+      {cards.map(([label, value, color]) => (
+        <Card key={label} hover>
+          <p className="text-xs uppercase tracking-wide text-[var(--muted)]">{label}</p>
+          <p className="mt-2 text-2xl font-semibold" style={{ color }}>
+            {value}
+          </p>
+        </Card>
       ))}
     </div>
   );
@@ -80,44 +83,42 @@ export function NotificationsPanel({ accessToken }: { accessToken: string }) {
   return (
     <div className="space-y-4">
       <form onSubmit={onSend} className="flex flex-wrap items-end gap-3">
-        <label className="text-sm">
+        <label className="text-sm text-[var(--muted)]">
           User ID (profile)
           <input
-            className="mt-1 block w-72 rounded border border-zinc-300 px-2 py-1.5 font-mono text-xs"
+            className="athena-input mt-1 block w-72 font-mono text-xs"
             value={userId}
             onChange={(e) => setUserId(e.target.value)}
             required
           />
         </label>
-        <label className="text-sm">
+        <label className="text-sm text-[var(--muted)]">
           Título
           <input
-            className="mt-1 block rounded border border-zinc-300 px-2 py-1.5"
+            className="athena-input mt-1 block"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
         </label>
-        <button type="submit" className="rounded bg-[#A3001B] px-3 py-1.5 text-sm font-semibold text-white">
-          Enviar push
-        </button>
+        <Button type="submit">Enviar push</Button>
       </form>
-      {error ? <p className="text-sm text-red-700">{error}</p> : null}
-      <ul className="divide-y divide-zinc-200 text-sm">
+      {error ? <p className="text-sm text-[var(--primary-hover)]">{error}</p> : null}
+      <ul className="athena-list text-sm">
         {items.map((n) => (
-          <li key={n.id} className="flex justify-between gap-2 py-2">
-            <span>
+          <li key={n.id} className="athena-list-item">
+            <span className="text-[var(--text)]">
               {n.title} · {n.channel} · {n.status}
             </span>
             {!n.readAt ? (
               <button
                 type="button"
-                className="text-[#A3001B]"
+                className="athena-link text-[var(--gold)]"
                 onClick={() => engagementApi.markRead(accessToken, n.id).then(reload)}
               >
                 Marcar lida
               </button>
             ) : (
-              <span className="text-zinc-400">lida</span>
+              <span className="text-[var(--muted)]">lida</span>
             )}
           </li>
         ))}
@@ -174,50 +175,54 @@ export function ChatPanel({ accessToken }: { accessToken: string }) {
 
   return (
     <div className="grid gap-4 md:grid-cols-2">
-      <div className="space-y-3">
+      <Card className="space-y-3">
         <div className="flex gap-2">
           <input
-            className="w-full rounded border border-zinc-300 px-2 py-1.5 font-mono text-xs"
+            className="athena-input w-full font-mono text-xs"
             placeholder="Member profile UUID"
             value={memberId}
             onChange={(e) => setMemberId(e.target.value)}
           />
-          <button type="button" onClick={createConv} className="rounded border px-2 py-1 text-sm">
+          <Button type="button" variant="secondary" onClick={() => void createConv()}>
             Nova
-          </button>
+          </Button>
         </div>
-        <ul className="divide-y divide-zinc-200 text-sm">
+        <ul className="divide-y divide-[var(--border)] text-sm">
           {conversations.map((c) => (
             <li key={c.id}>
-              <button type="button" className="w-full py-2 text-left hover:text-[#A3001B]" onClick={() => loadMessages(c.id)}>
+              <button
+                type="button"
+                className="w-full py-2 text-left text-[var(--text)] hover:text-[var(--gold)]"
+                onClick={() => void loadMessages(c.id)}
+              >
                 {c.title || c.id.slice(0, 8)} · {c.type}
               </button>
             </li>
           ))}
         </ul>
-      </div>
-      <div className="space-y-3">
-        {error ? <p className="text-sm text-red-700">{error}</p> : null}
+      </Card>
+      <Card className="space-y-3">
+        {error ? <p className="text-sm text-[var(--primary-hover)]">{error}</p> : null}
         <ul className="max-h-64 space-y-2 overflow-auto text-sm">
           {messages.map((m) => (
-            <li key={m.id} className="rounded bg-zinc-50 px-2 py-1">
-              <span className="text-xs text-zinc-500">{m.senderId.slice(0, 8)}…</span>
-              <p>{m.content}</p>
+            <li key={m.id} className="rounded-[10px] bg-[var(--surface)] px-2 py-1">
+              <span className="text-xs text-[var(--muted)]">{m.senderId.slice(0, 8)}…</span>
+              <p className="text-[var(--text)]">{m.content}</p>
             </li>
           ))}
         </ul>
         <div className="flex gap-2">
           <input
-            className="w-full rounded border border-zinc-300 px-2 py-1.5"
+            className="athena-input w-full"
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="Mensagem"
           />
-          <button type="button" onClick={send} className="rounded bg-[#A3001B] px-3 py-1.5 text-sm text-white">
+          <Button type="button" onClick={() => void send()}>
             Enviar
-          </button>
+          </Button>
         </div>
-      </div>
+      </Card>
     </div>
   );
 }
@@ -269,30 +274,34 @@ export function CampaignsPanel({ accessToken }: { accessToken: string }) {
     <div className="space-y-4">
       <div className="flex flex-wrap gap-2">
         <input
-          className="rounded border border-zinc-300 px-2 py-1.5"
+          className="athena-input"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-        <button type="button" onClick={create} className="rounded bg-[#A3001B] px-3 py-1.5 text-sm text-white">
+        <Button type="button" onClick={() => void create()}>
           Criar campanha
-        </button>
+        </Button>
       </div>
       <textarea
-        className="w-full rounded border border-zinc-300 px-2 py-1.5 text-sm"
+        className="athena-input text-sm"
         rows={2}
         value={body}
         onChange={(e) => setBody(e.target.value)}
       />
-      {msg ? <p className="text-sm text-emerald-700">{msg}</p> : null}
-      {error ? <p className="text-sm text-red-700">{error}</p> : null}
-      <ul className="divide-y divide-zinc-200 text-sm">
+      {msg ? <p className="text-sm text-[var(--gold)]">{msg}</p> : null}
+      {error ? <p className="text-sm text-[var(--primary-hover)]">{error}</p> : null}
+      <ul className="athena-list text-sm">
         {items.map((c) => (
-          <li key={c.id} className="flex justify-between py-2">
-            <span>
+          <li key={c.id} className="athena-list-item">
+            <span className="text-[var(--text)]">
               {c.name} · {c.status} · {c.channel}
             </span>
             {c.status === 'draft' ? (
-              <button type="button" onClick={() => send(c.id)} className="text-[#A3001B]">
+              <button
+                type="button"
+                onClick={() => void send(c.id)}
+                className="athena-link text-[var(--gold)]"
+              >
                 Enviar
               </button>
             ) : null}
@@ -350,39 +359,47 @@ export function LoyaltyPanel({ accessToken }: { accessToken: string }) {
     <div className="space-y-6">
       <div className="flex flex-wrap gap-2">
         <input
-          className="w-72 rounded border border-zinc-300 px-2 py-1.5 font-mono text-xs"
+          className="athena-input w-72 font-mono text-xs"
           placeholder="Student ID"
           value={studentId}
           onChange={(e) => setStudentId(e.target.value)}
         />
-        <button type="button" onClick={award} className="rounded border px-2 py-1 text-sm">
+        <Button type="button" variant="secondary" onClick={() => void award()}>
           +10 check-in
-        </button>
-        <button type="button" onClick={askAi} className="rounded border px-2 py-1 text-sm">
+        </Button>
+        <Button type="button" variant="ghost" onClick={() => void askAi()}>
           Perguntar IA
-        </button>
+        </Button>
       </div>
-      {aiAnswer ? <p className="text-sm text-zinc-700">{aiAnswer}</p> : null}
-      {error ? <p className="text-sm text-red-700">{error}</p> : null}
+      {aiAnswer ? <p className="text-sm text-[var(--text)]">{aiAnswer}</p> : null}
+      {error ? <p className="text-sm text-[var(--primary-hover)]">{error}</p> : null}
       <div>
-        <h2 className="mb-2 font-semibold">TOP 10</h2>
-        <ol className="list-decimal space-y-1 pl-5 text-sm">
-          {ranking.map((r) => (
-            <li key={r.studentId}>
-              {r.studentId.slice(0, 8)}… — {r.points} pts ({r.tier})
-            </li>
-          ))}
-        </ol>
+        <h2 className="athena-title mb-2 text-sm">TOP 10</h2>
+        <Card>
+          <ol className="list-decimal space-y-1 pl-5 text-sm text-[var(--text)]">
+            {ranking.map((r) => (
+              <li key={r.studentId}>
+                {r.studentId.slice(0, 8)}… —{' '}
+                <span className="text-[var(--gold)]">{r.points} pts</span> ({r.tier})
+              </li>
+            ))}
+          </ol>
+        </Card>
       </div>
       <div>
-        <h2 className="mb-2 font-semibold">Desafios</h2>
-        <ul className="divide-y divide-zinc-200 text-sm">
+        <h2 className="athena-title mb-2 text-sm">Desafios</h2>
+        <ul className="athena-list text-sm">
           {challenges.map((c) => (
-            <li key={c.id} className="flex justify-between py-2">
-              <span>
+            <li key={c.id} className="athena-list-item">
+              <span className="text-[var(--text)]">
                 {c.title} · {c.pointsReward} pts
               </span>
-              <button type="button" disabled={!studentId} onClick={() => join(c.id)} className="text-[#A3001B]">
+              <button
+                type="button"
+                disabled={!studentId}
+                onClick={() => void join(c.id)}
+                className="athena-link text-[var(--gold)] disabled:opacity-50"
+              >
                 Participar
               </button>
             </li>

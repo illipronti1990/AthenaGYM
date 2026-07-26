@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState, useTransition } from 'react';
-import type { ExecutiveDashboard, KpiItem, PredictionItem, ReportDefinition } from '@athenas/shared';
+import type { ExecutiveDashboard, KpiItem, PredictionItem, ReportDefinition } from '@athena/shared';
+import { Button, Card, chartColors } from '@athena/ui';
 import { analyticsApi } from '../services/analyticsApi';
 
 function money(n: number) {
@@ -11,7 +12,7 @@ function money(n: number) {
 function Delta({ value }: { value: number }) {
   const up = value >= 0;
   return (
-    <span className={up ? 'text-emerald-700' : 'text-rose-700'}>
+    <span className={up ? 'text-emerald-400' : 'text-[var(--primary-hover)]'}>
       {up ? '↑' : '↓'} {Math.abs(value)}%
     </span>
   );
@@ -28,27 +29,34 @@ export function ExecutiveStrip({ accessToken }: { accessToken: string }) {
       .catch((e: Error) => setError(e.message));
   }, [accessToken]);
 
-  if (error) return <p className="text-sm text-rose-700">{error}</p>;
-  if (!data) return <p className="text-sm text-zinc-500">Carregando executivo…</p>;
+  if (error) return <p className="text-sm text-[var(--primary-hover)]">{error}</p>;
+  if (!data) return <p className="text-sm text-[var(--muted)]">Carregando executivo…</p>;
 
   const cards = [
-    { label: 'Receita', value: money(data.revenue), delta: data.revenueDeltaPct },
-    { label: 'Lucro', value: money(data.profit), delta: data.profitDeltaPct },
-    { label: 'Churn', value: `${data.churn}%`, delta: data.churnDeltaPct },
-    { label: 'Conversão', value: `${data.conversion}%`, delta: data.conversionDeltaPct },
-    { label: 'Check-ins', value: data.checkins.toLocaleString('pt-BR'), delta: data.checkinsDeltaPct },
+    { label: 'Receita', value: money(data.revenue), delta: data.revenueDeltaPct, color: chartColors.revenue },
+    { label: 'Lucro', value: money(data.profit), delta: data.profitDeltaPct, color: chartColors.workouts },
+    { label: 'Churn', value: `${data.churn}%`, delta: data.churnDeltaPct, color: chartColors.finance },
+    { label: 'Conversão', value: `${data.conversion}%`, delta: data.conversionDeltaPct, color: chartColors.checkins },
+    {
+      label: 'Check-ins',
+      value: data.checkins.toLocaleString('pt-BR'),
+      delta: data.checkinsDeltaPct,
+      color: chartColors.revenue,
+    },
   ];
 
   return (
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5" data-testid="executive-strip">
       {cards.map((c) => (
-        <div key={c.label} className="border-b border-zinc-200 pb-3">
-          <p className="text-xs uppercase tracking-wide text-zinc-500">{c.label}</p>
-          <p className="mt-1 text-xl font-semibold text-zinc-900">{c.value}</p>
-          <p className="text-sm">
+        <Card key={c.label} hover>
+          <p className="text-xs uppercase tracking-wide text-[var(--muted)]">{c.label}</p>
+          <p className="mt-2 text-xl font-semibold" style={{ color: c.color }}>
+            {c.value}
+          </p>
+          <p className="mt-1 text-sm">
             <Delta value={c.delta} />
           </p>
-        </div>
+        </Card>
       ))}
     </div>
   );
@@ -65,8 +73,8 @@ export function KpiGrid({ accessToken }: { accessToken: string }) {
       .catch((e: Error) => setError(e.message));
   }, [accessToken]);
 
-  if (error) return <p className="text-sm text-rose-700">{error}</p>;
-  if (!kpis.length) return <p className="text-sm text-zinc-500">Carregando KPIs…</p>;
+  if (error) return <p className="text-sm text-[var(--primary-hover)]">{error}</p>;
+  if (!kpis.length) return <p className="text-sm text-[var(--muted)]">Carregando KPIs…</p>;
 
   const categories = [...new Set(kpis.map((k) => k.category))];
 
@@ -74,25 +82,28 @@ export function KpiGrid({ accessToken }: { accessToken: string }) {
     <div className="space-y-6" data-testid="kpi-grid">
       {categories.map((cat) => (
         <section key={cat}>
-          <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-zinc-600">{cat}</h3>
-          <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {kpis
-              .filter((k) => k.category === cat)
-              .map((k) => (
-                <li key={k.code} className="border-b border-zinc-100 py-2">
-                  <div className="flex items-baseline justify-between gap-2">
-                    <span className="text-sm text-zinc-700">{k.name}</span>
-                    <span className="font-medium">
+          <h3 className="athena-title mb-3 text-sm uppercase tracking-wide">{cat}</h3>
+          <Card>
+            <ul className="grid gap-1 sm:grid-cols-2 lg:grid-cols-3">
+              {kpis
+                .filter((k) => k.category === cat)
+                .map((k) => (
+                  <li
+                    key={k.code}
+                    className="flex items-baseline justify-between gap-2 border-b border-[var(--border)] py-2 last:border-b-0"
+                  >
+                    <span className="text-sm text-[var(--muted)]">{k.name}</span>
+                    <span className="font-medium text-[var(--text)]">
                       {k.unit === 'currency'
                         ? money(k.value)
                         : k.unit === 'percent'
                           ? `${k.value}%`
                           : k.value.toLocaleString('pt-BR')}
                     </span>
-                  </div>
-                </li>
-              ))}
-          </ul>
+                  </li>
+                ))}
+            </ul>
+          </Card>
         </section>
       ))}
     </div>
@@ -117,11 +128,11 @@ export function ChurnPanel({ accessToken }: { accessToken: string }) {
   return (
     <div className="space-y-3" data-testid="churn-panel">
       <div className="flex items-center justify-between gap-2">
-        <h2 className="text-lg font-semibold">Predição de churn</h2>
-        <button
+        <h2 className="athena-title text-lg">Predição de churn</h2>
+        <Button
           type="button"
+          variant="secondary"
           disabled={pending}
-          className="rounded border border-zinc-300 px-3 py-1.5 text-sm hover:border-[#A3001B]"
           onClick={() =>
             startTransition(async () => {
               setError(null);
@@ -135,22 +146,24 @@ export function ChurnPanel({ accessToken }: { accessToken: string }) {
           }
         >
           {pending ? 'Rodando…' : 'Rodar prediction engine'}
-        </button>
+        </Button>
       </div>
-      {error && <p className="text-sm text-rose-700">{error}</p>}
-      {!items.length && <p className="text-sm text-zinc-500">Nenhuma predição ainda. Execute o engine.</p>}
-      <ul className="divide-y divide-zinc-100">
+      {error && <p className="text-sm text-[var(--primary-hover)]">{error}</p>}
+      {!items.length && (
+        <p className="text-sm text-[var(--muted)]">Nenhuma predição ainda. Execute o engine.</p>
+      )}
+      <ul className="athena-list">
         {items.slice(0, 10).map((p) => (
-          <li key={p.id} className="flex flex-wrap items-center justify-between gap-2 py-3">
+          <li key={p.id} className="athena-list-item flex-wrap">
             <div>
-              <p className="font-medium">
+              <p className="font-medium text-[var(--text)]">
                 {(p.features.name as string) || p.entityId.slice(0, 8)}
               </p>
-              <p className="text-sm text-zinc-600">{p.recommendation}</p>
+              <p className="text-sm text-[var(--muted)]">{p.recommendation}</p>
             </div>
             <div className="text-right">
-              <p className="text-lg font-semibold text-[#A3001B]">{Math.round(p.score * 100)}%</p>
-              <p className="text-xs uppercase text-zinc-500">{p.label}</p>
+              <p className="text-lg font-semibold text-[var(--gold)]">{Math.round(p.score * 100)}%</p>
+              <p className="text-xs uppercase text-[var(--muted)]">{p.label}</p>
             </div>
           </li>
         ))}
@@ -173,7 +186,7 @@ export function ReportsPanel({ accessToken }: { accessToken: string }) {
 
   return (
     <div className="space-y-4" data-testid="reports-panel">
-      <h2 className="text-lg font-semibold">Report builder</h2>
+      <h2 className="athena-title text-lg">Report builder</h2>
       <form
         className="flex flex-wrap items-end gap-2"
         onSubmit={(e) => {
@@ -195,25 +208,21 @@ export function ReportsPanel({ accessToken }: { accessToken: string }) {
           });
         }}
       >
-        <label className="text-sm">
+        <label className="text-sm text-[var(--muted)]">
           Nome
           <input
-            className="mt-1 block rounded border border-zinc-300 px-2 py-1.5"
+            className="athena-input mt-1"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
         </label>
-        <button
-          type="submit"
-          disabled={pending}
-          className="rounded bg-[#A3001B] px-3 py-1.5 text-sm text-white"
-        >
+        <Button type="submit" disabled={pending}>
           Salvar
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
+          variant="secondary"
           disabled={pending}
-          className="rounded border border-zinc-300 px-3 py-1.5 text-sm"
           onClick={() =>
             startTransition(async () => {
               const job = await analyticsApi.createExport(accessToken, {
@@ -225,12 +234,12 @@ export function ReportsPanel({ accessToken }: { accessToken: string }) {
           }
         >
           Exportar CSV
-        </button>
+        </Button>
       </form>
-      {msg && <p className="text-sm text-zinc-600">{msg}</p>}
-      <ul className="text-sm">
+      {msg && <p className="text-sm text-[var(--muted)]">{msg}</p>}
+      <ul className="athena-list text-sm">
         {reports.map((r) => (
-          <li key={r.id} className="border-b border-zinc-100 py-2">
+          <li key={r.id} className="athena-list-item">
             {r.name} · {r.source} · {r.fields.join(', ')}
           </li>
         ))}
@@ -246,7 +255,7 @@ export function AiInsightsPanel({ accessToken }: { accessToken: string }) {
 
   return (
     <div className="space-y-3" data-testid="ai-insights-panel">
-      <h2 className="text-lg font-semibold">IA BI</h2>
+      <h2 className="athena-title text-lg">IA BI</h2>
       <form
         className="flex flex-wrap gap-2"
         onSubmit={(e) => {
@@ -258,19 +267,15 @@ export function AiInsightsPanel({ accessToken }: { accessToken: string }) {
         }}
       >
         <input
-          className="min-w-[240px] flex-1 rounded border border-zinc-300 px-2 py-1.5 text-sm"
+          className="athena-input min-w-[240px] flex-1"
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
         />
-        <button
-          type="submit"
-          disabled={pending}
-          className="rounded bg-[#A3001B] px-3 py-1.5 text-sm text-white"
-        >
+        <Button type="submit" disabled={pending}>
           Perguntar
-        </button>
+        </Button>
       </form>
-      {answer && <p className="text-sm leading-relaxed text-zinc-700">{answer}</p>}
+      {answer && <p className="text-sm leading-relaxed text-[var(--text)]">{answer}</p>}
     </div>
   );
 }

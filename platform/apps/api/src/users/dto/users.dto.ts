@@ -1,5 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEmail, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsEmail, IsOptional, IsString } from 'class-validator';
+import { IsUuidString } from '../../common/validators/is-uuid-string';
 
 export class CreateUserDto {
   @ApiPropertyOptional()
@@ -17,17 +18,17 @@ export class CreateUserDto {
   phone?: string;
 
   @ApiPropertyOptional()
-  @IsUUID()
+  @IsUuidString()
   roleId!: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   unitId?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   companyId?: string;
 }
 
@@ -49,16 +50,16 @@ export class UpdateUserDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   defaultUnitId?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   roleId?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   unitId?: string;
 }

@@ -11,7 +11,8 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { STUDENT_STATUSES } from '@athenas/shared';
+import { STUDENT_STATUSES } from '@athena/shared';
+import { IsUuidString } from '../../common/validators/is-uuid-string';
 
 export class StudentAddressDto {
   @ApiPropertyOptional()
@@ -76,12 +77,13 @@ export class EmergencyContactDto {
 export class CreateStudentDto {
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   companyId?: string;
 
-  @ApiProperty()
-  @IsUUID()
-  unitId!: string;
+  @ApiPropertyOptional({ format: 'uuid', description: 'Se omitido, usa a unidade padrão do usuário' })
+  @IsOptional()
+  @IsUuidString()
+  unitId?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -169,6 +171,11 @@ export class CreateStudentDto {
 export class UpdateStudentDto {
   @ApiPropertyOptional()
   @IsOptional()
+  @IsUuidString()
+  unitId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
   fullName?: string;
 
@@ -212,6 +219,11 @@ export class UpdateStudentDto {
   @IsString()
   whatsapp?: string;
 
+  @ApiPropertyOptional({ enum: STUDENT_STATUSES })
+  @IsOptional()
+  @IsIn([...STUDENT_STATUSES])
+  status?: string;
+
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
@@ -232,6 +244,12 @@ export class UpdateStudentDto {
   @ValidateNested()
   @Type(() => StudentAddressDto)
   address?: StudentAddressDto;
+
+  @ApiPropertyOptional({ type: [EmergencyContactDto] })
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => EmergencyContactDto)
+  emergencyContacts?: EmergencyContactDto[];
 }
 
 export class ChangeStatusDto {

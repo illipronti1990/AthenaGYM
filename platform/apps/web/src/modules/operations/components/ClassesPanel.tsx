@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { Schedule } from '@athenas/shared';
+import type { Schedule } from '@athena/shared';
 import { operationsApi } from '../services/operationsApi';
+import { StudentSelect } from './StudentSelect';
 
 export function ClassesPanel({ accessToken }: { accessToken: string }) {
   const [classes, setClasses] = useState<Schedule[]>([]);
@@ -14,7 +15,9 @@ export function ClassesPanel({ accessToken }: { accessToken: string }) {
     operationsApi
       .classes(accessToken)
       .then(setClasses)
-      .catch((e) => setError(e instanceof Error ? e.message : 'erro'));
+      .catch((e) =>
+        setError(e instanceof Error ? e.message.replace(/^Failed to fetch$/, 'Falha ao carregar aulas') : 'erro'),
+      );
   }, [accessToken]);
 
   async function enroll(scheduleId: string) {
@@ -42,24 +45,15 @@ export function ClassesPanel({ accessToken }: { accessToken: string }) {
 
   return (
     <div className="space-y-4">
-      <label className="block text-sm">
-        Student ID
-        <input
-          className="mt-1 w-full max-w-md rounded border border-zinc-300 px-2 py-1.5 font-mono text-xs"
-          value={studentId}
-          onChange={(e) => setStudentId(e.target.value)}
-          placeholder="uuid do aluno"
-          required
-        />
-      </label>
-      {message ? <p className="text-sm text-emerald-700">{message}</p> : null}
-      {error ? <p className="text-sm text-red-700">{error}</p> : null}
-      <ul className="divide-y divide-zinc-200">
+      <StudentSelect accessToken={accessToken} value={studentId} onChange={setStudentId} />
+      {message ? <p className="text-sm text-[var(--gold)]">{message}</p> : null}
+      {error ? <p className="text-sm text-[var(--primary-hover)]">{error}</p> : null}
+      <ul className="divide-y divide-[var(--border)]">
         {classes.map((c) => (
           <li key={c.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
             <div>
               <p className="font-medium">{c.title}</p>
-              <p className="text-xs text-zinc-500">
+              <p className="text-xs text-[var(--muted)]">
                 {c.reservedCount}/{c.maxCapacity} · fila {c.waitlistCount ?? 0}
               </p>
             </div>
@@ -68,7 +62,7 @@ export function ClassesPanel({ accessToken }: { accessToken: string }) {
                 type="button"
                 disabled={!studentId}
                 onClick={() => enroll(c.id)}
-                className="rounded border border-zinc-300 px-2 py-1 text-sm hover:border-[#A3001B]"
+                className="athena-btn athena-btn-ghost"
               >
                 Reservar
               </button>
@@ -76,7 +70,7 @@ export function ClassesPanel({ accessToken }: { accessToken: string }) {
                 type="button"
                 disabled={!studentId}
                 onClick={() => cancel(c.id)}
-                className="rounded border border-zinc-300 px-2 py-1 text-sm text-zinc-600"
+                className="athena-btn athena-btn-ghost"
               >
                 Cancelar
               </button>

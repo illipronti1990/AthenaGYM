@@ -10,7 +10,7 @@ import type {
   EngagementDashboard,
   LoyaltyAccount,
   RankingEntry,
-} from '@athenas/shared';
+} from '@athena/shared';
 import { SupabaseService } from '../supabase/supabase.service';
 
 @Injectable()

@@ -1,4 +1,4 @@
--- ATHENAS PLATFORM Sprint 7 — Comunicação, Engajamento e Apps
+-- ATHENA PLATFORM Sprint 7 — Comunicação, Engajamento e Apps
 
 -- ---------------------------------------------------------------------------
 -- communication preferences (LGPD)

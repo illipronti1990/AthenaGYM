@@ -68,6 +68,16 @@ export const PERMISSION_CODES = [
   'predictions.run',
   'executive.read',
   'ai.insights',
+  'platform.read',
+  'platform.manage',
+  'platform.webhooks',
+  'marketplace.read',
+  'marketplace.manage',
+  'integrations.read',
+  'integrations.manage',
+  'settings.read',
+  'settings.update',
+  'backup.create',
 ] as const;
 
 export type PermissionCode = (typeof PERMISSION_CODES)[number];
@@ -76,7 +86,7 @@ export const SYSTEM_ROLES: { slug: SystemRoleSlug; name: string }[] = [
   { slug: 'super_admin', name: 'Super Admin' },
   { slug: 'admin', name: 'Administrador' },
   { slug: 'manager', name: 'Gerente' },
-  { slug: 'reception', name: 'Recepção' },
+  { slug: 'reception', name: 'Recepcionista' },
   { slug: 'finance', name: 'Financeiro' },
   { slug: 'trainer', name: 'Professor' },
   { slug: 'personal', name: 'Personal' },

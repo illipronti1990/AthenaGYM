@@ -1,4 +1,4 @@
--- ATHENAS PLATFORM Sprint 1 — IAM RBAC
+-- ATHENA PLATFORM Sprint 1 — IAM RBAC
 -- Evolves profiles + roles/permissions/user_roles/invites/audit_logs + RLS + seed
 
 -- ---------------------------------------------------------------------------

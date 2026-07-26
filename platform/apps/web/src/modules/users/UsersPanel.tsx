@@ -1,7 +1,8 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import type { Role, UserListItem } from '@athenas/shared';
+import type { Role, UserListItem } from '@athena/shared';
+import { Button } from '@athena/ui';
 import { apiInviteUser, apiListRoles, apiListUsers } from '@/services/api';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
@@ -50,7 +51,11 @@ export function UsersPanel({ accessToken }: { accessToken: string }) {
         roleId,
       });
       setInviteToken(res.token);
-      push('Convite criado');
+      push(
+        res.temporaryPassword
+          ? `Usuário criado. Senha DEV: ${res.temporaryPassword}`
+          : 'Usuário criado e liberado no sistema',
+      );
       setEmail('');
       setFullName('');
       setPhone('');
@@ -65,31 +70,31 @@ export function UsersPanel({ accessToken }: { accessToken: string }) {
   return (
     <div className="space-y-8">
       <section>
-        <h2 className="mb-3 text-lg font-semibold">Usuários</h2>
+        <h2 className="athena-title mb-3 text-lg">Usuários</h2>
         {!users ? (
           <TableSkeleton />
         ) : (
-          <div className="overflow-x-auto rounded border border-zinc-200 bg-white">
-            <table className="min-w-full text-left text-sm" data-testid="users-table">
-              <thead className="border-b bg-zinc-50 text-zinc-600">
+          <div className="athena-list overflow-x-auto">
+            <table className="athena-table" data-testid="users-table">
+              <thead>
                 <tr>
-                  <th className="px-3 py-2">Nome</th>
-                  <th className="px-3 py-2">Email</th>
-                  <th className="px-3 py-2">Cargo</th>
-                  <th className="px-3 py-2">Unidade</th>
-                  <th className="px-3 py-2">Status</th>
-                  <th className="px-3 py-2">Último acesso</th>
+                  <th>Nome</th>
+                  <th>Email</th>
+                  <th>Cargo</th>
+                  <th>Unidade</th>
+                  <th>Status</th>
+                  <th>Último acesso</th>
                 </tr>
               </thead>
               <tbody>
                 {users.map((u) => (
-                  <tr key={u.id} className="border-b last:border-0">
-                    <td className="px-3 py-2">{u.fullName || '—'}</td>
-                    <td className="px-3 py-2">{u.email || '—'}</td>
-                    <td className="px-3 py-2">{u.roles.join(', ') || '—'}</td>
-                    <td className="px-3 py-2">{u.unitIds.length || '—'}</td>
-                    <td className="px-3 py-2">{u.status}</td>
-                    <td className="px-3 py-2">
+                  <tr key={u.id}>
+                    <td>{u.fullName || '—'}</td>
+                    <td>{u.email || '—'}</td>
+                    <td>{u.roles.join(', ') || '—'}</td>
+                    <td>{u.unitIds.length || '—'}</td>
+                    <td>{u.status}</td>
+                    <td>
                       {u.lastLoginAt ? new Date(u.lastLoginAt).toLocaleString('pt-BR') : '—'}
                     </td>
                   </tr>
@@ -101,7 +106,7 @@ export function UsersPanel({ accessToken }: { accessToken: string }) {
       </section>
 
       <section>
-        <h2 className="mb-3 text-lg font-semibold">Convidar usuário</h2>
+        <h2 className="athena-title mb-3 text-lg">Novo usuário</h2>
         <form onSubmit={onInvite} className="grid max-w-xl gap-3 sm:grid-cols-2">
           <input
             required
@@ -109,25 +114,25 @@ export function UsersPanel({ accessToken }: { accessToken: string }) {
             placeholder="E-mail"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="rounded border border-zinc-300 px-3 py-2"
+            className="athena-input"
           />
           <input
             placeholder="Nome"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            className="rounded border border-zinc-300 px-3 py-2"
+            className="athena-input"
           />
           <input
             placeholder="Telefone"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            className="rounded border border-zinc-300 px-3 py-2"
+            className="athena-input"
           />
           <select
             required
             value={roleId}
             onChange={(e) => setRoleId(e.target.value)}
-            className="rounded border border-zinc-300 px-3 py-2"
+            className="athena-input"
           >
             {roles.map((r) => (
               <option key={r.id} value={r.id}>
@@ -135,17 +140,14 @@ export function UsersPanel({ accessToken }: { accessToken: string }) {
               </option>
             ))}
           </select>
-          <button
-            type="submit"
-            disabled={loading || !roleId}
-            className="rounded bg-[#A3001B] px-4 py-2 font-semibold text-white disabled:opacity-60 sm:col-span-2"
-          >
-            {loading ? 'Enviando…' : 'Enviar convite'}
-          </button>
+          <Button type="submit" disabled={loading || !roleId} className="sm:col-span-2">
+            {loading ? 'Salvando…' : 'Criar usuário'}
+          </Button>
         </form>
         {inviteToken ? (
-          <p className="mt-3 break-all rounded bg-amber-50 p-3 text-sm text-amber-900">
-            Link DEV: /accept-invite?token={inviteToken}
+          <p className="mt-3 break-all rounded-[10px] border border-[var(--gold)] bg-[rgba(212,175,55,0.1)] p-3 text-sm text-[var(--gold)]">
+            Usuário liberado no sistema (DEV: senha teste123). Link legado: /accept-invite?token=
+            {inviteToken}
           </p>
         ) : null}
       </section>

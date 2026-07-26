@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 type CookieToSet = { name: string; value: string; options?: Record<string, unknown> };
 
-const DEV_TOKEN_COOKIE = 'athenas_dev_token';
+const DEV_TOKEN_COOKIE = 'athena_dev_token';
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({

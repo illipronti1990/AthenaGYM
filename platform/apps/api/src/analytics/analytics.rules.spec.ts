@@ -6,7 +6,7 @@ import {
   predictChurn,
   predictLeadConversion,
   toCsv,
-} from '@athenas/sdk-bi';
+} from '@athena/sdk-bi';
 
 describe('analytics BI rules', () => {
   it('computes KPI helpers', () => {

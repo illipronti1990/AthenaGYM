@@ -1,7 +1,8 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import type { Contract, Enrollment, Lead, Plan } from '@athenas/shared';
+import type { Contract, Enrollment, Lead, Plan } from '@athena/shared';
+import { Button } from '@athena/ui';
 import { salesApi } from '../services/salesApi';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
@@ -52,12 +53,12 @@ export function EnrollmentsPanel({ accessToken }: { accessToken: string }) {
           placeholder="Student UUID"
           value={studentId}
           onChange={(e) => setStudentId(e.target.value)}
-          className="min-w-[260px] rounded border border-zinc-300 px-3 py-2 text-sm"
+          className="athena-input min-w-[260px]"
         />
         <select
           value={planId}
           onChange={(e) => setPlanId(e.target.value)}
-          className="rounded border border-zinc-300 px-3 py-2 text-sm"
+          className="athena-input w-auto"
         >
           {plans.map((p) => (
             <option key={p.id} value={p.id}>
@@ -65,16 +66,14 @@ export function EnrollmentsPanel({ accessToken }: { accessToken: string }) {
             </option>
           ))}
         </select>
-        <button type="submit" className="rounded bg-[#A3001B] px-4 py-2 text-sm font-semibold text-white">
-          Matricular
-        </button>
+        <Button type="submit">Matricular</Button>
       </form>
       {!items ? (
         <TableSkeleton />
       ) : (
-        <ul className="divide-y rounded border border-zinc-200 bg-white text-sm">
+        <ul className="athena-list">
           {items.map((i) => (
-            <li key={i.id} className="px-3 py-2">
+            <li key={i.id} className="athena-list-item">
               {i.id.slice(0, 8)}… · aluno {i.studentId.slice(0, 8)}… · plano {i.planId.slice(0, 8)}… ·{' '}
               {i.status}
             </li>
@@ -146,7 +145,7 @@ export function ContractsPanel({ accessToken }: { accessToken: string }) {
         <select
           value={leadId}
           onChange={(e) => setLeadId(e.target.value)}
-          className="rounded border border-zinc-300 px-3 py-2 text-sm"
+          className="athena-input w-auto"
         >
           <option value="">Lead (opcional se student)</option>
           {leads.map((l) => (
@@ -158,7 +157,7 @@ export function ContractsPanel({ accessToken }: { accessToken: string }) {
         <select
           value={planId}
           onChange={(e) => setPlanId(e.target.value)}
-          className="rounded border border-zinc-300 px-3 py-2 text-sm"
+          className="athena-input w-auto"
         >
           {plans.map((p) => (
             <option key={p.id} value={p.id}>
@@ -166,28 +165,27 @@ export function ContractsPanel({ accessToken }: { accessToken: string }) {
             </option>
           ))}
         </select>
-        <button type="submit" className="rounded bg-[#A3001B] px-4 py-2 text-sm font-semibold text-white">
-          Gerar contrato
-        </button>
+        <Button type="submit">Gerar contrato</Button>
       </form>
       {!items ? (
         <TableSkeleton />
       ) : (
-        <ul className="divide-y rounded border border-zinc-200 bg-white text-sm">
+        <ul className="athena-list">
           {items.map((c) => (
-            <li key={c.id} className="flex flex-wrap items-center justify-between gap-2 px-3 py-2">
+            <li key={c.id} className="athena-list-item flex-wrap">
               <span>
                 {c.contractNumber} · {c.status}
                 {c.signedAt ? ` · ${new Date(c.signedAt).toLocaleString('pt-BR')}` : ''}
               </span>
               {c.status !== 'signed' ? (
-                <button
+                <Button
                   type="button"
+                  variant="secondary"
+                  className="!px-3 !py-1 text-xs"
                   onClick={() => void onSign(c.id)}
-                  className="rounded border border-zinc-300 px-3 py-1 text-xs"
                 >
                   Assinar
-                </button>
+                </Button>
               ) : null}
             </li>
           ))}

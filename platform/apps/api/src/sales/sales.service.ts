@@ -5,8 +5,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import type { AuthContext, PipelineColumn, SalesDashboard } from '@athenas/shared';
-import { calcConversionRate } from '@athenas/shared';
+import type { AuthContext, PipelineColumn, SalesDashboard } from '@athena/shared';
+import { calcConversionRate } from '@athena/shared';
 import { AuditService } from '../audit/audit.service';
 import { AuthUser } from '../auth/auth.types';
 import { SupabaseService } from '../supabase/supabase.service';
@@ -380,15 +380,24 @@ export class SalesService implements SalesOutboundPort {
       enrollmentId = enrollment.id;
     }
 
-    const pdfBody = `ATHENAS CONTRACT\n${contract.contractNumber}\nStudent: ${studentId}\nPlan: ${plan.name}\nPrice: ${plan.price}\nSigned: ${new Date().toISOString()}\n`;
-    const path = `companies/${contract.companyId}/contracts/${contract.id}.txt`;
+    const { buildPdf } = await import('../prints/pdf.util');
+    const pdfBuffer = await buildPdf({
+      title: 'Contrato de Matrícula',
+      subtitle: 'ATHENA',
+      lines: [
+        `Contrato nº: ${contract.contractNumber}`,
+        `Aluno ID: ${studentId}`,
+        `Plano: ${plan.name}`,
+        `Valor: R$ ${Number(plan.price).toFixed(2)}`,
+        `Assinado em: ${new Date().toISOString()}`,
+      ],
+    });
+    const path = `companies/${contract.companyId}/contracts/${contract.id}.pdf`;
     const admin = this.supabase.getAdmin();
-    await admin.storage
-      .from('contracts')
-      .upload(path, Buffer.from(pdfBody, 'utf8'), {
-        contentType: 'text/plain',
-        upsert: true,
-      });
+    await admin.storage.from('contracts').upload(path, pdfBuffer, {
+      contentType: 'application/pdf',
+      upsert: true,
+    });
     const { data: pub } = admin.storage.from('contracts').getPublicUrl(path);
 
     const signed = await this.repo.updateContract(id, {

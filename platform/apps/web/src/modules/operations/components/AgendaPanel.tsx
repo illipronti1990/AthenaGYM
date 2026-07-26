@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import type { Schedule } from '@athenas/shared';
+import type { Schedule } from '@athena/shared';
 import { operationsApi } from '../services/operationsApi';
 
 const UNIT_ID = '22222222-2222-2222-2222-222222222222';
@@ -49,19 +49,19 @@ export function AgendaPanel({ accessToken }: { accessToken: string }) {
   return (
     <div className="space-y-6">
       <form onSubmit={onCreate} className="flex flex-wrap items-end gap-3">
-        <label className="text-sm">
+        <label className="text-sm text-[var(--muted)]">
           Título
           <input
-            className="mt-1 block w-56 rounded border border-zinc-300 px-2 py-1.5"
+            className="mt-1 block w-56 athena-input"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
           />
         </label>
-        <label className="text-sm">
+        <label className="text-sm text-[var(--muted)]">
           Tipo
           <select
-            className="mt-1 block rounded border border-zinc-300 px-2 py-1.5"
+            className="mt-1 block athena-input"
             value={type}
             onChange={(e) => setType(e.target.value)}
           >
@@ -77,30 +77,30 @@ export function AgendaPanel({ accessToken }: { accessToken: string }) {
         <button
           type="submit"
           disabled={loading}
-          className="rounded bg-[#A3001B] px-3 py-1.5 text-sm font-semibold text-white disabled:opacity-60"
+          className="athena-btn athena-btn-primary disabled:opacity-60"
         >
           {loading ? 'Salvando…' : 'Nova agenda'}
         </button>
       </form>
-      {error ? <p className="text-sm text-red-700">{error}</p> : null}
-      <ul className="divide-y divide-zinc-200">
+      {error ? <p className="text-sm text-[var(--primary-hover)]">{error}</p> : null}
+      <ul className="divide-y divide-[var(--border)]">
         {items.map((s) => (
           <li key={s.id} className="flex flex-wrap items-baseline justify-between gap-2 py-3">
             <div>
-              <p className="font-medium text-zinc-900">{s.title}</p>
-              <p className="text-xs text-zinc-500">
+              <p className="font-medium text-[var(--text)]">{s.title}</p>
+              <p className="text-xs text-[var(--muted)]">
                 {s.type} · {new Date(s.startAt).toLocaleString('pt-BR')} →{' '}
                 {new Date(s.endAt).toLocaleTimeString('pt-BR')}
               </p>
             </div>
-            <p className="text-sm text-zinc-600">
+            <p className="text-sm text-[var(--muted)]">
               {s.reservedCount ?? 0}/{s.maxCapacity}
               {(s.waitlistCount ?? 0) > 0 ? ` · fila ${s.waitlistCount}` : ''}
             </p>
           </li>
         ))}
         {items.length === 0 ? (
-          <li className="py-6 text-sm text-zinc-500">Nenhum item na agenda.</li>
+          <li className="py-6 text-sm text-[var(--muted)]">Nenhum item na agenda.</li>
         ) : null}
       </ul>
     </div>

@@ -1,6 +1,6 @@
 {
-  "name": "@athenas/web",
-  "version": "0.9.0",
+  "name": "@athena/web",
+  "version": "0.10.0",
   "private": true,
   "scripts": {
     "dev": "next dev --port 3000",
@@ -9,12 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@athenas/shared": "workspace:*",
+    "@athena/shared": "workspace:*",
+    "@athena/ui": "workspace:*",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.47.10",
     "next": "15.1.3",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "recharts": "^3.10.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

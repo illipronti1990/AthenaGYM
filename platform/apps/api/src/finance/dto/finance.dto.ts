@@ -7,6 +7,7 @@ import {
   IsUUID,
   Min,
 } from 'class-validator';
+import { IsUuidString } from '../../common/validators/is-uuid-string';
 
 export class CreateReceivableDto {
   @ApiProperty()
@@ -24,27 +25,27 @@ export class CreateReceivableDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   studentId?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   contractId?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   subscriptionId?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   costCenterId?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   unitId?: string;
 
   @ApiPropertyOptional()
@@ -54,7 +55,7 @@ export class CreateReceivableDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   companyId?: string;
 }
 
@@ -155,21 +156,21 @@ export class CreatePayableDto {
 
 export class CreateSubscriptionDto {
   @ApiProperty()
-  @IsUUID()
+  @IsUuidString()
   studentId!: string;
 
   @ApiProperty()
-  @IsUUID()
+  @IsUuidString()
   planId!: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   enrollmentId?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   contractId?: string;
 
   @ApiPropertyOptional()
@@ -194,12 +195,12 @@ export class CreateSubscriptionDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   companyId?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   unitId?: string;
 }
 
@@ -236,13 +237,40 @@ export class CreateAccountDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   unitId?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   companyId?: string;
+}
+
+export class UpdateAccountDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  bankName?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  agency?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  account?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  pixKey?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  status?: string;
 }
 
 export class CreateCostCenterDto {

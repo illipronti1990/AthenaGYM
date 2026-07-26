@@ -1,5 +1,5 @@
 {
-  "name": "@athenas/sdk-access",
+  "name": "@athena/sdk-access",
   "version": "0.7.0",
   "private": true,
   "main": "./dist/index.js",

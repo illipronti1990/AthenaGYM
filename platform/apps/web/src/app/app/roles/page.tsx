@@ -6,7 +6,10 @@ export default async function RolesPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold">Cargos & permissões</h1>
+      <div>
+        <h1 className="athena-title text-3xl">Cargos & permissões</h1>
+        <p className="mt-1 text-sm text-[var(--muted)]">Controle de acesso da equipe</p>
+      </div>
       <RolesPanel accessToken={accessToken} />
     </div>
   );

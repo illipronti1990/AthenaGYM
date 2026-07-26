@@ -5,7 +5,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { hasAnyPermission, hasRole } from '@athenas/shared';
+import { hasAnyPermission, hasRole } from '@athena/shared';
 import { AUTH_CONTEXT_KEY, RequestAuth } from '../../auth/auth.types';
 import { PERMISSIONS_KEY, ROLES_KEY } from '../decorators/rbac.decorators';
 

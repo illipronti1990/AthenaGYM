@@ -1,14 +1,17 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsEmail,
+  IsIn,
+  IsObject,
   IsOptional,
   IsString,
   IsUUID,
   MinLength,
 } from 'class-validator';
+import { IsUuidString } from '../../common/validators/is-uuid-string';
 
 export class InviteUserDto {
-  @ApiProperty({ example: 'novo@athenas.gym' })
+  @ApiProperty({ example: 'novo@athena.gym' })
   @IsEmail()
   email!: string;
 
@@ -23,17 +26,17 @@ export class InviteUserDto {
   phone?: string;
 
   @ApiProperty({ description: 'Role UUID' })
-  @IsUUID()
+  @IsUuidString()
   roleId!: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   unitId?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   companyId?: string;
 }
 
@@ -66,13 +69,13 @@ export class ChangePasswordDto {
 }
 
 export class ResetPasswordDto {
-  @ApiProperty({ example: 'admin@athenas.gym' })
+  @ApiProperty({ example: 'admin@athena.gym' })
   @IsEmail()
   email!: string;
 }
 
 export class DevLoginDto {
-  @ApiProperty({ example: 'teste@athenas.local' })
+  @ApiProperty({ example: 'teste@athena.local' })
   @IsEmail()
   email!: string;
 
@@ -112,4 +115,14 @@ export class UpdateProfileDto {
   @IsOptional()
   @IsUUID()
   defaultUnitId?: string;
+
+  @ApiPropertyOptional({ enum: ['light', 'dark', 'system'] })
+  @IsOptional()
+  @IsIn(['light', 'dark', 'system'])
+  theme?: 'light' | 'dark' | 'system';
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsObject()
+  preferences?: Record<string, unknown>;
 }

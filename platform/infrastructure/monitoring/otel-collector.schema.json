@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://athenas.local/schemas/otel-collector-pipeline.json",
+  "$id": "https://athena.local/schemas/otel-collector-pipeline.json",
   "title": "OpenTelemetry Collector pipeline config (classic)",
   "description": "Permissive schema for Collector receivers/processors/exporters/service — not Declarative Configuration.",
   "type": "object",

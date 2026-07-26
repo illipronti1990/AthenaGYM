@@ -17,6 +17,10 @@ import { UsersModule } from './users/users.module';
 import { WorkoutsModule } from './workouts/workouts.module';
 import { EngagementModule } from './engagement/engagement.module';
 import { AnalyticsModule } from './analytics/analytics.module';
+import { PlatformModule } from './platform/platform.module';
+import { SettingsModule } from './settings/settings.module';
+import { PrintsModule } from './prints/prints.module';
+import { PolishModule } from './polish/polish.module';
 
 @Module({
   imports: [
@@ -38,6 +42,11 @@ import { AnalyticsModule } from './analytics/analytics.module';
     WorkoutsModule,
     EngagementModule,
     AnalyticsModule,
+    PlatformModule,
+    SettingsModule,
+    PrintsModule,
+    PolishModule,
   ],
 })
 export class AppModule {}
+

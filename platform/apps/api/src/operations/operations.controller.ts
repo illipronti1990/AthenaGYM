@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import type { AuthContext } from '@athenas/shared';
+import type { AuthContext } from '@athena/shared';
 import { CurrentAuth, CurrentUser } from '../common/decorators/current.decorators';
 import { Permissions } from '../common/decorators/rbac.decorators';
 import {

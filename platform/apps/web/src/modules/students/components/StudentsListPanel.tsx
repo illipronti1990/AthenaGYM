@@ -2,12 +2,15 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import type { StudentListItem } from '@athenas/shared';
+import type { StudentListItem } from '@athena/shared';
+import { Button } from '@athena/ui';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
 import { listStudents } from '../services/studentsApi';
 import { StudentCard } from './StudentCard';
 import { StudentFilters, type StudentFilterValues } from './StudentFilters';
+import { ExportButtons } from '@/modules/polish/components/ExportButtons';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 export function StudentsListPanel({
   accessToken,
@@ -51,23 +54,26 @@ export function StudentsListPanel({
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <StudentFilters value={filters} onChange={setFilters} units={units} />
-        <Link
-          href="/app/students/new"
-          className="rounded bg-[#A3001B] px-4 py-2 text-sm font-semibold text-white"
-        >
-          Novo aluno
-        </Link>
+        <div className="flex flex-wrap items-center gap-2">
+          <ExportButtons accessToken={accessToken} resource="students" />
+          <Link href="/app/students/new">
+            <Button>Novo aluno</Button>
+          </Link>
+        </div>
       </div>
-      <p className="text-xs text-zinc-500">{total} aluno(s)</p>
+      <p className="text-xs text-[var(--muted)]">{total} aluno(s)</p>
       {!items ? (
         <TableSkeleton rows={8} />
       ) : (
-        <div className="overflow-hidden rounded border border-zinc-200 bg-white">
+        <div className="athena-list">
           {items.map((s) => (
             <StudentCard key={s.id} student={s} />
           ))}
           {!items.length ? (
-            <p className="p-6 text-sm text-zinc-500">Nenhum aluno encontrado.</p>
+            <EmptyState
+              title="Nenhum aluno encontrado"
+              description="Ajuste os filtros ou cadastre um novo."
+            />
           ) : null}
         </div>
       )}

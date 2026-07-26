@@ -27,5 +27,5 @@ Env hints:
 
 ```
 OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318
-OTEL_SERVICE_NAME=athenas-api
+OTEL_SERVICE_NAME=athena-api
 ```

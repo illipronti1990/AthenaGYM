@@ -9,7 +9,7 @@ import type {
   PaymentTransaction,
   Receivable,
   Supplier,
-} from '@athenas/shared';
+} from '@athena/shared';
 import { SupabaseService } from '../supabase/supabase.service';
 
 @Injectable()
@@ -158,6 +158,28 @@ export class FinanceRepository {
     return this.mapAccount(data as Record<string, unknown>);
   }
 
+  async getAccount(id: string) {
+    const { data, error } = await this.admin()
+      .from('financial_accounts')
+      .select('*')
+      .eq('id', id)
+      .is('deleted_at', null)
+      .maybeSingle();
+    if (error) throw error;
+    return data ? this.mapAccount(data as Record<string, unknown>) : null;
+  }
+
+  async updateAccount(id: string, patch: Record<string, unknown>) {
+    const { data, error } = await this.admin()
+      .from('financial_accounts')
+      .update(patch)
+      .eq('id', id)
+      .select('*')
+      .single();
+    if (error) throw error;
+    return this.mapAccount(data as Record<string, unknown>);
+  }
+
   async listCostCenters(companyIds: string[]) {
     const { data, error } = await this.admin()
       .from('cost_centers')
@@ -185,13 +207,15 @@ export class FinanceRepository {
     return (data || []).map((r) => this.mapMethod(r as Record<string, unknown>));
   }
 
-  async listReceivables(companyIds: string[]) {
-    const { data, error } = await this.admin()
+  async listReceivables(companyIds: string[], studentId?: string) {
+    let q = this.admin()
       .from('receivables')
       .select('*')
       .in('company_id', companyIds)
       .is('deleted_at', null)
       .order('due_date', { ascending: false });
+    if (studentId) q = q.eq('student_id', studentId);
+    const { data, error } = await q;
     if (error) throw error;
     return (data || []).map((r) => this.mapReceivable(r as Record<string, unknown>));
   }
@@ -259,13 +283,15 @@ export class FinanceRepository {
     return this.mapSupplier(data as Record<string, unknown>);
   }
 
-  async listSubscriptions(companyIds: string[]) {
-    const { data, error } = await this.admin()
+  async listSubscriptions(companyIds: string[], studentId?: string) {
+    let q = this.admin()
       .from('subscriptions')
       .select('*')
       .in('company_id', companyIds)
       .is('deleted_at', null)
       .order('created_at', { ascending: false });
+    if (studentId) q = q.eq('student_id', studentId);
+    const { data, error } = await q;
     if (error) throw error;
     return (data || []).map((r) => this.mapSubscription(r as Record<string, unknown>));
   }
@@ -297,6 +323,61 @@ export class FinanceRepository {
     const { data, error } = await this.admin().from('plans').select('*').eq('id', id).maybeSingle();
     if (error) throw error;
     return data as Record<string, unknown> | null;
+  }
+
+  async findPlanByName(companyId: string, name: string) {
+    const { data, error } = await this.admin()
+      .from('plans')
+      .select('*')
+      .eq('company_id', companyId)
+      .ilike('name', name.trim())
+      .is('deleted_at', null)
+      .maybeSingle();
+    if (error) throw error;
+    return data as Record<string, unknown> | null;
+  }
+
+  async findActiveSubscription(companyId: string, studentId: string) {
+    const { data, error } = await this.admin()
+      .from('subscriptions')
+      .select('*')
+      .eq('company_id', companyId)
+      .eq('student_id', studentId)
+      .in('status', ['active', 'past_due', 'paused'])
+      .is('deleted_at', null)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (error) throw error;
+    return data ? this.mapSubscription(data as Record<string, unknown>) : null;
+  }
+
+  async listStudentsWithPlan(companyIds: string[]) {
+    const { data, error } = await this.admin()
+      .from('students')
+      .select('id, company_id, unit_id, plan_name, full_name')
+      .in('company_id', companyIds)
+      .not('plan_name', 'is', null)
+      .neq('plan_name', '')
+      .is('deleted_at', null);
+    if (error) throw error;
+    return (data || []) as Array<{
+      id: string;
+      company_id: string;
+      unit_id: string | null;
+      plan_name: string;
+      full_name: string;
+    }>;
+  }
+
+  async getStudentName(id: string) {
+    const { data, error } = await this.admin()
+      .from('students')
+      .select('full_name, plan_name')
+      .eq('id', id)
+      .maybeSingle();
+    if (error) throw error;
+    return data as { full_name: string; plan_name: string | null } | null;
   }
 
   async insertTransaction(row: Record<string, unknown>) {

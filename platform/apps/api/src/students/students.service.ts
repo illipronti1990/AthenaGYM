@@ -6,8 +6,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import type { AuthContext, Student, StudentListResponse } from '@athenas/shared';
-import { STUDENT_STATUSES } from '@athenas/shared';
+import type { AuthContext, Student, StudentListResponse } from '@athena/shared';
+import { STUDENT_STATUSES } from '@athena/shared';
 import { AuditService } from '../audit/audit.service';
 import { AuthUser } from '../auth/auth.types';
 import { SupabaseService } from '../supabase/supabase.service';
@@ -112,12 +112,17 @@ export class StudentsService {
   }
 
   async create(user: AuthUser, auth: AuthContext, dto: CreateStudentDto): Promise<Student> {
-    const unit = await this.repo.getUnit(dto.unitId);
+    const resolvedUnitId = dto.unitId || auth.defaultUnitId || auth.unitIds[0] || null;
+    if (!resolvedUnitId) {
+      throw new BadRequestException('unitId obrigatório — vincule uma unidade ao usuário');
+    }
+
+    const unit = await this.repo.getUnit(resolvedUnitId);
     if (!unit) throw new BadRequestException('Invalid unit');
     const companyId = dto.companyId || unit.company_id || auth.companyId;
     if (!companyId) throw new BadRequestException('companyId required');
     this.companyScope(auth, companyId);
-    if (!auth.isSuperAdmin && auth.unitIds.length && !auth.unitIds.includes(dto.unitId)) {
+    if (!auth.isSuperAdmin && auth.unitIds.length && !auth.unitIds.includes(resolvedUnitId)) {
       throw new ForbiddenException('Unit not allowed');
     }
 
@@ -139,7 +144,7 @@ export class StudentsService {
     let registration = dto.registrationNumber?.trim();
     if (!registration) {
       const code = (unit.code || 'MX').toUpperCase();
-      const n = (await this.repo.countByUnit(companyId, dto.unitId)) + 1;
+      const n = (await this.repo.countByUnit(companyId, resolvedUnitId)) + 1;
       registration = `ATH-${code}-${String(n).padStart(6, '0')}`;
     }
 
@@ -152,7 +157,7 @@ export class StudentsService {
     try {
       student = await this.repo.insertStudent({
         company_id: companyId,
-        unit_id: dto.unitId,
+        unit_id: resolvedUnitId,
         registration_number: registration,
         full_name: dto.fullName,
         social_name: dto.socialName || null,
@@ -211,8 +216,9 @@ export class StudentsService {
     this.events.emit(STUDENT_CREATED, {
       studentId: student.id,
       companyId,
-      unitId: dto.unitId,
+      unitId: resolvedUnitId,
       fullName: student.fullName,
+      planName: dto.planName || student.planName || null,
     });
     await this.audit.log({
       companyId,
@@ -253,7 +259,20 @@ export class StudentsService {
       throw new BadRequestException('Data de nascimento inválida');
     }
 
+    if (dto.unitId) {
+      if (!auth.isSuperAdmin && auth.unitIds.length && !auth.unitIds.includes(dto.unitId)) {
+        throw new BadRequestException('Sem acesso à unidade informada');
+      }
+      const unit = await this.repo.getUnit(dto.unitId);
+      if (!unit) throw new BadRequestException('Unidade não encontrada');
+    }
+
+    if (dto.status && !STUDENT_STATUSES.includes(dto.status as (typeof STUDENT_STATUSES)[number])) {
+      throw new BadRequestException('Status inválido');
+    }
+
     const patch: Record<string, unknown> = { updated_by: user.id };
+    if (dto.unitId !== undefined) patch.unit_id = dto.unitId;
     if (dto.fullName !== undefined) patch.full_name = dto.fullName;
     if (dto.socialName !== undefined) patch.social_name = dto.socialName;
     if (cpf !== undefined) patch.cpf = cpf;
@@ -263,6 +282,7 @@ export class StudentsService {
     if (dto.email !== undefined) patch.email = dto.email;
     if (dto.phone !== undefined) patch.phone = dto.phone;
     if (dto.whatsapp !== undefined) patch.whatsapp = dto.whatsapp;
+    if (dto.status !== undefined) patch.status = dto.status;
     if (dto.planName !== undefined) patch.plan_name = dto.planName;
     if (dto.trainerName !== undefined) patch.trainer_name = dto.trainerName;
     if (dto.notes !== undefined) patch.notes = dto.notes;
@@ -279,10 +299,33 @@ export class StudentsService {
         country: dto.address.country || 'Brasil',
       });
     }
+    if (dto.emergencyContacts) {
+      await this.repo.replaceEmergency(
+        id,
+        dto.emergencyContacts.map((c) => ({
+          name: c.name,
+          relationship: c.relationship || null,
+          phone: c.phone || null,
+          whatsapp: c.whatsapp || null,
+        })),
+      );
+    }
+
+    if (dto.status && dto.status !== existing.status) {
+      await this.repo.insertHistory({
+        student_id: id,
+        old_status: existing.status,
+        new_status: dto.status,
+        reason: 'update',
+        created_by: user.id,
+      });
+    }
 
     this.events.emit(STUDENT_UPDATED, {
       studentId: id,
       companyId: existing.companyId,
+      unitId: dto.unitId ?? existing.unitId,
+      planName: dto.planName !== undefined ? dto.planName : existing.planName,
     });
     await this.audit.log({
       companyId: existing.companyId,

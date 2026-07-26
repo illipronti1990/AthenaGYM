@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import type { Exercise, Workout } from '@athenas/shared';
+import type { Exercise, Workout } from '@athena/shared';
 import { workoutsApi } from '../services/workoutsApi';
 
 export function WorkoutsPanel({ accessToken }: { accessToken: string }) {
@@ -101,19 +101,19 @@ export function WorkoutsPanel({ accessToken }: { accessToken: string }) {
     <div className="space-y-6">
       <form onSubmit={onCreate} className="space-y-3">
         <div className="flex flex-wrap gap-3">
-          <label className="text-sm">
+          <label className="text-sm text-[var(--muted)]">
             Student ID
             <input
-              className="mt-1 block w-72 rounded border border-zinc-300 px-2 py-1.5 font-mono text-xs"
+              className="mt-1 block w-72 athena-input font-mono text-xs"
               value={studentId}
               onChange={(e) => setStudentId(e.target.value)}
               required
             />
           </label>
-          <label className="text-sm">
+          <label className="text-sm text-[var(--muted)]">
             Nome
             <input
-              className="mt-1 block w-48 rounded border border-zinc-300 px-2 py-1.5"
+              className="mt-1 block w-48 athena-input"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
@@ -132,47 +132,47 @@ export function WorkoutsPanel({ accessToken }: { accessToken: string }) {
                     onChange={() => toggle(ex.id)}
                   />
                   {ex.name}{' '}
-                  <span className="text-xs text-zinc-500">({ex.muscleGroup})</span>
+                  <span className="text-xs text-[var(--muted)]">({ex.muscleGroup})</span>
                 </label>
               </li>
             ))}
           </ul>
         </div>
         <div className="flex flex-wrap gap-2">
-          <button type="submit" className="rounded bg-[#A3001B] px-3 py-1.5 text-sm font-semibold text-white">
+          <button type="submit" className="athena-btn athena-btn-primary">
             Criar treino
           </button>
           <button
             type="button"
             disabled={!studentId}
             onClick={aiSuggest}
-            className="rounded border border-zinc-300 px-3 py-1.5 text-sm"
+            className="athena-btn athena-btn-ghost"
           >
             Sugestão IA
           </button>
         </div>
       </form>
       {msg ? <p className="text-sm text-emerald-700">{msg}</p> : null}
-      {error ? <p className="text-sm text-red-700">{error}</p> : null}
-      <ul className="divide-y divide-zinc-200">
+      {error ? <p className="text-sm text-[var(--primary-hover)]">{error}</p> : null}
+      <ul className="divide-y divide-[var(--border)]">
         {items.map((w) => (
           <li key={w.id} className="flex flex-wrap items-center justify-between gap-2 py-3">
             <div>
               <p className="font-medium">{w.name}</p>
-              <p className="text-xs text-zinc-500">
+              <p className="text-xs text-[var(--muted)]">
                 {w.status} · v{w.version} · {w.studentId.slice(0, 8)}…
               </p>
             </div>
             <div className="flex flex-wrap gap-2 text-sm">
               {w.status === 'draft' ? (
-                <button type="button" onClick={() => publish(w.id)} className="rounded border px-2 py-1">
+                <button type="button" onClick={() => publish(w.id)} className="athena-btn athena-btn-ghost">
                   Publicar
                 </button>
               ) : null}
-              <button type="button" onClick={() => duplicate(w.id)} className="rounded border px-2 py-1">
+              <button type="button" onClick={() => duplicate(w.id)} className="athena-btn athena-btn-ghost">
                 Duplicar
               </button>
-              <button type="button" onClick={() => complete(w.id)} className="rounded border px-2 py-1">
+              <button type="button" onClick={() => complete(w.id)} className="athena-btn athena-btn-ghost">
                 Concluir sessão
               </button>
             </div>

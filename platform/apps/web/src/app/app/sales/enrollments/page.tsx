@@ -8,8 +8,8 @@ export default async function SalesEnrollmentsPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-3">
-        <h1 className="text-2xl font-bold">Matrículas</h1>
-        <Link href="/app/sales" className="text-sm text-[#A3001B] hover:underline">
+        <h1 className="athena-title text-3xl">Matrículas</h1>
+        <Link href="/app/sales" className="athena-link text-sm text-[var(--gold)]">
           ← Comercial
         </Link>
       </div>
