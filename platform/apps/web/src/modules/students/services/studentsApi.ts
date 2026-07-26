@@ -68,6 +68,12 @@ export async function updateStudent(
   });
 }
 
+export async function deleteStudent(token: string, id: string) {
+  return apiFetch<{ ok: boolean }>(`/students/${id}`, token, {
+    method: 'DELETE',
+  });
+}
+
 export async function changeStudentStatus(
   token: string,
   id: string,

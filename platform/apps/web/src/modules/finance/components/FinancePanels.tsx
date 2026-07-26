@@ -174,28 +174,49 @@ export function SubscriptionsPanel({ accessToken }: { accessToken: string }) {
 export function CashflowPanel({ accessToken }: { accessToken: string }) {
   const { push } = useToast();
   const [points, setPoints] = useState<CashflowPoint[] | null>(null);
+  const [deletingDate, setDeletingDate] = useState<string | null>(null);
+
+  async function load() {
+    try {
+      setPoints(await financeApi.cashflow(accessToken));
+    } catch (e) {
+      push(e instanceof Error ? e.message : 'Falha', 'error');
+      setPoints([]);
+    }
+  }
 
   useEffect(() => {
-    void (async () => {
-      try {
-        setPoints(await financeApi.cashflow(accessToken));
-      } catch (e) {
-        push(e instanceof Error ? e.message : 'Falha', 'error');
-        setPoints([]);
-      }
-    })();
-  }, [accessToken, push]);
+    void load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accessToken]);
+
+  async function onDelete(date: string) {
+    if (!window.confirm(`Excluir os lançamentos do dia ${date} do fluxo de caixa?`)) {
+      return;
+    }
+    setDeletingDate(date);
+    try {
+      await financeApi.deleteCashflowDay(accessToken, date);
+      push('Dia removido do fluxo de caixa');
+      await load();
+    } catch (e) {
+      push(e instanceof Error ? e.message : 'Falha ao excluir', 'error');
+    } finally {
+      setDeletingDate(null);
+    }
+  }
 
   if (!points) return <TableSkeleton />;
   return (
     <div className="athena-list overflow-x-auto">
-      <table className="athena-table">
+      <table className="athena-table" data-testid="cashflow-table">
         <thead>
           <tr>
             <th>Data</th>
             <th>Entradas</th>
             <th>Saídas</th>
             <th>Saldo</th>
+            <th>Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -205,6 +226,18 @@ export function CashflowPanel({ accessToken }: { accessToken: string }) {
               <td>{p.inflow}</td>
               <td>{p.outflow}</td>
               <td>{p.balance}</td>
+              <td>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="border-[var(--primary)] text-[var(--primary-hover)] hover:bg-[var(--primary)] hover:text-white"
+                  disabled={deletingDate === p.date}
+                  onClick={() => void onDelete(p.date)}
+                  data-testid={`delete-cashflow-${p.date}`}
+                >
+                  {deletingDate === p.date ? 'Excluindo…' : 'Excluir'}
+                </Button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -363,7 +396,7 @@ export function SettingsPanel({ accessToken }: { accessToken: string }) {
               {saving ? 'Salvando…' : editingId ? 'Salvar alterações' : 'Cadastrar conta'}
             </Button>
             {editingId ? (
-              <Button type="button" variant="ghost" onClick={resetForm}>
+              <Button type="button" variant="secondary" onClick={resetForm}>
                 Cancelar
               </Button>
             ) : null}
@@ -383,7 +416,7 @@ export function SettingsPanel({ accessToken }: { accessToken: string }) {
                 </span>
                 <Button
                   type="button"
-                  variant="ghost"
+                  variant="secondary"
                   className="!px-2 !py-1 text-xs"
                   onClick={() => startEdit(a)}
                 >

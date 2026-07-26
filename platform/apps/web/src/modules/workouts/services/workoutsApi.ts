@@ -50,6 +50,8 @@ export const workoutsApi = {
     ),
   createAssessment: (t: string, body: Record<string, unknown>) =>
     apiFetch<Assessment>('/assessments', t, { method: 'POST', body: JSON.stringify(body) }),
+  deleteAssessment: (t: string, id: string) =>
+    apiFetch<{ ok: boolean; id: string }>(`/assessments/${id}`, t, { method: 'DELETE' }),
   progress: (t: string, studentId: string) =>
     apiFetch<ProgressSummary>(`/progress?studentId=${studentId}`, t),
   createPhoto: (t: string, body: Record<string, unknown>) =>

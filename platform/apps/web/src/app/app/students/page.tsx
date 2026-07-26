@@ -1,3 +1,5 @@
+import Link from 'next/link';
+import { Page, PageHeader, PageContent } from '@athena/ui';
 import { requireAccessToken } from '@/lib/auth/token';
 import { apiGetMe } from '@/services/api';
 import { StudentsListPanel } from '@/modules/students/components/StudentsListPanel';
@@ -14,12 +16,19 @@ export default async function StudentsPage() {
   }
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="athena-title text-3xl">Alunos</h1>
-        <p className="mt-1 text-sm text-[var(--muted)]">Cadastro e acompanhamento</p>
-      </div>
-      <StudentsListPanel accessToken={accessToken} units={units} />
-    </div>
+    <Page>
+      <PageHeader
+        title="Alunos"
+        description="Gerencie todos os alunos cadastrados."
+        actions={
+          <Link href="/app/students/new" className="athena-btn athena-btn-primary">
+            Novo aluno
+          </Link>
+        }
+      />
+      <PageContent>
+        <StudentsListPanel accessToken={accessToken} units={units} />
+      </PageContent>
+    </Page>
   );
 }

@@ -53,6 +53,13 @@ export const salesApi = {
   plans: (t: string) => apiFetch<Plan[]>('/sales/plans', t),
   createPlan: (t: string, body: Record<string, unknown>) =>
     apiFetch<Plan>('/sales/plans', t, { method: 'POST', body: JSON.stringify(body) }),
+  updatePlan: (t: string, id: string, body: Record<string, unknown>) =>
+    apiFetch<Plan>(`/sales/plans/${id}`, t, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    }),
+  deletePlan: (t: string, id: string) =>
+    apiFetch<{ ok: boolean }>(`/sales/plans/${id}`, t, { method: 'DELETE' }),
   enrollments: (t: string) => apiFetch<Enrollment[]>('/sales/enrollments', t),
   createEnrollment: (t: string, body: Record<string, unknown>) =>
     apiFetch<Enrollment>('/sales/enrollments', t, {

@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import type { FinanceDashboard } from '@athena/shared';
-import { Card, chartColors } from '@athena/ui';
+import { Card, chartColors, SkeletonCard } from '@athena/ui';
 import { financeApi } from '../services/financeApi';
-import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
+import { ContextualActions } from '@/components/ux/ContextualActions';
 
 export function FinanceDashboardPanel({ accessToken }: { accessToken: string }) {
   const { push } = useToast();
@@ -28,7 +28,15 @@ export function FinanceDashboardPanel({ accessToken }: { accessToken: string }) 
     })();
   }, [accessToken, push]);
 
-  if (!data) return <TableSkeleton rows={5} />;
+  if (!data) {
+    return (
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <SkeletonCard key={i} />
+        ))}
+      </div>
+    );
+  }
 
   const cards = [
     {
@@ -55,15 +63,35 @@ export function FinanceDashboardPanel({ accessToken }: { accessToken: string }) 
   ];
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5" data-testid="finance-dashboard">
-      {cards.map((c) => (
-        <Card key={c.label} hover>
-          <p className="text-xs uppercase tracking-wide text-[var(--muted)]">{c.label}</p>
-          <p className="mt-2 text-2xl font-bold" style={{ color: c.color }}>
-            {c.value}
-          </p>
-        </Card>
-      ))}
+    <div className="space-y-4" data-testid="finance-dashboard">
+      {data.delinquencyRate > 0 || data.toReceive > 0 ? (
+        <ContextualActions
+          title="Sugestão operacional"
+          actions={[
+            {
+              id: 'delinquency-report',
+              label: 'Emitir relatório de inadimplência',
+              href: '/app/finance/reports',
+              variant: 'primary',
+            },
+            {
+              id: 'open-receivables',
+              label: 'Ver recebimentos pendentes',
+              href: '/app/finance/receivables',
+            },
+          ]}
+        />
+      ) : null}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        {cards.map((c) => (
+          <Card key={c.label} hover>
+            <p className="text-xs uppercase tracking-wide text-[var(--muted)]">{c.label}</p>
+            <p className="mt-2 text-2xl font-bold" style={{ color: c.color }}>
+              {c.value}
+            </p>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 }

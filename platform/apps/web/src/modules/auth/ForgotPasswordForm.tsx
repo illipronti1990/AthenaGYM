@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from 'react';
 import Link from 'next/link';
+import { Button } from '@athena/ui';
 import { apiResetPassword } from '@/services/api';
 import { useToast } from '@/components/ui/Toast';
 
@@ -25,25 +26,21 @@ export function ForgotPasswordForm() {
 
   return (
     <form onSubmit={onSubmit} className="flex w-full max-w-sm flex-col gap-3">
-      <label className="text-sm font-medium text-zinc-700">
+      <label className="text-sm font-medium text-[var(--muted)]">
         E-mail
         <input
           type="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 w-full rounded border border-zinc-300 px-3 py-2"
+          className="athena-input mt-1"
           data-testid="forgot-email"
         />
       </label>
-      <button
-        type="submit"
-        disabled={loading}
-        className="rounded bg-[#A3001B] px-4 py-2 font-semibold text-white disabled:opacity-60"
-      >
+      <Button type="submit" disabled={loading} className="w-full">
         {loading ? 'Enviando…' : 'Enviar link'}
-      </button>
-      <Link href="/login" className="text-center text-sm text-zinc-600">
+      </Button>
+      <Link href="/login" className="athena-link text-center text-sm text-[var(--gold)]">
         Voltar ao login
       </Link>
     </form>

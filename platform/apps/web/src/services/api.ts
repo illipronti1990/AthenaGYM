@@ -92,6 +92,12 @@ export async function apiListUsers(accessToken: string, companyId?: string) {
   return apiFetch<UserListItem[]>('/users', accessToken, { companyId });
 }
 
+export async function apiDeleteUser(accessToken: string, id: string) {
+  return apiFetch<{ ok: boolean }>(`/users/${id}`, accessToken, {
+    method: 'DELETE',
+  });
+}
+
 export async function apiInviteUser(
   accessToken: string,
   body: {

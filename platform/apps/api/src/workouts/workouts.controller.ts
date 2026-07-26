@@ -144,6 +144,13 @@ export class WorkoutsController {
     return this.workouts.createAssessment(user, auth, dto);
   }
 
+  @Delete('assessments/:id')
+  @Permissions('assessments.update')
+  @ApiOperation({ summary: 'Soft-delete physical assessment' })
+  deleteAssessment(@CurrentAuth() auth: AuthContext, @Param('id') id: string) {
+    return this.workouts.deleteAssessment(auth, id);
+  }
+
   @Get('progress')
   @Permissions('progress.read')
   progress(@CurrentAuth() auth: AuthContext, @Query('studentId') studentId: string) {

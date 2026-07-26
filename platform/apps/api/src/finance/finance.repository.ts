@@ -439,6 +439,17 @@ export class FinanceRepository {
     return (data || []) as Array<Record<string, unknown>>;
   }
 
+  async deleteCashMovementsByDate(companyIds: string[], date: string) {
+    const { data, error } = await this.admin()
+      .from('cash_movements')
+      .delete()
+      .in('company_id', companyIds)
+      .eq('movement_date', date)
+      .select('id');
+    if (error) throw error;
+    return (data || []).length;
+  }
+
   async insertOutbox(row: Record<string, unknown>) {
     const { data, error } = await this.admin().from('outbox_events').insert(row).select('*').single();
     if (error) throw error;

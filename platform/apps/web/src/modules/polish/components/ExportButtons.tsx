@@ -32,7 +32,7 @@ export function ExportButtons({
           key={f}
           type="button"
           onClick={() => download(f)}
-          className="athena-btn athena-btn-ghost !px-2 !py-1 text-xs uppercase"
+          className="athena-btn athena-btn-secondary !px-2 !py-1 text-xs uppercase"
         >
           {f}
         </button>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 48" fill="none" role="img" aria-label="ATHENA GYM Plataforma">
+  <!-- Gold A mark -->
+  <path d="M14 40 L24 8 L34 40 H28.5 L26.8 33 H21.2 L19.5 40 H14 Z M22.4 28 H25.6 L24 20.5 L22.4 28 Z" fill="#D4AF37"/>
+  <!-- ATHENA in red -->
+  <text x="44" y="32" font-family="Manrope, Segoe UI, Arial, sans-serif" font-size="22" font-weight="800" fill="#A00018" letter-spacing="0.16em">ATHENA</text>
+  <text x="168" y="32" font-family="Manrope, Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#A1A1AA" letter-spacing="0.2em">GYM</text>
+  <text x="210" y="32" font-family="Manrope, Segoe UI, Arial, sans-serif" font-size="11" font-weight="500" fill="#A1A1AA" letter-spacing="0.06em">Plataforma</text>
+</svg>

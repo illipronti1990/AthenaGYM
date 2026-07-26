@@ -1,20 +1,16 @@
 import { requireAccessToken } from '@/lib/auth/token';
-import { OpsDashboardPanel } from '@/modules/settings/components/OpsDashboardPanel';
-import { Breadcrumb } from '@athena/ui';
+import { apiGetMe } from '@/services/api';
+import { ExecutiveDashboard } from '@/modules/dashboard/components/ExecutiveDashboard';
 
 export default async function AppHomePage() {
   const accessToken = await requireAccessToken();
+  let userName: string | null = null;
+  try {
+    const me = await apiGetMe(accessToken);
+    userName = me.profile.fullName || me.profile.email;
+  } catch {
+    userName = null;
+  }
 
-  return (
-    <div className="space-y-4">
-      <Breadcrumb items={[{ label: 'App', href: '/app' }, { label: 'Hoje' }]} />
-      <div>
-        <h1 className="athena-title text-3xl">Hoje</h1>
-        <p className="mt-1 text-sm text-[var(--muted)]">
-          Visão operacional · use Ctrl+K para pesquisar
-        </p>
-      </div>
-      <OpsDashboardPanel accessToken={accessToken} />
-    </div>
-  );
+  return <ExecutiveDashboard accessToken={accessToken} userName={userName} />;
 }

@@ -7,6 +7,7 @@ const links = [
   ['Aulas', '/app/operations/aulas'],
   ['Check-in', '/app/operations/checkin'],
   ['Acesso', '/app/operations/acesso'],
+  ['Parceiros', '/app/operations/parceiros'],
   ['Ocupação', '/app/operations/ocupacao'],
 ] as const;
 
@@ -19,7 +20,7 @@ export default async function OperationsPage() {
         <div>
           <h1 className="athena-title text-3xl">Operações</h1>
           <p className="mt-1 text-sm text-[var(--muted)]">
-            Agenda, check-in, acesso e ocupação em tempo real
+            Agenda, check-in, acesso, Wellhub/TotalPass e ocupação
           </p>
         </div>
         <nav className="flex flex-wrap gap-2">

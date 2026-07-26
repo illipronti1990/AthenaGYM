@@ -206,7 +206,7 @@ export function StudentFinancePanel({
                       </Button>
                       <Button
                         type="button"
-                        variant="ghost"
+                        variant="secondary"
                         className="!px-2 !py-1 text-xs"
                         onClick={() =>
                           void financeApi
@@ -226,7 +226,7 @@ export function StudentFinancePanel({
                       </Button>
                       <Button
                         type="button"
-                        variant="ghost"
+                        variant="secondary"
                         className="!px-2 !py-1 text-xs"
                         onClick={() =>
                           void runAction(() => financeApi.cancel(accessToken, r.id), 'Cobrança cancelada')
@@ -239,7 +239,7 @@ export function StudentFinancePanel({
                   {r.status === 'paid' ? (
                     <Button
                       type="button"
-                      variant="ghost"
+                      variant="secondary"
                       className="!px-2 !py-1 text-xs"
                       onClick={() =>
                         void runAction(() => financeApi.refund(accessToken, r.id), 'Estorno registrado')

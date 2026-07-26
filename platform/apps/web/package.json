@@ -1,6 +1,6 @@
 {
   "name": "@athena/web",
-  "version": "0.10.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev --port 3000",
@@ -11,12 +11,22 @@
   "dependencies": {
     "@athena/shared": "workspace:*",
     "@athena/ui": "workspace:*",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+    "@radix-ui/react-dialog": "^1.1.23",
+    "@radix-ui/react-tooltip": "^1.2.16",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.47.10",
+    "@tanstack/react-query": "^5.101.4",
+    "cmdk": "^1.1.1",
+    "lucide-react": "^1.27.0",
+    "motion": "^12.42.2",
     "next": "15.1.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "recharts": "^3.10.0"
+    "recharts": "^3.10.0",
+    "sonner": "^2.0.7"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

@@ -139,10 +139,10 @@ export function LoginForm() {
       </Link>
       <div className="mt-2 space-y-2 border-t border-[var(--border)] pt-3">
         <p className="text-xs text-[var(--muted)]">MFA (em breve)</p>
-        <button type="button" disabled className="athena-btn athena-btn-ghost w-full opacity-50">
+        <button type="button" disabled className="athena-btn athena-btn-secondary w-full opacity-50">
           Continuar com Google (em breve)
         </button>
-        <button type="button" disabled className="athena-btn athena-btn-ghost w-full opacity-50">
+        <button type="button" disabled className="athena-btn athena-btn-secondary w-full opacity-50">
           Continuar com Microsoft (em breve)
         </button>
       </div>

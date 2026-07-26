@@ -237,6 +237,13 @@ export class SalesRepository {
     return this.mapPlan(data as Record<string, unknown>);
   }
 
+  async softDeletePlan(id: string) {
+    return this.updatePlan(id, {
+      deleted_at: new Date().toISOString(),
+      active: false,
+    });
+  }
+
   async listEnrollments(companyIds: string[]) {
     const { data, error } = await this.admin()
       .from('enrollments')

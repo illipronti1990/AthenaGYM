@@ -68,12 +68,6 @@ export class SettingsController {
     return this.settings.uploadLogo(user, auth, file);
   }
 
-  @Get('dashboard')
-  @Permissions('dashboard.read')
-  dashboard(@CurrentAuth() auth: AuthContext) {
-    return this.settings.dashboard(auth);
-  }
-
   @Post('backup')
   @Permissions('backup.create')
   backup(@CurrentUser() user: AuthUser, @CurrentAuth() auth: AuthContext) {

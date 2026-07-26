@@ -8,7 +8,6 @@ import type {
   ReportDefinition,
   ReportSchedule,
 } from '@athena/shared';
-import { averageTicket, conversionRate, churnRate, deltaPercent } from '@athena/sdk-bi';
 import { SupabaseService } from '../supabase/supabase.service';
 
 @Injectable()
@@ -130,51 +129,19 @@ export class AnalyticsRepository {
     return data || [];
   }
 
-  async buildExecutive(companyId: string): Promise<ExecutiveDashboard> {
-    const today = new Date();
-    const monthStart = new Date(today.getFullYear(), today.getMonth(), 1)
-      .toISOString()
-      .slice(0, 10);
-    const prevMonthStart = new Date(today.getFullYear(), today.getMonth() - 1, 1)
-      .toISOString()
-      .slice(0, 10);
-    const prevMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0)
-      .toISOString()
-      .slice(0, 10);
-    const to = today.toISOString().slice(0, 10);
-
-    const [curRev, prevRev, curCheckins, prevCheckins, curSales, prevSales] = await Promise.all([
-      this.sumRevenue(companyId, monthStart, to),
-      this.sumRevenue(companyId, prevMonthStart, prevMonthEnd),
-      this.sumCheckins(companyId, monthStart, to),
-      this.sumCheckins(companyId, prevMonthStart, prevMonthEnd),
-      this.salesStats(companyId, monthStart, to),
-      this.salesStats(companyId, prevMonthStart, prevMonthEnd),
-    ]);
-
-    // Fallback demo numbers when warehouse is empty (keeps executive UI usable)
-    const revenue = curRev.gross || 384820;
-    const prevRevenue = prevRev.gross || 326000;
-    const profit = curRev.profit || 121540;
-    const prevProfit = prevRev.profit || 111500;
-    const checkins = curCheckins || 18254;
-    const prevCheck = prevCheckins || 16100;
-    const conversion = conversionRate(curSales.converted || 42, curSales.leads || 100);
-    const prevConversion = conversionRate(prevSales.converted || 38, prevSales.leads || 100);
-    const churn = churnRate(23, 1000);
-    const prevChurn = 2.8;
-
+  async buildExecutive(_companyId: string): Promise<ExecutiveDashboard> {
+    // Clean slate: Relatórios shows zeros until real warehouse/ETL is enabled.
     return {
-      revenue,
-      revenueDeltaPct: deltaPercent(revenue, prevRevenue),
-      profit,
-      profitDeltaPct: deltaPercent(profit, prevProfit),
-      churn,
-      churnDeltaPct: deltaPercent(churn, prevChurn),
-      conversion,
-      conversionDeltaPct: deltaPercent(conversion, prevConversion),
-      checkins,
-      checkinsDeltaPct: deltaPercent(checkins, prevCheck),
+      revenue: 0,
+      revenueDeltaPct: 0,
+      profit: 0,
+      profitDeltaPct: 0,
+      churn: 0,
+      churnDeltaPct: 0,
+      conversion: 0,
+      conversionDeltaPct: 0,
+      checkins: 0,
+      checkinsDeltaPct: 0,
       updatedAt: new Date().toISOString(),
     };
   }
@@ -182,33 +149,28 @@ export class AnalyticsRepository {
   async buildDashboard(companyId: string): Promise<AnalyticsDashboard> {
     const executive = await this.buildExecutive(companyId);
     const defs = await this.listKpiDefinitions();
-    const sales = await this.salesStats(
-      companyId,
-      new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().slice(0, 10),
-      new Date().toISOString().slice(0, 10),
-    );
 
     const values: Record<string, number> = {
-      revenue_daily: Math.round(executive.revenue / Math.max(1, new Date().getDate())),
-      revenue_monthly: executive.revenue,
-      revenue_yearly: executive.revenue * 12,
-      avg_ticket: averageTicket(sales.amount || executive.revenue, sales.converted || 120),
-      profit: executive.profit,
-      conversion: executive.conversion,
-      cac: 180,
-      ltv: 2400,
-      churn: executive.churn,
-      leads: sales.leads || 320,
-      enrollments: sales.converted || 134,
-      cancellations: 23,
-      checkins: executive.checkins,
-      frequency: 2.4,
-      occupancy: 78,
-      no_show: 6.5,
-      workouts_completed: 9400,
-      avg_evolution: 12.4,
-      active_users: 4120,
-      engagement_rate: 82,
+      revenue_daily: 0,
+      revenue_monthly: 0,
+      revenue_yearly: 0,
+      avg_ticket: 0,
+      profit: 0,
+      conversion: 0,
+      cac: 0,
+      ltv: 0,
+      churn: 0,
+      leads: 0,
+      enrollments: 0,
+      cancellations: 0,
+      checkins: 0,
+      frequency: 0,
+      occupancy: 0,
+      no_show: 0,
+      workouts_completed: 0,
+      avg_evolution: 0,
+      active_users: 0,
+      engagement_rate: 0,
     };
 
     const kpis: KpiItem[] = defs.map((d) => ({
@@ -374,6 +336,28 @@ export class AnalyticsRepository {
 
   async upsertDailyFacts(companyId: string) {
     const date = new Date().toISOString().slice(0, 10);
+    // Keep warehouse at zero until real ETL is connected (no demo seed).
+    await this.admin()
+      .schema('analytics')
+      .from('fact_revenue')
+      .update({
+        gross_revenue: 0,
+        net_revenue: 0,
+        expenses: 0,
+        profit: 0,
+      })
+      .eq('company_id', companyId);
+    await this.admin()
+      .schema('analytics')
+      .from('fact_checkins')
+      .update({ checkins: 0, duration_minutes: 0 })
+      .eq('company_id', companyId);
+    await this.admin()
+      .schema('analytics')
+      .from('fact_sales')
+      .delete()
+      .eq('company_id', companyId);
+
     const { data: existingRev } = await this.admin()
       .schema('analytics')
       .from('fact_revenue')
@@ -387,10 +371,10 @@ export class AnalyticsRepository {
         date,
         company_id: companyId,
         unit_id: null,
-        gross_revenue: 12827.33,
-        net_revenue: 11450,
-        expenses: 4200,
-        profit: 7250,
+        gross_revenue: 0,
+        net_revenue: 0,
+        expenses: 0,
+        profit: 0,
       });
     }
     const { data: existingCheck } = await this.admin()
@@ -408,8 +392,8 @@ export class AnalyticsRepository {
         company_id: companyId,
         unit_id: null,
         student_id: null,
-        checkins: 142,
-        duration_minutes: 8500,
+        checkins: 0,
+        duration_minutes: 0,
       });
     }
     return ['fact_revenue', 'fact_checkins'];

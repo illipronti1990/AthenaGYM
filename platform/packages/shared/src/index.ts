@@ -9,3 +9,4 @@ export * from './engagement/types';
 export * from './analytics/types';
 export * from './platform/types';
 export * from './settings/types';
+export * from './dashboard/types';

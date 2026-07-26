@@ -50,6 +50,7 @@ export const settingsApi = {
       body: form,
     });
   },
+  /** @deprecated use dashboardApi.executive — kept for temporary compatibility */
   dashboard: (t: string) => apiFetch<OpsDashboard>('/dashboard', t),
   backup: (t: string) =>
     apiFetch<BackupResult>('/backup', t, { method: 'POST', body: '{}' }),

@@ -38,7 +38,7 @@ export class StubPaymentProvider implements PaymentProvider {
 
   async createPixCharge(input: PixChargeInput): Promise<PixChargeResult> {
     const externalId = `stub_${input.receivableId}_${randomUUID().slice(0, 8)}`;
-    const copyPaste = `00020126580014BR.GOV.BCB.PIX0136${externalId}520400005303986540${input.amount.toFixed(2)}5802BR5925ATHENA GYM6009SAO PAULO62070503***6304ABCD`;
+    const copyPaste = `00020126580014BR.GOV.BCB.PIX0136${externalId}520400005303986540${input.amount.toFixed(2)}5802BR5925ATHENA GYM PLATAFORMA6009SAO PAULO62070503***6304ABCD`;
     return {
       externalId,
       qrCode: `data:text/plain;base64,${Buffer.from(copyPaste).toString('base64')}`,

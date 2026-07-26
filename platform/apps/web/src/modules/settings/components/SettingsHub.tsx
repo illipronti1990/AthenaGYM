@@ -1,11 +1,16 @@
 'use client';
 
 import Link from 'next/link';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useState } from 'react';
 import type { AuditLogItem, GymSettings } from '@athena/shared';
+import { Button, ProgressIndicator, SkeletonForm } from '@athena/ui';
 import { settingsApi } from '../services/settingsApi';
 import { useToast } from '@/components/ui/Toast';
-import { TableSkeleton } from '@/components/ui/Skeleton';
+import { CepFields } from '@/components/CepFields';
+import { formatCep } from '@/utils/cep';
+import { useAutosave } from '@/hooks/useAutosave';
+import { AutosaveIndicator } from '@/components/ux/AutosaveIndicator';
+import { useUiPreferences } from '@/hooks/useUiPreferences';
 
 const TABS = [
   { id: 'academia', label: 'Academia' },
@@ -31,6 +36,29 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
   const [logs, setLogs] = useState<AuditLogItem[] | null>(null);
   const [saving, setSaving] = useState(false);
   const [backupUrl, setBackupUrl] = useState<string | null>(null);
+  const [backupProgress, setBackupProgress] = useState(0);
+  const { prefs, setPrefs } = useUiPreferences();
+
+  const brandKey = settings
+    ? `${settings.primaryColor}|${settings.secondaryColor}`
+    : '';
+
+  const saveBrand = useCallback(async () => {
+    if (!settings) return;
+    const res = await settingsApi.patch(accessToken, {
+      primaryColor: settings.primaryColor,
+      secondaryColor: settings.secondaryColor,
+    });
+    setSettings(res.settings);
+  }, [accessToken, settings]);
+
+  const autosaveStatus = useAutosave({
+    value: brandKey,
+    enabled: tab === 'personalizacao' && Boolean(settings),
+    onSave: async () => {
+      await saveBrand();
+    },
+  });
 
   async function load() {
     try {
@@ -148,34 +176,37 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
   async function onBackup() {
     setSaving(true);
     setBackupUrl(null);
+    setBackupProgress(12);
+    const tick = window.setInterval(() => {
+      setBackupProgress((p) => (p >= 90 ? p : p + 8));
+    }, 200);
     try {
       const res = await settingsApi.backup(accessToken);
+      setBackupProgress(100);
       setBackupUrl(res.downloadUrl);
-      push(`Backup gerado (${res.bytes} bytes)`);
+      push('Backup realizado.', 'info');
     } catch (err) {
       push(err instanceof Error ? err.message : 'Falha no backup', 'error');
     } finally {
+      window.clearInterval(tick);
       setSaving(false);
+      window.setTimeout(() => setBackupProgress(0), 1200);
     }
   }
 
   if (!settings) {
-    return <TableSkeleton rows={6} />;
+    return <SkeletonForm fields={8} />;
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap gap-2 border-b border-zinc-200 pb-3">
+      <div className="flex flex-wrap gap-2 border-b border-[var(--border)] pb-4">
         {TABS.map((t) => (
           <button
             key={t.id}
             type="button"
             onClick={() => setTab(t.id)}
-            className={`rounded px-3 py-1.5 text-sm ${
-              tab === t.id
-                ? 'bg-[#A3001B] text-white'
-                : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
-            }`}
+            className={tab === t.id ? 'athena-tab athena-tab-active' : 'athena-tab'}
           >
             {t.label}
           </button>
@@ -190,29 +221,47 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
           <Field label="WhatsApp" value={settings.whatsapp || ''} onChange={(v) => updateField('whatsapp', v)} />
           <Field label="E-mail" value={settings.email || ''} onChange={(v) => updateField('email', v)} />
           <Field label="Instagram" value={settings.instagram || ''} onChange={(v) => updateField('instagram', v)} />
-          <Field label="CEP" value={settings.zipCode || ''} onChange={(v) => updateField('zipCode', v)} />
-          <Field label="Rua" value={settings.street || ''} onChange={(v) => updateField('street', v)} />
-          <Field label="Número" value={settings.number || ''} onChange={(v) => updateField('number', v)} />
-          <Field label="Bairro" value={settings.district || ''} onChange={(v) => updateField('district', v)} />
-          <Field label="Cidade" value={settings.city || ''} onChange={(v) => updateField('city', v)} />
-          <Field label="UF" value={settings.state || ''} onChange={(v) => updateField('state', v)} />
+          <div className="sm:col-span-2">
+            <CepFields
+              testIdPrefix="settings-cep"
+              value={{
+                zipCode: settings.zipCode ? formatCep(settings.zipCode) : '',
+                street: settings.street || '',
+                district: settings.district || '',
+                city: settings.city || '',
+                state: settings.state || '',
+                number: settings.number || '',
+              }}
+              onChange={(addr) => {
+                setSettings((prev) =>
+                  prev
+                    ? {
+                        ...prev,
+                        zipCode: addr.zipCode,
+                        street: addr.street,
+                        district: addr.district,
+                        city: addr.city,
+                        state: addr.state,
+                        number: addr.number || '',
+                      }
+                    : prev,
+                );
+              }}
+            />
+          </div>
           <label className="sm:col-span-2 block text-sm">
-            <span className="mb-1 block text-zinc-600">Rodapé dos recibos</span>
+            <span className="athena-label">Rodapé dos recibos</span>
             <textarea
-              className="w-full rounded border border-zinc-300 px-3 py-2"
+              className="athena-input"
               rows={3}
               value={settings.receiptFooter || ''}
               onChange={(e) => updateField('receiptFooter', e.target.value)}
             />
           </label>
           <div className="sm:col-span-2">
-            <button
-              type="submit"
-              disabled={saving}
-              className="rounded bg-[#A3001B] px-4 py-2 text-sm text-white disabled:opacity-50"
-            >
+            <Button type="submit" loading={saving} loadingLabel="Salvando…">
               Salvar academia
-            </button>
+            </Button>
           </div>
         </form>
       )}
@@ -248,7 +297,7 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
               <button
                 type="submit"
                 disabled={saving}
-                className="rounded bg-[#A3001B] px-4 py-2 text-sm text-white disabled:opacity-50"
+                className="athena-btn athena-btn-primary"
               >
                 Salvar financeiro
               </button>
@@ -256,21 +305,24 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
           </form>
           <div>
             <h3 className="mb-2 font-semibold">Contas / PIX</h3>
-            <p className="mb-2 text-sm text-zinc-600">
+            <p className="mb-2 text-sm text-[var(--muted)]">
               Gerencie contas em{' '}
-              <Link href="/app/finance/settings" className="text-[#A3001B] underline">
+              <Link href="/app/finance/settings" className="text-[var(--primary)] underline">
                 Financeiro → Configurações
               </Link>
               .
             </p>
             <ul className="space-y-1 text-sm">
               {accounts.map((a) => (
-                <li key={a.id} className="rounded border border-zinc-200 px-3 py-2">
+                <li
+                  key={a.id}
+                  className="rounded-[10px] border border-[var(--border)] bg-[var(--card)] px-3 py-2"
+                >
                   {a.bankName || a.name} — PIX: {a.pixKey || '—'}{' '}
-                  {!a.active && <span className="text-zinc-500">(inativa)</span>}
+                  {!a.active && <span className="text-[var(--muted)]">(inativa)</span>}
                 </li>
               ))}
-              {accounts.length === 0 && <li className="text-zinc-500">Nenhuma conta cadastrada</li>}
+              {accounts.length === 0 && <li className="text-[var(--muted)]">Nenhuma conta cadastrada</li>}
             </ul>
           </div>
         </div>
@@ -278,17 +330,43 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
 
       {tab === 'personalizacao' && (
         <form onSubmit={onSaveBrand} className="space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p className="text-sm text-[var(--muted)]">
+              Cores salvam automaticamente enquanto você ajusta.
+            </p>
+            <AutosaveIndicator status={autosaveStatus} />
+          </div>
+          <div className="grid gap-3 rounded-[12px] border border-[var(--border)] p-4 sm:grid-cols-2">
+            <label className="text-sm">
+              <span className="athena-label">Layout compacto</span>
+              <input
+                type="checkbox"
+                className="mt-2"
+                checked={prefs.denseLayout}
+                onChange={(e) => setPrefs({ denseLayout: e.target.checked })}
+              />
+            </label>
+            <label className="text-sm">
+              <span className="athena-label">Widgets compactos</span>
+              <input
+                type="checkbox"
+                className="mt-2"
+                checked={prefs.widgetsCompact}
+                onChange={(e) => setPrefs({ widgetsCompact: e.target.checked })}
+              />
+            </label>
+          </div>
           <div className="flex flex-wrap items-end gap-4">
             <label className="text-sm">
-              <span className="mb-1 block text-zinc-600">Cor principal</span>
+              <span className="athena-label">Cor principal</span>
               <input
                 type="color"
-                value={settings.primaryColor || '#A3001B'}
+                value={settings.primaryColor || '#A00018'}
                 onChange={(e) => updateField('primaryColor', e.target.value)}
               />
             </label>
             <label className="text-sm">
-              <span className="mb-1 block text-zinc-600">Cor secundária</span>
+              <span className="athena-label">Cor secundária</span>
               <input
                 type="color"
                 value={settings.secondaryColor || '#1a1a1a'}
@@ -296,7 +374,7 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
               />
             </label>
             <label className="text-sm">
-              <span className="mb-1 block text-zinc-600">Logo</span>
+              <span className="athena-label">Logo</span>
               <input
                 type="file"
                 accept="image/*"
@@ -311,7 +389,7 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
           <button
             type="submit"
             disabled={saving}
-            className="rounded bg-[#A3001B] px-4 py-2 text-sm text-white disabled:opacity-50"
+            className="athena-btn athena-btn-primary"
           >
             Salvar cores
           </button>
@@ -322,14 +400,14 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
         <div className="space-y-3 text-sm">
           <p>Cadastre funcionários e permissões:</p>
           <div className="flex gap-3">
-            <Link href="/app/users" className="rounded bg-zinc-900 px-3 py-2 text-white">
+            <Link href="/app/users" className="athena-btn athena-btn-primary">
               Usuários
             </Link>
-            <Link href="/app/roles" className="rounded border border-zinc-300 px-3 py-2">
+            <Link href="/app/roles" className="athena-btn athena-btn-secondary">
               Cargos / Permissões
             </Link>
           </div>
-          <p className="text-zinc-600">
+          <p className="text-[var(--muted)]">
             Cargos: Administrador, Recepcionista, Professor, Financeiro, Gerente.
           </p>
         </div>
@@ -337,23 +415,26 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
 
       {tab === 'backup' && (
         <div className="space-y-3">
-          <p className="text-sm text-zinc-600">
+          <p className="text-sm text-[var(--muted)]">
             Exporta os dados da academia (JSON) para download. Backup automático virá depois.
           </p>
-          <button
+          <Button
             type="button"
-            disabled={saving}
+            loading={saving}
+            loadingLabel="Exportando…"
             onClick={() => void onBackup()}
-            className="rounded bg-[#A3001B] px-4 py-2 text-sm text-white disabled:opacity-50"
           >
             Backup Manual — Exportar
-          </button>
+          </Button>
+          {backupProgress > 0 ? (
+            <ProgressIndicator value={backupProgress} label="Progresso do backup" />
+          ) : null}
           {backupUrl && (
             <a
               href={backupUrl}
               target="_blank"
               rel="noreferrer"
-              className="block text-sm text-[#A3001B] underline"
+              className="block text-sm text-[var(--primary)] underline"
             >
               Download do backup
             </a>
@@ -364,11 +445,11 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
       {tab === 'logs' && (
         <div className="overflow-auto">
           {!logs ? (
-            <TableSkeleton rows={5} />
+            <SkeletonForm fields={5} />
           ) : (
-            <table className="w-full text-left text-sm">
+            <table className="athena-table">
               <thead>
-                <tr className="border-b text-zinc-500">
+                <tr>
                   <th className="py-2 pr-2">Quando</th>
                   <th className="py-2 pr-2">Módulo</th>
                   <th className="py-2 pr-2">Ação</th>
@@ -377,7 +458,7 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
               </thead>
               <tbody>
                 {logs.map((l) => (
-                  <tr key={l.id} className="border-b border-zinc-100">
+                  <tr key={l.id} className="border-b border-[var(--border)]">
                     <td className="py-2 pr-2 whitespace-nowrap">
                       {new Date(l.createdAt).toLocaleString('pt-BR')}
                     </td>
@@ -390,7 +471,7 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
                 ))}
                 {logs.length === 0 && (
                   <tr>
-                    <td colSpan={4} className="py-4 text-zinc-500">
+                    <td colSpan={4} className="py-4 text-[var(--muted)]">
                       Nenhum log
                     </td>
                   </tr>
@@ -402,7 +483,7 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
       )}
 
       {tab === 'integracoes' && (
-        <p className="text-sm text-zinc-600">
+        <p className="text-sm text-[var(--muted)]">
           Integrações (WhatsApp, gateways) serão configuradas aqui. Por enquanto use as contas PIX
           no financeiro.
         </p>
@@ -411,7 +492,7 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
       {tab === 'seguranca' && (
         <div className="space-y-2 text-sm">
           <p>Altere sua senha e revise acessos em:</p>
-          <Link href="/app/profile" className="text-[#A3001B] underline">
+          <Link href="/app/profile" className="text-[var(--primary)] underline">
             Meu perfil
           </Link>
         </div>
@@ -428,12 +509,12 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
               )}
               target="_blank"
               rel="noreferrer"
-              className="text-[#A3001B] underline"
+              className="text-[var(--primary)] underline"
             >
               /api/v1/docs
             </a>
           </p>
-          <p className="text-zinc-600">PaaS / Marketplace congelados nesta sprint.</p>
+          <p className="text-[var(--muted)]">PaaS / Marketplace congelados nesta sprint.</p>
         </div>
       )}
     </div>
@@ -453,10 +534,10 @@ function Field({
 }) {
   return (
     <label className="block text-sm">
-      <span className="mb-1 block text-zinc-600">{label}</span>
+      <span className="athena-label">{label}</span>
       <input
         type={type}
-        className="w-full rounded border border-zinc-300 px-3 py-2"
+        className="athena-input"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         step={type === 'number' ? 'any' : undefined}

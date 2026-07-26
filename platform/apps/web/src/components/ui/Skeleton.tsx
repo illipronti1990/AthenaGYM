@@ -1,18 +1,24 @@
+import {
+  Skeleton as AthenaSkeleton,
+  SkeletonTable,
+  SkeletonDashboard,
+  SkeletonForm,
+  SkeletonCard,
+  SkeletonChart,
+} from '@athena/ui';
+
 export function Skeleton({ className = '' }: { className?: string }) {
-  return (
-    <div
-      className={`animate-pulse rounded bg-zinc-200 ${className}`}
-      aria-hidden
-    />
-  );
+  return <AthenaSkeleton className={className} />;
 }
 
 export function TableSkeleton({ rows = 5 }: { rows?: number }) {
-  return (
-    <div className="space-y-2" data-testid="table-skeleton">
-      {Array.from({ length: rows }).map((_, i) => (
-        <Skeleton key={i} className="h-10 w-full" />
-      ))}
-    </div>
-  );
+  return <SkeletonTable rows={rows} />;
 }
+
+export {
+  SkeletonDashboard,
+  SkeletonForm,
+  SkeletonCard,
+  SkeletonChart,
+  SkeletonTable,
+};

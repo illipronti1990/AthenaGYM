@@ -6,7 +6,6 @@ import {
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   predictChurn,
-  predictLeadConversion,
   REPORT_SOURCES,
   toCsv,
   type ExportFormat,
@@ -84,50 +83,13 @@ export class AnalyticsService {
           features: { ...pred.features, name: s.full_name },
         };
       });
-      // Always include a high-risk demo if empty
-      if (!rows.length) {
-        rows.push({
-          company_id: companyId,
-          entity_type: 'student',
-          entity_id: '00000000-0000-0000-0000-000000000099',
-          prediction_type: 'churn',
-          score: 0.92,
-          label: 'critical',
-          recommendation: 'Entrar em contato. Oferecer retenção ou reagendar avaliação.',
-          features: {
-            name: 'Carlos',
-            daysSinceLastCheckin: 28,
-            missedWorkouts30d: 9,
-            overdueInvoices: 2,
-            complaints90d: 1,
-            planMonthsRemaining: 1,
-          },
-        });
+      if (rows.length) {
+        created.push(...(await this.repo.insertPredictions(rows)));
       }
-      created.push(...(await this.repo.insertPredictions(rows)));
     }
 
     if (type === 'lead_conversion') {
-      const score = predictLeadConversion({
-        daysInPipeline: 5,
-        touchpoints: 4,
-        hasTrialClass: true,
-        sourceQuality: 0.8,
-      });
-      created.push(
-        ...(await this.repo.insertPredictions([
-          {
-            company_id: companyId,
-            entity_type: 'lead',
-            entity_id: '00000000-0000-0000-0000-000000000088',
-            prediction_type: 'lead_conversion',
-            score,
-            label: score >= 0.7 ? 'high' : 'medium',
-            recommendation: 'Priorizar follow-up comercial nas próximas 24h.',
-            features: { daysInPipeline: 5, touchpoints: 4, hasTrialClass: true },
-          },
-        ])),
-      );
+      // Predictions only from real leads — no demo seed.
     }
 
     this.events.emit(PREDICTIONS_RUN, {
@@ -248,26 +210,12 @@ export class AnalyticsService {
   }
 
   async aiInsights(auth: AuthContext, dto: AiInsightsDto) {
-    const companyId = this.companyId(auth);
-    const exec = await this.repo.buildExecutive(companyId);
-    const q = dto.question.toLowerCase();
-    let answer =
-      `Com base nos indicadores atuais: receita R$ ${exec.revenue.toLocaleString('pt-BR')}, ` +
-      `lucro R$ ${exec.profit.toLocaleString('pt-BR')}, churn ${exec.churn}%, conversão ${exec.conversion}%.`;
-
-    if (q.includes('inadimpl') || q.includes('unidade')) {
-      answer =
-        'Unidade com maior risco financeiro (stub): Unidade Centro — inadimplência relativa acima da média. Recomendo campanha de cobrança amigável e revisão de planos.';
-    } else if (q.includes('churn') || q.includes('cancel')) {
-      answer = `Churn atual ${exec.churn}%. Priorize alunos com predição crítica em /analytics/predictions.`;
-    } else if (q.includes('receita') || q.includes('fatur')) {
-      answer = `Receita do período: R$ ${exec.revenue.toLocaleString('pt-BR')} (${exec.revenueDeltaPct >= 0 ? '↑' : '↓'} ${Math.abs(exec.revenueDeltaPct)}%).`;
-    }
-
+    this.companyId(auth);
     return {
       provider: 'analytics-ai-stub',
       question: dto.question,
-      answer,
+      answer:
+        'Ainda não há dados suficientes nos Relatórios (tudo zerado). Assim que o warehouse/ETL estiver ativo, os insights aparecerão aqui.',
       sources: ['executive', 'kpi_snapshots', 'predictions'],
     };
   }

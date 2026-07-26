@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { Logo } from '@athena/ui';
 import { LoginForm } from '@/modules/auth/LoginForm';
 
 export default function LoginPage() {
@@ -13,11 +14,11 @@ export default function LoginPage() {
         }}
       />
       <div>
-        <p className="text-sm uppercase tracking-[0.28em] text-[var(--gold)]">ATHENA</p>
-        <h1 className="mt-2 text-3xl font-bold text-[var(--text)]">Entrar</h1>
-        <p className="mt-1 text-sm text-[var(--muted)]">Plataforma premium para academias</p>
+        <Logo variant="horizontal" className="!justify-start !px-0 !py-0" />
+        <h1 className="athena-h1 mt-4">Entrar</h1>
+        <p className="athena-caption mt-2">ATHENA GYM Plataforma</p>
       </div>
-      <Suspense fallback={<p className="text-[var(--muted)]">Carregando…</p>}>
+      <Suspense fallback={<p className="athena-muted">Carregando…</p>}>
         <LoginForm />
       </Suspense>
     </main>

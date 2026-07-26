@@ -656,6 +656,25 @@ export class FinanceService {
     );
   }
 
+  async deleteCashflowDay(user: AuthUser, auth: AuthContext, date: string) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      throw new BadRequestException('Invalid date. Use YYYY-MM-DD');
+    }
+    const ids = this.companyIds(auth);
+    const deleted = await this.repo.deleteCashMovementsByDate(ids, date);
+    if (!deleted) throw new NotFoundException('Nenhum lançamento nesse dia');
+    await this.audit.log({
+      companyId: ids[0],
+      userId: user.id,
+      module: 'finance',
+      action: 'delete_cashflow_day',
+      entity: 'cash_movement',
+      entityId: date,
+      metadata: { deleted },
+    });
+    return { ok: true, deleted };
+  }
+
   async dre(auth: AuthContext, from?: string, to?: string) {
     const ids = this.companyIds(auth);
     const start =

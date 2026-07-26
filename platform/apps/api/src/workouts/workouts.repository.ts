@@ -303,6 +303,19 @@ export class WorkoutsRepository {
     return this.mapAssessment(data as Record<string, unknown>);
   }
 
+  async softDeleteAssessment(companyId: string, id: string) {
+    const { data, error } = await this.admin()
+      .from('assessments')
+      .update({ deleted_at: new Date().toISOString() })
+      .eq('company_id', companyId)
+      .eq('id', id)
+      .is('deleted_at', null)
+      .select('*')
+      .maybeSingle();
+    if (error) throw error;
+    return data ? this.mapAssessment(data as Record<string, unknown>) : null;
+  }
+
   async upsertMeasurements(assessmentId: string, row: Record<string, unknown>) {
     const { error } = await this.admin()
       .from('body_measurements')

@@ -21,6 +21,7 @@ import { PlatformModule } from './platform/platform.module';
 import { SettingsModule } from './settings/settings.module';
 import { PrintsModule } from './prints/prints.module';
 import { PolishModule } from './polish/polish.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { PolishModule } from './polish/polish.module';
     SettingsModule,
     PrintsModule,
     PolishModule,
+    DashboardModule,
   ],
 })
 export class AppModule {}

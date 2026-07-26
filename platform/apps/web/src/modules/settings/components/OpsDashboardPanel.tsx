@@ -36,7 +36,7 @@ const DEFAULT_FAVS = [
   { href: '/app', label: 'Dashboard' },
   { href: '/app/finance', label: 'Financeiro' },
   { href: '/app/students', label: 'Alunos' },
-  { href: '/app/operations', label: 'Agenda' },
+  { href: '/app/operations', label: 'Operações' },
   { href: '/app/workouts', label: 'Treinos' },
 ];
 

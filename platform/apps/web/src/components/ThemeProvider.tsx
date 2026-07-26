@@ -10,38 +10,47 @@ import {
   type ReactNode,
 } from 'react';
 
-type Theme = 'light' | 'dark' | 'system';
+export type Theme = 'light' | 'dark';
+export type ThemePreference = Theme | 'system';
 
 const ThemeCtx = createContext<{
-  theme: Theme;
-  resolved: 'light' | 'dark';
-  setTheme: (t: Theme) => void;
+  theme: ThemePreference;
+  resolved: Theme;
+  setTheme: (t: ThemePreference) => void;
+  toggle: () => void;
 } | null>(null);
 
-function resolve(theme: Theme): 'light' | 'dark' {
+function resolveTheme(theme: ThemePreference): Theme {
   if (theme === 'system') {
-    if (typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark';
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: light)').matches) {
+      return 'light';
     }
-    return 'light';
+    return 'dark';
   }
   return theme;
 }
 
+function applyDom(resolved: Theme) {
+  const root = document.documentElement;
+  root.classList.remove('light', 'dark');
+  root.classList.add(resolved);
+  root.style.colorScheme = resolved;
+}
+
 export function ThemeProvider({
   children,
-  initialTheme = 'system',
+  initialTheme = 'dark',
 }: {
   children: ReactNode;
-  initialTheme?: Theme;
+  initialTheme?: ThemePreference;
 }) {
-  const [theme, setThemeState] = useState<Theme>(initialTheme);
-  const [resolved, setResolved] = useState<'light' | 'dark'>(() => resolve(initialTheme));
+  const [theme, setThemeState] = useState<ThemePreference>(initialTheme);
+  const [resolved, setResolved] = useState<Theme>(() => resolveTheme(initialTheme));
 
-  const apply = useCallback((t: Theme) => {
-    const r = resolve(t);
+  const apply = useCallback((t: ThemePreference) => {
+    const r = resolveTheme(t);
     setResolved(r);
-    document.documentElement.classList.toggle('dark', r === 'dark');
+    applyDom(r);
     try {
       localStorage.setItem('athena_theme', t);
     } catch {
@@ -50,9 +59,9 @@ export function ThemeProvider({
   }, []);
 
   useEffect(() => {
-    let initial = initialTheme;
+    let initial: ThemePreference = initialTheme;
     try {
-      const saved = localStorage.getItem('athena_theme') as Theme | null;
+      const saved = localStorage.getItem('athena_theme');
       if (saved === 'light' || saved === 'dark' || saved === 'system') initial = saved;
     } catch {
       /* ignore */
@@ -62,14 +71,21 @@ export function ThemeProvider({
   }, [apply, initialTheme]);
 
   const setTheme = useCallback(
-    (t: Theme) => {
+    (t: ThemePreference) => {
       setThemeState(t);
       apply(t);
     },
     [apply],
   );
 
-  const value = useMemo(() => ({ theme, resolved, setTheme }), [theme, resolved, setTheme]);
+  const toggle = useCallback(() => {
+    setTheme(resolved === 'dark' ? 'light' : 'dark');
+  }, [setTheme, resolved]);
+
+  const value = useMemo(
+    () => ({ theme, resolved, setTheme, toggle }),
+    [theme, resolved, setTheme, toggle],
+  );
 
   return <ThemeCtx.Provider value={value}>{children}</ThemeCtx.Provider>;
 }

@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { STUDENT_STATUSES, STUDENT_STATUS_LABELS, formatCpf } from '@athena/shared';
 import type { Student } from '@athena/shared';
-import { Button, Card } from '@athena/ui';
+import { Button, Card, ConfirmDialog, SkeletonForm } from '@athena/ui';
 import { StudentAvatar } from './StudentAvatar';
 import { StudentStatusBadge } from './StudentStatus';
 import { StudentTimeline } from './StudentTimeline';
@@ -14,11 +15,15 @@ import { StudentAssessmentsPanel } from './StudentAssessmentsPanel';
 import { EntityTimeline } from '@/modules/polish/components/EntityTimeline';
 import {
   changeStudentStatus,
+  deleteStudent,
   getStudent,
   getStudentHistory,
 } from '../services/studentsApi';
 import { useToast } from '@/components/ui/Toast';
-import { TableSkeleton } from '@/components/ui/Skeleton';
+import {
+  ContextualActions,
+  whatsappChargeUrl,
+} from '@/components/ux/ContextualActions';
 
 type Tab = 'data' | 'history' | 'finance' | 'workouts' | 'assessments';
 
@@ -31,6 +36,7 @@ export function StudentProfile({
   studentId: string;
   unitId: string;
 }) {
+  const router = useRouter();
   const { push } = useToast();
   const [tab, setTab] = useState<Tab>('data');
   const [student, setStudent] = useState<Student | null>(null);
@@ -44,6 +50,22 @@ export function StudentProfile({
     }>
   >([]);
   const [editing, setEditing] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
+  async function onDelete() {
+    setDeleting(true);
+    try {
+      await deleteStudent(accessToken, studentId);
+      push('Aluno excluído');
+      router.push('/app/students');
+    } catch (err) {
+      push(err instanceof Error ? err.message : 'Falha ao excluir', 'error');
+    } finally {
+      setDeleting(false);
+      setConfirmDelete(false);
+    }
+  }
 
   async function load() {
     try {
@@ -63,10 +85,62 @@ export function StudentProfile({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accessToken, studentId]);
 
-  if (!student) return <TableSkeleton rows={6} />;
+  if (!student) return <SkeletonForm fields={6} />;
+
+  const chargeUrl = whatsappChargeUrl(student.whatsapp || student.phone, student.fullName);
+  const contextual = [
+    student.status === 'delinquent' && chargeUrl
+      ? {
+          id: 'whatsapp-charge',
+          label: 'Enviar cobrança por WhatsApp',
+          onClick: () => window.open(chargeUrl, '_blank', 'noopener,noreferrer'),
+          variant: 'primary' as const,
+        }
+      : null,
+    {
+      id: 'new-workout',
+      label: 'Criar novo treino',
+      onClick: () => setTab('workouts'),
+      variant: 'secondary' as const,
+    },
+    {
+      id: 'reassess',
+      label: 'Agendar reavaliação',
+      onClick: () => setTab('assessments'),
+      variant: 'secondary' as const,
+    },
+  ].filter(Boolean) as Array<{
+    id: string;
+    label: string;
+    onClick?: () => void;
+    variant?: 'primary' | 'secondary';
+  }>;
 
   return (
     <div className="space-y-6">
+      <ConfirmDialog
+        open={confirmDelete}
+        title={`Excluir ${student.fullName}?`}
+        message="Essa ação não poderá ser desfeita."
+        confirmLabel="Excluir"
+        danger
+        loading={deleting}
+        onCancel={() => setConfirmDelete(false)}
+        onConfirm={() => void onDelete()}
+      />
+
+      <Button
+        type="button"
+        variant="secondary"
+        className="text-[var(--gold)]"
+        onClick={() => router.push('/app/students')}
+        data-testid="back-to-students"
+      >
+        ← Voltar
+      </Button>
+
+      <ContextualActions actions={contextual} />
+
       <header className="flex flex-wrap items-center gap-4">
         <StudentAvatar name={student.fullName} photoUrl={student.photoUrl} size={72} />
         <div className="min-w-0 flex-1">
@@ -106,6 +180,15 @@ export function StudentProfile({
             </select>
             <Button type="button" variant="secondary" onClick={() => setEditing((v) => !v)}>
               {editing ? 'Cancelar edição' : 'Editar'}
+            </Button>
+            <Button
+              type="button"
+              variant="danger"
+              disabled={deleting}
+              onClick={() => setConfirmDelete(true)}
+              data-testid="delete-student"
+            >
+              Excluir
             </Button>
           </div>
         </div>

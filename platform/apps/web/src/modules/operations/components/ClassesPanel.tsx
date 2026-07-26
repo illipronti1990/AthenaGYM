@@ -62,7 +62,7 @@ export function ClassesPanel({ accessToken }: { accessToken: string }) {
                 type="button"
                 disabled={!studentId}
                 onClick={() => enroll(c.id)}
-                className="athena-btn athena-btn-ghost"
+                className="athena-btn athena-btn-secondary"
               >
                 Reservar
               </button>
@@ -70,7 +70,7 @@ export function ClassesPanel({ accessToken }: { accessToken: string }) {
                 type="button"
                 disabled={!studentId}
                 onClick={() => cancel(c.id)}
-                className="athena-btn athena-btn-ghost"
+                className="athena-btn athena-btn-secondary"
               >
                 Cancelar
               </button>

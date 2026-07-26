@@ -146,7 +146,7 @@ export function WorkoutsPanel({ accessToken }: { accessToken: string }) {
             type="button"
             disabled={!studentId}
             onClick={aiSuggest}
-            className="athena-btn athena-btn-ghost"
+            className="athena-btn athena-btn-secondary"
           >
             Sugestão IA
           </button>
@@ -165,14 +165,14 @@ export function WorkoutsPanel({ accessToken }: { accessToken: string }) {
             </div>
             <div className="flex flex-wrap gap-2 text-sm">
               {w.status === 'draft' ? (
-                <button type="button" onClick={() => publish(w.id)} className="athena-btn athena-btn-ghost">
+                <button type="button" onClick={() => publish(w.id)} className="athena-btn athena-btn-secondary">
                   Publicar
                 </button>
               ) : null}
-              <button type="button" onClick={() => duplicate(w.id)} className="athena-btn athena-btn-ghost">
+              <button type="button" onClick={() => duplicate(w.id)} className="athena-btn athena-btn-secondary">
                 Duplicar
               </button>
-              <button type="button" onClick={() => complete(w.id)} className="athena-btn athena-btn-ghost">
+              <button type="button" onClick={() => complete(w.id)} className="athena-btn athena-btn-secondary">
                 Concluir sessão
               </button>
             </div>

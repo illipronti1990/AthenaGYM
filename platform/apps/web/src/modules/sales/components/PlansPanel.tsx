@@ -13,6 +13,8 @@ export function PlansPanel({ accessToken }: { accessToken: string }) {
   const [name, setName] = useState('');
   const [durationDays, setDurationDays] = useState(30);
   const [price, setPrice] = useState(129);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [busyId, setBusyId] = useState<string | null>(null);
 
   async function load() {
     try {
@@ -28,33 +30,73 @@ export function PlansPanel({ accessToken }: { accessToken: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accessToken]);
 
-  async function onCreate(e: FormEvent) {
+  function resetForm() {
+    setEditingId(null);
+    setName('');
+    setDurationDays(30);
+    setPrice(129);
+  }
+
+  function startEdit(plan: Plan) {
+    setEditingId(plan.id);
+    setName(plan.name);
+    setDurationDays(plan.durationDays);
+    setPrice(plan.price);
+  }
+
+  async function onSubmit(e: FormEvent) {
     e.preventDefault();
     try {
-      await salesApi.createPlan(accessToken, { name, durationDays, price });
-      push('Plano criado');
-      setName('');
+      if (editingId) {
+        await salesApi.updatePlan(accessToken, editingId, {
+          name,
+          durationDays,
+          price,
+        });
+        push('Plano atualizado');
+      } else {
+        await salesApi.createPlan(accessToken, { name, durationDays, price });
+        push('Plano criado');
+      }
+      resetForm();
       await load();
     } catch (err) {
       push(err instanceof Error ? err.message : 'Erro', 'error');
     }
   }
 
+  async function onDelete(plan: Plan) {
+    if (!window.confirm(`Excluir o plano "${plan.name}"?`)) return;
+    setBusyId(plan.id);
+    try {
+      await salesApi.deletePlan(accessToken, plan.id);
+      push('Plano excluído');
+      if (editingId === plan.id) resetForm();
+      await load();
+    } catch (err) {
+      push(err instanceof Error ? err.message : 'Erro ao excluir', 'error');
+    } finally {
+      setBusyId(null);
+    }
+  }
+
   return (
     <div className="space-y-4">
-      <form onSubmit={onCreate} className="flex flex-wrap gap-2">
+      <form onSubmit={onSubmit} className="flex flex-wrap gap-2">
         <input
           required
           placeholder="Nome"
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="athena-input max-w-xs"
+          data-testid="plan-name"
         />
         <input
           type="number"
           value={durationDays}
           onChange={(e) => setDurationDays(Number(e.target.value))}
           className="athena-input w-28"
+          data-testid="plan-duration"
         />
         <input
           type="number"
@@ -62,20 +104,29 @@ export function PlansPanel({ accessToken }: { accessToken: string }) {
           value={price}
           onChange={(e) => setPrice(Number(e.target.value))}
           className="athena-input w-28"
+          data-testid="plan-price"
         />
-        <Button type="submit">Adicionar</Button>
+        <Button type="submit" data-testid="plan-submit">
+          {editingId ? 'Salvar' : 'Adicionar'}
+        </Button>
+        {editingId ? (
+          <Button type="button" variant="secondary" onClick={resetForm} data-testid="plan-cancel-edit">
+            Cancelar
+          </Button>
+        ) : null}
       </form>
       {!plans ? (
         <TableSkeleton />
       ) : (
         <div className="athena-list overflow-x-auto">
-          <table className="athena-table">
+          <table className="athena-table" data-testid="plans-table">
             <thead>
               <tr>
                 <th>Plano</th>
                 <th>Duração</th>
                 <th>Valor</th>
                 <th>Ativo</th>
+                <th>Ações</th>
               </tr>
             </thead>
             <tbody>
@@ -85,6 +136,28 @@ export function PlansPanel({ accessToken }: { accessToken: string }) {
                   <td>{p.durationDays} dias</td>
                   <td>{p.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
                   <td>{p.active ? 'Sim' : 'Não'}</td>
+                  <td>
+                    <div className="flex flex-wrap gap-2">
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        onClick={() => startEdit(p)}
+                        data-testid={`edit-plan-${p.id}`}
+                      >
+                        Editar
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        className="border-[var(--primary)] text-[var(--primary-hover)] hover:bg-[var(--primary)] hover:text-white"
+                        disabled={busyId === p.id}
+                        onClick={() => void onDelete(p)}
+                        data-testid={`delete-plan-${p.id}`}
+                      >
+                        {busyId === p.id ? 'Excluindo…' : 'Excluir'}
+                      </Button>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>

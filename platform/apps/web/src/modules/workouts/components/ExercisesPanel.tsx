@@ -3,11 +3,25 @@
 import { FormEvent, useEffect, useState } from 'react';
 import type { Exercise } from '@athena/shared';
 import { workoutsApi } from '../services/workoutsApi';
+import { capitalizeLabel, MuscleGroupMultiSelect } from './MuscleGroupMultiSelect';
+import {
+  DIFFICULTY_OPTIONS,
+  difficultyLabel,
+  type DifficultyValue,
+} from '../utils/difficultyLabels';
+
+function formatGroups(ex: Exercise) {
+  const groups = [ex.muscleGroup, ...(ex.secondaryMuscles || [])]
+    .filter(Boolean)
+    .map(capitalizeLabel);
+  return groups.join(', ');
+}
 
 export function ExercisesPanel({ accessToken }: { accessToken: string }) {
   const [items, setItems] = useState<Exercise[]>([]);
   const [name, setName] = useState('');
-  const [muscleGroup, setMuscleGroup] = useState('pernas');
+  const [groups, setGroups] = useState<string[]>(['Pernas']);
+  const [difficulty, setDifficulty] = useState<DifficultyValue>('beginner');
   const [error, setError] = useState<string | null>(null);
 
   async function reload() {
@@ -16,13 +30,27 @@ export function ExercisesPanel({ accessToken }: { accessToken: string }) {
 
   useEffect(() => {
     reload().catch((e) => setError(e instanceof Error ? e.message : 'erro'));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accessToken]);
 
   async function onCreate(e: FormEvent) {
     e.preventDefault();
+    if (groups.length === 0) {
+      setError('Selecione ao menos um grupo muscular');
+      return;
+    }
     try {
-      await workoutsApi.createExercise(accessToken, { name, muscleGroup });
+      const [muscleGroup, ...secondaryMuscles] = groups;
+      await workoutsApi.createExercise(accessToken, {
+        name,
+        muscleGroup,
+        secondaryMuscles,
+        difficulty,
+      });
       setName('');
+      setGroups(['Pernas']);
+      setDifficulty('beginner');
+      setError(null);
       await reload();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'erro');
@@ -31,7 +59,7 @@ export function ExercisesPanel({ accessToken }: { accessToken: string }) {
 
   return (
     <div className="space-y-4">
-      <form onSubmit={onCreate} className="flex flex-wrap items-end gap-3">
+      <form onSubmit={onCreate} className="flex flex-wrap items-start gap-3">
         <label className="text-sm text-[var(--muted)]">
           Nome
           <input
@@ -39,18 +67,29 @@ export function ExercisesPanel({ accessToken }: { accessToken: string }) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
+            data-testid="exercise-name"
           />
         </label>
+        <div className="text-sm text-[var(--muted)]">
+          <span>Grupo</span>
+          <MuscleGroupMultiSelect value={groups} onChange={setGroups} />
+        </div>
         <label className="text-sm text-[var(--muted)]">
-          Grupo
-          <input
+          Nível
+          <select
             className="mt-1 block athena-input"
-            value={muscleGroup}
-            onChange={(e) => setMuscleGroup(e.target.value)}
-            required
-          />
+            value={difficulty}
+            onChange={(e) => setDifficulty(e.target.value as DifficultyValue)}
+            data-testid="exercise-difficulty"
+          >
+            {DIFFICULTY_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
+          </select>
         </label>
-        <button type="submit" className="athena-btn athena-btn-primary">
+        <button type="submit" className="athena-btn athena-btn-primary mt-6" data-testid="exercise-submit">
           Adicionar
         </button>
       </form>
@@ -61,11 +100,11 @@ export function ExercisesPanel({ accessToken }: { accessToken: string }) {
             <span>
               {ex.name}{' '}
               <span className="text-[var(--muted)]">
-                · {ex.muscleGroup}
+                · {formatGroups(ex)}
                 {ex.isGlobal ? ' · global' : ''}
               </span>
             </span>
-            <span className="text-[var(--muted)]">{ex.difficulty}</span>
+            <span className="text-[var(--muted)]">{difficultyLabel(ex.difficulty)}</span>
           </li>
         ))}
       </ul>

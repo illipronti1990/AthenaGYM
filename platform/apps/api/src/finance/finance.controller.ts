@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Headers,
   Param,
@@ -238,6 +239,19 @@ export class FinanceController {
     @Query('to') to?: string,
   ) {
     return this.finance.cashflow(auth, from, to);
+  }
+
+  @Delete('cashflow/:date')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, PermissionsGuard, CompanyGuard, UnitGuard)
+  @Permissions('finance.update')
+  @ApiOperation({ summary: 'Remove cash movements for a day' })
+  deleteCashflowDay(
+    @CurrentUser() user: AuthUser,
+    @CurrentAuth() auth: AuthContext,
+    @Param('date') date: string,
+  ) {
+    return this.finance.deleteCashflowDay(user, auth, date);
   }
 
   @Get('dre')

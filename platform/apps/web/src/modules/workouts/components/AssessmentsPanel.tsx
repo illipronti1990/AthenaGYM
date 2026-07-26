@@ -15,6 +15,7 @@ export function AssessmentsPanel({ accessToken }: { accessToken: string }) {
   const [bodyFat, setBodyFat] = useState('18');
   const [error, setError] = useState<string | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   async function reload(forStudentId = studentId) {
     setItems(await workoutsApi.assessments(accessToken, forStudentId || undefined));
@@ -53,6 +54,21 @@ export function AssessmentsPanel({ accessToken }: { accessToken: string }) {
       await reload(studentId);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'erro');
+    }
+  }
+
+  async function onDelete(assessment: Assessment) {
+    if (!window.confirm('Excluir esta avaliação física?')) return;
+    setDeletingId(assessment.id);
+    setError(null);
+    try {
+      await workoutsApi.deleteAssessment(accessToken, assessment.id);
+      setMsg('Avaliação excluída');
+      await reload(studentId);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Falha ao excluir');
+    } finally {
+      setDeletingId(null);
     }
   }
 
@@ -97,11 +113,23 @@ export function AssessmentsPanel({ accessToken }: { accessToken: string }) {
       </Card>
       {msg ? <p className="text-sm text-[var(--gold)]">{msg}</p> : null}
       {error ? <p className="text-sm text-[var(--primary-hover)]">{error}</p> : null}
-      <ul className="athena-list text-sm">
+      <ul className="athena-list text-sm" data-testid="assessments-list">
         {items.map((a) => (
           <li key={a.id} className="athena-list-item text-[var(--text)]">
-            {new Date(a.createdAt).toLocaleDateString('pt-BR')} · {a.weight}kg · IMC {a.bmi} · BF{' '}
-            {a.bodyFat}%
+            <span>
+              {new Date(a.createdAt).toLocaleDateString('pt-BR')} · {a.weight}kg · IMC {a.bmi} · BF{' '}
+              {a.bodyFat}%
+            </span>
+            <Button
+              type="button"
+              variant="secondary"
+              className="border-[var(--primary)] text-[var(--primary-hover)] hover:bg-[var(--primary)] hover:text-white"
+              disabled={deletingId === a.id}
+              onClick={() => void onDelete(a)}
+              data-testid={`delete-assessment-${a.id}`}
+            >
+              {deletingId === a.id ? 'Excluindo…' : 'Excluir'}
+            </Button>
           </li>
         ))}
       </ul>
@@ -295,7 +323,7 @@ export function EvolutionPanel({ accessToken }: { accessToken: string }) {
                 <p>{file ? `${(file.size / 1024).toFixed(0)} KB` : ''}</p>
                 <Button
                   type="button"
-                  variant="ghost"
+                  variant="secondary"
                   className="mt-2"
                   onClick={() => onPickFile(null)}
                 >
@@ -339,7 +367,7 @@ export function EvolutionPanel({ accessToken }: { accessToken: string }) {
                   </span>
                   <Button
                     type="button"
-                    variant="ghost"
+                    variant="secondary"
                     className="shrink-0 text-[var(--primary-hover)]"
                     disabled={deletingId === p.id}
                     onClick={() => void removePhoto(p.id)}

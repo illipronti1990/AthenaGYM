@@ -3,6 +3,8 @@ import type {
   Checkin,
   ClassEnrollment,
   OperationsDashboard,
+  PartnerAccessRequest,
+  PartnerIntegration,
   Room,
   Schedule,
 } from '@athena/shared';
@@ -65,4 +67,31 @@ export const operationsApi = {
       body: JSON.stringify({ deviceId, studentId }),
     }),
   rooms: (t: string) => apiFetch<Room[]>('/rooms', t),
+  partnerIntegrations: (t: string) =>
+    apiFetch<PartnerIntegration[]>('/partners/integrations', t),
+  updatePartnerIntegration: (t: string, body: Record<string, unknown>) =>
+    apiFetch<PartnerIntegration>('/partners/integrations', t, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    }),
+  partnerAccessRequests: (t: string, status?: string) =>
+    apiFetch<PartnerAccessRequest[]>(
+      `/partners/access-requests${status ? `?status=${encodeURIComponent(status)}` : ''}`,
+      t,
+    ),
+  createPartnerAccessRequest: (t: string, body: Record<string, unknown>) =>
+    apiFetch<PartnerAccessRequest>('/partners/access-requests', t, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  approvePartnerAccess: (t: string, id: string) =>
+    apiFetch<PartnerAccessRequest>(`/partners/access-requests/${id}/approve`, t, {
+      method: 'POST',
+      body: '{}',
+    }),
+  rejectPartnerAccess: (t: string, id: string, reason?: string) =>
+    apiFetch<PartnerAccessRequest>(`/partners/access-requests/${id}/reject`, t, {
+      method: 'POST',
+      body: JSON.stringify({ reason }),
+    }),
 };

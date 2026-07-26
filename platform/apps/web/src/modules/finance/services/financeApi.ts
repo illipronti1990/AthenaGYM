@@ -60,6 +60,12 @@ export const financeApi = {
       body: JSON.stringify(body),
     }),
   cashflow: (t: string) => apiFetch<CashflowPoint[]>('/finance/cashflow', t),
+  deleteCashflowDay: (t: string, date: string) =>
+    apiFetch<{ ok: boolean; deleted: number }>(
+      `/finance/cashflow/${encodeURIComponent(date)}`,
+      t,
+      { method: 'DELETE' },
+    ),
   dre: (t: string) => apiFetch<DreReport>('/finance/dre', t),
   accounts: (t: string) => apiFetch<FinancialAccount[]>('/finance/accounts', t),
   createAccount: (t: string, body: Record<string, unknown>) =>

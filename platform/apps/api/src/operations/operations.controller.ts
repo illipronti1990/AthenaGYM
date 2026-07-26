@@ -23,11 +23,14 @@ import { AuthUser } from '../auth/auth.types';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import {
   CreateCheckinDto,
+  CreatePartnerAccessRequestDto,
   CreateRoomDto,
   CreateScheduleDto,
   EnrollClassDto,
   GenerateQrDto,
   OpenGateDto,
+  RejectPartnerAccessDto,
+  UpdatePartnerIntegrationDto,
   UpdateScheduleDto,
   ValidateAccessDto,
 } from './dto/operations.dto';
@@ -183,5 +186,66 @@ export class OperationsController {
   @Permissions('operations.configure')
   createRoom(@CurrentAuth() auth: AuthContext, @Body() dto: CreateRoomDto) {
     return this.ops.createRoom(auth, dto);
+  }
+
+  // --- partner access (Wellhub / TotalPass) ---
+  @Get('partners/integrations')
+  @Permissions('operations.read')
+  @ApiOperation({ summary: 'List Wellhub / TotalPass integration status' })
+  partnerIntegrations(@CurrentAuth() auth: AuthContext) {
+    return this.ops.listPartnerIntegrations(auth);
+  }
+
+  @Patch('partners/integrations')
+  @Permissions('operations.configure')
+  @ApiOperation({ summary: 'Enable/disable partner integration' })
+  updatePartnerIntegration(
+    @CurrentAuth() auth: AuthContext,
+    @Body() dto: UpdatePartnerIntegrationDto,
+  ) {
+    return this.ops.updatePartnerIntegration(auth, dto);
+  }
+
+  @Get('partners/access-requests')
+  @Permissions('operations.access')
+  @ApiOperation({ summary: 'List partner login/access requests for approval' })
+  partnerAccessRequests(
+    @CurrentAuth() auth: AuthContext,
+    @Query('status') status?: string,
+  ) {
+    return this.ops.listPartnerAccessRequests(auth, status);
+  }
+
+  @Post('partners/access-requests')
+  @Permissions('operations.access')
+  @ApiOperation({ summary: 'Register inbound partner access request (manual/webhook sim)' })
+  createPartnerAccessRequest(
+    @CurrentAuth() auth: AuthContext,
+    @Body() dto: CreatePartnerAccessRequestDto,
+  ) {
+    return this.ops.createPartnerAccessRequest(auth, dto);
+  }
+
+  @Post('partners/access-requests/:id/approve')
+  @Permissions('operations.access')
+  @ApiOperation({ summary: 'Approve partner access at reception' })
+  approvePartnerAccess(
+    @CurrentUser() user: AuthUser,
+    @CurrentAuth() auth: AuthContext,
+    @Param('id') id: string,
+  ) {
+    return this.ops.approvePartnerAccess(user, auth, id);
+  }
+
+  @Post('partners/access-requests/:id/reject')
+  @Permissions('operations.access')
+  @ApiOperation({ summary: 'Reject partner access at reception' })
+  rejectPartnerAccess(
+    @CurrentUser() user: AuthUser,
+    @CurrentAuth() auth: AuthContext,
+    @Param('id') id: string,
+    @Body() dto: RejectPartnerAccessDto,
+  ) {
+    return this.ops.rejectPartnerAccess(user, auth, id, dto);
   }
 }

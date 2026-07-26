@@ -243,6 +243,15 @@ export class WorkoutsService {
     return this.repo.listAssessments(this.companyId(auth), studentId);
   }
 
+  async deleteAssessment(auth: AuthContext, id: string) {
+    const companyId = this.companyId(auth);
+    const existing = await this.repo.getAssessment(companyId, id);
+    if (!existing) throw new NotFoundException('Avaliação não encontrada');
+    const deleted = await this.repo.softDeleteAssessment(companyId, id);
+    if (!deleted) throw new NotFoundException('Avaliação não encontrada');
+    return { ok: true, id };
+  }
+
   async createAssessment(user: AuthUser, auth: AuthContext, dto: CreateAssessmentDto) {
     const companyId = this.companyId(auth);
     const weight = dto.weight ?? null;

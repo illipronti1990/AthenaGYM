@@ -93,7 +93,7 @@ export function ReceivablesPanel({ accessToken }: { accessToken: string }) {
                     </Button>
                     <Button
                       type="button"
-                      variant="ghost"
+                      variant="secondary"
                       className="!px-2 !py-1 text-xs"
                       onClick={() =>
                         void financeApi
@@ -109,7 +109,7 @@ export function ReceivablesPanel({ accessToken }: { accessToken: string }) {
                     </Button>
                     <Button
                       type="button"
-                      variant="ghost"
+                      variant="secondary"
                       className="!px-2 !py-1 text-xs"
                       onClick={() => void financeApi.cancel(accessToken, r.id).then(load)}
                     >
@@ -120,7 +120,7 @@ export function ReceivablesPanel({ accessToken }: { accessToken: string }) {
                 {r.status === 'paid' ? (
                   <Button
                     type="button"
-                    variant="ghost"
+                    variant="secondary"
                     className="!px-2 !py-1 text-xs"
                     onClick={() => void financeApi.refund(accessToken, r.id).then(load)}
                   >

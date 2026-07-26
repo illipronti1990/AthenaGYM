@@ -3,14 +3,15 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import type { StudentListItem } from '@athena/shared';
-import { Button } from '@athena/ui';
+import { Button, EmptyState, FloatingActionButton } from '@athena/ui';
+import { Plus, Users } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
 import { listStudents } from '../services/studentsApi';
 import { StudentCard } from './StudentCard';
 import { StudentFilters, type StudentFilterValues } from './StudentFilters';
 import { ExportButtons } from '@/modules/polish/components/ExportButtons';
-import { EmptyState } from '@/components/ui/EmptyState';
 
 export function StudentsListPanel({
   accessToken,
@@ -20,6 +21,7 @@ export function StudentsListPanel({
   units: Array<{ id: string; name: string }>;
 }) {
   const { push } = useToast();
+  const router = useRouter();
   const [filters, setFilters] = useState<StudentFilterValues>({
     q: '',
     status: '',
@@ -50,8 +52,13 @@ export function StudentsListPanel({
     return () => clearTimeout(t);
   }, [accessToken, filters, push]);
 
+  const hasFilters = Boolean(filters.q || filters.status || filters.unitId);
+
   return (
     <div className="space-y-4">
+      <FloatingActionButton label="Novo aluno (Ctrl+N)" onClick={() => router.push('/app/students/new')}>
+        <Plus size={22} />
+      </FloatingActionButton>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <StudentFilters value={filters} onChange={setFilters} units={units} />
         <div className="flex flex-wrap items-center gap-2">
@@ -71,8 +78,18 @@ export function StudentsListPanel({
           ))}
           {!items.length ? (
             <EmptyState
-              title="Nenhum aluno encontrado"
-              description="Ajuste os filtros ou cadastre um novo."
+              title={hasFilters ? 'Nenhum aluno com esses filtros' : 'Ainda não existem alunos'}
+              description={
+                hasFilters
+                  ? 'Ajuste os filtros ou limpe a busca para ver todos.'
+                  : 'Cadastre o primeiro aluno e comece a operar a academia.'
+              }
+              icon={<Users size={40} strokeWidth={1.5} />}
+              action={
+                <Link href="/app/students/new">
+                  <Button>Novo aluno</Button>
+                </Link>
+              }
             />
           ) : null}
         </div>

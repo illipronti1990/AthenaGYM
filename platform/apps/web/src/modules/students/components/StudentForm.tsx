@@ -9,7 +9,8 @@ import { createStudent, updateStudent } from '../services/studentsApi';
 import { salesApi } from '@/modules/sales/services/salesApi';
 import { apiGetMe, apiListUsers } from '@/services/api';
 import { useToast } from '@/components/ui/Toast';
-import { formatCep, lookupCep, onlyDigits } from '@/utils/cep';
+import { CepFields } from '@/components/CepFields';
+import { formatCep, onlyDigits } from '@/utils/cep';
 
 type Tab = 'personal' | 'contact' | 'address' | 'emergency' | 'notes';
 
@@ -88,8 +89,6 @@ export function StudentForm({
   const { push } = useToast();
   const [tab, setTab] = useState<Tab>('personal');
   const [loading, setLoading] = useState(false);
-  const [cepLoading, setCepLoading] = useState(false);
-  const [cepError, setCepError] = useState<string | null>(null);
   const [unitId, setUnitId] = useState(initialUnitId);
   const [plans, setPlans] = useState<Plan[]>([]);
   const [trainers, setTrainers] = useState<UserListItem[]>([]);
@@ -153,46 +152,8 @@ export function StudentForm({
     })();
   }, [accessToken, unitId]);
 
-  useEffect(() => {
-    const digits = onlyDigits(form.zipcode);
-    if (digits.length !== 8) {
-      setCepError(null);
-      return;
-    }
-    const t = setTimeout(() => {
-      void searchCep(digits);
-    }, 400);
-    return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form.zipcode]);
-
   function set<K extends keyof typeof form>(key: K, value: (typeof form)[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
-  }
-
-  async function searchCep(raw?: string) {
-    const digits = onlyDigits(raw ?? form.zipcode);
-    if (digits.length !== 8) {
-      setCepError('Informe um CEP com 8 dígitos');
-      return;
-    }
-    setCepLoading(true);
-    setCepError(null);
-    try {
-      const addr = await lookupCep(digits);
-      setForm((prev) => ({
-        ...prev,
-        zipcode: addr.zipcode,
-        street: addr.street || prev.street,
-        district: addr.district || prev.district,
-        city: addr.city || prev.city,
-        state: addr.state || prev.state,
-      }));
-    } catch (err) {
-      setCepError(err instanceof Error ? err.message : 'CEP não encontrado');
-    } finally {
-      setCepLoading(false);
-    }
   }
 
   async function onSubmit(e: FormEvent) {
@@ -304,7 +265,25 @@ export function StudentForm({
           ) : null}
           <Field label="Nome completo" value={form.fullName} onChange={(v) => set('fullName', v)} required />
           <Field label="Nome social" value={form.socialName} onChange={(v) => set('socialName', v)} />
-          <Field label="CPF" value={form.cpf} onChange={(v) => set('cpf', v)} />
+          <Field
+            label="CPF"
+            value={form.cpf}
+            onChange={(v) => set('cpf', v)}
+            state={
+              !form.cpf
+                ? 'idle'
+                : isValidCpf(form.cpf)
+                  ? 'valid'
+                  : 'invalid'
+            }
+            hint={
+              !form.cpf
+                ? undefined
+                : isValidCpf(form.cpf)
+                  ? 'CPF válido'
+                  : 'CPF inválido'
+            }
+          />
           <Field label="RG" value={form.rg} onChange={(v) => set('rg', v)} />
           <Field label="Nascimento" value={form.birthDate} onChange={(v) => set('birthDate', v)} type="date" />
           <SelectField
@@ -346,44 +325,28 @@ export function StudentForm({
       )}
 
       {tab === 'address' && (
-        <div className="grid gap-3 sm:grid-cols-2">
-          <label className="block text-sm font-medium text-[var(--muted)] sm:col-span-2">
-            CEP
-            <div className="mt-1 flex flex-wrap gap-2">
-              <input
-                value={form.zipcode}
-                onChange={(e) => set('zipcode', formatCep(e.target.value))}
-                onBlur={() => {
-                  if (onlyDigits(form.zipcode).length === 8) void searchCep();
-                }}
-                placeholder="00000-000"
-                inputMode="numeric"
-                autoComplete="postal-code"
-                className="athena-input max-w-[180px]"
-                data-testid="student-cep"
-              />
-              <Button
-                type="button"
-                variant="secondary"
-                disabled={cepLoading || onlyDigits(form.zipcode).length !== 8}
-                onClick={() => void searchCep()}
-              >
-                {cepLoading ? 'Buscando…' : 'Buscar CEP'}
-              </Button>
-            </div>
-            <span className="mt-1 block text-xs text-[var(--muted)]">
-              Consulta automática nos Correios (ViaCEP). Preenche rua, bairro, cidade e UF.
-            </span>
-            {cepError ? (
-              <span className="mt-1 block text-xs text-[var(--primary-hover)]">{cepError}</span>
-            ) : null}
-          </label>
-          <Field label="Rua" value={form.street} onChange={(v) => set('street', v)} />
-          <Field label="Número" value={form.number} onChange={(v) => set('number', v)} />
-          <Field label="Bairro" value={form.district} onChange={(v) => set('district', v)} />
-          <Field label="Cidade" value={form.city} onChange={(v) => set('city', v)} />
-          <Field label="UF" value={form.state} onChange={(v) => set('state', v)} />
-        </div>
+        <CepFields
+          testIdPrefix="student-cep"
+          value={{
+            zipCode: form.zipcode,
+            street: form.street,
+            number: form.number,
+            district: form.district,
+            city: form.city,
+            state: form.state,
+          }}
+          onChange={(addr) => {
+            setForm((prev) => ({
+              ...prev,
+              zipcode: addr.zipCode,
+              street: addr.street,
+              number: addr.number || '',
+              district: addr.district,
+              city: addr.city,
+              state: addr.state,
+            }));
+          }}
+        />
       )}
 
       {tab === 'emergency' && (
@@ -414,8 +377,8 @@ export function StudentForm({
       )}
 
       <div className="flex gap-2">
-        <Button type="submit" disabled={loading}>
-          {loading ? 'Salvando…' : 'Salvar'}
+        <Button type="submit" loading={loading} loadingLabel="Salvando…">
+          Salvar
         </Button>
       </div>
     </form>
@@ -485,6 +448,8 @@ function Field({
   inputMode,
   maxLength,
   placeholder,
+  state = 'idle',
+  hint,
 }: {
   label: string;
   value: string;
@@ -494,7 +459,11 @@ function Field({
   inputMode?: HTMLAttributes<HTMLInputElement>['inputMode'];
   maxLength?: number;
   placeholder?: string;
+  state?: 'idle' | 'valid' | 'invalid';
+  hint?: string;
 }) {
+  const stateClass =
+    state === 'valid' ? 'athena-input-valid' : state === 'invalid' ? 'athena-input-invalid' : '';
   return (
     <label className="block text-sm font-medium text-[var(--muted)]">
       {label}
@@ -506,8 +475,19 @@ function Field({
         inputMode={inputMode}
         maxLength={maxLength}
         placeholder={placeholder}
-        className="athena-input mt-1"
+        className={`athena-input mt-1 ${stateClass}`}
+        aria-invalid={state === 'invalid' || undefined}
       />
+      {hint ? (
+        <span
+          className={`athena-field-hint ${
+            state === 'valid' ? 'is-ok' : state === 'invalid' ? 'is-error' : ''
+          }`}
+        >
+          {state === 'valid' ? '✔ ' : state === 'invalid' ? '❌ ' : ''}
+          {hint}
+        </span>
+      ) : null}
     </label>
   );
 }

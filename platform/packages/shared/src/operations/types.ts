@@ -16,9 +16,42 @@ export type ClassEnrollmentStatus =
   | 'waitlist'
   | 'no_show';
 
-export type CheckinMethod = 'qr' | 'biometric' | 'facial' | 'manual' | 'nfc';
+export type CheckinMethod = 'qr' | 'biometric' | 'facial' | 'manual' | 'nfc' | 'partner';
 
 export type AccessResult = 'allowed' | 'denied';
+
+export type PartnerProvider = 'wellhub' | 'totalpass';
+
+export type PartnerAccessStatus = 'pending' | 'approved' | 'rejected' | 'expired';
+
+export interface PartnerIntegration {
+  id: string;
+  companyId: string;
+  provider: PartnerProvider;
+  enabled: boolean;
+  status: string;
+  externalGymId: string | null;
+  notes: string | null;
+}
+
+export interface PartnerAccessRequest {
+  id: string;
+  companyId: string;
+  unitId: string | null;
+  provider: PartnerProvider;
+  status: PartnerAccessStatus;
+  memberName: string;
+  memberDocument: string | null;
+  memberEmail: string | null;
+  externalMemberId: string | null;
+  externalBookingId: string | null;
+  studentId: string | null;
+  checkinId: string | null;
+  decidedBy: string | null;
+  decidedAt: string | null;
+  rejectReason: string | null;
+  createdAt: string;
+}
 
 export interface Room {
   id: string;

@@ -15,12 +15,12 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="rounded border border-red-200 bg-red-50 p-6 text-red-900">
-          <h2 className="text-lg font-semibold">Algo deu errado</h2>
-          <p className="mt-2 text-sm">{this.state.message || 'Erro inesperado'}</p>
+        <div className="athena-card border-[var(--danger)]">
+          <h2 className="athena-h3 text-[var(--danger)]">Algo deu errado</h2>
+          <p className="athena-muted mt-2 text-sm">{this.state.message || 'Erro inesperado'}</p>
           <button
             type="button"
-            className="mt-4 rounded bg-[#A3001B] px-3 py-1.5 text-sm text-white"
+            className="athena-btn athena-btn-danger mt-4"
             onClick={() => this.setState({ hasError: false, message: undefined })}
           >
             Tentar de novo

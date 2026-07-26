@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
+  IsBoolean,
   IsIn,
   IsInt,
   IsISO8601,
@@ -135,9 +136,9 @@ export class CreateCheckinDto {
   @IsUUID()
   scheduleId?: string;
 
-  @ApiPropertyOptional({ enum: ['qr', 'biometric', 'facial', 'manual', 'nfc'] })
+  @ApiPropertyOptional({ enum: ['qr', 'biometric', 'facial', 'manual', 'nfc', 'partner'] })
   @IsOptional()
-  @IsIn(['qr', 'biometric', 'facial', 'manual', 'nfc'])
+  @IsIn(['qr', 'biometric', 'facial', 'manual', 'nfc', 'partner'])
   method?: string;
 
   @ApiPropertyOptional()
@@ -184,7 +185,7 @@ export class ValidateAccessDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsIn(['qr', 'biometric', 'facial', 'manual', 'nfc'])
+  @IsIn(['qr', 'biometric', 'facial', 'manual', 'nfc', 'partner'])
   method?: string;
 
   @ApiPropertyOptional()
@@ -224,4 +225,81 @@ export class CreateRoomDto {
   @IsOptional()
   @IsString()
   area?: string;
+}
+
+const PARTNER_PROVIDERS = ['wellhub', 'totalpass'] as const;
+
+export class CreatePartnerAccessRequestDto {
+  @ApiProperty({ enum: PARTNER_PROVIDERS })
+  @IsIn(PARTNER_PROVIDERS)
+  provider!: (typeof PARTNER_PROVIDERS)[number];
+
+  @ApiProperty()
+  @IsString()
+  @MaxLength(200)
+  memberName!: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @MaxLength(40)
+  memberDocument?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  memberEmail?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUUID()
+  unitId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUUID()
+  studentId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  externalMemberId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  externalBookingId?: string;
+}
+
+export class RejectPartnerAccessDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  reason?: string;
+}
+
+export class UpdatePartnerIntegrationDto {
+  @ApiProperty({ enum: PARTNER_PROVIDERS })
+  @IsIn(PARTNER_PROVIDERS)
+  provider!: (typeof PARTNER_PROVIDERS)[number];
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  enabled?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  externalGymId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  notes?: string;
 }

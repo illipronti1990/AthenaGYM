@@ -6,6 +6,7 @@ import { Button, Card } from '@athena/ui';
 import { workoutsApi } from '@/modules/workouts/services/workoutsApi';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
+import { ContextualActions } from '@/components/ux/ContextualActions';
 
 const STATUS_LABEL: Record<string, string> = {
   draft: 'Rascunho',
@@ -90,8 +91,27 @@ export function StudentWorkoutsPanel({
 
   if (!items) return <TableSkeleton rows={5} />;
 
+  const hasActive = items.some((w) => w.status === 'published' || w.status === 'draft');
+
   return (
     <div className="space-y-6" data-testid="student-workouts-panel">
+      {!hasActive ? (
+        <ContextualActions
+          title="Sugestão"
+          actions={[
+            {
+              id: 'create-workout',
+              label: 'Criar novo treino',
+              onClick: () => {
+                document
+                  .querySelector<HTMLInputElement>('[data-testid="student-workouts-panel"] input')
+                  ?.focus();
+              },
+              variant: 'primary',
+            },
+          ]}
+        />
+      ) : null}
       <Card>
         <h3 className="athena-title mb-3 text-lg">Novo treino</h3>
         <form onSubmit={onCreate} className="space-y-3">
@@ -132,7 +152,7 @@ export function StudentWorkoutsPanel({
             </Button>
             <Button
               type="button"
-              variant="ghost"
+              variant="secondary"
               onClick={() =>
                 void run(
                   () =>
@@ -179,7 +199,7 @@ export function StudentWorkoutsPanel({
                   ) : null}
                   <Button
                     type="button"
-                    variant="ghost"
+                    variant="secondary"
                     className="!px-2 !py-1 text-xs"
                     onClick={() =>
                       void run(() => workoutsApi.duplicateWorkout(accessToken, w.id), 'Treino duplicado')
@@ -189,7 +209,7 @@ export function StudentWorkoutsPanel({
                   </Button>
                   <Button
                     type="button"
-                    variant="ghost"
+                    variant="secondary"
                     className="!px-2 !py-1 text-xs"
                     onClick={() =>
                       void run(

@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import type { Role, UserListItem } from '@athena/shared';
 import { Button } from '@athena/ui';
-import { apiInviteUser, apiListRoles, apiListUsers } from '@/services/api';
+import { apiDeleteUser, apiInviteUser, apiListRoles, apiListUsers } from '@/services/api';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
 
@@ -35,6 +35,7 @@ export function TrainersPanel({ accessToken }: { accessToken: string }) {
   const [roleId, setRoleId] = useState('');
   const [tempPassword, setTempPassword] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const trainerRoles = useMemo(
     () => roles.filter((r) => TRAINER_SLUGS.has(r.slug.toLowerCase())),
@@ -64,6 +65,23 @@ export function TrainersPanel({ accessToken }: { accessToken: string }) {
     void load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accessToken]);
+
+  async function onDelete(trainer: UserListItem) {
+    const name = trainer.fullName || trainer.email || 'este professor';
+    if (!window.confirm(`Excluir ${name}? Esta ação remove o professor da lista.`)) {
+      return;
+    }
+    setDeletingId(trainer.id);
+    try {
+      await apiDeleteUser(accessToken, trainer.id);
+      push('Professor excluído');
+      await load();
+    } catch (err) {
+      push(err instanceof Error ? err.message : 'Falha ao excluir professor', 'error');
+    } finally {
+      setDeletingId(null);
+    }
+  }
 
   async function onCreate(e: FormEvent) {
     e.preventDefault();
@@ -115,6 +133,7 @@ export function TrainersPanel({ accessToken }: { accessToken: string }) {
                   <th>Telefone</th>
                   <th>Tipo</th>
                   <th>Status</th>
+                  <th>Ações</th>
                 </tr>
               </thead>
               <tbody>
@@ -129,6 +148,18 @@ export function TrainersPanel({ accessToken }: { accessToken: string }) {
                         .join(', ') || '—'}
                     </td>
                     <td>{t.status}</td>
+                    <td>
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        className="border-[var(--primary)] text-[var(--primary-hover)] hover:bg-[var(--primary)] hover:text-white"
+                        disabled={deletingId === t.id}
+                        onClick={() => void onDelete(t)}
+                        data-testid={`delete-trainer-${t.id}`}
+                      >
+                        {deletingId === t.id ? 'Excluindo…' : 'Excluir'}
+                      </Button>
+                    </td>
                   </tr>
                 ))}
               </tbody>

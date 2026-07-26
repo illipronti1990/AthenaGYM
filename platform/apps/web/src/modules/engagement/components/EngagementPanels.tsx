@@ -367,7 +367,7 @@ export function LoyaltyPanel({ accessToken }: { accessToken: string }) {
         <Button type="button" variant="secondary" onClick={() => void award()}>
           +10 check-in
         </Button>
-        <Button type="button" variant="ghost" onClick={() => void askAi()}>
+        <Button type="button" variant="secondary" onClick={() => void askAi()}>
           Perguntar IA
         </Button>
       </div>

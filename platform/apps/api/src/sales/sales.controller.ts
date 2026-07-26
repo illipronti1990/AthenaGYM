@@ -155,6 +155,17 @@ export class SalesController {
     return this.sales.updatePlan(user, auth, id, dto);
   }
 
+  @Delete('plans/:id')
+  @Permissions('sales.plans')
+  @ApiOperation({ summary: 'Soft-delete plan' })
+  deletePlan(
+    @CurrentUser() user: AuthUser,
+    @CurrentAuth() auth: AuthContext,
+    @Param('id') id: string,
+  ) {
+    return this.sales.deletePlan(user, auth, id);
+  }
+
   @Get('enrollments')
   @Permissions('sales.read')
   listEnrollments(@CurrentAuth() auth: AuthContext) {

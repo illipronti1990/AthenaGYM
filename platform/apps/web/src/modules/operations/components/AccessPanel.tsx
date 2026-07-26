@@ -47,7 +47,7 @@ export function AccessPanel({ accessToken }: { accessToken: string }) {
               <button
                 type="button"
                 onClick={() => open(d.id)}
-                className="athena-btn athena-btn-ghost"
+                className="athena-btn athena-btn-secondary"
               >
                 Abrir catraca
               </button>

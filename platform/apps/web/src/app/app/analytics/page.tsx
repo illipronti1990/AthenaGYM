@@ -15,7 +15,7 @@ export default async function AnalyticsPage() {
     <div className="space-y-8">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="athena-title text-3xl">Business Intelligence</h1>
+          <h1 className="athena-title text-3xl">Relatórios</h1>
           <p className="mt-1 text-sm text-[var(--muted)]">
             KPIs, warehouse, predições e report builder
           </p>

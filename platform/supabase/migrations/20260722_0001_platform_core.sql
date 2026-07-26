@@ -202,8 +202,8 @@ create policy memberships_select on public.memberships
 insert into public.companies (id, name, legal_name, document, status)
 values (
   '11111111-1111-1111-1111-111111111111',
-  'ATHENA GYM',
-  'ATHENA GYM ACADEMIA LTDA',
+  'ATHENA GYM Plataforma',
+  'ATHENA GYM PLATAFORMA LTDA',
   '12.345.678/0001-90',
   'active'
 )

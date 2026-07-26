@@ -12,11 +12,14 @@ import { QR_TTL_SECONDS } from '@athena/shared';
 import { AuthUser } from '../auth/auth.types';
 import {
   CreateCheckinDto,
+  CreatePartnerAccessRequestDto,
   CreateRoomDto,
   CreateScheduleDto,
   EnrollClassDto,
   GenerateQrDto,
   OpenGateDto,
+  RejectPartnerAccessDto,
+  UpdatePartnerIntegrationDto,
   UpdateScheduleDto,
   ValidateAccessDto,
 } from './dto/operations.dto';
@@ -415,5 +418,101 @@ export class OperationsService {
       return getAccessProvider(device.provider).health();
     }
     return getAccessProvider('stub').health();
+  }
+
+  listPartnerIntegrations(auth: AuthContext) {
+    return this.repo.listPartnerIntegrations(this.companyId(auth));
+  }
+
+  async updatePartnerIntegration(auth: AuthContext, dto: UpdatePartnerIntegrationDto) {
+    const companyId = this.companyId(auth);
+    return this.repo.upsertPartnerIntegration({
+      company_id: companyId,
+      provider: dto.provider,
+      enabled: dto.enabled ?? true,
+      status: dto.enabled === false ? 'disconnected' : 'connected',
+      external_gym_id: dto.externalGymId ?? null,
+      notes: dto.notes ?? null,
+      updated_at: new Date().toISOString(),
+    });
+  }
+
+  listPartnerAccessRequests(auth: AuthContext, status?: string) {
+    return this.repo.listPartnerAccessRequests(this.companyId(auth), status);
+  }
+
+  async createPartnerAccessRequest(auth: AuthContext, dto: CreatePartnerAccessRequestDto) {
+    const companyId = this.companyId(auth);
+    const integrations = await this.repo.listPartnerIntegrations(companyId);
+    const integration = integrations.find((i) => i.provider === dto.provider);
+    if (integration && !integration.enabled) {
+      throw new BadRequestException(`${dto.provider} integration disabled`);
+    }
+    return this.repo.insertPartnerAccessRequest({
+      company_id: companyId,
+      unit_id: dto.unitId || this.unitId(auth) || null,
+      provider: dto.provider,
+      status: 'pending',
+      member_name: dto.memberName,
+      member_document: dto.memberDocument || null,
+      member_email: dto.memberEmail || null,
+      external_member_id: dto.externalMemberId || null,
+      external_booking_id: dto.externalBookingId || null,
+      student_id: dto.studentId || null,
+      raw_payload: { source: 'ops_console' },
+    });
+  }
+
+  async approvePartnerAccess(user: AuthUser, auth: AuthContext, id: string) {
+    const companyId = this.companyId(auth);
+    const req = await this.repo.getPartnerAccessRequest(companyId, id);
+    if (!req) throw new NotFoundException('Partner access request not found');
+    if (req.status !== 'pending') {
+      throw new BadRequestException(`Request already ${req.status}`);
+    }
+
+    let checkinId: string | null = null;
+    const unitId = req.unitId || this.unitId(auth);
+    if (req.studentId && unitId) {
+      try {
+        const checkin = await this.createCheckin(auth, {
+          studentId: req.studentId,
+          unitId,
+          method: 'partner',
+        });
+        checkinId = checkin.id;
+      } catch (err) {
+        // Partner guest may already be checked in; still allow approval.
+        if (!(err instanceof BadRequestException)) throw err;
+      }
+    }
+
+    return this.repo.updatePartnerAccessRequest(id, {
+      status: 'approved',
+      decided_by: user.id,
+      decided_at: new Date().toISOString(),
+      checkin_id: checkinId,
+      reject_reason: null,
+    });
+  }
+
+  async rejectPartnerAccess(
+    user: AuthUser,
+    auth: AuthContext,
+    id: string,
+    dto: RejectPartnerAccessDto,
+  ) {
+    const companyId = this.companyId(auth);
+    const req = await this.repo.getPartnerAccessRequest(companyId, id);
+    if (!req) throw new NotFoundException('Partner access request not found');
+    if (req.status !== 'pending') {
+      throw new BadRequestException(`Request already ${req.status}`);
+    }
+    return this.repo.updatePartnerAccessRequest(id, {
+      status: 'rejected',
+      decided_by: user.id,
+      decided_at: new Date().toISOString(),
+      reject_reason: dto.reason || 'Recusado na recepção',
+    });
   }
 }

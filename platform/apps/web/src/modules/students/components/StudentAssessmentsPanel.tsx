@@ -2,10 +2,11 @@
 
 import { FormEvent, useEffect, useState } from 'react';
 import type { Assessment, ProgressSummary } from '@athena/shared';
-import { Button, Card } from '@athena/ui';
+import { Button, Card, ConfirmDialog } from '@athena/ui';
 import { workoutsApi } from '@/modules/workouts/services/workoutsApi';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
+import { ContextualActions } from '@/components/ux/ContextualActions';
 
 export function StudentAssessmentsPanel({
   accessToken,
@@ -24,6 +25,8 @@ export function StudentAssessmentsPanel({
   const [bodyFat, setBodyFat] = useState('25');
   const [sex, setSex] = useState<'female' | 'male' | 'other'>('female');
   const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<Assessment | null>(null);
 
   async function load() {
     try {
@@ -70,10 +73,59 @@ export function StudentAssessmentsPanel({
     }
   }
 
+  async function onDelete(assessment: Assessment) {
+    setDeletingId(assessment.id);
+    try {
+      await workoutsApi.deleteAssessment(accessToken, assessment.id);
+      push('Avaliação excluída');
+      await load();
+    } catch (err) {
+      push(err instanceof Error ? err.message : 'Falha ao excluir avaliação', 'error');
+    } finally {
+      setDeletingId(null);
+      setPendingDelete(null);
+    }
+  }
+
   if (!items) return <TableSkeleton rows={5} />;
+
+  const lastDate = items[0]?.createdAt;
+  const stale =
+    !lastDate || Date.now() - new Date(lastDate).getTime() > 90 * 24 * 60 * 60 * 1000;
 
   return (
     <div className="space-y-6" data-testid="student-assessments-panel">
+      <ConfirmDialog
+        open={Boolean(pendingDelete)}
+        title="Excluir avaliação física?"
+        message="Essa ação não poderá ser desfeita."
+        confirmLabel="Excluir"
+        danger
+        loading={Boolean(deletingId)}
+        onCancel={() => setPendingDelete(null)}
+        onConfirm={() => {
+          if (pendingDelete) void onDelete(pendingDelete);
+        }}
+      />
+
+      {stale ? (
+        <ContextualActions
+          title="Sugestão"
+          actions={[
+            {
+              id: 'reassess',
+              label: items.length ? 'Agendar reavaliação' : 'Criar primeira avaliação',
+              onClick: () => {
+                document
+                  .querySelector<HTMLElement>('[data-testid="student-assessment-form"]')
+                  ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              },
+              variant: 'primary',
+            },
+          ]}
+        />
+      ) : null}
+
       {progress ? (
         <div className="grid gap-3 sm:grid-cols-3">
           <Card>
@@ -148,8 +200,8 @@ export function StudentAssessmentsPanel({
               <option value="other">Outro</option>
             </select>
           </label>
-          <Button type="submit" disabled={saving}>
-            {saving ? 'Salvando…' : 'Salvar avaliação'}
+          <Button type="submit" loading={saving} loadingLabel="Salvando…">
+            Salvar avaliação
           </Button>
         </form>
       </Card>
@@ -167,6 +219,16 @@ export function StudentAssessmentsPanel({
                   {a.bmi ?? '—'} · BF {a.bodyFat ?? '—'}%
                   {a.leanMass != null ? ` · massa magra ${a.leanMass} kg` : ''}
                 </span>
+                <Button
+                  type="button"
+                  variant="danger"
+                  size="sm"
+                  disabled={deletingId === a.id}
+                  onClick={() => setPendingDelete(a)}
+                  data-testid={`delete-student-assessment-${a.id}`}
+                >
+                  Excluir
+                </Button>
               </li>
             ))}
           </ul>

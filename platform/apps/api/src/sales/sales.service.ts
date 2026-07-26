@@ -251,6 +251,22 @@ export class SalesService implements SalesOutboundPort {
     return updated;
   }
 
+  async deletePlan(user: AuthUser, auth: AuthContext, id: string) {
+    const plan = await this.repo.getPlan(id);
+    if (!plan) throw new NotFoundException('Plan not found');
+    this.companyIds(auth, plan.companyId);
+    await this.repo.softDeletePlan(id);
+    await this.audit.log({
+      companyId: plan.companyId,
+      userId: user.id,
+      module: 'sales',
+      action: 'delete_plan',
+      entity: 'plan',
+      entityId: id,
+    });
+    return { ok: true };
+  }
+
   async listEnrollments(auth: AuthContext) {
     return this.repo.listEnrollments(this.companyIds(auth));
   }

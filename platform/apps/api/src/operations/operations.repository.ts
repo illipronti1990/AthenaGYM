@@ -6,6 +6,8 @@ import type {
   ClassEnrollment,
   OccupancyArea,
   OperationsDashboard,
+  PartnerAccessRequest,
+  PartnerIntegration,
   Room,
   Schedule,
 } from '@athena/shared';
@@ -415,5 +417,102 @@ export class OperationsRepository {
       classesInProgress: (classes || []).length,
       areas,
     };
+  }
+
+  mapPartnerIntegration(row: Record<string, unknown>): PartnerIntegration {
+    return {
+      id: String(row.id),
+      companyId: String(row.company_id),
+      provider: row.provider as PartnerIntegration['provider'],
+      enabled: Boolean(row.enabled),
+      status: String(row.status),
+      externalGymId: row.external_gym_id ? String(row.external_gym_id) : null,
+      notes: row.notes ? String(row.notes) : null,
+    };
+  }
+
+  mapPartnerAccessRequest(row: Record<string, unknown>): PartnerAccessRequest {
+    return {
+      id: String(row.id),
+      companyId: String(row.company_id),
+      unitId: row.unit_id ? String(row.unit_id) : null,
+      provider: row.provider as PartnerAccessRequest['provider'],
+      status: row.status as PartnerAccessRequest['status'],
+      memberName: String(row.member_name),
+      memberDocument: row.member_document ? String(row.member_document) : null,
+      memberEmail: row.member_email ? String(row.member_email) : null,
+      externalMemberId: row.external_member_id ? String(row.external_member_id) : null,
+      externalBookingId: row.external_booking_id ? String(row.external_booking_id) : null,
+      studentId: row.student_id ? String(row.student_id) : null,
+      checkinId: row.checkin_id ? String(row.checkin_id) : null,
+      decidedBy: row.decided_by ? String(row.decided_by) : null,
+      decidedAt: row.decided_at ? String(row.decided_at) : null,
+      rejectReason: row.reject_reason ? String(row.reject_reason) : null,
+      createdAt: String(row.created_at),
+    };
+  }
+
+  async listPartnerIntegrations(companyId: string) {
+    const { data, error } = await this.admin()
+      .from('partner_integrations')
+      .select('*')
+      .eq('company_id', companyId)
+      .order('provider');
+    if (error) throw error;
+    return (data || []).map((r) => this.mapPartnerIntegration(r as Record<string, unknown>));
+  }
+
+  async upsertPartnerIntegration(payload: Record<string, unknown>) {
+    const { data, error } = await this.admin()
+      .from('partner_integrations')
+      .upsert(payload, { onConflict: 'company_id,provider' })
+      .select('*')
+      .single();
+    if (error) throw error;
+    return this.mapPartnerIntegration(data as Record<string, unknown>);
+  }
+
+  async listPartnerAccessRequests(companyId: string, status?: string) {
+    let q = this.admin()
+      .from('partner_access_requests')
+      .select('*')
+      .eq('company_id', companyId)
+      .order('created_at', { ascending: false })
+      .limit(100);
+    if (status) q = q.eq('status', status);
+    const { data, error } = await q;
+    if (error) throw error;
+    return (data || []).map((r) => this.mapPartnerAccessRequest(r as Record<string, unknown>));
+  }
+
+  async getPartnerAccessRequest(companyId: string, id: string) {
+    const { data } = await this.admin()
+      .from('partner_access_requests')
+      .select('*')
+      .eq('company_id', companyId)
+      .eq('id', id)
+      .maybeSingle();
+    return data ? this.mapPartnerAccessRequest(data as Record<string, unknown>) : null;
+  }
+
+  async insertPartnerAccessRequest(payload: Record<string, unknown>) {
+    const { data, error } = await this.admin()
+      .from('partner_access_requests')
+      .insert(payload)
+      .select('*')
+      .single();
+    if (error) throw error;
+    return this.mapPartnerAccessRequest(data as Record<string, unknown>);
+  }
+
+  async updatePartnerAccessRequest(id: string, payload: Record<string, unknown>) {
+    const { data, error } = await this.admin()
+      .from('partner_access_requests')
+      .update({ ...payload, updated_at: new Date().toISOString() })
+      .eq('id', id)
+      .select('*')
+      .single();
+    if (error) throw error;
+    return this.mapPartnerAccessRequest(data as Record<string, unknown>);
   }
 }
