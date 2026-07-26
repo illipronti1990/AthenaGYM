@@ -1,4 +1,4 @@
-# ATHENAS PLATFORM — Sprint 8 (BI, Analytics e IA)
+# ATHENA PLATFORM — Sprint 8 (BI, Analytics e IA)
 
 Produto oficial: **Next.js + NestJS + Supabase + Worker BullMQ/Redis**.  
 Excel/VBA = import/export. FastAPI em `cloud/api` = **congelado**.
@@ -22,7 +22,18 @@ platform/
 cd platform
 pnpm install
 cp apps/api/.env.example apps/api/.env
+cp apps/web/.env.example apps/web/.env.local
 docker compose up -d redis
+```
+
+## Deploy (internet)
+
+Guia completo (Vercel + Render + Supabase Free): veja **[DEPLOY.md](./DEPLOY.md)**.
+
+```bash
+pnpm build:packages
+pnpm build:api:prod
+pnpm build:web:prod
 ```
 
 ### Migrations

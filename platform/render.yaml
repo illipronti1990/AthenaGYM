@@ -1,0 +1,41 @@
+# Render Blueprint — API NestJS
+# Docs: https://render.com/docs/blueprint-spec
+# Root Directory no painel: platform  (ou deixe vazio se o serviço apontar para este arquivo)
+
+services:
+  - type: web
+    name: athena-api
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./apps/api/Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/v1/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: PORT
+        value: 3001
+      - key: DEV_AUTH_ENABLED
+        value: "false"
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: SUPABASE_JWT_SECRET
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: PASSWORD_RESET_REDIRECT
+        sync: false
+      - key: QR_SIGNING_SECRET
+        generateValue: true
+      - key: FINANCE_WEBHOOK_SECRET
+        generateValue: true
+      - key: REDIS_URL
+        sync: false
