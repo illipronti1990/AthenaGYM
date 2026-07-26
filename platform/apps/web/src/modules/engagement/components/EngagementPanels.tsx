@@ -53,7 +53,7 @@ export function NotificationsPanel({ accessToken }: { accessToken: string }) {
   const [items, setItems] = useState<AppNotification[]>([]);
   const [userId, setUserId] = useState('');
   const [title, setTitle] = useState('Volte a treinar');
-  const [body, setBody] = useState('Sentimos sua falta na academia!');
+  const [body] = useState('Sentimos sua falta na academia!');
   const [error, setError] = useState<string | null>(null);
 
   async function reload() {
