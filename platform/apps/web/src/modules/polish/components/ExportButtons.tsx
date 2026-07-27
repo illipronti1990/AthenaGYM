@@ -7,7 +7,7 @@ export function ExportButtons({
   resource,
 }: {
   accessToken: string;
-  resource: 'students' | 'receivables' | 'checkins';
+  resource: 'alunos' | 'receivables' | 'checkins';
 }) {
   function download(format: 'csv' | 'xlsx' | 'pdf') {
     const url = polishApi.exportUrl(resource, format);

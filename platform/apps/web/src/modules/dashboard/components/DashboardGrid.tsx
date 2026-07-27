@@ -112,7 +112,14 @@ export function DashboardGrid({
             const tile = tileMap.get(id);
             if (!tile) return null;
             return (
-              <SortableTile key={id} id={id} span={tile.span || (id === 'kpis' || id === 'quickActions' ? 'full' : 'half')}>
+              <SortableTile
+                key={id}
+                id={id}
+                span={
+                  tile.span ||
+                  (id === 'kpis' || id === 'quickActions' || id === 'daySummary' ? 'full' : 'half')
+                }
+              >
                 {tile.node}
               </SortableTile>
             );

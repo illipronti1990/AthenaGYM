@@ -27,7 +27,7 @@ test.describe('Sprint 11 polish smoke', () => {
   });
 
   test('exports students without token get 401', async ({ request }) => {
-    const res = await request.get(`${API}/exports/students?format=csv`);
+    const res = await request.get(`${API}/exports/alunos?format=csv`);
     expect(res.status()).toBe(401);
   });
 

@@ -39,10 +39,10 @@ import {
 } from './dto/students.dto';
 import { StudentsService } from './students.service';
 
-@ApiTags('students')
+@ApiTags('alunos')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard, CompanyGuard, UnitGuard)
-@Controller('students')
+@Controller('alunos')
 export class StudentsController {
   constructor(private readonly students: StudentsService) {}
 
@@ -113,6 +113,20 @@ export class StudentsController {
   @ApiOperation({ summary: 'Status history' })
   history(@CurrentAuth() auth: AuthContext, @Param('id') id: string) {
     return this.students.history(auth, id);
+  }
+
+  @Get(':id/timeline')
+  @Permissions('students.read')
+  @ApiOperation({ summary: 'Unified student timeline (check-ins, payments, etc.)' })
+  timeline(@CurrentAuth() auth: AuthContext, @Param('id') id: string) {
+    return this.students.timeline(auth, id);
+  }
+
+  @Get(':id/summary')
+  @Permissions('students.read')
+  @ApiOperation({ summary: 'Student 360° summary metrics' })
+  summary(@CurrentAuth() auth: AuthContext, @Param('id') id: string) {
+    return this.students.summary(auth, id);
   }
 
   @Post()

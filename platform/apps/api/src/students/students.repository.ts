@@ -6,7 +6,10 @@ import type {
   StudentDocument,
   StudentListItem,
   StudentStatusHistory,
+  StudentTimelineEvent,
+  Student360Summary,
 } from '@athena/shared';
+import { resolveStudentDisplayStatus } from '@athena/shared';
 import { SupabaseService } from '../supabase/supabase.service';
 
 @Injectable()
@@ -30,6 +33,8 @@ export class StudentsRepository {
       rg: (row.rg as string) || null,
       birthDate: row.birth_date ? String(row.birth_date) : null,
       gender: (row.gender as string) || null,
+      maritalStatus: (row.marital_status as string) || null,
+      profession: (row.profession as string) || null,
       email: (row.email as string) || null,
       phone: (row.phone as string) || null,
       whatsapp: (row.whatsapp as string) || null,
@@ -45,17 +50,29 @@ export class StudentsRepository {
     };
   }
 
-  mapListItem(row: Record<string, unknown>): StudentListItem {
+  mapListItem(
+    row: Record<string, unknown>,
+    meta?: { nextDueDate?: string | null; monthlyFee?: number | null },
+  ): StudentListItem {
+    const status = String(row.status);
+    const nextDueDate = meta?.nextDueDate ?? null;
     return {
       id: String(row.id),
       fullName: String(row.full_name),
       cpf: (row.cpf as string) || null,
       registrationNumber: String(row.registration_number),
       planName: (row.plan_name as string) || null,
-      status: String(row.status),
+      trainerName: (row.trainer_name as string) || null,
+      status,
+      displayStatus: resolveStudentDisplayStatus(status, nextDueDate),
       unitId: String(row.unit_id),
       phone: (row.phone as string) || null,
+      whatsapp: (row.whatsapp as string) || null,
       lastAccessAt: row.last_access_at ? String(row.last_access_at) : null,
+      lastCheckinAt: row.last_access_at ? String(row.last_access_at) : null,
+      nextDueDate,
+      monthlyFee: meta?.monthlyFee ?? null,
+      createdAt: String(row.created_at),
       photoUrl: (row.photo_url as string) || null,
     };
   }
@@ -67,6 +84,7 @@ export class StudentsRepository {
       zipcode: (row.zipcode as string) || null,
       street: (row.street as string) || null,
       number: (row.number as string) || null,
+      complement: (row.complement as string) || null,
       district: (row.district as string) || null,
       city: (row.city as string) || null,
       state: (row.state as string) || null,
@@ -120,6 +138,10 @@ export class StudentsRepository {
       email?: string;
       status?: string;
       unitId?: string;
+      planName?: string;
+      trainerName?: string;
+      birthdays?: boolean;
+      recentEnrollment?: boolean;
     };
     page: number;
     pageSize: number;
@@ -129,12 +151,47 @@ export class StudentsRepository {
     const to = from + params.pageSize - 1;
     const sortColumn = params.sort?.column || 'full_name';
     const ascending = params.sort?.ascending ?? true;
+    const selectCols =
+      'id, full_name, cpf, registration_number, plan_name, trainer_name, status, unit_id, phone, whatsapp, last_access_at, photo_url, created_at, birth_date';
+
+    if (params.filters.birthdays) {
+      let birthdayQ = this.admin()
+        .from('students')
+        .select(selectCols)
+        .is('deleted_at', null)
+        .in('company_id', params.companyIds)
+        .not('birth_date', 'is', null);
+      if (params.unitIds?.length) birthdayQ = birthdayQ.in('unit_id', params.unitIds);
+      if (params.filters.unitId) birthdayQ = birthdayQ.eq('unit_id', params.filters.unitId);
+      const { data: allRows, error: allErr } = await birthdayQ;
+      if (allErr) throw allErr;
+      const month = new Date().getMonth() + 1;
+      const filtered = (allRows || []).filter((r) => {
+        const bd = (r as { birth_date?: string }).birth_date;
+        if (!bd) return false;
+        const m = Number(bd.slice(5, 7));
+        return m === month;
+      });
+      const sorted = [...filtered].sort((a, b) => {
+        const av = String((a as Record<string, unknown>)[sortColumn] ?? '');
+        const bv = String((b as Record<string, unknown>)[sortColumn] ?? '');
+        return ascending ? av.localeCompare(bv) : bv.localeCompare(av);
+      });
+      const slice = sorted.slice(from, to + 1);
+      const meta = await this.subscriptionMetaForStudents(
+        slice.map((r) => String((r as { id: string }).id)),
+      );
+      return {
+        items: slice.map((r) =>
+          this.mapListItem(r as Record<string, unknown>, meta.get(String((r as { id: string }).id))),
+        ),
+        total: filtered.length,
+      };
+    }
+
     let q = this.admin()
       .from('students')
-      .select(
-        'id, full_name, cpf, registration_number, plan_name, status, unit_id, phone, last_access_at, photo_url',
-        { count: 'exact' },
-      )
+      .select(selectCols, { count: 'exact' })
       .is('deleted_at', null)
       .in('company_id', params.companyIds)
       .order(sortColumn, { ascending })
@@ -150,6 +207,13 @@ export class StudentsRepository {
     if (params.filters.phone) q = q.ilike('phone', `%${params.filters.phone}%`);
     if (params.filters.email) q = q.ilike('email', `%${params.filters.email}%`);
     if (params.filters.name) q = q.ilike('full_name', `%${params.filters.name}%`);
+    if (params.filters.planName) q = q.ilike('plan_name', `%${params.filters.planName}%`);
+    if (params.filters.trainerName) q = q.ilike('trainer_name', `%${params.filters.trainerName}%`);
+    if (params.filters.recentEnrollment) {
+      const since = new Date();
+      since.setDate(since.getDate() - 30);
+      q = q.gte('created_at', since.toISOString());
+    }
     if (params.filters.q) {
       const term = `%${params.filters.q}%`;
       q = q.or(
@@ -159,9 +223,220 @@ export class StudentsRepository {
 
     const { data, error, count } = await q;
     if (error) throw error;
+    const rows = (data || []) as Record<string, unknown>[];
+    const meta = await this.subscriptionMetaForStudents(rows.map((r) => String(r.id)));
     return {
-      items: (data || []).map((r) => this.mapListItem(r as Record<string, unknown>)),
+      items: rows.map((r) => this.mapListItem(r, meta.get(String(r.id)))),
       total: count || 0,
+    };
+  }
+
+  private async subscriptionMetaForStudents(studentIds: string[]) {
+    const map = new Map<string, { nextDueDate: string | null; monthlyFee: number | null }>();
+    if (!studentIds.length) return map;
+    const { data, error } = await this.admin()
+      .from('subscriptions')
+      .select('student_id, next_due_date, amount, status')
+      .in('student_id', studentIds)
+      .eq('status', 'active')
+      .is('deleted_at', null);
+    if (error) throw error;
+    for (const row of data || []) {
+      const sid = String((row as { student_id: string }).student_id);
+      const nextDue = (row as { next_due_date?: string | null }).next_due_date;
+      const amount = Number((row as { amount?: number }).amount ?? 0);
+      const existing = map.get(sid);
+      if (!existing) {
+        map.set(sid, {
+          nextDueDate: nextDue ? String(nextDue) : null,
+          monthlyFee: amount,
+        });
+        continue;
+      }
+      if (nextDue && (!existing.nextDueDate || nextDue < existing.nextDueDate)) {
+        existing.nextDueDate = String(nextDue);
+      }
+      if (amount > 0) existing.monthlyFee = amount;
+    }
+    return map;
+  }
+
+  async fetchTimeline(studentId: string, limit = 60): Promise<StudentTimelineEvent[]> {
+    const admin = this.admin();
+    const perSource = Math.min(25, limit);
+    const [checkins, enrollments, assessments, workouts, payments, history] = await Promise.all([
+      admin
+        .from('checkins')
+        .select('id, created_at, method')
+        .eq('student_id', studentId)
+        .order('created_at', { ascending: false })
+        .limit(perSource),
+      admin
+        .from('enrollments')
+        .select('id, created_at, status')
+        .eq('student_id', studentId)
+        .is('deleted_at', null)
+        .order('created_at', { ascending: false })
+        .limit(perSource),
+      admin
+        .from('assessments')
+        .select('id, created_at')
+        .eq('student_id', studentId)
+        .is('deleted_at', null)
+        .order('created_at', { ascending: false })
+        .limit(perSource),
+      admin
+        .from('workouts')
+        .select('id, name, created_at')
+        .eq('student_id', studentId)
+        .is('deleted_at', null)
+        .order('created_at', { ascending: false })
+        .limit(perSource),
+      admin
+        .from('receivables')
+        .select('id, description, amount, paid_at')
+        .eq('student_id', studentId)
+        .not('paid_at', 'is', null)
+        .is('deleted_at', null)
+        .order('paid_at', { ascending: false })
+        .limit(perSource),
+      this.findHistory(studentId),
+    ]);
+
+    const events: StudentTimelineEvent[] = [];
+
+    for (const row of checkins.data || []) {
+      const r = row as { id: string; created_at: string; method?: string };
+      events.push({
+        id: `checkin-${r.id}`,
+        kind: 'checkin',
+        title: 'Check-in',
+        description: r.method ? `Via ${r.method}` : null,
+        occurredAt: r.created_at,
+      });
+    }
+    for (const row of enrollments.data || []) {
+      const r = row as { id: string; created_at: string; status?: string };
+      events.push({
+        id: `enrollment-${r.id}`,
+        kind: 'enrollment',
+        title: 'Matrícula',
+        description: r.status ? `Status: ${r.status}` : null,
+        occurredAt: r.created_at,
+      });
+    }
+    for (const row of assessments.data || []) {
+      const r = row as { id: string; created_at: string };
+      events.push({
+        id: `assessment-${r.id}`,
+        kind: 'assessment',
+        title: 'Avaliação física',
+        occurredAt: r.created_at,
+      });
+    }
+    for (const row of workouts.data || []) {
+      const r = row as { id: string; name: string; created_at: string };
+      events.push({
+        id: `workout-${r.id}`,
+        kind: 'workout',
+        title: r.name ? `Treino: ${r.name}` : 'Novo treino',
+        occurredAt: r.created_at,
+      });
+    }
+    for (const row of payments.data || []) {
+      const r = row as {
+        id: string;
+        description?: string;
+        amount?: number;
+        paid_at: string;
+      };
+      const amt = r.amount != null ? `R$ ${Number(r.amount).toFixed(2)}` : '';
+      events.push({
+        id: `payment-${r.id}`,
+        kind: 'payment',
+        title: 'Pagamento',
+        description: [r.description, amt].filter(Boolean).join(' · ') || null,
+        occurredAt: r.paid_at,
+      });
+    }
+    for (const row of history) {
+      events.push({
+        id: `status-${row.id}`,
+        kind: 'status',
+        title: 'Alteração de status',
+        description:
+          row.oldStatus
+            ? `${row.oldStatus} → ${row.newStatus}${row.reason ? ` (${row.reason})` : ''}`
+            : row.newStatus,
+        occurredAt: row.createdAt,
+      });
+    }
+
+    events.sort((a, b) => Date.parse(b.occurredAt) - Date.parse(a.occurredAt));
+    return events.slice(0, limit);
+  }
+
+  async fetchStudentSummary(studentId: string): Promise<Student360Summary> {
+    const admin = this.admin();
+    const [assessment, workout, checkin, subscription, receivables] = await Promise.all([
+      admin
+        .from('assessments')
+        .select('weight, height, bmi, created_at')
+        .eq('student_id', studentId)
+        .is('deleted_at', null)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+      admin
+        .from('workouts')
+        .select('created_at, updated_at')
+        .eq('student_id', studentId)
+        .is('deleted_at', null)
+        .order('updated_at', { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+      admin
+        .from('checkins')
+        .select('created_at')
+        .eq('student_id', studentId)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+      admin
+        .from('subscriptions')
+        .select('next_due_date, amount')
+        .eq('student_id', studentId)
+        .eq('status', 'active')
+        .is('deleted_at', null)
+        .order('next_due_date', { ascending: true })
+        .limit(1)
+        .maybeSingle(),
+      admin
+        .from('receivables')
+        .select('id', { count: 'exact', head: true })
+        .eq('student_id', studentId)
+        .eq('status', 'open')
+        .is('deleted_at', null),
+    ]);
+
+    const a = assessment.data as {
+      weight?: number;
+      height?: number;
+      bmi?: number;
+    } | null;
+    const w = workout.data as { updated_at?: string; created_at?: string } | null;
+    const c = checkin.data as { created_at?: string } | null;
+    const s = subscription.data as { next_due_date?: string; amount?: number } | null;
+
+    return {
+      weight: a?.weight != null ? Number(a.weight) : null,
+      height: a?.height != null ? Number(a.height) : null,
+      bmi: a?.bmi != null ? Number(a.bmi) : null,
+      lastWorkoutAt: w?.updated_at || w?.created_at || null,
+      lastCheckinAt: c?.created_at || null,
+      nextDueDate: s?.next_due_date ? String(s.next_due_date) : null,
+      monthlyFee: s?.amount != null ? Number(s.amount) : null,
+      openReceivables: receivables.count || 0,
     };
   }
 

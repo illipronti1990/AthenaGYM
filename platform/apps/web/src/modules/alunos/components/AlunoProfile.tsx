@@ -2,32 +2,37 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { STUDENT_STATUSES, STUDENT_STATUS_LABELS, formatCpf } from '@athena/shared';
-import type { Student } from '@athena/shared';
+import { STUDENT_STATUSES, STUDENT_STATUS_LABELS, formatCpf, resolveStudentDisplayStatus } from '@athena/shared';
+import type { Student, Student360Summary, StudentTimelineEvent } from '@athena/shared';
 import { Button, Card, ConfirmDialog, SkeletonForm } from '@athena/ui';
-import { StudentAvatar } from './StudentAvatar';
-import { StudentStatusBadge } from './StudentStatus';
-import { StudentTimeline } from './StudentTimeline';
-import { StudentForm } from './StudentForm';
-import { StudentFinancePanel } from './StudentFinancePanel';
-import { StudentWorkoutsPanel } from './StudentWorkoutsPanel';
-import { StudentAssessmentsPanel } from './StudentAssessmentsPanel';
+import { AlunoAvatar } from './AlunoAvatar';
+import { AlunoStatusBadge } from './AlunoStatus';
+import { AlunoTimeline } from './AlunoTimeline';
+import { AlunoForm } from './AlunoForm';
+import { AlunoFinancePanel } from './AlunoFinancePanel';
+import { AlunoWorkoutsPanel } from './AlunoWorkoutsPanel';
+import { AlunoAssessmentsPanel } from './AlunoAssessmentsPanel';
+import { AlunoProfile360 } from './AlunoProfile360';
+import { AlunoDocumentsPanel } from './AlunoDocumentsPanel';
+import { AlunoCommunicationBar } from './AlunoCommunicationBar';
 import { EntityTimeline } from '@/modules/polish/components/EntityTimeline';
 import {
-  changeStudentStatus,
-  deleteStudent,
-  getStudent,
-  getStudentHistory,
-} from '../services/studentsApi';
+  changeAlunoStatus,
+  deleteAluno,
+  getAluno,
+  getAlunoSummary,
+  getAlunoTimeline,
+  uploadAlunoPhoto,
+} from '../services/alunosApi';
 import { useToast } from '@/components/ui/Toast';
 import {
   ContextualActions,
   whatsappChargeUrl,
 } from '@/components/ux/ContextualActions';
 
-type Tab = 'data' | 'history' | 'finance' | 'workouts' | 'assessments';
+type Tab = 'data' | 'history' | 'finance' | 'workouts' | 'assessments' | 'documents';
 
-export function StudentProfile({
+export function AlunoProfile({
   accessToken,
   studentId,
   unitId,
@@ -40,15 +45,8 @@ export function StudentProfile({
   const { push } = useToast();
   const [tab, setTab] = useState<Tab>('data');
   const [student, setStudent] = useState<Student | null>(null);
-  const [history, setHistory] = useState<
-    Array<{
-      id: string;
-      oldStatus: string | null;
-      newStatus: string;
-      reason: string | null;
-      createdAt: string;
-    }>
-  >([]);
+  const [timeline, setTimeline] = useState<StudentTimelineEvent[]>([]);
+  const [summary, setSummary] = useState<Student360Summary | null>(null);
   const [editing, setEditing] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -56,9 +54,9 @@ export function StudentProfile({
   async function onDelete() {
     setDeleting(true);
     try {
-      await deleteStudent(accessToken, studentId);
+      await deleteAluno(accessToken, studentId);
       push('Aluno excluído');
-      router.push('/app/students');
+      router.push('/app/alunos');
     } catch (err) {
       push(err instanceof Error ? err.message : 'Falha ao excluir', 'error');
     } finally {
@@ -69,12 +67,14 @@ export function StudentProfile({
 
   async function load() {
     try {
-      const [s, h] = await Promise.all([
-        getStudent(accessToken, studentId),
-        getStudentHistory(accessToken, studentId),
+      const [s, tl, sm] = await Promise.all([
+        getAluno(accessToken, studentId),
+        getAlunoTimeline(accessToken, studentId),
+        getAlunoSummary(accessToken, studentId),
       ]);
       setStudent(s);
-      setHistory(h);
+      setTimeline(tl as StudentTimelineEvent[]);
+      setSummary(sm);
     } catch (err) {
       push(err instanceof Error ? err.message : 'Falha ao carregar', 'error');
     }
@@ -133,7 +133,7 @@ export function StudentProfile({
         type="button"
         variant="secondary"
         className="text-[var(--gold)]"
-        onClick={() => router.push('/app/students')}
+        onClick={() => router.push('/app/alunos')}
         data-testid="back-to-students"
       >
         ← Voltar
@@ -142,23 +142,54 @@ export function StudentProfile({
       <ContextualActions actions={contextual} />
 
       <header className="flex flex-wrap items-center gap-4">
-        <StudentAvatar name={student.fullName} photoUrl={student.photoUrl} size={72} />
+        <button
+          type="button"
+          className="relative rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)]"
+          onClick={() => {
+            const input = document.getElementById('student-photo-input') as HTMLInputElement | null;
+            input?.click();
+          }}
+          title="Alterar foto"
+        >
+          <AlunoAvatar name={student.fullName} photoUrl={student.photoUrl} size={72} />
+        </button>
+        <input
+          id="student-photo-input"
+          type="file"
+          className="hidden"
+          accept="image/*"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+            void uploadAlunoPhoto(accessToken, studentId, file)
+              .then((s) => {
+                setStudent(s);
+                push('Foto atualizada.');
+              })
+              .catch((err) => push(err instanceof Error ? err.message : 'Falha no upload', 'error'));
+            e.target.value = '';
+          }}
+        />
         <div className="min-w-0 flex-1">
           <h1 className="athena-title text-2xl">{student.fullName}</h1>
           <p className="text-sm text-[var(--muted)]">
             {student.registrationNumber}
             {student.cpf ? ` · ${formatCpf(student.cpf)}` : ''}
-            {student.planName ? ` · ${student.planName}` : ' · Plano —'}
-            {student.trainerName ? ` · ${student.trainerName}` : ' · Professor —'}
           </p>
           <div className="mt-2 flex flex-wrap items-center gap-2">
-            <StudentStatusBadge status={student.status} />
+            <AlunoStatusBadge
+              status={student.status}
+              displayStatus={resolveStudentDisplayStatus(
+                student.status,
+                summary?.nextDueDate,
+              )}
+            />
             <select
               className="athena-input w-auto"
               value={student.status}
               onChange={async (e) => {
                 try {
-                  const s = await changeStudentStatus(
+                  const s = await changeAlunoStatus(
                     accessToken,
                     studentId,
                     e.target.value,
@@ -166,7 +197,9 @@ export function StudentProfile({
                   );
                   setStudent(s);
                   push('Status atualizado');
-                  setHistory(await getStudentHistory(accessToken, studentId));
+                  setTimeline(
+                    (await getAlunoTimeline(accessToken, studentId)) as StudentTimelineEvent[],
+                  );
                 } catch (err) {
                   push(err instanceof Error ? err.message : 'Falha', 'error');
                 }
@@ -191,8 +224,23 @@ export function StudentProfile({
               Excluir
             </Button>
           </div>
+          <div className="mt-3">
+            <AlunoCommunicationBar
+              fullName={student.fullName}
+              phone={student.phone}
+              whatsapp={student.whatsapp}
+              email={student.email}
+            />
+          </div>
         </div>
       </header>
+
+      <AlunoProfile360
+        planName={student.planName}
+        trainerName={student.trainerName}
+        monthlyFee={summary?.monthlyFee ?? null}
+        summary={summary}
+      />
 
       <div className="flex flex-wrap gap-2 border-b border-[var(--border)] pb-2">
         {(
@@ -202,6 +250,7 @@ export function StudentProfile({
             ['finance', 'Financeiro'],
             ['workouts', 'Treinos'],
             ['assessments', 'Avaliações'],
+            ['documents', 'Documentos'],
           ] as const
         ).map(([id, label]) => (
           <button
@@ -217,7 +266,7 @@ export function StudentProfile({
 
       {tab === 'data' &&
         (editing ? (
-          <StudentForm
+          <AlunoForm
             accessToken={accessToken}
             unitId={unitId || student.unitId}
             studentId={student.id}
@@ -228,6 +277,8 @@ export function StudentProfile({
               rg: student.rg || '',
               birthDate: student.birthDate || '',
               gender: student.gender || '',
+              maritalStatus: student.maritalStatus || '',
+              profession: student.profession || '',
               email: student.email || '',
               phone: student.phone || '',
               whatsapp: student.whatsapp || '',
@@ -238,9 +289,13 @@ export function StudentProfile({
               zipcode: student.address?.zipcode || '',
               street: student.address?.street || '',
               number: student.address?.number || '',
+              complement: student.address?.complement || '',
               district: student.address?.district || '',
               city: student.address?.city || '',
               state: student.address?.state || '',
+              emergencyName: student.emergencyContacts?.[0]?.name || '',
+              emergencyPhone: student.emergencyContacts?.[0]?.phone || '',
+              emergencyRel: student.emergencyContacts?.[0]?.relationship || '',
             }}
           />
         ) : (
@@ -249,7 +304,9 @@ export function StudentProfile({
               <Item label="E-mail" value={student.email} />
               <Item label="Telefone" value={student.phone} />
               <Item label="WhatsApp" value={student.whatsapp} />
-              <Item label="Último acesso" value={student.lastAccessAt} />
+              <Item label="Estado civil" value={student.maritalStatus} />
+              <Item label="Profissão" value={student.profession} />
+              <Item label="Último acesso" value={student.lastAccessAt} date />
               <Item label="Observações" value={student.notes} />
             </dl>
           </Card>
@@ -257,7 +314,7 @@ export function StudentProfile({
 
       {tab === 'history' && (
         <div className="space-y-6">
-          <StudentTimeline items={history} />
+          <AlunoTimeline items={timeline} />
           <div>
             <h3 className="athena-title mb-2 text-sm">Auditoria</h3>
             <EntityTimeline accessToken={accessToken} entity="student" id={studentId} />
@@ -266,7 +323,7 @@ export function StudentProfile({
       )}
 
       {tab === 'finance' && (
-        <StudentFinancePanel
+        <AlunoFinancePanel
           accessToken={accessToken}
           studentId={student.id}
           unitId={unitId || student.unitId}
@@ -275,26 +332,47 @@ export function StudentProfile({
       )}
 
       {tab === 'workouts' && (
-        <StudentWorkoutsPanel accessToken={accessToken} studentId={student.id} />
+        <AlunoWorkoutsPanel accessToken={accessToken} studentId={student.id} />
       )}
 
       {tab === 'assessments' && (
-        <StudentAssessmentsPanel
+        <AlunoAssessmentsPanel
           accessToken={accessToken}
           studentId={student.id}
           unitId={unitId || student.unitId}
+        />
+      )}
+
+      {tab === 'documents' && (
+        <AlunoDocumentsPanel
+          accessToken={accessToken}
+          studentId={student.id}
+          documents={student.documents || []}
+          onUploaded={() => void load()}
         />
       )}
     </div>
   );
 }
 
-function Item({ label, value }: { label: string; value: string | null | undefined }) {
+function Item({
+  label,
+  value,
+  date,
+}: {
+  label: string;
+  value: string | null | undefined;
+  date?: boolean;
+}) {
   return (
     <div>
       <dt className="text-xs uppercase tracking-wide text-[var(--muted)]">{label}</dt>
       <dd className="font-medium text-[var(--text)]">
-        {value ? (label.includes('acesso') ? new Date(value).toLocaleString('pt-BR') : value) : '—'}
+        {value
+          ? date
+            ? new Date(value).toLocaleString('pt-BR')
+            : value
+          : '—'}
       </dd>
     </div>
   );

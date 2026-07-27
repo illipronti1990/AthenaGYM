@@ -15,7 +15,7 @@ const STATUS_LABEL: Record<string, string> = {
   completed: 'Concluído',
 };
 
-export function StudentWorkoutsPanel({
+export function AlunoWorkoutsPanel({
   accessToken,
   studentId,
 }: {

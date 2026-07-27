@@ -94,7 +94,7 @@ export class AthenaClient {
     if (params?.page) q.set('page', String(params.page));
     if (params?.pageSize) q.set('pageSize', String(params.pageSize));
     const qs = q.toString() ? `?${q}` : '';
-    return this.request<Page<Record<string, unknown>>>('GET', `/students${qs}`);
+    return this.request<Page<Record<string, unknown>>>('GET', `/alunos${qs}`);
   }
 
   listPlans() {

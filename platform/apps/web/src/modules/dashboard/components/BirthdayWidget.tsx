@@ -12,13 +12,21 @@ export function BirthdayWidget({ items }: { items: DashboardBirthday[] }) {
         <Cake size={18} /> Aniversariantes
       </h3>
       {items.length === 0 ? (
-        <EmptyState title="Sem aniversários próximos" description="Nos próximos 14 dias." />
+        <EmptyState
+          title="Sem aniversários próximos"
+          description="Nos próximos 14 dias. Complete a data de nascimento dos alunos."
+          action={
+            <Link href="/app/alunos" className="athena-btn athena-btn-secondary athena-btn-sm">
+              Ver Alunos
+            </Link>
+          }
+        />
       ) : (
         <ul className="space-y-2">
           {items.map((b) => (
             <li key={b.id}>
               <Link
-                href={b.href || '/app/students'}
+                href={b.href || '/app/alunos'}
                 className="flex items-center gap-3 rounded-[12px] border border-[var(--border)] px-3 py-2 transition hover:border-orange-400/50"
               >
                 <Avatar src={b.photoUrl} name={b.fullName} size={36} />

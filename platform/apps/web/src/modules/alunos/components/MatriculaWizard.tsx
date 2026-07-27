@@ -14,7 +14,7 @@ import {
   Wizard,
   type WizardStep,
 } from '@athena/ui';
-import { createStudent } from '../services/studentsApi';
+import { createAluno } from '../services/alunosApi';
 import { salesApi } from '@/modules/sales/services/salesApi';
 import { financeApi } from '@/modules/finance/services/financeApi';
 import { useToast } from '@/components/ui/Toast';
@@ -28,7 +28,7 @@ const STEPS: WizardStep[] = [
   { id: 'done', title: 'Concluir', description: 'Revise e finalize' },
 ];
 
-export function EnrollmentWizard({
+export function MatriculaWizard({
   accessToken,
   unitId,
 }: {
@@ -64,7 +64,7 @@ export function EnrollmentWizard({
     try {
       let id = studentId;
       if (!id) {
-        const created = await createStudent(accessToken, {
+        const created = await createAluno(accessToken, {
           fullName,
           phone: phone || undefined,
           status: 'active',
@@ -94,7 +94,7 @@ export function EnrollmentWizard({
 
       setDirty(false);
       push('Matrícula concluída com sucesso.');
-      router.push(`/app/students/${id}`);
+      router.push(`/app/alunos/${id}`);
     } catch (e) {
       push(e instanceof Error ? e.message : 'Falha na matrícula', 'error');
     } finally {

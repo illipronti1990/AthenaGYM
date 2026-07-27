@@ -38,6 +38,6 @@ export const polishApi = {
     if (!res.ok) throw new Error(`health failed (${res.status})`);
     return res.json() as Promise<SystemHealth>;
   },
-  exportUrl: (resource: 'students' | 'receivables' | 'checkins', format: 'csv' | 'xlsx' | 'pdf') =>
+  exportUrl: (resource: 'alunos' | 'receivables' | 'checkins', format: 'csv' | 'xlsx' | 'pdf') =>
     `${API_URL}/exports/${resource}?format=${format}`,
 };

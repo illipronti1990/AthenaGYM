@@ -34,7 +34,7 @@ async function apiFetch<T>(
   return res.json() as Promise<T>;
 }
 
-export async function listStudents(
+export async function listAlunos(
   token: string,
   params: Record<string, string | undefined> = {},
 ) {
@@ -43,50 +43,50 @@ export async function listStudents(
     if (v) qs.set(k, v);
   });
   const q = qs.toString();
-  return apiFetch<StudentListResponse>(`/students${q ? `?${q}` : ''}`, token);
+  return apiFetch<StudentListResponse>(`/alunos${q ? `?${q}` : ''}`, token);
 }
 
-export async function getStudent(token: string, id: string) {
-  return apiFetch<Student>(`/students/${id}`, token);
+export async function getAluno(token: string, id: string) {
+  return apiFetch<Student>(`/alunos/${id}`, token);
 }
 
-export async function createStudent(token: string, body: Record<string, unknown>) {
-  return apiFetch<Student>('/students', token, {
+export async function createAluno(token: string, body: Record<string, unknown>) {
+  return apiFetch<Student>('/alunos', token, {
     method: 'POST',
     body: JSON.stringify(body),
   });
 }
 
-export async function updateStudent(
+export async function updateAluno(
   token: string,
   id: string,
   body: Record<string, unknown>,
 ) {
-  return apiFetch<Student>(`/students/${id}`, token, {
+  return apiFetch<Student>(`/alunos/${id}`, token, {
     method: 'PATCH',
     body: JSON.stringify(body),
   });
 }
 
-export async function deleteStudent(token: string, id: string) {
-  return apiFetch<{ ok: boolean }>(`/students/${id}`, token, {
+export async function deleteAluno(token: string, id: string) {
+  return apiFetch<{ ok: boolean }>(`/alunos/${id}`, token, {
     method: 'DELETE',
   });
 }
 
-export async function changeStudentStatus(
+export async function changeAlunoStatus(
   token: string,
   id: string,
   status: string,
   reason?: string,
 ) {
-  return apiFetch<Student>(`/students/${id}/status`, token, {
+  return apiFetch<Student>(`/alunos/${id}/status`, token, {
     method: 'POST',
     body: JSON.stringify({ status, reason }),
   });
 }
 
-export async function getStudentHistory(token: string, id: string) {
+export async function getAlunoHistory(token: string, id: string) {
   return apiFetch<
     Array<{
       id: string;
@@ -95,7 +95,59 @@ export async function getStudentHistory(token: string, id: string) {
       reason: string | null;
       createdAt: string;
     }>
-  >(`/students/${id}/history`, token);
+  >(`/alunos/${id}/history`, token);
+}
+
+export async function getAlunoTimeline(token: string, id: string) {
+  return apiFetch<
+    Array<{
+      id: string;
+      kind: string;
+      title: string;
+      description?: string | null;
+      occurredAt: string;
+    }>
+  >(`/alunos/${id}/timeline`, token);
+}
+
+export async function getAlunoSummary(token: string, id: string) {
+  return apiFetch<{
+    weight: number | null;
+    height: number | null;
+    bmi: number | null;
+    lastWorkoutAt: string | null;
+    lastCheckinAt: string | null;
+    nextDueDate: string | null;
+    monthlyFee: number | null;
+    openReceivables: number;
+  }>(`/alunos/${id}/summary`, token);
+}
+
+export async function uploadAlunoPhoto(token: string, id: string, file: File) {
+  const form = new FormData();
+  form.append('file', file);
+  return apiFetch<Student>(`/alunos/${id}/photo`, token, {
+    method: 'POST',
+    body: form,
+  });
+}
+
+export async function uploadAlunoDocument(
+  token: string,
+  id: string,
+  file: File,
+  type: string,
+) {
+  const form = new FormData();
+  form.append('file', file);
+  return apiFetch<{ id: string; type: string; storagePath: string; fileName: string | null }>(
+    `/alunos/${id}/documents?type=${encodeURIComponent(type)}`,
+    token,
+    {
+      method: 'POST',
+      body: form,
+    },
+  );
 }
 
 export type { StudentListItem, Student };

@@ -185,6 +185,7 @@ export interface StudentAddress {
   zipcode: string | null;
   street: string | null;
   number: string | null;
+  complement: string | null;
   district: string | null;
   city: string | null;
   state: string | null;
@@ -231,6 +232,8 @@ export interface Student {
   rg: string | null;
   birthDate: string | null;
   gender: string | null;
+  maritalStatus: string | null;
+  profession: string | null;
   email: string | null;
   phone: string | null;
   whatsapp: string | null;
@@ -254,11 +257,29 @@ export interface StudentListItem {
   cpf: string | null;
   registrationNumber: string;
   planName: string | null;
+  trainerName: string | null;
   status: string;
+  displayStatus: string;
   unitId: string;
   phone: string | null;
+  whatsapp: string | null;
   lastAccessAt: string | null;
+  lastCheckinAt: string | null;
+  nextDueDate: string | null;
+  monthlyFee: number | null;
+  createdAt: string;
   photoUrl: string | null;
+}
+
+export interface Student360Summary {
+  weight: number | null;
+  height: number | null;
+  bmi: number | null;
+  lastWorkoutAt: string | null;
+  lastCheckinAt: string | null;
+  nextDueDate: string | null;
+  monthlyFee: number | null;
+  openReceivables: number;
 }
 
 export interface StudentListResponse {
@@ -277,8 +298,14 @@ export interface StudentFilters {
   email?: string;
   status?: string;
   unitId?: string;
+  planName?: string;
+  trainerName?: string;
+  birthdays?: boolean;
+  recentEnrollment?: boolean;
   page?: number;
   pageSize?: number;
+  sort?: string;
+  sortDir?: string;
 }
 
 export type LeadActivityType =

@@ -4,7 +4,7 @@ import { FormEvent, useEffect, useRef, useState } from 'react';
 import type { Assessment, ProgressSummary } from '@athena/shared';
 import { Button, Card } from '@athena/ui';
 import { workoutsApi } from '../services/workoutsApi';
-import { StudentSelect } from '@/modules/students/components/StudentSelect';
+import { AlunoSelect } from '@/modules/alunos/components/AlunoSelect';
 import { useToast } from '@/components/ui/Toast';
 
 export function AssessmentsPanel({ accessToken }: { accessToken: string }) {
@@ -76,7 +76,7 @@ export function AssessmentsPanel({ accessToken }: { accessToken: string }) {
     <div className="space-y-4">
       <Card>
         <form onSubmit={onCreate} className="flex flex-wrap items-end gap-3">
-          <StudentSelect
+          <AlunoSelect
             accessToken={accessToken}
             value={studentId}
             onChange={setStudentId}
@@ -232,7 +232,7 @@ export function EvolutionPanel({ accessToken }: { accessToken: string }) {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-end gap-3">
-        <StudentSelect
+        <AlunoSelect
           accessToken={accessToken}
           value={studentId}
           onChange={(id) => {

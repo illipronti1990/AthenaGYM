@@ -11,9 +11,8 @@ import {
 import {
   ATHENA_ACADEMIA_BRANDING,
   resolveCompanyBranding,
-  type Company,
-  type ResolvedCompanyBranding,
-} from '@athena/shared';
+} from '@athena/shared/branding/athena';
+import type { Company, ResolvedCompanyBranding } from '@athena/shared';
 import { applyBrandingToDocument } from '@/lib/branding/applyBranding';
 
 type BrandingCtx = {

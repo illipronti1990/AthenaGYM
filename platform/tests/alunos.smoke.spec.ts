@@ -3,14 +3,14 @@ import { test, expect } from '@playwright/test';
 const WEB = process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000';
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
 
-test.describe('Students smoke', () => {
-  test('students without token get 401', async ({ request }) => {
-    const res = await request.get(`${API}/students`);
+test.describe('Alunos smoke', () => {
+  test('alunos without token get 401', async ({ request }) => {
+    const res = await request.get(`${API}/alunos`);
     expect(res.status()).toBe(401);
   });
 
   test('create without token get 401', async ({ request }) => {
-    const res = await request.post(`${API}/students`, {
+    const res = await request.post(`${API}/alunos`, {
       data: {
         unitId: '22222222-2222-2222-2222-222222222222',
         fullName: 'Teste',
@@ -20,8 +20,8 @@ test.describe('Students smoke', () => {
     expect(res.status()).toBe(401);
   });
 
-  test('students page redirects unauthenticated to login', async ({ page }) => {
-    await page.goto(`${WEB}/app/students`);
+  test('alunos page redirects unauthenticated to login', async ({ page }) => {
+    await page.goto(`${WEB}/app/alunos`);
     await expect(page).toHaveURL(/login/, { timeout: 15_000 });
   });
 });

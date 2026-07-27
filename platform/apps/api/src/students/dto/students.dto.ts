@@ -33,6 +33,11 @@ export class StudentAddressDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
+  complement?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
   district?: string;
 
   @ApiPropertyOptional()
@@ -122,6 +127,16 @@ export class CreateStudentDto {
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsString()
+  maritalStatus?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  profession?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsEmail()
   email?: string;
 
@@ -203,6 +218,16 @@ export class UpdateStudentDto {
   @IsOptional()
   @IsString()
   gender?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  maritalStatus?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  profession?: string;
 
   @ApiPropertyOptional()
   @IsOptional()

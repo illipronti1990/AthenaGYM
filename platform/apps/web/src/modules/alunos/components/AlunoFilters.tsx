@@ -8,7 +8,7 @@ export type StudentFilterValues = {
   unitId: string;
 };
 
-export function StudentFilters({
+export function AlunoFilters({
   value,
   onChange,
   units,
@@ -54,4 +54,4 @@ export function StudentFilters({
   );
 }
 
-export { StudentFilters as StudentSearch };
+export { AlunoFilters as StudentSearch };

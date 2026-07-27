@@ -21,7 +21,7 @@ import { ContextualActions } from '@/components/ux/ContextualActions';
 import { formsApi } from '@/modules/forms/services/formsApi';
 import { useAutosave } from '@/hooks/useAutosave';
 
-export function StudentAssessmentsPanel({
+export function AlunoAssessmentsPanel({
   accessToken,
   studentId,
   unitId,

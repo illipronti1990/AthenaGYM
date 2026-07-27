@@ -211,7 +211,7 @@ html.light .athena-btn-secondary {
   border-radius: var(--radius-card);
   padding: var(--space-24);
   box-shadow: var(--shadow-card);
-  transition: transform 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+  transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
 }
 
 .athena-card-hover:hover {
@@ -552,9 +552,37 @@ html.light .athena-badge-novo {
   padding: var(--space-16);
 }
 
+.athena-modal-enter {
+  animation: athena-modal-fade-in 0.15s ease;
+}
+
 .athena-modal-panel {
   width: 100%;
   max-width: 520px;
+}
+
+.athena-modal-panel-enter {
+  animation: athena-modal-pop-in 0.18s ease;
+}
+
+@keyframes athena-modal-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes athena-modal-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* ========== PX-2 Layout / Navigation ========== */

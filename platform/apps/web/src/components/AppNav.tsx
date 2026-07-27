@@ -7,7 +7,7 @@ import { requireAccessToken } from '@/lib/auth/token';
 
 const links = [
   { href: '/app', label: 'Dashboard' },
-  { href: '/app/students', label: 'Alunos' },
+  { href: '/app/alunos', label: 'Alunos' },
   { href: '/app/trainers', label: 'Professores' },
   { href: '/app/sales', label: 'Comercial' },
   { href: '/app/finance', label: 'Financeiro' },

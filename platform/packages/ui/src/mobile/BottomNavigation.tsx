@@ -15,10 +15,10 @@ export type BottomNavItem = {
 const DEFAULT_ITEMS: BottomNavItem[] = [
   { href: '/app', label: 'Início', icon: Home, match: (p) => p === '/app' },
   {
-    href: '/app/students',
+    href: '/app/alunos',
     label: 'Alunos',
     icon: UserRound,
-    match: (p) => p.startsWith('/app/students'),
+    match: (p) => p.startsWith('/app/alunos'),
   },
   {
     href: '/app/finance',

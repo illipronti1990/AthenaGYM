@@ -19,7 +19,7 @@ export function PageHeader({
   actions,
   children,
 }: {
-  title: string;
+  title: ReactNode;
   description?: string;
   icon?: ReactNode;
   actions?: ReactNode;

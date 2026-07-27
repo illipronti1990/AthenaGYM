@@ -102,7 +102,7 @@ export function WorkoutsPanel({ accessToken }: { accessToken: string }) {
       <form onSubmit={onCreate} className="space-y-3">
         <div className="flex flex-wrap gap-3">
           <label className="text-sm text-[var(--muted)]">
-            Student ID
+            ID do aluno
             <input
               className="mt-1 block w-72 athena-input font-mono text-xs"
               value={studentId}

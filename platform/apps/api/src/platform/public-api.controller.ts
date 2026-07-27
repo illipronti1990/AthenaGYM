@@ -32,9 +32,23 @@ export class PublicApiController {
     }
   }
 
+  @Get('alunos')
+  @Scopes('students.read')
+  @ApiOperation({ summary: 'Public API — list alunos' })
+  alunos(
+    @CurrentPublic() ctx: PublicApiContext,
+    @Query('page') page?: string,
+    @Query('pageSize') pageSize?: string,
+  ) {
+    return this.tracked(ctx, '/public/alunos', 'GET', () =>
+      this.platform.publicStudents(ctx, Number(page || 1), Number(pageSize || 20)),
+    );
+  }
+
+  /** @deprecated use GET /public/alunos */
   @Get('students')
   @Scopes('students.read')
-  @ApiOperation({ summary: 'Public API — list students' })
+  @ApiOperation({ summary: 'Public API — list students (legacy)' })
   students(
     @CurrentPublic() ctx: PublicApiContext,
     @Query('page') page?: string,

@@ -3,6 +3,7 @@ import {
   type DashboardLayoutItem,
   type DashboardWidgetId,
 } from '@athena/shared';
+import { percentDelta } from '@athena/shared';
 
 const VALID = new Set(DEFAULT_DASHBOARD_LAYOUT.map((i) => i.id));
 
@@ -48,4 +49,17 @@ export function greetingForHour(hour: number, firstName: string): string {
 export function goalProgress(current: number, target: number): number {
   if (target <= 0) return 0;
   return Math.min(100, Math.round((current / target) * 100));
+}
+
+export { percentDelta };
+
+export function activityKindFromAudit(module: string, action: string): string {
+  const m = `${module}.${action}`.toLowerCase();
+  if (m.includes('checkin') || m.includes('check-in')) return 'checkin';
+  if (m.includes('payment') || m.includes('receivable') || m.includes('finance')) return 'payment';
+  if (m.includes('enroll')) return 'enrollment';
+  if (m.includes('assessment') || m.includes('avali')) return 'assessment';
+  if (m.includes('workout') || m.includes('treino')) return 'workout';
+  if (m.includes('student') || m.includes('aluno')) return 'student';
+  return 'other';
 }

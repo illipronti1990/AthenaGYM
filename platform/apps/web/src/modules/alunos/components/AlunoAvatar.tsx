@@ -1,4 +1,4 @@
-export function StudentAvatar({
+export function AlunoAvatar({
   name,
   photoUrl,
   size = 40,

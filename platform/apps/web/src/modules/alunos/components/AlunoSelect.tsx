@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import type { StudentListItem } from '@athena/shared';
-import { listStudents } from '@/modules/students/services/studentsApi';
+import { listAlunos } from '@/modules/alunos/services/alunosApi';
 
-export function StudentSelect({
+export function AlunoSelect({
   accessToken,
   value,
   onChange,
@@ -20,7 +20,7 @@ export function StudentSelect({
   const [students, setStudents] = useState<StudentListItem[]>([]);
 
   useEffect(() => {
-    void listStudents(accessToken, { pageSize: '100' })
+    void listAlunos(accessToken, { pageSize: '100' })
       .then((res) => setStudents(res.items || []))
       .catch(() => setStudents([]));
   }, [accessToken]);

@@ -1,19 +1,18 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import { useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { DashboardChartPeriod, DashboardLayoutItem } from '@athena/shared';
+import type { CommandDashboard, DashboardChartPeriod, DashboardLayoutItem } from '@athena/shared';
 import {
   Button,
   ErrorState,
   Page,
   PageHeader,
   PageContent,
-  SkeletonChart,
   pageQualityAttrs,
 } from '@athena/ui';
 import { Settings2 } from 'lucide-react';
+import { useBranding } from '@/components/BrandingProvider';
 import { dashboardApi } from '../services/dashboardApi';
 import { useToast } from '@/components/ui/Toast';
 import { SkeletonDashboard } from '@/components/ui/Skeleton';
@@ -21,36 +20,65 @@ import { CACHE_TTL } from '@/lib/queryKeys';
 import { greetingEmoji } from '../utils/format';
 import { QuickActions } from './QuickActions';
 import { KpiCard } from './KpiCard';
+import { DaySummaryCard } from './DaySummaryCard';
+import { AlertsWidget } from './AlertsWidget';
+import { FinanceSnapshotWidget } from './FinanceSnapshotWidget';
+import { CommercialSnapshotWidget } from './CommercialSnapshotWidget';
 import { AgendaWidget } from './AgendaWidget';
 import { BirthdayWidget } from './BirthdayWidget';
 import { DuesWidget } from './DuesWidget';
 import { GoalWidget } from './GoalWidget';
 import { RankingWidget } from './RankingWidget';
+import { RevenueChart } from './RevenueChart';
+import { CheckinChart } from './CheckinChart';
+import { ActivityTimeline } from './ActivityTimeline';
 import { DashboardCustomizer } from './DashboardCustomizer';
 import { DashboardGrid, type DashboardTile } from './DashboardGrid';
+import { FALLBACK_DASHBOARD_LAYOUT } from '../utils/layout';
 
-const RevenueChart = dynamic(
-  () => import('./RevenueChart').then((m) => ({ default: m.RevenueChart })),
-  { ssr: false, loading: () => <SkeletonChart /> },
-);
-const CheckinChart = dynamic(
-  () => import('./CheckinChart').then((m) => ({ default: m.CheckinChart })),
-  { ssr: false, loading: () => <SkeletonChart /> },
-);
-const ActivityTimeline = dynamic(
-  () => import('./ActivityTimeline').then((m) => ({ default: m.ActivityTimeline })),
-  { ssr: false, loading: () => <SkeletonChart /> },
-);
+function normalizeDashboard(raw: CommandDashboard, firstName: string): CommandDashboard {
+  const greeting = raw.daySummary?.greeting || `Olá, ${firstName}`;
+  return {
+    ...raw,
+    daySummary: raw.daySummary ?? {
+      greeting,
+      items: [],
+      forecastRevenue: 0,
+    },
+    alerts: raw.alerts ?? [],
+    financeSnapshot: raw.financeSnapshot ?? { inflows: 0, outflows: 0, balance: 0 },
+    commercialSnapshot: raw.commercialSnapshot ?? {
+      newStudents: 0,
+      cancellations: 0,
+      conversionRate: 0,
+    },
+    kpis: raw.kpis ?? [],
+    revenueChart: raw.revenueChart ?? [],
+    checkinChart: raw.checkinChart ?? [],
+    agenda: raw.agenda ?? [],
+    activities: raw.activities ?? [],
+    dues: raw.dues ?? { dueToday: 0, overdue: 0, receivedMonth: 0 },
+    birthdays: raw.birthdays ?? [],
+    goals: raw.goals ?? [],
+    ranking: raw.ranking ?? [],
+    layout: raw.layout?.length ? raw.layout : FALLBACK_DASHBOARD_LAYOUT,
+    greetingHint: raw.greetingHint ?? `${greeting} · Centro de comando da academia`,
+    generatedAt: raw.generatedAt ?? new Date().toISOString(),
+  };
+}
 
 export function ExecutiveDashboard({
   accessToken,
   userName,
+  unitName,
 }: {
   accessToken: string;
   userName?: string | null;
+  unitName?: string | null;
 }) {
   const { push } = useToast();
   const qc = useQueryClient();
+  const { branding } = useBranding();
   const [period, setPeriod] = useState<DashboardChartPeriod>('30d');
   const [customOpen, setCustomOpen] = useState(false);
   const [draftLayout, setDraftLayout] = useState<DashboardLayoutItem[] | null>(null);
@@ -59,7 +87,10 @@ export function ExecutiveDashboard({
 
   const query = useQuery({
     queryKey: ['executive-dashboard', period, firstName],
-    queryFn: () => dashboardApi.executive(accessToken, period, firstName),
+    queryFn: async () => {
+      const payload = await dashboardApi.executive(accessToken, period, firstName);
+      return normalizeDashboard(payload, firstName);
+    },
     staleTime: CACHE_TTL.kpis,
     refetchInterval: CACHE_TTL.kpis,
   });
@@ -89,6 +120,15 @@ export function ExecutiveDashboard({
   const tiles: DashboardTile[] = useMemo(() => {
     if (!data) return [];
     return [
+      {
+        id: 'daySummary',
+        span: 'full',
+        node: <DaySummaryCard summary={data.daySummary} />,
+      },
+      {
+        id: 'alerts',
+        node: <AlertsWidget alerts={data.alerts} />,
+      },
       { id: 'quickActions', span: 'full', node: <QuickActions /> },
       {
         id: 'kpis',
@@ -100,6 +140,14 @@ export function ExecutiveDashboard({
             ))}
           </div>
         ),
+      },
+      {
+        id: 'financeSnapshot',
+        node: <FinanceSnapshotWidget snapshot={data.financeSnapshot} />,
+      },
+      {
+        id: 'commercialSnapshot',
+        node: <CommercialSnapshotWidget snapshot={data.commercialSnapshot} />,
       },
       {
         id: 'revenueChart',
@@ -143,11 +191,20 @@ export function ExecutiveDashboard({
     );
   }
 
+  const brandName = branding.displayName || 'Athena Academia';
+  const unitLabel = unitName || 'Unidade';
+
   return (
     <Page {...pageQualityAttrs()} data-testid="executive-dashboard">
       <PageHeader
-        title={`${data?.greetingHint?.split('·')[0]?.trim() || `Olá, ${firstName}`} ${greetingEmoji()}`}
-        description={`${dateLabel} · ${data?.greetingHint?.split('·')[1]?.trim() || 'Centro de comando da academia'}`}
+        title={brandName}
+        icon={
+          branding.logoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={branding.logoUrl} alt="" className="h-9 w-auto object-contain" />
+          ) : undefined
+        }
+        description={`${unitLabel} · ${data?.greetingHint?.split('·')[0]?.trim() || `Olá, ${firstName}`} ${greetingEmoji()} · ${dateLabel}`}
         actions={
           <Button
             type="button"

@@ -539,7 +539,7 @@ export class PlatformService {
       gatewayAlias: '/api/public/v1',
       oauth: '/api/v1/oauth/token',
       endpoints: [
-        'GET /students',
+        'GET /alunos',
         'GET /plans',
         'GET /units',
         'GET /workouts',

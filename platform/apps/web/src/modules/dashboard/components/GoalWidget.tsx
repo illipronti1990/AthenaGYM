@@ -1,9 +1,28 @@
 'use client';
 
+import Link from 'next/link';
 import type { DashboardGoal } from '@athena/shared';
+import { EmptyState } from '@athena/ui';
 import { formatKpi } from '../utils/format';
 
 export function GoalWidget({ goals }: { goals: DashboardGoal[] }) {
+  if (!goals.length) {
+    return (
+      <div className="athena-card h-full" data-testid="goal-widget">
+        <h3 className="athena-h3 mb-4 text-[var(--gold)]">Metas do mês</h3>
+        <EmptyState
+          title="Nenhuma meta configurada"
+          description="Defina metas de receita e matrículas para acompanhar o progresso."
+          action={
+            <Link href="/app/finance" className="athena-btn athena-btn-primary athena-btn-sm">
+              Ver Financeiro
+            </Link>
+          }
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="athena-card h-full" data-testid="goal-widget">
       <h3 className="athena-h3 mb-4 text-[var(--gold)]">Metas do mês</h3>

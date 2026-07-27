@@ -360,7 +360,7 @@ export function LoyaltyPanel({ accessToken }: { accessToken: string }) {
       <div className="flex flex-wrap gap-2">
         <input
           className="athena-input w-72 font-mono text-xs"
-          placeholder="Student ID"
+          placeholder="ID do aluno"
           value={studentId}
           onChange={(e) => setStudentId(e.target.value)}
         />

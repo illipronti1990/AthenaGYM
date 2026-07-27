@@ -9,6 +9,7 @@ import {
   AthenaDataGrid,
   Button,
   FloatingActionButton,
+  formatCurrencyBRL,
   type DataGridColumn,
   type DataGridFilterDef,
   type DataGridSort,
@@ -18,24 +19,41 @@ import { Plus } from 'lucide-react';
 import { useToast } from '@/components/ui/Toast';
 import { ExportButtons } from '@/modules/polish/components/ExportButtons';
 import { useDataGridPrefs } from '@/modules/datagrid/hooks/useDataGridPrefs';
-import { deleteStudent, listStudents } from '../services/studentsApi';
-import { StudentStatusBadge } from './StudentStatus';
+import { deleteAluno, listAlunos } from '../services/alunosApi';
+import { AlunoAvatar } from './AlunoAvatar';
+import { AlunoStatusBadge } from './AlunoStatus';
 
-const TABLE_ID = 'students';
+const TABLE_ID = 'alunos';
 
 const WORK_PANELS: WorkPanel[] = [
   { id: 'active', label: 'Ativos', tone: 'success', filters: { status: 'active' } },
   { id: 'delinquent', label: 'Inadimplentes', tone: 'danger', filters: { status: 'delinquent' } },
   { id: 'blocked', label: 'Bloqueados', tone: 'warn', filters: { status: 'blocked' } },
   { id: 'leads', label: 'Leads', tone: 'info', filters: { status: 'lead' } },
+  { id: 'birthdays', label: 'Aniversariantes', tone: 'info', filters: { birthdays: 'true' } },
+  {
+    id: 'recent',
+    label: 'Matrículas recentes',
+    tone: 'success',
+    filters: { recentEnrollment: 'true' },
+  },
 ];
 
-export function StudentsListPanel({
+function formatDateShort(v: string | null | undefined) {
+  if (!v) return '—';
+  return new Date(v).toLocaleDateString('pt-BR');
+}
+
+export function AlunosListPanel({
   accessToken,
   units,
+  planOptions = [],
+  trainerOptions = [],
 }: {
   accessToken: string;
   units: Array<{ id: string; name: string }>;
+  planOptions?: string[];
+  trainerOptions?: string[];
 }) {
   const { push } = useToast();
   const router = useRouter();
@@ -64,10 +82,14 @@ export function StudentsListPanel({
       void (async () => {
         setLoading(true);
         try {
-          const res = await listStudents(accessToken, {
+          const res = await listAlunos(accessToken, {
             q: search || undefined,
             status: filters.status || undefined,
             unitId: filters.unitId || undefined,
+            planName: filters.planName || undefined,
+            trainerName: filters.trainerName || undefined,
+            birthdays: filters.birthdays || undefined,
+            recentEnrollment: filters.recentEnrollment || undefined,
             page: String(page),
             pageSize: String(pageSize),
             sort: sort?.id,
@@ -105,12 +127,34 @@ export function StudentsListPanel({
         type: 'select',
         options: units.map((u) => ({ value: u.id, label: u.name })),
       },
+      {
+        id: 'planName',
+        label: 'Plano',
+        type: planOptions.length ? 'select' : 'text',
+        options: planOptions.map((p) => ({ value: p, label: p })),
+      },
+      {
+        id: 'trainerName',
+        label: 'Professor',
+        type: trainerOptions.length ? 'select' : 'text',
+        options: trainerOptions.map((t) => ({ value: t, label: t })),
+      },
     ],
-    [units],
+    [units, planOptions, trainerOptions],
   );
 
   const columns: Array<DataGridColumn<StudentListItem>> = useMemo(
     () => [
+      {
+        id: 'photo',
+        header: '',
+        width: 48,
+        minWidth: 48,
+        sticky: true,
+        cell: (row) => (
+          <AlunoAvatar name={row.fullName} photoUrl={row.photoUrl} size={36} />
+        ),
+      },
       {
         id: 'fullName',
         header: 'Nome',
@@ -118,7 +162,7 @@ export function StudentsListPanel({
         sortable: true,
         sticky: true,
         mobilePrimary: true,
-        width: 220,
+        width: 200,
         minWidth: 160,
       },
       {
@@ -126,8 +170,14 @@ export function StudentsListPanel({
         header: 'CPF',
         cell: (row) => formatCpf(row.cpf) || '—',
         sortable: true,
-        defaultVisible: false,
         width: 140,
+      },
+      {
+        id: 'registrationNumber',
+        header: 'Matrícula',
+        accessor: 'registrationNumber',
+        sortable: true,
+        width: 130,
       },
       {
         id: 'planName',
@@ -138,28 +188,59 @@ export function StudentsListPanel({
         cell: (row) => row.planName || '—',
       },
       {
+        id: 'trainerName',
+        header: 'Professor',
+        accessor: 'trainerName',
+        sortable: true,
+        width: 140,
+        cell: (row) => row.trainerName || '—',
+      },
+      {
         id: 'status',
-        header: 'Situação',
+        header: 'Status',
         sortable: true,
         sticky: true,
         width: 140,
-        cell: (row) => <StudentStatusBadge status={row.status} />,
+        cell: (row) => (
+          <AlunoStatusBadge status={row.status} displayStatus={row.displayStatus} />
+        ),
+      },
+      {
+        id: 'lastCheckinAt',
+        header: 'Último check-in',
+        sortable: true,
+        width: 130,
+        cell: (row) => formatDateShort(row.lastCheckinAt || row.lastAccessAt),
+      },
+      {
+        id: 'nextDueDate',
+        header: 'Próx. vencimento',
+        width: 130,
+        cell: (row) => formatDateShort(row.nextDueDate),
+      },
+      {
+        id: 'monthlyFee',
+        header: 'Mensalidade',
+        width: 120,
+        cell: (row) =>
+          row.monthlyFee != null ? formatCurrencyBRL(row.monthlyFee) : '—',
       },
       {
         id: 'phone',
         header: 'Telefone',
         accessor: 'phone',
         sortable: true,
+        defaultVisible: false,
         width: 140,
         cell: (row) => row.phone || '—',
       },
       {
-        id: 'registrationNumber',
-        header: 'Código',
-        accessor: 'registrationNumber',
+        id: 'createdAt',
+        header: 'Cadastro',
         sortable: true,
         defaultVisible: false,
         width: 120,
+        cell: (row) => formatDateShort(row.createdAt),
       },
     ],
     [],
@@ -167,9 +248,11 @@ export function StudentsListPanel({
 
   const unitName = (id: string) => units.find((u) => u.id === id)?.name || id;
 
+  const selectedRows = items.filter((i) => selectedIds.includes(i.id));
+
   return (
     <div className="space-y-3">
-      <FloatingActionButton label="Novo aluno (Ctrl+N)" onClick={() => router.push('/app/students/new')}>
+      <FloatingActionButton label="Novo aluno (Ctrl+N)" onClick={() => router.push('/app/alunos/novo')}>
         <Plus size={22} />
       </FloatingActionButton>
 
@@ -232,16 +315,16 @@ export function StudentsListPanel({
             .then(() => push('Filtro removido.'))
             .catch((e) => push(e instanceof Error ? e.message : 'Falha', 'error'));
         }}
-        onRowOpen={(row) => router.push(`/app/students/${row.id}`)}
-        exportSlot={<ExportButtons accessToken={accessToken} resource="students" />}
+        onRowOpen={(row) => router.push(`/app/alunos/${row.id}`)}
+        exportSlot={<ExportButtons accessToken={accessToken} resource="alunos" />}
         primaryAction={
           <div className="flex flex-wrap gap-2">
-            <Link href="/app/students/enroll">
+            <Link href="/app/alunos/matricula">
               <Button variant="secondary" size="sm">
                 Matrícula rápida
               </Button>
             </Link>
-            <Link href="/app/students/new">
+            <Link href="/app/alunos/novo">
               <Button size="sm">+ Novo</Button>
             </Link>
           </div>
@@ -257,15 +340,33 @@ export function StudentsListPanel({
             : 'Cadastre o primeiro aluno e comece a operar a academia.'
         }
         emptyAction={
-          <Link href="/app/students/new">
+          <Link href="/app/alunos/novo">
             <Button>Novo aluno</Button>
           </Link>
         }
         bulkActions={[
           {
+            id: 'whatsapp',
+            label: 'WhatsApp (seleção)',
+            onClick: () => {
+              const withPhone = selectedRows.filter((r) => r.phone || r.whatsapp);
+              if (!withPhone.length) {
+                push('Nenhum aluno selecionado com telefone.', 'error');
+                return;
+              }
+              const first = withPhone[0];
+              const digits = String(first.whatsapp || first.phone || '').replace(/\D/g, '');
+              window.open(`https://wa.me/55${digits.replace(/^55/, '')}`, '_blank', 'noopener,noreferrer');
+              if (withPhone.length > 1) {
+                push(`${withPhone.length} alunos com telefone — abrindo o primeiro.`);
+              }
+            },
+          },
+          {
             id: 'export',
             label: 'Exportar seleção',
-            onClick: () => push(`${selectedIds.length} aluno(s) selecionado(s) — use Exportar CSV/XLSX.`),
+            onClick: () =>
+              push(`${selectedIds.length} aluno(s) — use Exportar CSV/XLSX no topo da lista.`),
           },
           {
             id: 'delete',
@@ -274,7 +375,7 @@ export function StudentsListPanel({
             onClick: (ids) => {
               void (async () => {
                 try {
-                  await Promise.all(ids.map((id) => deleteStudent(accessToken, id)));
+                  await Promise.all(ids.map((id) => deleteAluno(accessToken, id)));
                   push(`${ids.length} aluno(s) excluído(s).`);
                   setSelectedIds([]);
                   setPage(1);
@@ -289,21 +390,16 @@ export function StudentsListPanel({
         rowActions={[
           {
             id: 'view',
-            label: 'Visualizar',
-            onClick: (row) => router.push(`/app/students/${row.id}`),
-          },
-          {
-            id: 'edit',
-            label: 'Editar',
-            onClick: (row) => router.push(`/app/students/${row.id}`),
+            label: 'Perfil 360°',
+            onClick: (row) => router.push(`/app/alunos/${row.id}`),
           },
           {
             id: 'whatsapp',
             label: 'WhatsApp',
-            hidden: (row) => !row.phone,
+            hidden: (row) => !row.phone && !row.whatsapp,
             onClick: (row) => {
-              const digits = String(row.phone || '').replace(/\D/g, '');
-              window.open(`https://wa.me/55${digits}`, '_blank', 'noopener,noreferrer');
+              const digits = String(row.whatsapp || row.phone || '').replace(/\D/g, '');
+              window.open(`https://wa.me/55${digits.replace(/^55/, '')}`, '_blank', 'noopener,noreferrer');
             },
           },
           {
@@ -311,7 +407,7 @@ export function StudentsListPanel({
             label: 'Excluir',
             danger: true,
             onClick: (row) => {
-              void deleteStudent(accessToken, row.id)
+              void deleteAluno(accessToken, row.id)
                 .then(() => {
                   push('Aluno excluído.');
                   setReloadKey((k) => k + 1);

@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 
 const ACTIONS = [
-  { href: '/app/students/new', label: 'Novo Aluno', icon: UserPlus },
+  { href: '/app/alunos/novo', label: 'Novo Aluno', icon: UserPlus },
   { href: '/app/sales/enrollments', label: 'Nova Matrícula', icon: CreditCard },
   { href: '/app/finance/receivables', label: 'Receber', icon: Wallet },
   { href: '/app/operations/agenda', label: 'Agendar', icon: CalendarPlus },

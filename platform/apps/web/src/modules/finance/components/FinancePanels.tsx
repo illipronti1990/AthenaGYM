@@ -11,7 +11,7 @@ import type {
 } from '@athena/shared';
 import { Button, Card } from '@athena/ui';
 import { financeApi } from '../services/financeApi';
-import { listStudents } from '@/modules/students/services/studentsApi';
+import { listAlunos } from '@/modules/alunos/services/alunosApi';
 import { salesApi } from '@/modules/sales/services/salesApi';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
@@ -129,7 +129,7 @@ export function SubscriptionsPanel({ accessToken }: { accessToken: string }) {
       try {
         const [subs, studentsRes, plans] = await Promise.all([
           financeApi.subscriptions(accessToken),
-          listStudents(accessToken, { pageSize: '200' }).catch(() => ({ items: [] as never[] })),
+          listAlunos(accessToken, { pageSize: '200' }).catch(() => ({ items: [] as never[] })),
           salesApi.plans(accessToken).catch(() => []),
         ]);
         setItems(subs);

@@ -31,9 +31,9 @@ export const navGroups: NavGroup[] = [
     label: 'Gestão',
     icon: athenaIcons.students,
     items: [
-      { href: '/app/students', label: 'Alunos', icon: athenaIcons.student, keywords: ['aluno', 'cliente'] },
+      { href: '/app/alunos', label: 'Alunos', icon: athenaIcons.student, keywords: ['aluno', 'cliente'] },
       {
-        href: '/app/students/enroll',
+        href: '/app/alunos/matricula',
         label: 'Matrícula rápida',
         icon: athenaIcons.subscriptions,
         keywords: ['matricula', 'wizard', 'recepção'],
@@ -168,7 +168,7 @@ export function findActiveGroup(pathname: string): string | null {
 
 /** Build breadcrumb trail from pathname */
 const groupHub: Record<string, string> = {
-  gestao: '/app/students',
+  gestao: '/app/alunos',
   financeiro: '/app/finance',
   academia: '/app/workouts',
   relatorios: '/app/analytics',

@@ -1,10 +1,17 @@
-import { DEFAULT_DASHBOARD_LAYOUT } from '@athena/shared';
-import { greetingForHour, goalProgress, normalizeLayout } from './dashboard.rules';
+import { DEFAULT_DASHBOARD_LAYOUT, layoutForPreset, percentDelta } from '@athena/shared';
+import {
+  activityKindFromAudit,
+  greetingForHour,
+  goalProgress,
+  normalizeLayout,
+} from './dashboard.rules';
 
 describe('dashboard.rules', () => {
-  it('normalizes empty layout to defaults', () => {
+  it('normalizes empty layout to defaults including G-2 widgets', () => {
     const layout = normalizeLayout([]);
     expect(layout.map((i) => i.id)).toEqual(DEFAULT_DASHBOARD_LAYOUT.map((i) => i.id));
+    expect(layout.some((i) => i.id === 'daySummary')).toBe(true);
+    expect(layout.some((i) => i.id === 'alerts')).toBe(true);
   });
 
   it('dedupes and fills missing widgets', () => {
@@ -28,5 +35,27 @@ describe('dashboard.rules', () => {
     expect(goalProgress(82, 100)).toBe(82);
     expect(goalProgress(150, 100)).toBe(100);
     expect(goalProgress(10, 0)).toBe(0);
+  });
+
+  it('computes percent delta', () => {
+    expect(percentDelta(118, 100)).toBe(18);
+    expect(percentDelta(50, 0)).toBe(100);
+    expect(percentDelta(0, 0)).toBe(0);
+  });
+
+  it('maps audit to activity kind', () => {
+    expect(activityKindFromAudit('operations', 'checkin')).toBe('checkin');
+    expect(activityKindFromAudit('finance', 'payment')).toBe('payment');
+    expect(activityKindFromAudit('sales', 'enroll')).toBe('enrollment');
+  });
+
+  it('applies role preset when no saved layout', () => {
+    const finance = layoutForPreset('finance', null);
+    expect(finance.find((i) => i.id === 'financeSnapshot')?.visible).toBe(true);
+    expect(finance.find((i) => i.id === 'ranking')?.visible).toBe(false);
+
+    const trainer = layoutForPreset('trainer', null);
+    expect(trainer.find((i) => i.id === 'agenda')?.visible).toBe(true);
+    expect(trainer.find((i) => i.id === 'financeSnapshot')?.visible).toBe(false);
   });
 });

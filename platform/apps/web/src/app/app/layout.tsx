@@ -1,9 +1,9 @@
+import { requireAccessToken } from '@/lib/auth/token';
+import { apiGetMe } from '@/services/api';
 import { AppShell } from '@/components/AppShell';
 import { CompanyBrandingSync } from '@/components/CompanyBrandingSync';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { SessionManager } from '@/modules/auth/SessionManager';
-import { requireAccessToken } from '@/lib/auth/token';
-import { apiGetMe } from '@/services/api';
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const accessToken = await requireAccessToken();

@@ -86,7 +86,11 @@ export class StudentsService {
       registrationNumber: 'registration_number',
       registration_number: 'registration_number',
       lastAccessAt: 'last_access_at',
-      last_access_at: 'last_access_at',
+      lastCheckinAt: 'last_access_at',
+      createdAt: 'created_at',
+      created_at: 'created_at',
+      trainerName: 'trainer_name',
+      trainer_name: 'trainer_name',
       cpf: 'cpf',
     };
     const sortKey = query.sort ? sortMap[query.sort] : undefined;
@@ -103,6 +107,11 @@ export class StudentsService {
         email: query.email,
         status: query.status,
         unitId: query.unitId,
+        planName: query.planName,
+        trainerName: query.trainerName,
+        birthdays: query.birthdays === '1' || query.birthdays === 'true',
+        recentEnrollment:
+          query.recentEnrollment === '1' || query.recentEnrollment === 'true',
       },
       page,
       pageSize,
@@ -181,6 +190,8 @@ export class StudentsService {
         rg: dto.rg || null,
         birth_date: dto.birthDate || null,
         gender: dto.gender || null,
+        marital_status: dto.maritalStatus || null,
+        profession: dto.profession || null,
         email: dto.email || null,
         phone: dto.phone || null,
         whatsapp: dto.whatsapp || null,
@@ -203,6 +214,7 @@ export class StudentsService {
         zipcode: dto.address.zipcode || null,
         street: dto.address.street || null,
         number: dto.address.number || null,
+        complement: dto.address.complement || null,
         district: dto.address.district || null,
         city: dto.address.city || null,
         state: dto.address.state || null,
@@ -295,6 +307,8 @@ export class StudentsService {
     if (dto.rg !== undefined) patch.rg = dto.rg;
     if (dto.birthDate !== undefined) patch.birth_date = dto.birthDate;
     if (dto.gender !== undefined) patch.gender = dto.gender;
+    if (dto.maritalStatus !== undefined) patch.marital_status = dto.maritalStatus;
+    if (dto.profession !== undefined) patch.profession = dto.profession;
     if (dto.email !== undefined) patch.email = dto.email;
     if (dto.phone !== undefined) patch.phone = dto.phone;
     if (dto.whatsapp !== undefined) patch.whatsapp = dto.whatsapp;
@@ -309,6 +323,7 @@ export class StudentsService {
         zipcode: dto.address.zipcode || null,
         street: dto.address.street || null,
         number: dto.address.number || null,
+        complement: dto.address.complement || null,
         district: dto.address.district || null,
         city: dto.address.city || null,
         state: dto.address.state || null,
@@ -461,6 +476,20 @@ export class StudentsService {
     if (!existing) throw new NotFoundException('Student not found');
     this.assertCanAccess(auth, existing);
     return this.repo.findHistory(id);
+  }
+
+  async timeline(auth: AuthContext, id: string) {
+    const existing = await this.repo.findById(id);
+    if (!existing) throw new NotFoundException('Student not found');
+    this.assertCanAccess(auth, existing);
+    return this.repo.fetchTimeline(id);
+  }
+
+  async summary(auth: AuthContext, id: string) {
+    const existing = await this.repo.findById(id);
+    if (!existing) throw new NotFoundException('Student not found');
+    this.assertCanAccess(auth, existing);
+    return this.repo.fetchStudentSummary(id);
   }
 
   async uploadPhoto(

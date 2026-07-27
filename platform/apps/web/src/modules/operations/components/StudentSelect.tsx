@@ -1,1 +1,2 @@
-export { StudentSelect } from '@/modules/students/components/StudentSelect';
+export { AlunoSelect } from '@/modules/alunos/components/AlunoSelect';
+export { AlunoSelect as StudentSelect } from '@/modules/alunos/components/AlunoSelect';

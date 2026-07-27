@@ -75,6 +75,17 @@ export class PolishController {
     return this.polish.timeline(auth, entity, id);
   }
 
+  @Get('exports/alunos')
+  @Permissions('students.read')
+  @ApiQuery({ name: 'format', required: false, enum: ['csv', 'xlsx', 'pdf'] })
+  exportAlunos(
+    @CurrentAuth() auth: AuthContext,
+    @Query('format') format?: string,
+  ) {
+    return this.exports.exportStudents(auth, this.fmt(format));
+  }
+
+  /** @deprecated use exports/alunos */
   @Get('exports/students')
   @Permissions('students.read')
   @ApiQuery({ name: 'format', required: false, enum: ['csv', 'xlsx', 'pdf'] })

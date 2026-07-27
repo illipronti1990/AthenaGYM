@@ -17,7 +17,15 @@ export function AgendaWidget({ items }: { items: DashboardAgendaItem[] }) {
         </Link>
       </div>
       {items.length === 0 ? (
-        <EmptyState title="Agenda livre" description="Nenhum compromisso para hoje." />
+        <EmptyState
+          title="Agenda livre hoje"
+          description="Nenhum compromisso agendado. Crie o primeiro evento."
+          action={
+            <Link href="/app/operations/agenda" className="athena-btn athena-btn-primary athena-btn-sm">
+              Nova Agenda
+            </Link>
+          }
+        />
       ) : (
         <ul className="space-y-2">
           {items.map((item) => {

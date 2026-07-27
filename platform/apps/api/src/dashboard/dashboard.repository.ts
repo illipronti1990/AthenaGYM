@@ -11,14 +11,16 @@ export class DashboardRepository {
     return this.supabase.getAdmin();
   }
 
-  async getLayout(companyId: string, userId: string): Promise<DashboardLayoutItem[]> {
+  /** Returns null when the user has never customized the layout. */
+  async getLayout(companyId: string, userId: string): Promise<DashboardLayoutItem[] | null> {
     const { data } = await this.admin()
       .from('dashboard_layouts')
       .select('layout_json')
       .eq('company_id', companyId)
       .eq('user_id', userId)
       .maybeSingle();
-    return normalizeLayout(data?.layout_json);
+    if (!data?.layout_json) return null;
+    return normalizeLayout(data.layout_json);
   }
 
   async saveLayout(

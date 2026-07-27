@@ -128,7 +128,14 @@ export function LoginForm() {
   const disabled = loading || attempts.locked;
 
   return (
-    <form onSubmit={onSubmit} className="athena-login-form" data-testid="login-form" noValidate>
+    <form
+      onSubmit={onSubmit}
+      method="post"
+      action="/login"
+      className="athena-login-form"
+      data-testid="login-form"
+      noValidate
+    >
       <div className="athena-login-field">
         <label htmlFor={emailId}>E-mail</label>
         <div className="athena-login-input-wrap">

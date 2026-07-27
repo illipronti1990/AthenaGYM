@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState } from 'react';
 import type { Contract, Enrollment, Lead, Plan } from '@athena/shared';
 import { Button } from '@athena/ui';
+import { AlunoSelect } from '@/modules/alunos/components/AlunoSelect';
 import { salesApi } from '../services/salesApi';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
@@ -47,13 +48,12 @@ export function EnrollmentsPanel({ accessToken }: { accessToken: string }) {
 
   return (
     <div className="space-y-4">
-      <form onSubmit={onCreate} className="flex flex-wrap gap-2">
-        <input
-          required
-          placeholder="Student UUID"
+      <form onSubmit={onCreate} className="flex flex-wrap items-end gap-3">
+        <AlunoSelect
+          accessToken={accessToken}
           value={studentId}
-          onChange={(e) => setStudentId(e.target.value)}
-          className="athena-input min-w-[260px]"
+          onChange={setStudentId}
+          className="athena-input min-w-[280px]"
         />
         <select
           value={planId}
@@ -147,7 +147,7 @@ export function ContractsPanel({ accessToken }: { accessToken: string }) {
           onChange={(e) => setLeadId(e.target.value)}
           className="athena-input w-auto"
         >
-          <option value="">Lead (opcional se student)</option>
+          <option value="">Lead (opcional se já houver aluno)</option>
           {leads.map((l) => (
             <option key={l.id} value={l.id}>
               {l.fullName}

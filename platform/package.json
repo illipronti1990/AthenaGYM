@@ -6,7 +6,7 @@
   "scripts": {
     "ports:free": "node scripts/free-ports.js",
     "dev": "pnpm --parallel --filter @athena/api --filter @athena/web dev",
-    "dev:fresh": "pnpm ports:free && pnpm dev",
+    "dev:fresh": "pnpm ports:free && node -e \"require('fs').rmSync('apps/web/.next',{recursive:true,force:true})\" && pnpm dev",
     "dev:api": "pnpm --filter @athena/api dev",
     "dev:web": "pnpm --filter @athena/web dev",
     "dev:worker": "pnpm --filter @athena/worker start:dev",

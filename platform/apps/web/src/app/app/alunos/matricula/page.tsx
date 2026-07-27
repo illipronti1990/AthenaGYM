@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Page, PageHeader, PageContent, Button } from '@athena/ui';
 import { requireAccessToken } from '@/lib/auth/token';
 import { apiGetMe } from '@/services/api';
-import { EnrollmentWizard } from '@/modules/students/components/EnrollmentWizard';
+import { MatriculaWizard } from '@/modules/alunos/components/MatriculaWizard';
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -25,7 +25,7 @@ export default async function EnrollStudentPage() {
         title="Nova matrícula"
         description="Wizard rápido para recepção: aluno → plano → pagamento."
         actions={
-          <Link href="/app/students/new">
+          <Link href="/app/alunos/novo">
             <Button type="button" variant="secondary" size="sm">
               Cadastro completo
             </Button>
@@ -33,7 +33,7 @@ export default async function EnrollStudentPage() {
         }
       />
       <PageContent>
-        <EnrollmentWizard accessToken={accessToken} unitId={unitId} />
+        <MatriculaWizard accessToken={accessToken} unitId={unitId} />
       </PageContent>
     </Page>
   );

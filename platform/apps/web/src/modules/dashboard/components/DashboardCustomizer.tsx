@@ -4,8 +4,12 @@ import type { DashboardLayoutItem, DashboardWidgetId } from '@athena/shared';
 import { Button } from '@athena/ui';
 
 const LABELS: Record<DashboardWidgetId, string> = {
+  daySummary: 'Resumo do dia',
+  alerts: 'Alertas',
   quickActions: 'Ações rápidas',
   kpis: 'KPIs',
+  financeSnapshot: 'Financeiro',
+  commercialSnapshot: 'Comercial',
   revenueChart: 'Receita',
   checkinChart: 'Check-ins',
   agenda: 'Agenda',

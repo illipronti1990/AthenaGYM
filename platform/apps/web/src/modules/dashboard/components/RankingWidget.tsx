@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import type { DashboardRankingRow } from '@athena/shared';
 import { EmptyState } from '@athena/ui';
 import { Trophy } from 'lucide-react';
@@ -11,7 +12,15 @@ export function RankingWidget({ rows }: { rows: DashboardRankingRow[] }) {
         <Trophy size={18} /> Ranking de professores
       </h3>
       {rows.length === 0 ? (
-        <EmptyState title="Sem ranking ainda" description="Publique treinos e avaliações para gerar o ranking." />
+        <EmptyState
+          title="Sem ranking ainda"
+          description="Publique treinos e avaliações para gerar o ranking."
+          action={
+            <Link href="/app/workouts" className="athena-btn athena-btn-primary athena-btn-sm">
+              Ir para Treinos
+            </Link>
+          }
+        />
       ) : (
         <div className="overflow-x-auto">
           <table className="athena-table">

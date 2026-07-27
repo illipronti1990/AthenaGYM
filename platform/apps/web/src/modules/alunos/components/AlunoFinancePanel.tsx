@@ -23,7 +23,7 @@ function subscriptionStatusLabel(status: string) {
   return SUB_STATUS_LABEL[status] || status;
 }
 
-export function StudentFinancePanel({
+export function AlunoFinancePanel({
   accessToken,
   studentId,
   unitId,

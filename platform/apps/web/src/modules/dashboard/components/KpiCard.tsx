@@ -17,7 +17,7 @@ const toneBorder: Record<DashboardKpi['tone'], string> = {
 export function KpiCard({ kpi }: { kpi: DashboardKpi }) {
   const content = (
     <div
-      className={`athena-card athena-card-hover flex min-h-[120px] flex-col justify-between transition duration-150 ${toneBorder[kpi.tone]}`}
+      className={`athena-card athena-card-hover flex min-h-[120px] cursor-pointer flex-col justify-between transition duration-200 ${toneBorder[kpi.tone]}`}
       title={kpi.deltaLabel || kpi.label}
       data-testid={`kpi-${kpi.id}`}
     >

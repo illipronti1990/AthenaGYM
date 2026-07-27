@@ -20,7 +20,7 @@ import {
   CepInput,
   DatePicker,
 } from '@athena/ui';
-import { createStudent, updateStudent } from '../services/studentsApi';
+import { createAluno, updateAluno } from '../services/alunosApi';
 import { salesApi } from '@/modules/sales/services/salesApi';
 import { apiGetMe, apiListUsers } from '@/services/api';
 import { useToast } from '@/components/ui/Toast';
@@ -33,6 +33,15 @@ const UUID_RE =
 function isUuid(value: unknown): value is string {
   return typeof value === 'string' && UUID_RE.test(value);
 }
+
+const MARITAL_OPTIONS = [
+  { value: '', label: 'Selecione…' },
+  { value: 'solteiro', label: 'Solteiro(a)' },
+  { value: 'casado', label: 'Casado(a)' },
+  { value: 'divorciado', label: 'Divorciado(a)' },
+  { value: 'viuvo', label: 'Viúvo(a)' },
+  { value: 'uniao_estavel', label: 'União estável' },
+] as const;
 
 const GENDER_OPTIONS = [
   { value: '', label: 'Selecione…' },
@@ -54,7 +63,7 @@ function isTrainerUser(u: UserListItem) {
   });
 }
 
-export function StudentForm({
+export function AlunoForm({
   accessToken,
   unitId: initialUnitId,
   units = [],
@@ -72,6 +81,8 @@ export function StudentForm({
     rg: string;
     birthDate: string;
     gender: string;
+    maritalStatus: string;
+    profession: string;
     email: string;
     phone: string;
     whatsapp: string;
@@ -82,6 +93,7 @@ export function StudentForm({
     zipcode: string;
     street: string;
     number: string;
+    complement: string;
     district: string;
     city: string;
     state: string;
@@ -111,6 +123,8 @@ export function StudentForm({
     rg: initial?.rg || '',
     birthDate: initial?.birthDate || '',
     gender: normalizeGender(initial?.gender || ''),
+    maritalStatus: initial?.maritalStatus || '',
+    profession: initial?.profession || '',
     email: initial?.email || '',
     phone: initial?.phone || '',
     whatsapp: initial?.whatsapp || '',
@@ -121,6 +135,7 @@ export function StudentForm({
     zipcode: initial?.zipcode || '',
     street: initial?.street || '',
     number: initial?.number || '',
+    complement: initial?.complement || '',
     district: initial?.district || '',
     city: initial?.city || '',
     state: initial?.state || '',
@@ -265,6 +280,7 @@ export function StudentForm({
         zipcode: form.zipcode || undefined,
         street: form.street || undefined,
         number: form.number || undefined,
+        complement: form.complement || undefined,
         district: form.district || undefined,
         city: form.city || undefined,
         state: form.state || undefined,
@@ -277,6 +293,8 @@ export function StudentForm({
         rg: form.rg || undefined,
         birthDate: form.birthDate || undefined,
         gender: form.gender || undefined,
+        maritalStatus: form.maritalStatus || undefined,
+        profession: form.profession || undefined,
         email: form.email || undefined,
         phone: form.phone || undefined,
         whatsapp: form.whatsapp || undefined,
@@ -298,11 +316,11 @@ export function StudentForm({
       if (isUuid(unitId)) payload.unitId = unitId;
 
       const saved = studentId
-        ? await updateStudent(accessToken, studentId, payload)
-        : await createStudent(accessToken, payload);
+        ? await updateAluno(accessToken, studentId, payload)
+        : await createAluno(accessToken, payload);
       setDirty(false);
       push(studentId ? 'Aluno atualizado' : 'Aluno cadastrado com sucesso.');
-      router.push(`/app/students/${saved.id}`);
+      router.push(`/app/alunos/${saved.id}`);
       router.refresh();
     } catch (err) {
       push(err instanceof Error ? err.message : 'Falha ao salvar', 'error');
@@ -348,7 +366,7 @@ export function StudentForm({
               {existing.fullName} · {STUDENT_STATUS_LABELS[existing.status as keyof typeof STUDENT_STATUS_LABELS] || existing.status}
             </p>
           </div>
-          <Link href={`/app/students/${existing.id}`}>
+          <Link href={`/app/alunos/${existing.id}`}>
             <Button type="button" variant="secondary" size="sm">
               Abrir cadastro
             </Button>
@@ -408,6 +426,19 @@ export function StudentForm({
             value={form.gender}
             onChange={(e) => patch('gender', e.target.value)}
             options={[...GENDER_OPTIONS]}
+          />
+        </FormRow>
+        <FormRow>
+          <FormSelect
+            label="Estado civil"
+            value={form.maritalStatus}
+            onChange={(e) => patch('maritalStatus', e.target.value)}
+            options={[...MARITAL_OPTIONS]}
+          />
+          <FormInput
+            label="Profissão"
+            value={form.profession}
+            onChange={(e) => patch('profession', e.target.value)}
           />
         </FormRow>
         <FormRow>
@@ -488,6 +519,11 @@ export function StudentForm({
             label="Número"
             value={form.number}
             onChange={(e) => patch('number', e.target.value)}
+          />
+          <FormInput
+            label="Complemento"
+            value={form.complement}
+            onChange={(e) => patch('complement', e.target.value)}
           />
         </FormRow>
         <FormRow cols={1}>

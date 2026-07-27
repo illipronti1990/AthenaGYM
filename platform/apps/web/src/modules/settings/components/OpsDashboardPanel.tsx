@@ -25,7 +25,7 @@ function money(n: number) {
 }
 
 const QUICK = [
-  { href: '/app/students/new', label: 'Novo aluno' },
+  { href: '/app/alunos/novo', label: 'Novo aluno' },
   { href: '/app/sales', label: 'Nova matrícula' },
   { href: '/app/finance', label: 'Novo pagamento' },
   { href: '/app/workouts', label: 'Novo treino' },
@@ -35,7 +35,7 @@ const QUICK = [
 const DEFAULT_FAVS = [
   { href: '/app', label: 'Dashboard' },
   { href: '/app/finance', label: 'Financeiro' },
-  { href: '/app/students', label: 'Alunos' },
+  { href: '/app/alunos', label: 'Alunos' },
   { href: '/app/operations', label: 'Operações' },
   { href: '/app/workouts', label: 'Treinos' },
 ];
@@ -230,7 +230,7 @@ export function OpsDashboardPanel({ accessToken }: { accessToken: string }) {
             <ul className="divide-y divide-[var(--border)]">
               {data.birthdaysSoon.map((b) => (
                 <li key={b.id} className="flex items-center justify-between py-2 text-sm">
-                  <Link href={`/app/students/${b.id}`} className="athena-link">
+                  <Link href={`/app/alunos/${b.id}`} className="athena-link">
                     {b.fullName}
                   </Link>
                   <span className="text-[var(--muted)]">

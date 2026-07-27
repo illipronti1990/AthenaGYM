@@ -5,12 +5,17 @@ import { ExecutiveDashboard } from '@/modules/dashboard/components/ExecutiveDash
 export default async function AppHomePage() {
   const accessToken = await requireAccessToken();
   let userName: string | null = null;
+  let unitName: string | null = null;
   try {
     const me = await apiGetMe(accessToken);
     userName = me.profile.fullName || me.profile.email;
+    const unitId = me.auth.defaultUnitId || me.profile.defaultUnitId || me.units[0]?.id;
+    unitName = me.units.find((u) => u.id === unitId)?.name || me.units[0]?.name || null;
   } catch {
     userName = null;
   }
 
-  return <ExecutiveDashboard accessToken={accessToken} userName={userName} />;
+  return (
+    <ExecutiveDashboard accessToken={accessToken} userName={userName} unitName={unitName} />
+  );
 }

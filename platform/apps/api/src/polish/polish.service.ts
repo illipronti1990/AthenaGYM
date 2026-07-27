@@ -86,7 +86,7 @@ export class PolishService {
         id: s.id,
         title: s.full_name,
         subtitle: `${s.registration_number} · ${s.status}`,
-        href: `/app/students/${s.id}`,
+        href: `/app/alunos/${s.id}`,
       });
     }
 

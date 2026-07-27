@@ -1,6 +1,6 @@
 import { requireAccessToken } from '@/lib/auth/token';
 import { apiGetMe } from '@/services/api';
-import { StudentProfile } from '@/modules/students/components/StudentProfile';
+import { AlunoProfile } from '@/modules/alunos/components/AlunoProfile';
 
 export default async function StudentDetailPage({
   params,
@@ -19,7 +19,7 @@ export default async function StudentDetailPage({
   }
 
   return (
-    <StudentProfile
+    <AlunoProfile
       accessToken={accessToken}
       studentId={id}
       unitId={unitId}
