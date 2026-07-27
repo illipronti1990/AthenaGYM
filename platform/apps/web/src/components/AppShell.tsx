@@ -13,12 +13,10 @@ function ShellInner({
   accessToken,
   children,
   userName,
-  initialPathname,
 }: {
   accessToken: string;
   children: React.ReactNode;
   userName?: string | null;
-  initialPathname: string;
 }) {
   const { collapsed } = useLayout();
 
@@ -54,7 +52,7 @@ export function AppShell({
   return (
     <PathnameSyncProvider initialPathname={initialPathname}>
       <LayoutProvider>
-        <ShellInner accessToken={accessToken} userName={userName} initialPathname={initialPathname}>
+        <ShellInner accessToken={accessToken} userName={userName}>
           {children}
         </ShellInner>
       </LayoutProvider>
