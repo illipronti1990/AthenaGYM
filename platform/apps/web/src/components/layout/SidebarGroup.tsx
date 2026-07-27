@@ -12,6 +12,7 @@ export function SidebarGroup({
   open,
   onToggle,
   onNavigate,
+  showActive = true,
 }: {
   group: NavGroup;
   pathname: string;
@@ -19,11 +20,13 @@ export function SidebarGroup({
   open: boolean;
   onToggle: () => void;
   onNavigate?: () => void;
+  showActive?: boolean;
 }) {
   const Icon = group.icon;
   const groupActive =
-    (group.href ? isNavActive(pathname, group.href) : false) ||
-    group.items.some((i) => isNavActive(pathname, i.href));
+    showActive &&
+    ((group.href ? isNavActive(pathname, group.href) : false) ||
+      group.items.some((i) => isNavActive(pathname, i.href)));
 
   if (group.href && group.items.length === 0) {
     return (
@@ -31,7 +34,7 @@ export function SidebarGroup({
         href={group.href}
         label={group.label}
         icon={Icon}
-        active={isNavActive(pathname, group.href)}
+              active={showActive && isNavActive(pathname, group.href)}
         collapsed={collapsed}
         onNavigate={onNavigate}
       />
@@ -46,7 +49,7 @@ export function SidebarGroup({
         href={target}
         label={group.label}
         icon={Icon}
-        active={groupActive}
+        active={showActive && groupActive}
         collapsed
         onNavigate={onNavigate}
       />
@@ -79,7 +82,7 @@ export function SidebarGroup({
               href={item.href}
               label={item.label}
               icon={item.icon}
-              active={isNavActive(pathname, item.href)}
+              active={showActive && isNavActive(pathname, item.href)}
               collapsed={false}
               nested
               onNavigate={onNavigate}

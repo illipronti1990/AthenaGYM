@@ -7,15 +7,12 @@ import type { StudentListItem } from '@athena/shared';
 import { formatCpf, STUDENT_STATUS_LABELS, type StudentStatus } from '@athena/shared';
 import {
   AthenaDataGrid,
-  Button,
-  FloatingActionButton,
   formatCurrencyBRL,
   type DataGridColumn,
   type DataGridFilterDef,
   type DataGridSort,
   type WorkPanel,
 } from '@athena/ui';
-import { Plus } from 'lucide-react';
 import { useToast } from '@/components/ui/Toast';
 import { ExportButtons } from '@/modules/polish/components/ExportButtons';
 import { useDataGridPrefs } from '@/modules/datagrid/hooks/useDataGridPrefs';
@@ -252,10 +249,6 @@ export function AlunosListPanel({
 
   return (
     <div className="space-y-3">
-      <FloatingActionButton label="Novo aluno (Ctrl+N)" onClick={() => router.push('/app/alunos/novo')}>
-        <Plus size={22} />
-      </FloatingActionButton>
-
       <AthenaDataGrid<StudentListItem>
         tableId={TABLE_ID}
         columns={columns}
@@ -318,16 +311,12 @@ export function AlunosListPanel({
         onRowOpen={(row) => router.push(`/app/alunos/${row.id}`)}
         exportSlot={<ExportButtons accessToken={accessToken} resource="alunos" />}
         primaryAction={
-          <div className="flex flex-wrap gap-2">
-            <Link href="/app/alunos/matricula">
-              <Button variant="secondary" size="sm">
-                Matrícula rápida
-              </Button>
-            </Link>
-            <Link href="/app/alunos/novo">
-              <Button size="sm">+ Novo</Button>
-            </Link>
-          </div>
+          <Link
+            href="/app/alunos/matricula"
+            className="athena-btn athena-btn-secondary athena-btn-sm"
+          >
+            Matrícula rápida
+          </Link>
         }
         emptyTitle={
           search || filters.status || filters.unitId
@@ -340,8 +329,8 @@ export function AlunosListPanel({
             : 'Cadastre o primeiro aluno e comece a operar a academia.'
         }
         emptyAction={
-          <Link href="/app/alunos/novo">
-            <Button>Novo aluno</Button>
+          <Link href="/app/alunos/novo" className="athena-btn athena-btn-primary">
+            Novo aluno
           </Link>
         }
         bulkActions={[

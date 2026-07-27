@@ -1827,6 +1827,7 @@ html.light .athena-badge-novo {
   border-radius: 16px;
   overflow: auto;
   background: var(--card);
+  min-height: 280px;
 }
 
 .athena-dg-table {
@@ -1885,7 +1886,7 @@ html.light .athena-badge-novo {
 }
 
 .athena-dg-table tbody td {
-  padding: 0.7rem 1rem;
+  padding: 0.9rem 1rem;
   border-bottom: 1px solid var(--border);
   color: var(--text);
   vertical-align: middle;
@@ -1893,7 +1894,7 @@ html.light .athena-badge-novo {
 
 .athena-dg-table tbody tr {
   transition: background 150ms ease;
-  height: 48px;
+  height: 64px;
 }
 
 .athena-dg-table tbody tr:hover,
@@ -1930,6 +1931,16 @@ html.light .athena-badge-novo {
   border-radius: 10px;
   background: var(--card);
   box-shadow: var(--shadow-card);
+}
+
+.athena-dg-menu.is-portal {
+  position: fixed;
+  right: auto;
+  top: 0;
+  left: 0;
+  z-index: 80;
+  margin: 0;
+  min-width: 180px;
 }
 
 .athena-dg-menu button {

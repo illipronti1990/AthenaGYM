@@ -1,13 +1,22 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { House } from 'lucide-react';
 import { breadcrumbForPath } from '@/config/navigation';
+import { useInitialPathname } from './PathnameSyncProvider';
+import { useStablePathname } from './useStablePathname';
 
 export function AppBreadcrumb() {
-  const pathname = usePathname() || '/app';
-  const items = breadcrumbForPath(pathname);
+  const initialPathname = useInitialPathname();
+  const pathname = useStablePathname(initialPathname);
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  const items = breadcrumbForPath(hydrated ? pathname : initialPathname);
 
   return (
     <nav aria-label="Breadcrumb" className="athena-breadcrumb" data-testid="app-breadcrumb">
@@ -33,8 +42,10 @@ export function AppBreadcrumb() {
                 <Link href={item.href} className="athena-breadcrumb-link">
                   {item.label}
                 </Link>
-              ) : (
+              ) : isLast ? (
                 <span className="athena-breadcrumb-current">{item.label}</span>
+              ) : (
+                <span className="athena-breadcrumb-link">{item.label}</span>
               )}
             </li>
           );

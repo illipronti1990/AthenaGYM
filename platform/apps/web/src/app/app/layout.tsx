@@ -1,3 +1,4 @@
+import { headers } from 'next/headers';
 import { requireAccessToken } from '@/lib/auth/token';
 import { apiGetMe } from '@/services/api';
 import { AppShell } from '@/components/AppShell';
@@ -7,6 +8,7 @@ import { SessionManager } from '@/modules/auth/SessionManager';
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const accessToken = await requireAccessToken();
+  const pathname = (await headers()).get('x-pathname') || '/app';
   let userName: string | null = null;
   let company = null as Awaited<ReturnType<typeof apiGetMe>>['companies'][number] | null;
   try {
@@ -23,7 +25,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     <div className="min-h-screen bg-[var(--background)] text-[var(--text)]">
       <CompanyBrandingSync company={company} />
       <SessionManager />
-      <AppShell accessToken={accessToken} userName={userName}>
+      <AppShell accessToken={accessToken} userName={userName} initialPathname={pathname}>
         <ErrorBoundary>{children}</ErrorBoundary>
       </AppShell>
     </div>

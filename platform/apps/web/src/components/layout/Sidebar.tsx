@@ -1,19 +1,28 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
 import { Logo } from '@athena/ui';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { findActiveGroup, navGroups } from '@/config/navigation';
 import { useLayout } from './LayoutProvider';
 import { SidebarGroup } from './SidebarGroup';
 import { SidebarFooter } from './SidebarFooter';
+import { useInitialPathname } from './PathnameSyncProvider';
+import { useStablePathname } from './useStablePathname';
 
 export function Sidebar({ userName }: { userName?: string | null }) {
-  const pathname = usePathname() || '/app';
+  const initialPathname = useInitialPathname();
+  const pathname = useStablePathname(initialPathname);
+  const [hydrated, setHydrated] = useState(false);
+  const routePath = hydrated ? pathname : initialPathname;
+  const activeGroupId = findActiveGroup(routePath);
   const { collapsed, toggleCollapsed, mobileOpen, setMobileOpen } = useLayout();
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
   const effectiveCollapsed = collapsed && !mobileOpen;
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
 
   useEffect(() => {
     const active = findActiveGroup(pathname);
@@ -22,8 +31,17 @@ export function Sidebar({ userName }: { userName?: string | null }) {
     }
   }, [pathname]);
 
+  function isGroupOpen(groupId: string) {
+    if (groupId in openGroups) return openGroups[groupId];
+    if (!hydrated) return false;
+    return groupId === activeGroupId;
+  }
+
   function toggleGroup(id: string) {
-    setOpenGroups((prev) => ({ ...prev, [id]: !prev[id] }));
+    setOpenGroups((prev) => ({
+      ...prev,
+      [id]: !(id in prev ? prev[id] : id === activeGroupId),
+    }));
   }
 
   const closeMobile = () => setMobileOpen(false);
@@ -66,9 +84,10 @@ export function Sidebar({ userName }: { userName?: string | null }) {
             <SidebarGroup
               key={group.id}
               group={group}
-              pathname={pathname}
+              pathname={routePath}
               collapsed={effectiveCollapsed}
-              open={openGroups[group.id] ?? false}
+              open={isGroupOpen(group.id)}
+              showActive={hydrated}
               onToggle={() => toggleGroup(group.id)}
               onNavigate={closeMobile}
             />

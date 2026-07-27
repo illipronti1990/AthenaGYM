@@ -1,6 +1,7 @@
 'use client';
 
 import { BottomNavigation } from '@athena/ui';
+import { PathnameSyncProvider } from '@/components/layout/PathnameSyncProvider';
 import { LayoutProvider, useLayout } from '@/components/layout/LayoutProvider';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Topbar } from '@/components/layout/Topbar';
@@ -12,10 +13,12 @@ function ShellInner({
   accessToken,
   children,
   userName,
+  initialPathname,
 }: {
   accessToken: string;
   children: React.ReactNode;
   userName?: string | null;
+  initialPathname: string;
 }) {
   const { collapsed } = useLayout();
 
@@ -41,16 +44,20 @@ export function AppShell({
   accessToken,
   children,
   userName,
+  initialPathname = '/app',
 }: {
   accessToken: string;
   children: React.ReactNode;
   userName?: string | null;
+  initialPathname?: string;
 }) {
   return (
-    <LayoutProvider>
-      <ShellInner accessToken={accessToken} userName={userName}>
-        {children}
-      </ShellInner>
-    </LayoutProvider>
+    <PathnameSyncProvider initialPathname={initialPathname}>
+      <LayoutProvider>
+        <ShellInner accessToken={accessToken} userName={userName} initialPathname={initialPathname}>
+          {children}
+        </ShellInner>
+      </LayoutProvider>
+    </PathnameSyncProvider>
   );
 }

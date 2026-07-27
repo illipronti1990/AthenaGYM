@@ -6,11 +6,13 @@ type CookieToSet = { name: string; value: string; options?: Record<string, unkno
 const DEV_TOKEN_COOKIE = 'athena_dev_token';
 
 export async function middleware(request: NextRequest) {
-  let response = NextResponse.next({
-    request: { headers: request.headers },
-  });
-
   const path = request.nextUrl.pathname;
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-pathname', path);
+
+  let response = NextResponse.next({
+    request: { headers: requestHeaders },
+  });
   const isApp = path.startsWith('/app');
   const isAuthPage = path === '/login' || path === '/forgot-password';
   const devAuth = process.env.NEXT_PUBLIC_DEV_AUTH === 'true';
@@ -22,6 +24,7 @@ export async function middleware(request: NextRequest) {
       app.pathname = '/app';
       return NextResponse.redirect(app);
     }
+    response.headers.set('x-pathname', path);
     return response;
   }
 
@@ -49,7 +52,7 @@ export async function middleware(request: NextRequest) {
       },
       setAll(cookiesToSet: CookieToSet[]) {
         cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-        response = NextResponse.next({ request: { headers: request.headers } });
+        response = NextResponse.next({ request: { headers: requestHeaders } });
         cookiesToSet.forEach(({ name, value, options }) =>
           response.cookies.set(name, value, options),
         );
@@ -73,6 +76,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(app);
   }
 
+  response.headers.set('x-pathname', path);
   return response;
 }
 

@@ -31,7 +31,7 @@ import type {
   WorkPanel,
 } from './types';
 
-const ROW_H = 48;
+const ROW_H = 64;
 
 function cellValue<T>(col: DataGridColumn<T>, row: T): ReactNode {
   if (col.cell) return col.cell(row);
@@ -455,12 +455,6 @@ export function AthenaDataGrid<T>({
             onPageChange(1);
           }}
         />
-      ) : null}
-
-      {!loading && rows.length > 0 && emptyAction ? (
-        <div className="mt-2 hidden">
-          <Button type="button">{emptyAction}</Button>
-        </div>
       ) : null}
     </div>
   );

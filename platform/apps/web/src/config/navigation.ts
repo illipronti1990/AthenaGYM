@@ -191,8 +191,12 @@ export function breadcrumbForPath(pathname: string): { label: string; href?: str
     const leaf = matches[0];
     if (leaf) {
       const hub = groupHub[g.id];
-      crumbs.push({ label: g.label, href: hub && hub !== leaf.href ? hub : undefined });
-      if (leaf.label !== g.label) {
+      if (hub && hub !== leaf.href) {
+        crumbs.push({ label: g.label, href: hub });
+        if (leaf.label !== g.label) {
+          crumbs.push({ label: leaf.label });
+        }
+      } else {
         crumbs.push({ label: leaf.label });
       }
       return crumbs;
