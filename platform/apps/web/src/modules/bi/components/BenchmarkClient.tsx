@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { BenchmarkResponse } from '@athena/shared';
-import { Card } from '@athena/ui';
+import type { BenchmarkResponse } from '@movvo/shared';
+import { Card } from '@movvo/ui';
 import { biApi } from '@/modules/bi/services/biApi';
 
 export function BenchmarkClient({ accessToken }: { accessToken: string }) {

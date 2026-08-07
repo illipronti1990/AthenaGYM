@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Page, PageHeader, PageContent, PageFilters, pageQualityAttrs } from '@athena/ui';
+import { Page, PageHeader, PageContent, PageFilters, pageQualityAttrs } from '@movvo/ui';
 import { requireAccessToken } from '@/lib/auth/token';
 import { INTEGRACOES_LINKS } from '@/modules/acesso/utils/acessoLinks';
 import { PartnerDashboardCard } from '@/modules/acesso/components/PartnerDashboardCard';
@@ -15,7 +15,7 @@ export default async function IntegracoesHubPage() {
       />
       <PageFilters>
         {INTEGRACOES_LINKS.filter(([, href]) => href !== '/app/integracoes').map(([label, href]) => (
-          <Link key={href} href={href} className="athena-chip-nav">
+          <Link key={href} href={href} className="movvo-chip-nav">
             {label}
           </Link>
         ))}

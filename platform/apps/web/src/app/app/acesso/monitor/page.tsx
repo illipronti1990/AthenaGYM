@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Page, PageHeader, PageContent, pageQualityAttrs } from '@athena/ui';
+import { Page, PageHeader, PageContent, pageQualityAttrs } from '@movvo/ui';
 import { requireAccessToken } from '@/lib/auth/token';
 import { LiveAccessMonitor } from '@/modules/acesso/components/LiveAccessMonitor';
 import { AccessPanel } from '@/modules/operations/components/AccessPanel';
@@ -10,7 +10,7 @@ export default async function AcessoMonitorPage() {
     <Page {...pageQualityAttrs()}>
       <PageHeader title="Monitor" description="Feed ao vivo de liberações e negações (poll 4s)." />
       <p className="mb-4">
-        <Link href="/app/acesso" className="athena-link text-sm text-[var(--gold)]">
+        <Link href="/app/acesso" className="movvo-link text-sm text-[var(--gold)]">
           ← Acesso
         </Link>
       </p>

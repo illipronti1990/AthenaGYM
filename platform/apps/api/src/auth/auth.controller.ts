@@ -19,7 +19,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import type { AuthContext } from '@athena/shared';
+import type { AuthContext } from '@movvo/shared';
 import { CurrentAuth, CurrentUser } from '../common/decorators/current.decorators';
 import { Permissions } from '../common/decorators/rbac.decorators';
 import {
@@ -39,6 +39,10 @@ import {
   ResetPasswordDto,
   UpdateProfileDto,
 } from './dto/auth.dto';
+import {
+  InMemoryRateLimitGuard,
+  ThrottleLimit,
+} from '../security/rate-limit.guard';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -55,6 +59,8 @@ export class AuthController {
 
   @Post('login-events')
   @ApiOperation({ summary: 'Registrar tentativa de login (IP, navegador, horário)' })
+  @UseGuards(InMemoryRateLimitGuard)
+  @ThrottleLimit(5, 60)
   loginEvent(
     @Body() dto: LoginEventDto,
     @Headers('x-forwarded-for') forwarded?: string,
@@ -68,6 +74,42 @@ export class AuthController {
       undefined;
     const browser = clientBrowser || userAgent;
     return this.auth.recordLoginEvent(dto, ip, browser);
+  }
+
+  @Post('logout')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Registrar logout na auditoria' })
+  logout(
+    @CurrentUser() user: AuthUser,
+    @Headers('x-forwarded-for') forwarded?: string,
+    @Headers('user-agent') browser?: string,
+    @Req() req?: { ip?: string },
+  ) {
+    const ip = (forwarded || '').split(',')[0]?.trim() || req?.ip;
+    return this.auth.recordLogout(user, ip, browser);
+  }
+
+  @Post('session')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, CompanyGuard)
+  @ApiOperation({ summary: 'Registrar sessão ativa após login' })
+  registerSession(
+    @CurrentUser() user: AuthUser,
+    @CurrentAuth() auth: AuthContext,
+    @Req() req: { headers: { authorization?: string }; ip?: string },
+    @Headers('x-forwarded-for') forwarded?: string,
+    @Headers('user-agent') browser?: string,
+  ) {
+    const token = (req.headers.authorization || '').slice(7).trim();
+    const ip = (forwarded || '').split(',')[0]?.trim() || req.ip;
+    return this.auth.registerSessionAfterLogin({
+      userId: user.id,
+      companyId: auth.companyId || null,
+      accessToken: token,
+      ip,
+      browser,
+    });
   }
 
   @Get('me')

@@ -1,8 +1,8 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import type { Exercise } from '@athena/shared';
-import { MUSCLE_CATEGORIES } from '@athena/shared';
+import type { Exercise } from '@movvo/shared';
+import { MUSCLE_CATEGORIES } from '@movvo/shared';
 import { workoutsApi } from '@/modules/workouts/services/workoutsApi';
 import { capitalizeLabel } from '@/modules/workouts/components/MuscleGroupMultiSelect';
 import {
@@ -87,14 +87,14 @@ export function ExerciseLibrary({ accessToken }: { accessToken: string }) {
     <div className="space-y-6" data-testid="exercise-library">
       <form onSubmit={onSearch} className="flex flex-wrap gap-3">
         <input
-          className="athena-input"
+          className="movvo-input"
           placeholder="Buscar…"
           value={q}
           onChange={(e) => setQ(e.target.value)}
           data-testid="exercise-filter-q"
         />
         <select
-          className="athena-input"
+          className="movvo-input"
           value={muscleGroup}
           onChange={(e) => setMuscleGroup(e.target.value)}
           data-testid="exercise-filter-muscle"
@@ -107,7 +107,7 @@ export function ExerciseLibrary({ accessToken }: { accessToken: string }) {
           ))}
         </select>
         <select
-          className="athena-input"
+          className="movvo-input"
           value={difficulty}
           onChange={(e) => setDifficulty(e.target.value)}
         >
@@ -118,7 +118,7 @@ export function ExerciseLibrary({ accessToken }: { accessToken: string }) {
             </option>
           ))}
         </select>
-        <button type="submit" className="athena-btn">
+        <button type="submit" className="movvo-btn">
           Filtrar
         </button>
       </form>
@@ -127,7 +127,7 @@ export function ExerciseLibrary({ accessToken }: { accessToken: string }) {
         <label className="text-sm text-[var(--muted)]">
           Nome
           <input
-            className="mt-1 block athena-input"
+            className="mt-1 block movvo-input"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
@@ -137,7 +137,7 @@ export function ExerciseLibrary({ accessToken }: { accessToken: string }) {
         <label className="text-sm text-[var(--muted)]">
           Grupo
           <select
-            className="mt-1 block athena-input"
+            className="mt-1 block movvo-input"
             value={createGroup}
             onChange={(e) => setCreateGroup(e.target.value)}
           >
@@ -151,7 +151,7 @@ export function ExerciseLibrary({ accessToken }: { accessToken: string }) {
         <label className="text-sm text-[var(--muted)]">
           Nível
           <select
-            className="mt-1 block athena-input"
+            className="mt-1 block movvo-input"
             value={createDifficulty}
             onChange={(e) => setCreateDifficulty(e.target.value as DifficultyValue)}
           >
@@ -162,7 +162,7 @@ export function ExerciseLibrary({ accessToken }: { accessToken: string }) {
             ))}
           </select>
         </label>
-        <button type="submit" className="athena-btn athena-btn-primary" data-testid="exercise-submit">
+        <button type="submit" className="movvo-btn movvo-btn-primary" data-testid="exercise-submit">
           Adicionar
         </button>
       </form>
@@ -178,7 +178,7 @@ export function ExerciseLibrary({ accessToken }: { accessToken: string }) {
               {difficultyLabel(ex.difficulty as DifficultyValue)}
               {ex.objective ? ` · ${ex.objective}` : ''}
             </span>
-            <button type="button" className="athena-btn athena-btn-ghost text-xs" onClick={() => onDelete(ex.id)}>
+            <button type="button" className="movvo-btn movvo-btn-ghost text-xs" onClick={() => onDelete(ex.id)}>
               Excluir
             </button>
           </li>

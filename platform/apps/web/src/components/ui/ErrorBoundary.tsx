@@ -1,3 +1,3 @@
 'use client';
 
-export { ErrorBoundary } from '@athena/ui';
+export { ErrorBoundary } from '@movvo/ui';

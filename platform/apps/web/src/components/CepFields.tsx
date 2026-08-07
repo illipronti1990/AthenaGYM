@@ -83,7 +83,7 @@ export function CepFields({
         <span className="mb-1 block text-[var(--muted)]">CEP</span>
         <div className="flex gap-2">
           <input
-            className="athena-input w-full"
+            className="movvo-input w-full"
             value={value.zipCode}
             onChange={(e) => {
               lastLookup.current = '';
@@ -99,7 +99,7 @@ export function CepFields({
           />
           <button
             type="button"
-            className="athena-btn athena-btn-secondary whitespace-nowrap"
+            className="movvo-btn movvo-btn-secondary whitespace-nowrap"
             disabled={loading || onlyDigits(value.zipCode).length !== 8}
             onClick={() => void search()}
             data-testid={`${testIdPrefix}-lookup`}
@@ -118,7 +118,7 @@ export function CepFields({
       <label className="block text-sm sm:col-span-1">
         <span className="mb-1 block text-[var(--muted)]">Rua</span>
         <input
-          className="athena-input w-full"
+          className="movvo-input w-full"
           value={value.street}
           onChange={(e) => patch({ street: e.target.value })}
           data-testid={`${testIdPrefix}-street`}
@@ -129,7 +129,7 @@ export function CepFields({
         <label className="block text-sm">
           <span className="mb-1 block text-[var(--muted)]">Número</span>
           <input
-            className="athena-input w-full"
+            className="movvo-input w-full"
             value={value.number || ''}
             onChange={(e) => patch({ number: e.target.value })}
             data-testid={`${testIdPrefix}-number`}
@@ -140,7 +140,7 @@ export function CepFields({
       <label className="block text-sm">
         <span className="mb-1 block text-[var(--muted)]">Bairro</span>
         <input
-          className="athena-input w-full"
+          className="movvo-input w-full"
           value={value.district}
           onChange={(e) => patch({ district: e.target.value })}
           data-testid={`${testIdPrefix}-district`}
@@ -150,7 +150,7 @@ export function CepFields({
       <label className="block text-sm">
         <span className="mb-1 block text-[var(--muted)]">Cidade</span>
         <input
-          className="athena-input w-full"
+          className="movvo-input w-full"
           value={value.city}
           onChange={(e) => patch({ city: e.target.value })}
           data-testid={`${testIdPrefix}-city`}
@@ -160,7 +160,7 @@ export function CepFields({
       <label className="block text-sm">
         <span className="mb-1 block text-[var(--muted)]">UF</span>
         <input
-          className="athena-input w-full uppercase"
+          className="movvo-input w-full uppercase"
           value={value.state}
           maxLength={2}
           onChange={(e) => patch({ state: e.target.value.toUpperCase() })}

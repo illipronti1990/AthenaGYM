@@ -1,4 +1,4 @@
-# ATHENAS GYM Cloud
+# ATHENA GYM Cloud
 
 Arquitetura alvo (Sprint 12 — SQL Foundation):
 
@@ -48,7 +48,7 @@ Para produção SaaS, o caminho preferido de leitura/escrita cloud é o **pacote
 - Login retorna `empresa_id`, `plano`, `nome_empresa`
 - SuperAdmin: usuário `super` / `123456` (empresa_id=0)
 - Academia demo: `admin` / `123456` (empresa_id=1, Enterprise)
-- Após mudar schema: apague `cloud/api/data/athenas.db` (ou use `athenas_mt.db`) e reinicie a API para recriar o banco multi-tenant.
+- Após mudar schema: apague `cloud/api/data/athena.db` (ou use `athena_mt.db`) e reinicie a API para recriar o banco multi-tenant.
 
 ## 1) API com SQL (SQLite — zero instalação)
 
@@ -60,7 +60,7 @@ python -m uvicorn app.main:app --reload --port 8000
 
 - Health: http://127.0.0.1:8000/health  
 - Docs: http://127.0.0.1:8000/docs  
-- Banco criado em: `cloud/api/data/athenas.db`
+- Banco criado em: `cloud/api/data/athena.db`
 
 ## 2) Portal Web
 
@@ -97,7 +97,7 @@ docker compose up -d
 No Windows (PowerShell):
 
 ```powershell
-$env:DATABASE_URL="postgresql+psycopg://athenas:athenas@localhost:5432/athenas"
+$env:DATABASE_URL="postgresql+psycopg://athena:athena@localhost:5432/athena"
 cd api
 python -m uvicorn app.main:app --reload --port 8000
 ```

@@ -40,24 +40,24 @@ PARAM_UNIDADE_SEED = [
 
 PROF_UNIDADE_HEADERS = ["ID", "ProfessorID", "Professor", "UnidadeID", "Unidade", "Status"]
 PROF_UNIDADE_SEED = [
-    (1, "P001", "Carlos Mendes", 1, "ATHENAS GYM Matriz", "Ativo"),
-    (2, "P001", "Carlos Mendes", 2, "ATHENAS GYM Zona Sul", "Ativo"),
-    (3, "P002", "Ana Paula Souza", 1, "ATHENAS GYM Matriz", "Ativo"),
-    (4, "P003", "Roberto Lima", 2, "ATHENAS GYM Zona Sul", "Ativo"),
+    (1, "P001", "Carlos Mendes", 1, "ATHENA GYM Matriz", "Ativo"),
+    (2, "P001", "Carlos Mendes", 2, "ATHENA GYM Zona Sul", "Ativo"),
+    (3, "P002", "Ana Paula Souza", 1, "ATHENA GYM Matriz", "Ativo"),
+    (4, "P003", "Roberto Lima", 2, "ATHENA GYM Zona Sul", "Ativo"),
 ]
 
 TRANSF_HEADERS = [
     "ID", "Data", "Código", "Produto", "Qtde", "OrigemID", "Origem", "DestinoID", "Destino", "Usuário", "Status", "Obs",
 ]
 TRANSF_SEED = [
-    (1, HOJE, "PRD-001", "Whey Protein 900g", 2, 1, "ATHENAS GYM Matriz", 2, "ATHENAS GYM Zona Sul", "admin", "Concluída", "Seed demo"),
+    (1, HOJE, "PRD-001", "Whey Protein 900g", 2, 1, "ATHENA GYM Matriz", 2, "ATHENA GYM Zona Sul", "admin", "Concluída", "Seed demo"),
 ]
 
 USUARIO_UNIDADE_HEADERS = ["ID", "UsuarioID", "Usuário", "UnidadeID", "Unidade", "Status"]
 USUARIO_UNIDADE_SEED = [
-    (1, 2, "admin", 1, "ATHENAS GYM Matriz", "Ativo"),
-    (2, 2, "admin", 2, "ATHENAS GYM Zona Sul", "Ativo"),
-    (3, 3, "recepcao", 1, "ATHENAS GYM Matriz", "Ativo"),
+    (1, 2, "admin", 1, "ATHENA GYM Matriz", "Ativo"),
+    (2, 2, "admin", 2, "ATHENA GYM Zona Sul", "Ativo"),
+    (3, 3, "recepcao", 1, "ATHENA GYM Matriz", "Ativo"),
 ]
 
 
@@ -146,7 +146,7 @@ def build_unidades_ui(wb) -> None:
     ws["C18"] = "UnidadeID"
     ws["D18"] = 1
     ws["C19"] = "Nome sessão"
-    ws["D19"] = "ATHENAS GYM Matriz"
+    ws["D19"] = "ATHENA GYM Matriz"
 
     paint_kpi_card(ws, 22, 3, "Alunos unidade", "0", False, 2)
     paint_kpi_card(ws, 22, 5, "Receita mês", "R$ 0,00", False, 2)

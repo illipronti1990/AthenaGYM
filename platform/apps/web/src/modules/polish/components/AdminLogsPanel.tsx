@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { AuditLogItem } from '@athena/shared';
-import { Button } from '@athena/ui';
+import type { AuditLogItem } from '@movvo/shared';
+import { Button } from '@movvo/ui';
 import { polishApi } from '../services/polishApi';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -32,7 +32,7 @@ export function AdminLogsPanel({ accessToken }: { accessToken: string }) {
     <div className="space-y-3">
       <div className="flex gap-2">
         <input
-          className="athena-input max-w-xs"
+          className="movvo-input max-w-xs"
           placeholder="Filtrar módulo"
           value={module}
           onChange={(e) => setModule(e.target.value)}
@@ -46,8 +46,8 @@ export function AdminLogsPanel({ accessToken }: { accessToken: string }) {
       ) : items.length === 0 ? (
         <EmptyState title="Nenhum log" />
       ) : (
-        <div className="athena-list overflow-x-auto">
-          <table className="athena-table">
+        <div className="movvo-list overflow-x-auto">
+          <table className="movvo-table">
             <thead>
               <tr>
                 <th>Quando</th>

@@ -1,10 +1,17 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import compression from 'compression';
+import { startOtelIfConfigured } from './observability/otel';
 import { AppModule } from './app.module';
+import { PinoNestLogger } from './observability/observability.core';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  startOtelIfConfigured('movvo-api');
+  const app = await NestFactory.create(AppModule, {
+    logger: new PinoNestLogger(),
+  });
+  app.use(compression());
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -27,9 +34,9 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Movvo ERP API')
     .setDescription(
-      'PaaS official API — Sprint 9 Open Platform. Public API under /api/v1/public (gateway alias /api/public/v1). OAuth2 at /api/v1/oauth/token.',
+      'PaaS official API — G-17 scale/observability. Public API under /api/v1/public.',
     )
-    .setVersion('0.10.0')
+    .setVersion('0.14.0')
     .addBearerAuth()
     .addApiKey({ type: 'apiKey', name: 'X-Company-Id', in: 'header' }, 'company')
     .addApiKey({ type: 'apiKey', name: 'X-Unit-Id', in: 'header' }, 'unit')
@@ -43,8 +50,6 @@ async function bootstrap() {
   await app.listen(port, host);
   // eslint-disable-next-line no-console
   console.log(`Movvo API listening on http://${host}:${port}/api/v1`);
-  // eslint-disable-next-line no-console
-  console.log(`Swagger: http://${host}:${port}/api/v1/docs`);
 }
 
 bootstrap();

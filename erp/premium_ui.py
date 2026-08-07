@@ -1,4 +1,4 @@
-"""Telas premium — aparência de software ATHENAS GYM."""
+"""Telas premium — aparência de software ATHENA GYM."""
 
 from __future__ import annotations
 
@@ -74,7 +74,7 @@ def build_login(wb) -> None:
             ws.cell(row=row, column=col).border = Border()
 
     ws.merge_cells("C4:J4")
-    ws["C4"] = "ATHENAS GYM"
+    ws["C4"] = "ATHENA GYM"
     ws["C4"].font = Font(name="Georgia", size=28, bold=True, color=GOLD)
     ws["C4"].alignment = Alignment(horizontal="center", vertical="center", wrap_text=False)
     ws["C4"].fill = PatternFill("solid", fgColor="5C0010")
@@ -130,7 +130,7 @@ def build_login(wb) -> None:
         cell.value = None
 
     ws.merge_cells("D27:I27")
-    ws["D27"] = f"© {date.today().year} Athenas Gym — Fase 3 Login Real"
+    ws["D27"] = f"© {date.today().year} Athena Gym — Fase 3 Login Real"
     ws["D27"].font = Font(name="Calibri", size=9, color=GOLD)
     ws["D27"].alignment = center
     ws["D27"].fill = PatternFill("solid", fgColor="5C0010")

@@ -4,4 +4,4 @@ export {
   PageActions,
   PageFilters,
   PageContent,
-} from '@athena/ui';
+} from '@movvo/ui';

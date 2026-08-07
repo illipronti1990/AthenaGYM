@@ -19,8 +19,8 @@ function FieldShell({
   children: ReactNode;
 }) {
   return (
-    <label className="athena-field" htmlFor={htmlFor}>
-      {label ? <span className="athena-label">{label}</span> : null}
+    <label className="movvo-field" htmlFor={htmlFor}>
+      {label ? <span className="movvo-label">{label}</span> : null}
       {children}
       <ValidationMessage state={state}>{hint}</ValidationMessage>
     </label>
@@ -43,7 +43,7 @@ export function Textarea({
     <FieldShell label={label} hint={hint} state={state} htmlFor={id}>
       <textarea
         id={id}
-        className={`athena-input athena-textarea ${state === 'valid' ? 'athena-input-valid' : state === 'invalid' ? 'athena-input-invalid' : ''} ${className}`}
+        className={`movvo-input movvo-textarea ${state === 'valid' ? 'movvo-input-valid' : state === 'invalid' ? 'movvo-input-invalid' : ''} ${className}`}
         {...props}
       />
     </FieldShell>
@@ -56,7 +56,7 @@ export function Checkbox({
   ...props
 }: InputHTMLAttributes<HTMLInputElement> & { label: ReactNode }) {
   return (
-    <label className={`athena-check ${className}`}>
+    <label className={`movvo-check ${className}`}>
       <input type="checkbox" {...props} />
       <span>{label}</span>
     </label>
@@ -75,15 +75,15 @@ export function Switch({
   className?: string;
 }) {
   return (
-    <label className={`athena-switch ${className}`}>
+    <label className={`movvo-switch ${className}`}>
       <button
         type="button"
         role="switch"
         aria-checked={checked}
-        className={`athena-switch-track ${checked ? 'is-on' : ''}`}
+        className={`movvo-switch-track ${checked ? 'is-on' : ''}`}
         onClick={() => onCheckedChange(!checked)}
       >
-        <span className="athena-switch-thumb" />
+        <span className="movvo-switch-thumb" />
       </button>
       <span>{label}</span>
     </label>
@@ -104,11 +104,11 @@ export function RadioGroup({
   onChange: (v: string) => void;
 }) {
   return (
-    <fieldset className="athena-field">
-      {label ? <legend className="athena-label">{label}</legend> : null}
-      <div className="athena-radio-group">
+    <fieldset className="movvo-field">
+      {label ? <legend className="movvo-label">{label}</legend> : null}
+      <div className="movvo-radio-group">
         {options.map((o) => (
-          <label key={o.value} className="athena-check">
+          <label key={o.value} className="movvo-check">
             <input
               type="radio"
               name={name}
@@ -140,7 +140,7 @@ export function FormSelect({
 }) {
   return (
     <FieldShell label={label} hint={hint} state={state} htmlFor={id}>
-      <select id={id} className={`athena-input ${className}`} {...props}>
+      <select id={id} className={`movvo-input ${className}`} {...props}>
         {options.map((o) => (
           <option key={`${o.value}-${o.label}`} value={o.value}>
             {o.label}
@@ -164,10 +164,10 @@ export function FormInput({
   state?: FieldState;
 }) {
   const stateClass =
-    state === 'valid' ? 'athena-input-valid' : state === 'invalid' ? 'athena-input-invalid' : '';
+    state === 'valid' ? 'movvo-input-valid' : state === 'invalid' ? 'movvo-input-invalid' : '';
   return (
     <FieldShell label={label} hint={hint} state={state} htmlFor={id}>
-      <input id={id} className={`athena-input ${stateClass} ${className}`} {...props} />
+      <input id={id} className={`movvo-input ${stateClass} ${className}`} {...props} />
     </FieldShell>
   );
 }

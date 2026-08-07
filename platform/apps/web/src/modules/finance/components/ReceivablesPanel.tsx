@@ -1,9 +1,9 @@
 'use client';
 
 import { FormEvent, useEffect, useMemo, useState } from 'react';
-import type { Receivable } from '@athena/shared';
+import type { Receivable } from '@movvo/shared';
 import {
-  AthenaDataGrid,
+  MovvoDataGrid,
   Badge,
   Button,
   CurrencyInput,
@@ -17,7 +17,7 @@ import {
   type DataGridFilterDef,
   type DataGridSort,
   type WorkPanel,
-} from '@athena/ui';
+} from '@movvo/ui';
 import { financeApi } from '../services/financeApi';
 import {
   isReceivableOpen,
@@ -296,7 +296,7 @@ export function ReceivablesPanel({ accessToken }: { accessToken: string }) {
         </FormSection>
       </Form>
 
-      <AthenaDataGrid<Receivable>
+      <MovvoDataGrid<Receivable>
         tableId={TABLE_ID}
         columns={columns}
         rows={pageRows}

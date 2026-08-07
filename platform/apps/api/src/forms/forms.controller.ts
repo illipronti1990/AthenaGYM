@@ -17,7 +17,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import type { AuthContext } from '@athena/shared';
+import type { AuthContext } from '@movvo/shared';
 import { CurrentAuth } from '../common/decorators/current.decorators';
 import { Permissions } from '../common/decorators/rbac.decorators';
 import { CompanyGuard, PermissionsGuard } from '../common/guards/rbac.guards';

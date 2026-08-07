@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { athenaIcons } from '@athena/ui';
+import { athenaIcons } from '@movvo/ui';
 
 export function SidebarFooter({
   userName,
@@ -19,7 +19,7 @@ export function SidebarFooter({
         href="/app/profile"
         onClick={onNavigate}
         title={collapsed ? userName || 'Meu perfil' : undefined}
-        className="athena-sidebar-link"
+        className="movvo-sidebar-link"
       >
         <ProfileIcon size={18} aria-hidden className="shrink-0" />
         {!collapsed ? <span className="truncate">{userName || 'Meu perfil'}</span> : null}

@@ -1,4 +1,4 @@
-import { OAUTH_SCOPES, WEBHOOK_RETRY_MINUTES } from '@athena/shared';
+import { OAUTH_SCOPES, WEBHOOK_RETRY_MINUTES } from '@movvo/shared';
 
 export function isValidScope(scope: string): boolean {
   return (OAUTH_SCOPES as readonly string[]).includes(scope);

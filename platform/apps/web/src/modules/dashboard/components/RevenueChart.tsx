@@ -1,7 +1,7 @@
 'use client';
 
-import type { DashboardChartPoint, DashboardChartPeriod } from '@athena/shared';
-import { chartColors, EmptyState } from '@athena/ui';
+import type { DashboardChartPoint, DashboardChartPeriod } from '@movvo/shared';
+import { chartColors, EmptyState } from '@movvo/ui';
 import {
   Area,
   CartesianGrid,
@@ -33,15 +33,15 @@ export function RevenueChart({
   const hasData = data.some((d) => (d.revenue || 0) + (d.expense || 0) > 0);
 
   return (
-    <div className="athena-card h-full min-h-[280px]" data-testid="revenue-chart">
+    <div className="movvo-card h-full min-h-[280px]" data-testid="revenue-chart">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <h3 className="athena-h3 text-[var(--gold)]">Receita mensal</h3>
+        <h3 className="movvo-h3 text-[var(--gold)]">Receita mensal</h3>
         <div className="flex flex-wrap gap-1">
           {PERIODS.map((p) => (
             <button
               key={p.id}
               type="button"
-              className={period === p.id ? 'athena-tab athena-tab-active' : 'athena-tab'}
+              className={period === p.id ? 'movvo-tab movvo-tab-active' : 'movvo-tab'}
               onClick={() => onPeriod(p.id)}
             >
               {p.label}

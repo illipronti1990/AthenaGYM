@@ -1,4 +1,4 @@
-import { isValidCpf, normalizeCpf } from '@athena/shared';
+import { isValidCpf, normalizeCpf } from '@movvo/shared';
 
 describe('PX-5 forms rules', () => {
   it('normalizes and validates CPF', () => {

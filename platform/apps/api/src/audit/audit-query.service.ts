@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import type { AuthContext, AuditLogItem } from '@athena/shared';
+import type { AuthContext, AuditLogItem } from '@movvo/shared';
+import { paginate } from '../common/pagination';
 import { SupabaseService } from '../supabase/supabase.service';
 
 @Injectable()
@@ -25,10 +26,11 @@ export class AuditQueryService {
       pageSize?: number;
     },
   ): Promise<{ items: AuditLogItem[]; total: number; page: number; pageSize: number }> {
-    const page = Math.max(1, query.page || 1);
-    const pageSize = Math.min(100, Math.max(1, query.pageSize || 50));
-    const from = (page - 1) * pageSize;
-    const to = from + pageSize - 1;
+    const { page, pageSize, from, to } = paginate({
+      page: query.page,
+      pageSize: query.pageSize || 50,
+      maxPageSize: 100,
+    });
 
     const admin = this.supabase.getAdmin();
     let q = admin

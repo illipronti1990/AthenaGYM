@@ -1,7 +1,7 @@
 Option Explicit
 
 Private Sub UserForm_Initialize()
-    Me.Caption = "ATHENAS GYM — Cadastro de Aluno"
+    Me.Caption = "ATHENA GYM — Cadastro de Aluno"
     Me.Tag = "0"
     Call CarregarListas
     Call LimparCampos

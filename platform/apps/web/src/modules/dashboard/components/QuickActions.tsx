@@ -25,12 +25,12 @@ const ACTIONS = [
 
 export function QuickActions() {
   return (
-    <div className="athena-card" data-testid="quick-actions">
+    <div className="movvo-card" data-testid="quick-actions">
       <div className="flex flex-wrap gap-2">
         {ACTIONS.map((a) => {
           const Icon = a.icon;
           return (
-            <Link key={a.href + a.label} href={a.href} className="athena-btn athena-btn-secondary athena-btn-sm">
+            <Link key={a.href + a.label} href={a.href} className="movvo-btn movvo-btn-secondary movvo-btn-sm">
               <Icon size={16} />
               {a.label}
             </Link>

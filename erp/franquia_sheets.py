@@ -33,8 +33,8 @@ FRANQUEADORAS_HEADERS = [
 ]
 FRANQUEADORAS_SEED = [
     (
-        1, "ATHENAS FRANCHISE", "00.111.222/0001-33", "ATHENAS FRANCHISE HOLDING LTDA",
-        "Renan Athenas", "franchise@athenas.gym", "(11) 3000-0100", "https://franchise.athenas.gym", "Ativa",
+        1, "ATHENA FRANCHISE", "00.111.222/0001-33", "ATHENA FRANCHISE HOLDING LTDA",
+        "Renan Athena", "franchise@athena.gym", "(11) 3000-0100", "https://franchise.athena.gym", "Ativa",
     ),
 ]
 
@@ -149,7 +149,7 @@ def build_franqueadora_ui(wb) -> None:
     set_column_widths(ws, {1: 24, 2: 2, 3: 16, 4: 16, 5: 14, 6: 14, 7: 14, 8: 14, 9: 12})
 
     ws.merge_cells("C5:H5")
-    ws["C5"] = "ATHENAS FRANCHISE"
+    ws["C5"] = "ATHENA FRANCHISE"
     ws["C5"].font = Font(name="Georgia", size=20, bold=True, color=BRAND_RED)
     ws["C5"].fill = fill_light
 
@@ -208,7 +208,7 @@ def build_franqueadora_ui(wb) -> None:
     ws["C34"] = "FranqueadoID"
     ws["D34"] = 0
     ws["C35"] = "Nome rede"
-    ws["D35"] = "ATHENAS FRANCHISE"
+    ws["D35"] = "ATHENA FRANCHISE"
 
     ws.merge_cells("C37:H37")
     ws["C37"] = "Relatório / competência"

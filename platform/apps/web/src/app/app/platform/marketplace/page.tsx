@@ -8,7 +8,7 @@ export default async function Page() {
     <div className="space-y-4">
       <Breadcrumb items={[{ label: 'App', href: '/app' }, { label: 'Platform', href: '/app/platform/dashboard' }, { label: 'Marketplace' }]} />
       <div>
-        <h1 className="athena-title text-3xl">Marketplace</h1>
+        <h1 className="movvo-title text-3xl">Marketplace</h1>
         <p className="mt-1 text-sm text-[var(--muted)]">Plugins oficiais e parceiros</p>
       </div>
       <MarketplaceSaasPanel accessToken={accessToken} />

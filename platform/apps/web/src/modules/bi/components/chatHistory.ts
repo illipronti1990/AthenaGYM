@@ -2,7 +2,7 @@
 
 import type { ChatMsg } from './chatTypes';
 
-const STORAGE_PREFIX = 'athena-ai-chat-v1';
+const STORAGE_PREFIX = 'movvo-ai-chat-v1';
 const MAX_MESSAGES = 80;
 
 export function chatStorageKey(userKey: string): string {

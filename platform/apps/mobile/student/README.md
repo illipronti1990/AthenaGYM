@@ -12,4 +12,4 @@ App oficial do aluno. Consome a API `platform/apps/api` (`/api/v1`).
 
 ## Próximo passo
 
-Inicializar com Expo/React Native e `@athena/sdk-mobile` (a criar), apontando para `NEXT_PUBLIC_API_URL`.
+Inicializar com Expo/React Native e `@movvo/sdk-mobile` (a criar), apontando para `NEXT_PUBLIC_API_URL`.

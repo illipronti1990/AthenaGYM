@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Page, PageHeader, PageContent } from '@athena/ui';
+import { Page, PageHeader, PageContent } from '@movvo/ui';
 import { requireAccessToken } from '@/lib/auth/token';
 import { PlansPanel } from '@/modules/matriculas/components/PlansPanel';
 
@@ -11,7 +11,7 @@ export default async function MatriculasPlanosPage() {
         title="Planos"
         description="Cadastro completo de planos comerciais da academia."
         actions={
-          <Link href="/app/matriculas" className="athena-btn athena-btn-secondary athena-btn-sm">
+          <Link href="/app/matriculas" className="movvo-btn movvo-btn-secondary movvo-btn-sm">
             Matrículas
           </Link>
         }

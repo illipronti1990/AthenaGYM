@@ -1,13 +1,14 @@
 import { test, expect } from '@playwright/test';
+import { E2E_EMAIL, E2E_PASSWORD, E2E_STUDENT_EMAIL, E2E_TRAINER_EMAIL } from './helpers/e2eEnv';
 
 const WEB = process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000';
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
 
-const DEV_EMAIL = process.env.ATHENA_E2E_EMAIL || 'teste@athena.local';
-const DEV_PASSWORD = process.env.ATHENA_E2E_PASSWORD || 'teste123';
-const STUDENT_EMAIL = process.env.ATHENA_E2E_STUDENT_EMAIL || 'renan.aluno@athena.local';
+const DEV_EMAIL = E2E_EMAIL;
+const DEV_PASSWORD = E2E_PASSWORD;
+const STUDENT_EMAIL = E2E_STUDENT_EMAIL;
 const TRAINER_EMAIL =
-  process.env.ATHENA_E2E_TRAINER_EMAIL || 'bruna.professora@athena.local';
+  E2E_TRAINER_EMAIL;
 
 async function login(
   request: import('@playwright/test').APIRequestContext,

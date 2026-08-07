@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import type { Assessment, ProgressSummary } from '@athena/shared';
+import type { Assessment, ProgressSummary } from '@movvo/shared';
 import {
   Button,
   Card,
@@ -13,7 +13,7 @@ import {
   FormSection,
   FormSelect,
   AutoSaveIndicator,
-} from '@athena/ui';
+} from '@movvo/ui';
 import { workoutsApi } from '@/modules/workouts/services/workoutsApi';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
@@ -225,13 +225,13 @@ export function AlunoAssessmentsPanel({
       </Form>
 
       <section>
-        <h3 className="athena-title mb-3 text-lg">Histórico de avaliações</h3>
+        <h3 className="movvo-title mb-3 text-lg">Histórico de avaliações</h3>
         {items.length === 0 ? (
           <p className="text-sm text-[var(--muted)]">Nenhuma avaliação registrada.</p>
         ) : (
-          <ul className="athena-list" data-testid="student-assessments-list">
+          <ul className="movvo-list" data-testid="student-assessments-list">
             {items.map((a) => (
-              <li key={a.id} className="athena-list-item">
+              <li key={a.id} className="movvo-list-item">
                 <span>
                   {new Date(a.createdAt).toLocaleDateString('pt-BR')} · {a.weight ?? '—'} kg · IMC{' '}
                   {a.bmi ?? '—'} · BF {a.bodyFat ?? '—'}%

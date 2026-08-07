@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Page, PageHeader, PageContent, Button } from '@athena/ui';
+import { Page, PageHeader, PageContent, Button } from '@movvo/ui';
 import { requireAccessToken } from '@/lib/auth/token';
 import { apiGetMe } from '@/services/api';
 import { MatriculaWizard } from '@/modules/alunos/components/MatriculaWizard';

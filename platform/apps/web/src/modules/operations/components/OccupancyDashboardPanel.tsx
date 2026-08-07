@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { OperationsDashboard } from '@athena/shared';
-import { Card, chartColors } from '@athena/ui';
+import type { OperationsDashboard } from '@movvo/shared';
+import { Card, chartColors } from '@movvo/ui';
 import { operationsApi } from '../services/operationsApi';
 
 export function OccupancyDashboardPanel({ accessToken }: { accessToken: string }) {
@@ -51,7 +51,7 @@ export function OccupancyDashboardPanel({ accessToken }: { accessToken: string }
         ))}
       </div>
       <div>
-        <h2 className="athena-title mb-3 text-lg">Mapa de ocupação</h2>
+        <h2 className="movvo-title mb-3 text-lg">Mapa de ocupação</h2>
         <Card>
           <ul className="space-y-4">
             {data.areas.map((a) => (

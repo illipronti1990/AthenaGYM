@@ -5,8 +5,8 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { getBenefitPartnerAdapter } from '@athena/integrations';
-import type { AuthContext } from '@athena/shared';
+import { getBenefitPartnerAdapter } from '@movvo/integrations';
+import type { AuthContext } from '@movvo/shared';
 import { verifyHmacSignature } from '../operations/operations.rules';
 import { IntegrationsRepository } from './integrations.repository';
 
@@ -28,7 +28,7 @@ export class IntegrationsService {
     return (
       this.config.get<string>(`PARTNER_WEBHOOK_SECRET_${provider.toUpperCase()}`) ||
       this.config.get<string>('PARTNER_WEBHOOK_SECRET') ||
-      'athena-partner-webhook-dev'
+      'movvo-partner-webhook-dev'
     );
   }
 

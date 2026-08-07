@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card } from '@athena/ui';
+import { Card } from '@movvo/ui';
 import type { NpsDashboardView } from '../../services/crmApi';
 import { crmApi } from '../../services/crmApi';
 import { useToast } from '@/components/ui/Toast';
@@ -63,9 +63,9 @@ export function NpsSurvey({ accessToken }: { accessToken: string }) {
       )}
 
       {responses.length > 0 && (
-        <ul className="athena-list text-sm">
+        <ul className="movvo-list text-sm">
           {responses.map((r, idx) => (
-            <li key={r.id ?? idx} className="athena-list-item flex-col items-start gap-1">
+            <li key={r.id ?? idx} className="movvo-list-item flex-col items-start gap-1">
               <div className="flex w-full items-center justify-between">
                 <span className="font-semibold text-[var(--text)]">
                   Nota {r.score} · {responseLabel(r.score)}

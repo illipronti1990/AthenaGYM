@@ -1,3 +1,3 @@
 'use client';
 
-export { Modal } from '@athena/ui';
+export { Modal } from '@movvo/ui';

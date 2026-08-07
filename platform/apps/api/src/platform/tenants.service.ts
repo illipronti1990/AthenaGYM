@@ -3,11 +3,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import type { AuthContext, TenantDomain, TenantEntitlements, TenantSummary } from '@athena/shared';
+import type { AuthContext, TenantDomain, TenantEntitlements, TenantSummary } from '@movvo/shared';
 import { createHash, randomBytes } from 'crypto';
 import { promises as dns } from 'dns';
 import { AuditService } from '../audit/audit.service';
 import { AuthUser } from '../auth/auth.types';
+import { RedisCacheService } from '../cache/redis-cache.service';
 import { SupabaseService } from '../supabase/supabase.service';
 
 const DEV_COMPANY = '11111111-1111-1111-1111-111111111111';
@@ -17,6 +18,7 @@ export class TenantsService {
   constructor(
     private readonly supabase: SupabaseService,
     private readonly audit: AuditService,
+    private readonly cache: RedisCacheService,
   ) {}
 
   private admin() {
@@ -329,6 +331,16 @@ export class TenantsService {
 
   // ---- entitlements ----
   async entitlements(companyId: string, environment = 'production'): Promise<TenantEntitlements> {
+    const cacheKey = this.cache.key(companyId, 'flags', `ent:${environment}`);
+    return this.cache.wrap(cacheKey, RedisCacheService.TTL.flags, () =>
+      this.loadEntitlements(companyId, environment),
+    );
+  }
+
+  private async loadEntitlements(
+    companyId: string,
+    environment: string,
+  ): Promise<TenantEntitlements> {
     const { data: company } = await this.admin()
       .from('companies')
       .select('id, plan_code')
@@ -420,6 +432,7 @@ export class TenantsService {
       entityId: data.id,
       metadata: body,
     });
+    await this.cache.invalidatePrefix(this.cache.key(companyId, 'flags', ''));
     return data;
   }
 

@@ -1,6 +1,6 @@
 import { Controller, Get, Headers, Query } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { resolveFeatureFlags } from '@athena/shared';
+import { resolveFeatureFlags } from '@movvo/shared';
 import { TenantsService } from './tenants.service';
 
 @ApiTags('platform')

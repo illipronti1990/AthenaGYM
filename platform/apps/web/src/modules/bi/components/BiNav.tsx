@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { PageFilters } from '@athena/ui';
+import { PageFilters } from '@movvo/ui';
 import { useAuthNav } from '@/components/auth/AuthNavProvider';
 import { isProfessorOnly } from '@/config/navAccess';
 import { BI_LINKS } from '../utils/biLinks';
@@ -18,7 +18,7 @@ export function BiNav({ current }: { current?: string }) {
       {links
         .filter(([, href]) => href !== current)
         .map(([label, href]) => (
-          <Link key={href} href={href} className="athena-chip-nav">
+          <Link key={href} href={href} className="movvo-chip-nav">
             {label}
           </Link>
         ))}

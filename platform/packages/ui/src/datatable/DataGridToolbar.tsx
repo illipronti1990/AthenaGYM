@@ -28,8 +28,8 @@ export function DataGridToolbar({
   onClearFilters?: () => void;
 }) {
   return (
-    <div className="athena-dg-toolbar" data-testid="datagrid-toolbar">
-      <div className="athena-dg-search">
+    <div className="movvo-dg-toolbar" data-testid="datagrid-toolbar">
+      <div className="movvo-dg-search">
         <Search size={16} aria-hidden />
         <input
           value={search}
@@ -39,14 +39,14 @@ export function DataGridToolbar({
           data-testid="datagrid-search"
         />
         {search ? (
-          <button type="button" className="athena-dg-icon-clear" onClick={() => onSearchChange('')} aria-label="Limpar busca">
+          <button type="button" className="movvo-dg-icon-clear" onClick={() => onSearchChange('')} aria-label="Limpar busca">
             <X size={14} />
           </button>
         ) : null}
       </div>
-      <div className="athena-dg-toolbar-actions">
+      <div className="movvo-dg-toolbar-actions">
         {typeof resultCount === 'number' ? (
-          <span className="athena-dg-count">{resultCount} resultado(s)</span>
+          <span className="movvo-dg-count">{resultCount} resultado(s)</span>
         ) : null}
         <Button
           type="button"
@@ -70,7 +70,7 @@ export function DataGridToolbar({
           <Printer size={14} /> Imprimir
         </Button>
         {exportSlot ? (
-          <div className="athena-dg-export">
+          <div className="movvo-dg-export">
             <Download size={14} aria-hidden />
             {exportSlot}
           </div>
@@ -78,14 +78,14 @@ export function DataGridToolbar({
         {primaryAction}
       </div>
       {activeFilterChips && activeFilterChips.length > 0 ? (
-        <div className="athena-dg-chips">
+        <div className="movvo-dg-chips">
           {activeFilterChips.map((c) => (
-            <button key={c.id} type="button" className="athena-dg-chip" onClick={c.onRemove}>
+            <button key={c.id} type="button" className="movvo-dg-chip" onClick={c.onRemove}>
               {c.label} <X size={12} />
             </button>
           ))}
           {onClearFilters ? (
-            <button type="button" className="athena-dg-chip-clear" onClick={onClearFilters}>
+            <button type="button" className="movvo-dg-chip-clear" onClick={onClearFilters}>
               Limpar filtros
             </button>
           ) : null}

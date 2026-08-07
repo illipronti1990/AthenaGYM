@@ -1,5 +1,5 @@
 import { createHmac, randomBytes, timingSafeEqual } from 'crypto';
-import { QR_TTL_SECONDS } from '@athena/shared';
+import { QR_TTL_SECONDS } from '@movvo/shared';
 
 export type AccessValidationIssue =
   | 'student_inactive'

@@ -1,15 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import type { DashboardAgendaItem } from '@athena/shared';
-import { EmptyState } from '@athena/ui';
+import type { DashboardAgendaItem } from '@movvo/shared';
+import { EmptyState } from '@movvo/ui';
 import { Calendar } from 'lucide-react';
 
 export function AgendaWidget({ items }: { items: DashboardAgendaItem[] }) {
   return (
-    <div className="athena-card h-full" data-testid="agenda-widget">
+    <div className="movvo-card h-full" data-testid="agenda-widget">
       <div className="mb-3 flex items-center justify-between gap-2">
-        <h3 className="athena-h3 inline-flex items-center gap-2 text-sky-400">
+        <h3 className="movvo-h3 inline-flex items-center gap-2 text-sky-400">
           <Calendar size={18} /> Agenda de hoje
         </h3>
         <Link href="/app/acesso/agenda" className="text-xs text-[var(--gold)]">
@@ -21,7 +21,7 @@ export function AgendaWidget({ items }: { items: DashboardAgendaItem[] }) {
           title="Agenda livre hoje"
           description="Nenhum compromisso agendado. Crie o primeiro evento."
           action={
-            <Link href="/app/acesso/agenda" className="athena-btn athena-btn-primary athena-btn-sm">
+            <Link href="/app/acesso/agenda" className="movvo-btn movvo-btn-primary movvo-btn-sm">
               Nova Agenda
             </Link>
           }

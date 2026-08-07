@@ -13,7 +13,7 @@ import {
   DEFAULT_FEATURE_FLAGS,
   type FeatureFlagKey,
   type FeatureFlags,
-} from '@athena/shared';
+} from '@movvo/shared';
 import { featuresApi } from '@/services/featuresApi';
 
 type FeatureFlagsCtx = {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { StudentListItem } from '@athena/shared';
+import type { StudentListItem } from '@movvo/shared';
 import { listAlunos } from '@/modules/alunos/services/alunosApi';
 
 export function AlunoSelect({
@@ -9,7 +9,7 @@ export function AlunoSelect({
   value,
   onChange,
   required = true,
-  className = 'athena-input mt-1 block w-full max-w-md',
+  className = 'movvo-input mt-1 block w-full max-w-md',
 }: {
   accessToken: string;
   value: string;

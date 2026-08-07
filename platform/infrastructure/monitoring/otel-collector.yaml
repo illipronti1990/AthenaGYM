@@ -29,9 +29,9 @@ exporters:
     verbosity: basic
   prometheus:
     endpoint: 0.0.0.0:8889
-    namespace: athena
+    namespace: movvo
     const_labels:
-      platform: athena
+      platform: movvo
     resource_to_telemetry_conversion:
       enabled: true
 

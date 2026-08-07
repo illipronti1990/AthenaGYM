@@ -97,10 +97,10 @@ export function FileUploader({
   }
 
   return (
-    <div className="athena-field" data-testid="file-uploader">
-      {label ? <span className="athena-label">{label}</span> : null}
+    <div className="movvo-field" data-testid="file-uploader">
+      {label ? <span className="movvo-label">{label}</span> : null}
       <div
-        className={`athena-dropzone ${dragOver ? 'is-over' : ''}`}
+        className={`movvo-dropzone ${dragOver ? 'is-over' : ''}`}
         onDragOver={(e) => {
           e.preventDefault();
           setDragOver(true);
@@ -116,7 +116,7 @@ export function FileUploader({
       >
         <Upload size={22} aria-hidden />
         <p>Arraste aqui, selecione ou cole (Ctrl+V)</p>
-        <p className="athena-muted text-xs">PDF, JPG, PNG, DOCX · até {maxSizeMb} MB</p>
+        <p className="movvo-muted text-xs">PDF, JPG, PNG, DOCX · até {maxSizeMb} MB</p>
         <input
           ref={inputRef}
           type="file"
@@ -129,14 +129,14 @@ export function FileUploader({
           }}
         />
       </div>
-      {error ? <p className="athena-field-hint is-error mt-2">❌ {error}</p> : null}
+      {error ? <p className="movvo-field-hint is-error mt-2">❌ {error}</p> : null}
       {value.length ? (
-        <ul className="athena-upload-list">
+        <ul className="movvo-upload-list">
           {value.map((item) => (
-            <li key={item.id} className="athena-upload-item">
+            <li key={item.id} className="movvo-upload-item">
               {item.previewUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={item.previewUrl} alt="" className="athena-upload-thumb" />
+                <img src={item.previewUrl} alt="" className="movvo-upload-thumb" />
               ) : (
                 <FileText size={20} aria-hidden />
               )}
@@ -150,7 +150,7 @@ export function FileUploader({
                   <ProgressIndicator value={item.progress || 50} />
                 ) : null}
               </div>
-              <button type="button" className="athena-icon-btn" onClick={() => remove(item.id)} aria-label="Remover">
+              <button type="button" className="movvo-icon-btn" onClick={() => remove(item.id)} aria-label="Remover">
                 <X size={16} />
               </button>
             </li>

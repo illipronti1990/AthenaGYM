@@ -2,7 +2,7 @@ Attribute VB_Name = "modCRM"
 Option Explicit
 
 '============================================================
-' Sprint 6.0 — CRM Inteligente ATHENAS GYM
+' Sprint 6.0 — CRM Inteligente ATHENA GYM
 '============================================================
 
 Public Const SHT_LEADS As String = "BD_LEADS"

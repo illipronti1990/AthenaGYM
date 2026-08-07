@@ -1,9 +1,9 @@
 /**
- * Official ATHENA TypeScript SDK — generated-style client for Public API.
+ * Official Movvo TypeScript SDK — client for Public API.
  * Auth: OAuth2 client credentials or access token.
  */
 
-export type AthenaSdkOptions = {
+export type MovvoSdkOptions = {
   baseUrl?: string;
   clientId?: string;
   clientSecret?: string;
@@ -11,14 +11,14 @@ export type AthenaSdkOptions = {
   fetchImpl?: typeof fetch;
 };
 
-export class AthenaApiError extends Error {
+export class MovvoApiError extends Error {
   constructor(
     message: string,
     readonly status: number,
     readonly body: string,
   ) {
     super(message);
-    this.name = 'AthenaApiError';
+    this.name = 'MovvoApiError';
   }
 }
 
@@ -29,14 +29,14 @@ export type Page<T> = {
   total: number;
 };
 
-export class AthenaClient {
+export class MovvoClient {
   private accessToken: string | null;
   private readonly baseUrl: string;
   private readonly clientId?: string;
   private readonly clientSecret?: string;
   private readonly fetchImpl: typeof fetch;
 
-  constructor(opts: AthenaSdkOptions = {}) {
+  constructor(opts: MovvoSdkOptions = {}) {
     this.baseUrl = (opts.baseUrl || 'http://localhost:3001/api/v1/public').replace(/\/$/, '');
     this.clientId = opts.clientId;
     this.clientSecret = opts.clientSecret;
@@ -58,7 +58,7 @@ export class AthenaClient {
       }),
     });
     const text = await res.text();
-    if (!res.ok) throw new AthenaApiError('OAuth token failed', res.status, text);
+    if (!res.ok) throw new MovvoApiError('OAuth token failed', res.status, text);
     const json = JSON.parse(text) as { accessToken: string };
     this.accessToken = json.accessToken;
     return this.accessToken;
@@ -85,7 +85,7 @@ export class AthenaClient {
       body: body ? JSON.stringify(body) : undefined,
     });
     const text = await res.text();
-    if (!res.ok) throw new AthenaApiError(`${method} ${path} failed`, res.status, text);
+    if (!res.ok) throw new MovvoApiError(`${method} ${path} failed`, res.status, text);
     return text ? (JSON.parse(text) as T) : (undefined as T);
   }
 

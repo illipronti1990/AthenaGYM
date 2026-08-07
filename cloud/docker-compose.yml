@@ -1,21 +1,21 @@
-# ATHENAS GYM — banco PostgreSQL (opcional; local usa SQLite por padrão)
+# ATHENA GYM — banco PostgreSQL (opcional; local usa SQLite por padrão)
 services:
   db:
     image: postgres:16-alpine
-    container_name: athenas-postgres
+    container_name: athena-postgres
     environment:
-      POSTGRES_DB: athenas
-      POSTGRES_USER: athenas
-      POSTGRES_PASSWORD: athenas
+      POSTGRES_DB: athena
+      POSTGRES_USER: athena
+      POSTGRES_PASSWORD: athena
     ports:
       - "5432:5432"
     volumes:
-      - athenas_pg:/var/lib/postgresql/data
+      - athena_pg:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U athenas -d athenas"]
+      test: ["CMD-SHELL", "pg_isready -U athena -d athena"]
       interval: 5s
       timeout: 5s
       retries: 10
 
 volumes:
-  athenas_pg:
+  athena_pg:

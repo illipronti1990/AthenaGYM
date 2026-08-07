@@ -10,8 +10,8 @@ import type {
   ForecastResult,
   HeatmapCell,
   KpiItem,
-} from '@athena/shared';
-import { Button, Card } from '@athena/ui';
+} from '@movvo/shared';
+import { Button, Card } from '@movvo/ui';
 import { useAuthNav } from '@/components/auth/AuthNavProvider';
 import { isProfessorOnly } from '@/config/navAccess';
 import { biApi } from '../services/biApi';
@@ -108,7 +108,7 @@ export function KpiBiPanel({ accessToken }: { accessToken: string }) {
     <div className="space-y-6" data-testid="bi-kpis">
       {categories.map((cat) => (
         <section key={cat}>
-          <h3 className="athena-title mb-3 text-sm uppercase tracking-wide">{cat}</h3>
+          <h3 className="movvo-title mb-3 text-sm uppercase tracking-wide">{cat}</h3>
           <Card>
             <ul className="grid gap-1 sm:grid-cols-2 lg:grid-cols-3">
               {kpis
@@ -151,7 +151,7 @@ export function InsightsBiPanel({ accessToken }: { accessToken: string }) {
 
   return (
     <div className="space-y-3" data-testid="bi-insights">
-      <h2 className="athena-title text-lg">Athena Insights</h2>
+      <h2 className="movvo-title text-lg">Movvo Insights</h2>
       {insights.map((i) => (
         <Card key={i.code}>
           <p className="text-xs uppercase text-[var(--muted)]">{i.severity}</p>
@@ -233,10 +233,10 @@ export function HeatmapBiPanel({ accessToken }: { accessToken: string }) {
   );
 }
 
-import { AthenaChat } from './AthenaChat';
+import { MovvoChat } from './MovvoChat';
 
 export function ChatBiPanel({ accessToken }: { accessToken: string }) {
-  return <AthenaChat accessToken={accessToken} />;
+  return <MovvoChat accessToken={accessToken} />;
 }
 
 export function GoalsBiPanel({ accessToken }: { accessToken: string }) {

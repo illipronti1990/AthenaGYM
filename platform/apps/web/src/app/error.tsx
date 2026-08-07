@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import Link from 'next/link';
-import { MOVVO_PRODUCT } from '@athena/shared';
+import { MOVVO_PRODUCT } from '@movvo/shared';
 
 export default function GlobalError({
   error,

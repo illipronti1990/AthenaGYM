@@ -8,7 +8,7 @@ export default async function AdminCargosPage() {
     <div className="space-y-4">
       <Breadcrumb items={[{ label: 'App', href: '/app' }, { label: 'Admin', href: '/app/admin/dashboard' }, { label: 'Cargos' }]} />
       <div>
-        <h1 className="athena-title text-3xl">Cargos & permissões</h1>
+        <h1 className="movvo-title text-3xl">Cargos & permissões</h1>
         <p className="mt-1 text-sm text-[var(--muted)]">Matriz RBAC do sistema</p>
       </div>
       <AdminRolesPanel accessToken={accessToken} />

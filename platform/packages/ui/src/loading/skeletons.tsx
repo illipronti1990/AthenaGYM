@@ -3,7 +3,7 @@ import { Skeleton } from '../Skeleton';
 
 export function SkeletonCard({ className = '' }: { className?: string }) {
   return (
-    <div className={`athena-card ${className}`} data-testid="skeleton-card">
+    <div className={`movvo-card ${className}`} data-testid="skeleton-card">
       <Skeleton style={{ width: '40%', height: 14, marginBottom: 16 }} />
       <Skeleton style={{ width: '70%', height: 28, marginBottom: 12 }} />
       <Skeleton style={{ width: '55%', height: 12 }} />
@@ -24,7 +24,7 @@ export function SkeletonTable({ rows = 5 }: { rows?: number }) {
 
 export function SkeletonChart({ className = '' }: { className?: string }) {
   return (
-    <div className={`athena-card ${className}`} data-testid="skeleton-chart">
+    <div className={`movvo-card ${className}`} data-testid="skeleton-chart">
       <Skeleton style={{ width: '35%', height: 16, marginBottom: 20 }} />
       <div className="flex h-40 items-end gap-2">
         {[40, 70, 55, 85, 45, 90, 60].map((h, i) => (

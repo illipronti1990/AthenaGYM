@@ -2,9 +2,9 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import type { Enrollment, RenewalDueItem } from '@athena/shared';
-import { ENROLLMENT_STATUS_LABELS, type EnrollmentStatus } from '@athena/shared';
-import { Button, formatCurrencyBRL } from '@athena/ui';
+import type { Enrollment, RenewalDueItem } from '@movvo/shared';
+import { ENROLLMENT_STATUS_LABELS, type EnrollmentStatus } from '@movvo/shared';
+import { Button, formatCurrencyBRL } from '@movvo/ui';
 import { matriculasApi } from '../services/matriculasApi';
 import { useToast } from '@/components/ui/Toast';
 import { RenewalAlert } from './RenewalAlert';
@@ -41,7 +41,7 @@ export function EnrollmentsListPanel({ accessToken }: { accessToken: string }) {
         <p className="text-sm text-[var(--muted)]">Carregando…</p>
       ) : (
         <div className="overflow-auto rounded-2xl border border-[var(--border)]">
-          <table className="athena-dg-table">
+          <table className="movvo-dg-table">
             <thead>
               <tr>
                 <th>Aluno</th>
@@ -82,7 +82,7 @@ export function EnrollmentsListPanel({ accessToken }: { accessToken: string }) {
                 <tr>
                   <td colSpan={7} className="py-8 text-center text-[var(--muted)]">
                     Nenhuma matrícula ainda.{' '}
-                    <Link href="/app/matriculas/nova" className="athena-link text-[var(--gold)]">
+                    <Link href="/app/matriculas/nova" className="movvo-link text-[var(--gold)]">
                       Criar agora
                     </Link>
                   </td>

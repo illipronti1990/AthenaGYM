@@ -18,7 +18,7 @@ import {
   type CashflowSummary,
   type DelinquencyReport,
   type DueAlertItem,
-} from '@athena/shared';
+} from '@movvo/shared';
 import { AuditService } from '../audit/audit.service';
 import { AuthUser } from '../auth/auth.types';
 import { ContractSignedEvent } from '../sales/events/sales.events';
@@ -712,7 +712,7 @@ export class FinanceService {
     const event = await gateway.parseWebhook(headers, rawBody);
     await this.repo.insertWebhookReceipt({
       provider,
-      signature: headers['x-athena-signature'] || headers['asaas-access-token'] || null,
+      signature: headers['x-movvo-signature'] || headers['asaas-access-token'] || null,
       payload_hash: hash,
       external_id: event.externalId || null,
     });

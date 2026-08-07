@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import type { PublicApiContext } from '@athena/shared';
+import type { PublicApiContext } from '@movvo/shared';
 import { CurrentPublic } from './decorators/current-public.decorator';
 import { Scopes } from './decorators/scopes.decorator';
 import { CreateCheckinPublicDto, CreateWebhookDto } from './dto/platform.dto';

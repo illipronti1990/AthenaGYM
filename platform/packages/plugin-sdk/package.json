@@ -1,5 +1,5 @@
 {
-  "name": "@athena/plugin-sdk",
+  "name": "@movvo/plugin-sdk",
   "version": "0.10.0",
   "private": true,
   "main": "./dist/index.js",

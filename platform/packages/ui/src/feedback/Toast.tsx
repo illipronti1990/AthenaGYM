@@ -38,7 +38,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         richColors
         closeButton
         toastOptions={{
-          className: 'athena-sonner',
+          className: 'movvo-sonner',
           duration: 4000,
         }}
       />

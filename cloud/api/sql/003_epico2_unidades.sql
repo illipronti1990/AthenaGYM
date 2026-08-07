@@ -1,4 +1,4 @@
--- ATHENAS GYM — Épico 2 Multiunidade
+-- ATHENA GYM — Épico 2 Multiunidade
 -- Cole no SQL Editor do Supabase ou: python -m scripts.apply_sql_supabase sql/003_epico2_unidades.sql
 
 -- Expandir unidades
@@ -20,8 +20,8 @@ update public.unidades set status = 'Ativa' where id = 2;
 
 insert into public.unidades (id, empresa_id, nome, codigo, cidade, estado, status)
 values
-  (1, 1, 'ATHENAS GYM Matriz', 'MX', 'São Paulo', 'SP', 'Ativa'),
-  (2, 1, 'ATHENAS GYM Zona Sul', 'ZS', 'São Paulo', 'SP', 'Ativa')
+  (1, 1, 'ATHENA GYM Matriz', 'MX', 'São Paulo', 'SP', 'Ativa'),
+  (2, 1, 'ATHENA GYM Zona Sul', 'ZS', 'São Paulo', 'SP', 'Ativa')
 on conflict (id) do update set
   nome = excluded.nome,
   codigo = excluded.codigo,

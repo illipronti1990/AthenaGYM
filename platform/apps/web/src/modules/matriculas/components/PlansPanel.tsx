@@ -1,9 +1,9 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import type { Plan, PlanType } from '@athena/shared';
-import { PLAN_TYPE_LABELS } from '@athena/shared';
-import { Button, formatCurrencyBRL } from '@athena/ui';
+import type { Plan, PlanType } from '@movvo/shared';
+import { PLAN_TYPE_LABELS } from '@movvo/shared';
+import { Button, formatCurrencyBRL } from '@movvo/ui';
 import { matriculasApi } from '../services/matriculasApi';
 import { useToast } from '@/components/ui/Toast';
 import { useConfirm } from '@/components/ux/ConfirmProvider';
@@ -120,20 +120,20 @@ export function PlansPanel({ accessToken }: { accessToken: string }) {
     <div className="space-y-4" data-testid="matriculas-plans-panel">
       <form onSubmit={onSubmit} className="grid gap-3 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 md:grid-cols-3">
         <label className="block text-sm">
-          <span className="athena-label">Nome do plano</span>
+          <span className="movvo-label">Nome do plano</span>
           <input
             required
             placeholder="Ex.: Mensal Premium"
             value={form.name}
             onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-            className="athena-input mt-1"
+            className="movvo-input mt-1"
             data-testid="plan-name"
           />
         </label>
         <label className="block text-sm">
-          <span className="athena-label">Tipo</span>
+          <span className="movvo-label">Tipo</span>
           <select
-            className="athena-input mt-1"
+            className="movvo-input mt-1"
             value={form.planType}
             onChange={(e) => setForm((f) => ({ ...f, planType: e.target.value }))}
             data-testid="plan-type"
@@ -146,77 +146,77 @@ export function PlansPanel({ accessToken }: { accessToken: string }) {
           </select>
         </label>
         <label className="block text-sm">
-          <span className="athena-label">Duração (dias)</span>
+          <span className="movvo-label">Duração (dias)</span>
           <input
             type="number"
             min={1}
             value={form.durationDays}
             onChange={(e) => setForm((f) => ({ ...f, durationDays: Number(e.target.value) }))}
-            className="athena-input mt-1"
+            className="movvo-input mt-1"
             data-testid="plan-duration"
           />
         </label>
         <label className="block text-sm">
-          <span className="athena-label">Valor (R$)</span>
+          <span className="movvo-label">Valor (R$)</span>
           <input
             type="number"
             min={0}
             step="0.01"
             value={form.price}
             onChange={(e) => setForm((f) => ({ ...f, price: Number(e.target.value) }))}
-            className="athena-input mt-1"
+            className="movvo-input mt-1"
             data-testid="plan-price"
           />
         </label>
         <label className="block text-sm">
-          <span className="athena-label">Taxa de matrícula (R$)</span>
+          <span className="movvo-label">Taxa de matrícula (R$)</span>
           <input
             type="number"
             min={0}
             step="0.01"
             value={form.enrollmentFee}
             onChange={(e) => setForm((f) => ({ ...f, enrollmentFee: Number(e.target.value) }))}
-            className="athena-input mt-1"
+            className="movvo-input mt-1"
           />
         </label>
         <label className="block text-sm">
-          <span className="athena-label">Fidelidade (dias)</span>
+          <span className="movvo-label">Fidelidade (dias)</span>
           <input
             type="number"
             min={0}
             value={form.fidelityDays}
             onChange={(e) => setForm((f) => ({ ...f, fidelityDays: Number(e.target.value) }))}
-            className="athena-input mt-1"
+            className="movvo-input mt-1"
           />
         </label>
         <label className="block text-sm">
-          <span className="athena-label">Carência (dias)</span>
+          <span className="movvo-label">Carência (dias)</span>
           <input
             type="number"
             min={0}
             value={form.graceDays}
             onChange={(e) => setForm((f) => ({ ...f, graceDays: Number(e.target.value) }))}
-            className="athena-input mt-1"
+            className="movvo-input mt-1"
           />
         </label>
         <label className="block text-sm">
-          <span className="athena-label">Desconto (%)</span>
+          <span className="movvo-label">Desconto (%)</span>
           <input
             type="number"
             min={0}
             max={100}
             value={form.discountPercent}
             onChange={(e) => setForm((f) => ({ ...f, discountPercent: Number(e.target.value) }))}
-            className="athena-input mt-1"
+            className="movvo-input mt-1"
           />
         </label>
         <label className="block text-sm md:col-span-3">
-          <span className="athena-label">Observações</span>
+          <span className="movvo-label">Observações</span>
           <input
             placeholder="Opcional"
             value={form.notes}
             onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))}
-            className="athena-input mt-1"
+            className="movvo-input mt-1"
           />
         </label>
         <div className="flex gap-2 md:col-span-3">
@@ -240,7 +240,7 @@ export function PlansPanel({ accessToken }: { accessToken: string }) {
           >
             <div className="mb-2 flex items-start justify-between gap-2">
               <div>
-                <h3 className="athena-title text-lg">{plan.name}</h3>
+                <h3 className="movvo-title text-lg">{plan.name}</h3>
                 <p className="text-sm text-[var(--muted)]">
                   {PLAN_TYPE_LABELS[plan.planType as PlanType] || plan.planType} · {plan.durationDays} dias
                 </p>

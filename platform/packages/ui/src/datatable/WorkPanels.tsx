@@ -21,10 +21,10 @@ export function WorkPanels({
 }) {
   if (!panels.length) return null;
   return (
-    <div className="athena-dg-panels" data-testid="work-panels">
+    <div className="movvo-dg-panels" data-testid="work-panels">
       <button
         type="button"
-        className={`athena-dg-panel ${!activeId ? 'is-active' : ''}`}
+        className={`movvo-dg-panel ${!activeId ? 'is-active' : ''}`}
         onClick={() => onSelect(null)}
       >
         Todos
@@ -33,7 +33,7 @@ export function WorkPanels({
         <button
           key={p.id}
           type="button"
-          className={`athena-dg-panel ${toneClass[p.tone || 'default']} ${activeId === p.id ? 'is-active' : ''}`}
+          className={`movvo-dg-panel ${toneClass[p.tone || 'default']} ${activeId === p.id ? 'is-active' : ''}`}
           onClick={() => onSelect(p)}
         >
           {p.label}

@@ -1,6 +1,6 @@
 /* Sprint G-1 — Premium Login */
 
-.athena-login-page {
+.movvo-login-page {
   --login-bg: #080808;
   --login-card: #131313;
   --login-red: #d90429;
@@ -18,14 +18,14 @@
   overflow: hidden;
 }
 
-.athena-login-bg {
+.movvo-login-bg {
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
 }
 
-.athena-login-bg-red {
+.movvo-login-bg-red {
   position: absolute;
   inset: 0;
   width: 52%;
@@ -41,15 +41,15 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .athena-login-bg-red {
+  .movvo-login-bg-red {
     animation: none;
   }
-  .athena-login-brand-inner {
+  .movvo-login-brand-inner {
     animation: none !important;
   }
 }
 
-.athena-login-bg-blur {
+.movvo-login-bg-blur {
   position: absolute;
   inset: 0;
   width: 55%;
@@ -57,7 +57,7 @@
   background: rgba(8, 8, 8, 0.35);
 }
 
-.athena-login-bg-gradient {
+.movvo-login-bg-gradient {
   position: absolute;
   inset: 0;
   background:
@@ -65,7 +65,7 @@
     linear-gradient(90deg, rgba(9, 9, 9, 0.15) 45%, #090909 72%);
 }
 
-.athena-login-bg-mark {
+.movvo-login-bg-mark {
   position: absolute;
   left: 6%;
   bottom: -8%;
@@ -77,8 +77,8 @@
   user-select: none;
 }
 
-.athena-login-brand,
-.athena-login-panel {
+.movvo-login-brand,
+.movvo-login-panel {
   position: relative;
   z-index: 1;
   display: flex;
@@ -87,12 +87,12 @@
   padding: clamp(24px, 5vw, 64px);
 }
 
-.athena-login-brand-inner {
+.movvo-login-brand-inner {
   max-width: 440px;
-  animation: athena-login-fade 280ms ease-out;
+  animation: movvo-login-fade 280ms ease-out;
 }
 
-.athena-login-brand-name {
+.movvo-login-brand-name {
   margin: 20px 0 0;
   font-size: clamp(2rem, 4vw, 2.8rem);
   font-weight: 800;
@@ -101,7 +101,7 @@
   line-height: 1.05;
 }
 
-.athena-login-tenant {
+.movvo-login-tenant {
   margin: 8px 0 0;
   font-size: 0.95rem;
   font-weight: 600;
@@ -110,7 +110,7 @@
   color: var(--login-gold);
 }
 
-.athena-login-slogan {
+.movvo-login-slogan {
   margin: 14px 0 0;
   font-size: clamp(1.15rem, 2vw, 1.45rem);
   font-weight: 600;
@@ -119,7 +119,7 @@
   max-width: 18ch;
 }
 
-.athena-login-brand-desc {
+.movvo-login-brand-desc {
   margin: 16px 0 0;
   color: var(--login-muted);
   font-size: 0.95rem;
@@ -127,7 +127,7 @@
   max-width: 36ch;
 }
 
-.athena-login-features {
+.movvo-login-features {
   list-style: none;
   margin: 28px 0 0;
   padding: 0;
@@ -135,7 +135,7 @@
   gap: 12px;
 }
 
-.athena-login-features li {
+.movvo-login-features li {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -144,7 +144,7 @@
   font-size: 0.95rem;
 }
 
-.athena-login-feature-dot {
+.movvo-login-feature-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
@@ -152,12 +152,12 @@
   box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.12);
 }
 
-.athena-login-panel {
+.movvo-login-panel {
   align-items: center;
   gap: 24px;
 }
 
-.athena-login-card {
+.movvo-login-card {
   width: min(100%, 440px);
   padding: 32px;
   border-radius: 20px;
@@ -167,56 +167,56 @@
     0 24px 60px rgba(0, 0, 0, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
   backdrop-filter: blur(16px);
-  animation: athena-login-rise 280ms ease-out;
+  animation: movvo-login-rise 280ms ease-out;
 }
 
-.athena-login-card-head {
+.movvo-login-card-head {
   text-align: center;
   margin-bottom: 24px;
 }
 
-.athena-login-card-head h2 {
+.movvo-login-card-head h2 {
   margin: 14px 0 0;
   font-size: 1.35rem;
   font-weight: 700;
 }
 
-.athena-login-card-head p {
+.movvo-login-card-head p {
   margin: 8px 0 0;
   color: var(--login-muted);
   font-size: 0.9rem;
 }
 
-.athena-login-form {
+.movvo-login-form {
   display: grid;
   gap: 16px;
 }
 
-.athena-login-field {
+.movvo-login-field {
   display: grid;
   gap: 8px;
 }
 
-.athena-login-field label {
+.movvo-login-field label {
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--login-muted);
 }
 
-.athena-login-input-wrap {
+.movvo-login-input-wrap {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.athena-login-input-icon {
+.movvo-login-input-icon {
   position: absolute;
   left: 14px;
   color: var(--login-muted);
   pointer-events: none;
 }
 
-.athena-login-input {
+.movvo-login-input {
   width: 100%;
   height: 48px;
   border-radius: 12px;
@@ -231,22 +231,22 @@
     background 200ms ease;
 }
 
-.athena-login-input::placeholder {
+.movvo-login-input::placeholder {
   color: #71717a;
 }
 
-.athena-login-input:focus {
+.movvo-login-input:focus {
   outline: none;
   border-color: var(--login-gold);
   box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.22);
 }
 
-.athena-login-input:disabled {
+.movvo-login-input:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-.athena-login-eye {
+.movvo-login-eye {
   position: absolute;
   right: 8px;
   display: grid;
@@ -261,20 +261,20 @@
   transition: color 200ms ease, background 200ms ease;
 }
 
-.athena-login-eye:hover,
-.athena-login-eye:focus-visible {
+.movvo-login-eye:hover,
+.movvo-login-eye:focus-visible {
   color: var(--login-gold);
   background: rgba(212, 175, 55, 0.08);
   outline: none;
 }
 
-.athena-login-capslock {
+.movvo-login-capslock {
   margin: 0;
   font-size: 0.8rem;
   color: var(--login-gold);
 }
 
-.athena-login-remember {
+.movvo-login-remember {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -282,13 +282,13 @@
   color: var(--login-muted);
 }
 
-.athena-login-dev {
+.movvo-login-dev {
   margin: 0;
   font-size: 0.75rem;
   color: var(--login-gold);
 }
 
-.athena-login-error {
+.movvo-login-error {
   margin: 0;
   padding: 10px 12px;
   border-radius: 10px;
@@ -298,7 +298,7 @@
   font-size: 0.875rem;
 }
 
-.athena-login-submit {
+.movvo-login-submit {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -318,34 +318,34 @@
   box-shadow: 0 10px 24px rgba(177, 0, 24, 0.28);
 }
 
-.athena-login-submit:hover:not(:disabled) {
+.movvo-login-submit:hover:not(:disabled) {
   filter: brightness(1.08);
   transform: translateY(-1px);
 }
 
-.athena-login-submit:focus-visible {
+.movvo-login-submit:focus-visible {
   outline: none;
   box-shadow:
     0 0 0 3px rgba(212, 175, 55, 0.28),
     0 10px 24px rgba(177, 0, 24, 0.28);
 }
 
-.athena-login-submit:disabled {
+.movvo-login-submit:disabled {
   opacity: 0.7;
   cursor: not-allowed;
   transform: none;
 }
 
-.athena-login-spinner {
+.movvo-login-spinner {
   width: 16px;
   height: 16px;
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.35);
   border-top-color: #fff;
-  animation: athena-login-spin 0.7s linear infinite;
+  animation: movvo-login-spin 0.7s linear infinite;
 }
 
-.athena-login-forgot {
+.movvo-login-forgot {
   text-align: center;
   color: var(--login-gold);
   font-size: 0.875rem;
@@ -353,12 +353,12 @@
   transition: opacity 200ms ease;
 }
 
-.athena-login-forgot:hover {
+.movvo-login-forgot:hover {
   opacity: 0.85;
   text-decoration: underline;
 }
 
-.athena-login-footer {
+.movvo-login-footer {
   width: min(100%, 440px);
   text-align: center;
   color: var(--login-muted);
@@ -367,52 +367,52 @@
   gap: 8px;
 }
 
-.athena-login-footer-tenant {
+.movvo-login-footer-tenant {
   margin: 0;
   color: color-mix(in srgb, var(--login-gold) 80%, var(--login-muted));
   font-size: 0.7rem;
   letter-spacing: 0.04em;
 }
 
-.athena-login-footer a {
+.movvo-login-footer a {
   color: var(--login-muted);
   text-decoration: none;
 }
 
-.athena-login-footer a:hover {
+.movvo-login-footer a:hover {
   color: var(--login-gold);
 }
 
-.athena-login-footer nav {
+.movvo-login-footer nav {
   display: flex;
   justify-content: center;
   gap: 8px;
   flex-wrap: wrap;
 }
 
-.athena-login-loader {
+.movvo-login-loader {
   display: grid;
   place-items: center;
   min-height: 180px;
 }
 
-.athena-login-loader-mark {
-  animation: athena-login-pulse 1.2s ease-in-out infinite;
+.movvo-login-loader-mark {
+  animation: movvo-login-pulse 1.2s ease-in-out infinite;
 }
 
-.athena-login-logo {
+.movvo-login-logo {
   display: block;
   height: auto;
   max-width: 100%;
 }
 
-@keyframes athena-login-spin {
+@keyframes movvo-login-spin {
   to {
     transform: rotate(360deg);
   }
 }
 
-@keyframes athena-login-fade {
+@keyframes movvo-login-fade {
   from {
     opacity: 0;
     transform: translateY(8px);
@@ -423,7 +423,7 @@
   }
 }
 
-@keyframes athena-login-rise {
+@keyframes movvo-login-rise {
   from {
     opacity: 0;
     transform: translateY(14px);
@@ -434,7 +434,7 @@
   }
 }
 
-@keyframes athena-login-pulse {
+@keyframes movvo-login-pulse {
   0%,
   100% {
     opacity: 0.7;
@@ -447,70 +447,70 @@
 }
 
 @media (max-width: 960px) {
-  .athena-login-page {
+  .movvo-login-page {
     grid-template-columns: 1fr;
   }
 
-  .athena-login-bg-red,
-  .athena-login-bg-blur {
+  .movvo-login-bg-red,
+  .movvo-login-bg-blur {
     width: 100%;
     height: 42%;
   }
 
-  .athena-login-bg-gradient {
+  .movvo-login-bg-gradient {
     background:
       radial-gradient(ellipse at 50% 0%, rgba(177, 0, 24, 0.35), transparent 50%),
       linear-gradient(180deg, transparent 30%, #090909 58%);
   }
 
-  .athena-login-brand {
+  .movvo-login-brand {
     padding-bottom: 8px;
     min-height: auto;
   }
 
-  .athena-login-brand-inner {
+  .movvo-login-brand-inner {
     max-width: none;
   }
 
-  .athena-login-brand-name {
+  .movvo-login-brand-name {
     font-size: 2.2rem;
   }
 
-  .athena-login-slogan {
+  .movvo-login-slogan {
     max-width: none;
   }
 
-  .athena-login-features {
+  .movvo-login-features {
     grid-template-columns: 1fr 1fr;
   }
 
-  .athena-login-panel {
+  .movvo-login-panel {
     padding-top: 8px;
     padding-bottom: 32px;
   }
 }
 
 @media (max-width: 520px) {
-  .athena-login-card {
+  .movvo-login-card {
     padding: 24px 20px;
     border-radius: 16px;
   }
 
-  .athena-login-features {
+  .movvo-login-features {
     grid-template-columns: 1fr;
   }
 
-  .athena-login-bg-mark {
+  .movvo-login-bg-mark {
     display: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .athena-login-brand-inner,
-  .athena-login-card,
-  .athena-login-loader-mark,
-  .athena-login-spinner,
-  .athena-login-submit {
+  .movvo-login-brand-inner,
+  .movvo-login-card,
+  .movvo-login-loader-mark,
+  .movvo-login-spinner,
+  .movvo-login-submit {
     animation: none !important;
     transition: none !important;
   }

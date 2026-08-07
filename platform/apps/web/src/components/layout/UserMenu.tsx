@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Avatar, athenaIcons } from '@athena/ui';
+import { Avatar, athenaIcons } from '@movvo/ui';
 import { ChevronDown, Moon, Sun } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { DEV_TOKEN_COOKIE } from '@/lib/auth/constants';
@@ -44,7 +44,7 @@ export function UserMenu({ userName }: { userName?: string | null }) {
     <div className="relative" ref={ref}>
       <button
         type="button"
-        className="athena-user-trigger"
+        className="movvo-user-trigger"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-haspopup="menu"
@@ -56,16 +56,16 @@ export function UserMenu({ userName }: { userName?: string | null }) {
       </button>
 
       {open ? (
-        <div className="athena-user-menu" role="menu">
-          <Link href="/app/profile" className="athena-user-menu-item" role="menuitem" onClick={() => setOpen(false)}>
+        <div className="movvo-user-menu" role="menu">
+          <Link href="/app/profile" className="movvo-user-menu-item" role="menuitem" onClick={() => setOpen(false)}>
             <Profile size={16} /> Meu Perfil
           </Link>
-          <Link href="/app/settings" className="athena-user-menu-item" role="menuitem" onClick={() => setOpen(false)}>
+          <Link href="/app/settings" className="movvo-user-menu-item" role="menuitem" onClick={() => setOpen(false)}>
             <Settings size={16} /> Configurações
           </Link>
           <button
             type="button"
-            className="athena-user-menu-item"
+            className="movvo-user-menu-item"
             role="menuitem"
             onClick={() => {
               toggle();
@@ -75,10 +75,10 @@ export function UserMenu({ userName }: { userName?: string | null }) {
             {resolved === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
             Tema {resolved === 'dark' ? 'claro' : 'escuro'}
           </button>
-          <Link href="/app/help" className="athena-user-menu-item" role="menuitem" onClick={() => setOpen(false)}>
+          <Link href="/app/help" className="movvo-user-menu-item" role="menuitem" onClick={() => setOpen(false)}>
             <Help size={16} /> Ajuda
           </Link>
-          <button type="button" className="athena-user-menu-item is-danger" role="menuitem" onClick={() => void logout()}>
+          <button type="button" className="movvo-user-menu-item is-danger" role="menuitem" onClick={() => void logout()}>
             <Logout size={16} /> Sair
           </button>
         </div>

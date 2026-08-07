@@ -27,9 +27,9 @@ export function reportClientError(
   };
   buffer.push(payload);
   try {
-    const w = window as Window & { __ATHENA_ERRORS__?: ClientErrorPayload[] };
-    w.__ATHENA_ERRORS__ = w.__ATHENA_ERRORS__ || [];
-    w.__ATHENA_ERRORS__.push(payload);
+    const w = window as Window & { __MOVVO_ERRORS__?: ClientErrorPayload[] };
+    w.__MOVVO_ERRORS__ = w.__MOVVO_ERRORS__ || [];
+    w.__MOVVO_ERRORS__.push(payload);
     if (process.env.NODE_ENV !== 'production') {
       // eslint-disable-next-line no-console
       console.error('[Athena RUM]', payload);

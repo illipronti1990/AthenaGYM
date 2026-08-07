@@ -19,7 +19,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical } from 'lucide-react';
-import type { DashboardLayoutItem, DashboardWidgetId } from '@athena/shared';
+import type { DashboardLayoutItem, DashboardWidgetId } from '@movvo/shared';
 
 export type DashboardTile = {
   id: DashboardWidgetId;

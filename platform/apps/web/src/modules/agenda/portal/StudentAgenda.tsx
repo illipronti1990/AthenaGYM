@@ -1,12 +1,12 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import type { ClassEnrollment, Schedule } from '@athena/shared';
+import type { ClassEnrollment, Schedule } from '@movvo/shared';
 import {
   canCancelClassReservation,
   CLASS_CANCEL_CUTOFF_MINUTES,
   classCancelBlockMessage,
-} from '@athena/shared';
+} from '@movvo/shared';
 import { useToast } from '@/components/ui/Toast';
 import { operationsApi } from '@/modules/operations/services/operationsApi';
 
@@ -50,8 +50,8 @@ export function StudentAgenda({ accessToken }: { accessToken: string }) {
     const onAgendaChanged = () => {
       void reload();
     };
-    window.addEventListener('athena-agenda-changed', onAgendaChanged);
-    return () => window.removeEventListener('athena-agenda-changed', onAgendaChanged);
+    window.addEventListener('movvo-agenda-changed', onAgendaChanged);
+    return () => window.removeEventListener('movvo-agenda-changed', onAgendaChanged);
   }, [reload]);
 
   async function enroll(scheduleId: string) {
@@ -94,7 +94,7 @@ export function StudentAgenda({ accessToken }: { accessToken: string }) {
     return (
       <div className="space-y-3">
         <p className="text-sm text-[var(--danger)]">{loadError}</p>
-        <button type="button" className="athena-btn athena-btn-secondary" onClick={() => void reload()}>
+        <button type="button" className="movvo-btn movvo-btn-secondary" onClick={() => void reload()}>
           Tentar novamente
         </button>
       </div>
@@ -134,7 +134,7 @@ export function StudentAgenda({ accessToken }: { accessToken: string }) {
               </span>
               <button
                 type="button"
-                className="athena-btn athena-btn-secondary"
+                className="movvo-btn movvo-btn-secondary"
                 disabled={!allowed || busyId === schedule.id}
                 title={!allowed ? reason || undefined : undefined}
                 data-testid={`cancel-class-${schedule.id}`}
@@ -162,7 +162,7 @@ export function StudentAgenda({ accessToken }: { accessToken: string }) {
             </span>
             <button
               type="button"
-              className="athena-btn athena-btn-primary"
+              className="movvo-btn movvo-btn-primary"
               disabled={busyId === schedule.id}
               data-testid={`reserve-class-${schedule.id}`}
               onClick={() => void enroll(schedule.id)}

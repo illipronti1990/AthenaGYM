@@ -66,7 +66,7 @@ def detalhe_aluno(matricula: str, user: AuthUser) -> dict | None:
         "valor": 0.0,
         "vencimento": "—",
         "status": "Em dia",
-        "pix_copia_cola": "00020126ATHENASGYMPIXDEMO",
+        "pix_copia_cola": "00020126ATHENAGYMPIXDEMO",
     }
     if conta:
         situacao = str(conta.get("situacao") or "")
@@ -76,7 +76,7 @@ def detalhe_aluno(matricula: str, user: AuthUser) -> dict | None:
             "valor": float(conta.get("valor") or 0),
             "vencimento": str(conta.get("vencimento") or "—"),
             "status": situacao,
-            "pix_copia_cola": "00020126ATHENASGYMPIXDEMO",
+            "pix_copia_cola": "00020126ATHENAGYMPIXDEMO",
         }
 
     progresso = 0.78

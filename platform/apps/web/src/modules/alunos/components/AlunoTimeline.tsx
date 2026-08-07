@@ -1,5 +1,5 @@
-import type { StudentTimelineEvent, StudentTimelineKind } from '@athena/shared';
-import { STUDENT_TIMELINE_KIND_LABELS } from '@athena/shared';
+import type { StudentTimelineEvent, StudentTimelineKind } from '@movvo/shared';
+import { STUDENT_TIMELINE_KIND_LABELS } from '@movvo/shared';
 import {
   Activity,
   ClipboardList,

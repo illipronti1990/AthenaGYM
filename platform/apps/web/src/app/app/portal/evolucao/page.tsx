@@ -1,4 +1,4 @@
-import { Page, PageHeader, PageContent, pageQualityAttrs } from '@athena/ui';
+import { Page, PageHeader, PageContent, pageQualityAttrs } from '@movvo/ui';
 import { requireAccessToken } from '@/lib/auth/token';
 import { PortalEvolucao } from '@/modules/portal/components/PortalPanels';
 

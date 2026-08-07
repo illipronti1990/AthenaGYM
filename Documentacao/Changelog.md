@@ -1,4 +1,30 @@
-# Changelog — ATHENA GYM ERP / PLATFORM
+# Changelog — Movvo ERP / Platform
+
+## Platform — 07/08/2026 — Sprint G-20 Arquitetura 2.0 / Athena → Movvo
+
+- Packages `@athena/*` → `@movvo/*` (21 workspaces); root `movvo-platform`
+- Símbolos: `MovvoDataGrid`, `MovvoChat`, `MovvoClient`; CSS `movvo-*`; theme Tailwind só `movvo.*`
+- Migration `20260812_0001_movvo_g20.sql`: `companies.theme` athena→movvo (tenant **Athena Academia** preservado)
+- Env E2E `MOVVO_E2E_*` (+ fallback); Grep Gate CI `scripts/grep-athena-gate.mjs`
+- Docs/Swagger/OTel service `movvo-api`; Vercel slugs `athena-*` documentados como exceção de infra
+- Playwright `rename.g20.smoke.spec.ts`
+
+## Platform — 07/08/2026 — Sprint G-17 Performance / Escala / Observabilidade
+
+- Migration `20260811_0001_scale_g17.sql`: índices hot paths + `claim_outbox_batch`
+- API: `CacheModule` (Redis), `QueueModule`, `ObservabilityModule` (Pino, `/metrics`, RUM, status), `StorageModule`, health Redis/filas
+- Worker BullMQ long-running + `WORKER_HEALTH_URL`
+- Web `/app/platform/observability` · RUM → `POST /observability/rum` · lazy loading BI/estoque/admin/platform/security · DataGrid virtualize default
+- Grafana provisionado (`movvo-g17-api`) · k6 `tests/load/` · Playwright `scale.g17.smoke.spec.ts`
+- Docs `MOVVO_SCALE_G17.md` · DEPLOY Redis/worker/OTel/Sentry
+
+## Platform — 07/08/2026 — Sprint G-16 Segurança / LGPD / Compliance
+
+- Migration `20260810_0001_security_g16.sql`: audit extend, sessions, MFA, security_events, consents/LGPD, retention, integration_secrets, backup_logs, rate limits
+- API `SecurityModule` (`/api/v1/security/*`) + login lockout/rate-limit + logout/session + health `/db|/cache|/integrations` (503)
+- Web `/app/security/*` (dashboard, sessões/MFA, auditoria, LGPD, retenção)
+- Secrets AES-GCM (`SECRETS_ENCRYPTION_KEY`) · script `purge-retention.mjs` · docs `MOVVO_SECURITY_G16.md`
+- Playwright `security.g16.smoke.spec.ts`
 
 ## Platform — 07/08/2026 — Sprint G-15 SaaS / White Label / Billing
 
@@ -71,7 +97,7 @@
 
 ## Platform 0.1.0 — 22/07/2026 — Sprint 0 Fundação SaaS
 
-- Monorepo `platform/` — Next.js (`apps/web`) + NestJS (`apps/api`) + `@athena/shared`
+- Monorepo `platform/` — Next.js (`apps/web`) + NestJS (`apps/api`) + `@movvo/shared`
 - Schema canônico UUID: `companies`, `units`, `profiles`, `memberships` + RLS
 - API oficial `/api/v1` (health, me, companies, units) + Swagger `/api/v1/docs`
 - Auth: JWT Supabase · shell login Next.js `/login` + `/app`

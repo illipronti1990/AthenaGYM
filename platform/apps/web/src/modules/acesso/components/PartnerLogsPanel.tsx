@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { PartnerApiLog } from '@athena/shared';
-import { Button } from '@athena/ui';
+import type { PartnerApiLog } from '@movvo/shared';
+import { Button } from '@movvo/ui';
 import { useToast } from '@/components/ui/Toast';
 import { integracoesApi } from '../services/acessoApi';
 

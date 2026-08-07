@@ -144,7 +144,7 @@ Public Sub VerificarAlertas()
     On Error GoTo TrataErro
 
     RegistrarAcao "Alertas Atraso=" & atrasados & " Manut=" & manut, "Sistema"
-    MsgAviso "ALERTAS ATHENAS GYM" & vbCrLf & vbCrLf & _
+    MsgAviso "ALERTAS ATHENA GYM" & vbCrLf & vbCrLf & _
            "Mensalidades em atraso: " & atrasados & vbCrLf & _
            "Equipamentos com manutenção vencida: " & manut
     Exit Sub

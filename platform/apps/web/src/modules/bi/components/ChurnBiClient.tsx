@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useTransition } from 'react';
-import { Button, Card } from '@athena/ui';
+import { Button, Card } from '@movvo/ui';
 import { biApi } from '@/modules/bi/services/biApi';
 
 type Risk = {

@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { LoyaltyAccount, LoyaltyEarnRule, LoyaltyReward } from '@athena/shared';
-import { Button, Card } from '@athena/ui';
+import type { LoyaltyAccount, LoyaltyEarnRule, LoyaltyReward } from '@movvo/shared';
+import { Button, Card } from '@movvo/ui';
 import { crmApi } from '../../services/crmApi';
 import { useToast } from '@/components/ui/Toast';
 
@@ -67,13 +67,13 @@ export function LoyaltyPanel({ accessToken }: { accessToken: string }) {
   return (
     <div className="space-y-6" data-testid="loyalty-panel">
       <Card>
-        <h2 className="athena-title mb-3 text-sm">Consultar aluno</h2>
+        <h2 className="movvo-title mb-3 text-sm">Consultar aluno</h2>
         <div className="flex flex-wrap gap-2">
           <input
             placeholder="ID do aluno"
             value={studentId}
             onChange={(e) => setStudentId(e.target.value)}
-            className="athena-input w-72 font-mono text-xs"
+            className="movvo-input w-72 font-mono text-xs"
             data-testid="loyalty-student-id"
           />
           <Button variant="secondary" type="button" onClick={() => void lookupAccount()}>
@@ -90,7 +90,7 @@ export function LoyaltyPanel({ accessToken }: { accessToken: string }) {
               <select
                 value={earnEvent}
                 onChange={(e) => setEarnEvent(e.target.value)}
-                className="athena-input"
+                className="movvo-input"
               >
                 <option value="">Evento de acúmulo</option>
                 {earnRules.map((r) => (
@@ -112,7 +112,7 @@ export function LoyaltyPanel({ accessToken }: { accessToken: string }) {
               <select
                 value={redeemRewardId}
                 onChange={(e) => setRedeemRewardId(e.target.value)}
-                className="athena-input"
+                className="movvo-input"
               >
                 <option value="">Selecionar recompensa</option>
                 {rewards.map((r) => (
@@ -135,7 +135,7 @@ export function LoyaltyPanel({ accessToken }: { accessToken: string }) {
 
       <div className="grid gap-4 md:grid-cols-2">
         <Card>
-          <h2 className="athena-title mb-3 text-sm">Recompensas disponíveis</h2>
+          <h2 className="movvo-title mb-3 text-sm">Recompensas disponíveis</h2>
           <ul className="space-y-2 text-sm">
             {rewards.map((r) => (
               <li key={r.id} className="flex items-center justify-between">
@@ -146,7 +146,7 @@ export function LoyaltyPanel({ accessToken }: { accessToken: string }) {
           </ul>
         </Card>
         <Card>
-          <h2 className="athena-title mb-3 text-sm">Regras de acúmulo</h2>
+          <h2 className="movvo-title mb-3 text-sm">Regras de acúmulo</h2>
           <ul className="space-y-2 text-sm">
             {earnRules.map((r) => (
               <li key={r.id} className="flex items-center justify-between">

@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import type { DashboardAlert, DashboardAlertSeverity } from '@athena/shared';
-import { EmptyState } from '@athena/ui';
+import type { DashboardAlert, DashboardAlertSeverity } from '@movvo/shared';
+import { EmptyState } from '@movvo/ui';
 import { AlertTriangle } from 'lucide-react';
 
 const severityMeta: Record<
@@ -28,8 +28,8 @@ const severityMeta: Record<
 
 export function AlertsWidget({ alerts }: { alerts: DashboardAlert[] }) {
   return (
-    <div className="athena-card h-full" data-testid="alerts-widget">
-      <h3 className="athena-h3 mb-3 inline-flex items-center gap-2 text-orange-400">
+    <div className="movvo-card h-full" data-testid="alerts-widget">
+      <h3 className="movvo-h3 mb-3 inline-flex items-center gap-2 text-orange-400">
         <AlertTriangle size={18} /> Atenção
       </h3>
       {alerts.length === 0 ? (

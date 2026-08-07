@@ -8,17 +8,17 @@ export function ReconnectOverlay() {
 
   return (
     <div
-      className="athena-reconnect"
+      className="movvo-reconnect"
       role="alert"
       aria-live="assertive"
       data-testid="reconnect-overlay"
     >
-      <div className="athena-reconnect-card">
-        <p className="athena-h3">Reconectando…</p>
-        <p className="athena-muted mt-1 text-sm">
+      <div className="movvo-reconnect-card">
+        <p className="movvo-h3">Reconectando…</p>
+        <p className="movvo-muted mt-1 text-sm">
           {!online ? 'Sem conexão com a internet.' : 'A API está temporariamente indisponível.'}
         </p>
-        <p className="athena-reconnect-count" aria-label={`Nova tentativa em ${countdown} segundos`}>
+        <p className="movvo-reconnect-count" aria-label={`Nova tentativa em ${countdown} segundos`}>
           {countdown}
         </p>
       </div>

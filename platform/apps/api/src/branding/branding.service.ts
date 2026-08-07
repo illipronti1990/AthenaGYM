@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { MOVVO_PRODUCT, resolveCompanyBranding } from '@athena/shared';
+import { MOVVO_PRODUCT, resolveCompanyBranding } from '@movvo/shared';
+import { RedisCacheService } from '../cache/redis-cache.service';
 import { SupabaseService } from '../supabase/supabase.service';
 
 export type BrandingResponse = {
@@ -20,9 +21,26 @@ export type BrandingResponse = {
 
 @Injectable()
 export class BrandingService {
-  constructor(private readonly supabase: SupabaseService) {}
+  constructor(
+    private readonly supabase: SupabaseService,
+    private readonly cache: RedisCacheService,
+  ) {}
 
   async getPublic(companyId?: string | null, hostname?: string | null): Promise<BrandingResponse> {
+    const cacheKey = this.cache.key(
+      companyId || hostname || 'default',
+      'branding',
+      hostname || companyId || 'root',
+    );
+    return this.cache.wrap(cacheKey, RedisCacheService.TTL.branding, () =>
+      this.loadPublic(companyId, hostname),
+    );
+  }
+
+  private async loadPublic(
+    companyId?: string | null,
+    hostname?: string | null,
+  ): Promise<BrandingResponse> {
     const product: BrandingResponse = {
       name: MOVVO_PRODUCT.name,
       shortName: MOVVO_PRODUCT.shortName,

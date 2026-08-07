@@ -1,5 +1,5 @@
 """
-ATHENAS GYM Cloud API — Sprint 12.0 (SQL Foundation)
+ATHENA GYM Cloud API — Sprint 12.0 (SQL Foundation)
 
 Excel VBA (ops) ──sync JSON──► FastAPI ──SQL──► Portal Web / Flutter
 """
@@ -65,7 +65,7 @@ def health() -> dict:
     sb = supabase_status()
     return {
         "status": "ok",
-        "service": "athenas-gym-api",
+        "service": "athena-gym-api",
         "version": API_VERSION,
         "store": "supabase-py",
         "database_url_engine": DATABASE_URL.split("://", 1)[0],

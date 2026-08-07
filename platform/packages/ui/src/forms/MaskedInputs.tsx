@@ -188,7 +188,7 @@ export function DatePicker({
   }
 
   return (
-    <div className="athena-field">
+    <div className="movvo-field">
       <FormInput
         label={label}
         type="date"
@@ -199,14 +199,14 @@ export function DatePicker({
         data-testid="date-input"
       />
       {showShortcuts ? (
-        <div className="athena-date-shortcuts">
-          <button type="button" className="athena-chip-mini" onClick={() => shift(0)}>
+        <div className="movvo-date-shortcuts">
+          <button type="button" className="movvo-chip-mini" onClick={() => shift(0)}>
             Hoje
           </button>
-          <button type="button" className="athena-chip-mini" onClick={() => shift(-1)}>
+          <button type="button" className="movvo-chip-mini" onClick={() => shift(-1)}>
             Ontem
           </button>
-          <button type="button" className="athena-chip-mini" onClick={() => shift(1)}>
+          <button type="button" className="movvo-chip-mini" onClick={() => shift(1)}>
             Amanhã
           </button>
         </div>
@@ -247,11 +247,11 @@ export function Combobox({
     o.label.toLowerCase().includes((q || value).toLowerCase()),
   );
   return (
-    <div className="athena-field">
-      {label ? <span className="athena-label">{label}</span> : null}
+    <div className="movvo-field">
+      {label ? <span className="movvo-label">{label}</span> : null}
       <input
-        className="athena-input"
-        list="athena-combobox-list"
+        className="movvo-input"
+        list="movvo-combobox-list"
         value={value}
         placeholder={placeholder}
         onChange={(e) => {
@@ -259,7 +259,7 @@ export function Combobox({
           onChange(e.target.value);
         }}
       />
-      <datalist id="athena-combobox-list">
+      <datalist id="movvo-combobox-list">
         {filtered.slice(0, 40).map((o) => (
           <option key={o.value} value={o.label} />
         ))}

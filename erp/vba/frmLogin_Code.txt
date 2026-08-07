@@ -1,7 +1,7 @@
 Option Explicit
 
 Private Sub UserForm_Initialize()
-    Me.Caption = "ATHENAS GYM — Login"
+    Me.Caption = "ATHENA GYM — Login"
     Me.txtUsuario.Value = ""
     Me.txtSenha.Value = ""
     Me.txtSenha.PasswordChar = "*"
@@ -34,12 +34,12 @@ Private Sub btnEntrar_Click()
 
     If ValidarLogin(usuario, senha) Then
         RegistrarLogin
-        MsgBox "Bem-vindo, " & NomeUsuario, vbInformation, "ATHENAS GYM"
+        MsgBox "Bem-vindo, " & NomeUsuario, vbInformation, "ATHENA GYM"
         Unload Me
         ConcluirLogin
     Else
         Me.lblMensagem.Caption = "Usuário ou senha inválidos."
-        MsgBox "Usuário ou senha inválidos.", vbCritical, "ATHENAS GYM"
+        MsgBox "Usuário ou senha inválidos.", vbCritical, "ATHENA GYM"
         Me.txtSenha.Value = ""
         On Error Resume Next
         Me.txtSenha.SetFocus

@@ -34,7 +34,7 @@ export interface PaymentProvider {
 export class StubPaymentProvider implements PaymentProvider {
   readonly name = 'stub';
 
-  constructor(private readonly webhookSecret = process.env.FINANCE_WEBHOOK_SECRET || 'athena-stub-secret') {}
+  constructor(private readonly webhookSecret = process.env.FINANCE_WEBHOOK_SECRET || 'movvo-stub-secret') {}
 
   async createPixCharge(input: PixChargeInput): Promise<PixChargeResult> {
     const externalId = `stub_${input.receivableId}_${randomUUID().slice(0, 8)}`;
@@ -48,7 +48,7 @@ export class StubPaymentProvider implements PaymentProvider {
   }
 
   verifySignature(headers: Record<string, string>, rawBody: string): boolean {
-    const sig = headers['x-athena-signature'] || headers['X-Athena-Signature'] || '';
+    const sig = headers['x-movvo-signature'] || headers['X-Athena-Signature'] || '';
     const expected = createHmac('sha256', this.webhookSecret).update(rawBody).digest('hex');
     return sig === expected || sig === `sha256=${expected}`;
   }

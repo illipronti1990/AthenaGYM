@@ -17,13 +17,13 @@ export function StepIndicator({
   current: number;
 }) {
   return (
-    <ol className="athena-steps" data-testid="step-indicator">
+    <ol className="movvo-steps" data-testid="step-indicator">
       {steps.map((step, i) => {
         const state = i < current ? 'done' : i === current ? 'current' : 'todo';
         return (
-          <li key={step.id} className={`athena-step is-${state}`}>
-            <span className="athena-step-index">{i + 1}</span>
-            <span className="athena-step-title">{step.title}</span>
+          <li key={step.id} className={`movvo-step is-${state}`}>
+            <span className="movvo-step-index">{i + 1}</span>
+            <span className="movvo-step-title">{step.title}</span>
           </li>
         );
       })}
@@ -52,13 +52,13 @@ export function Wizard({
 }) {
   const last = current >= steps.length - 1;
   return (
-    <div className="athena-wizard" data-testid="wizard">
+    <div className="movvo-wizard" data-testid="wizard">
       <StepIndicator steps={steps} current={current} />
-      <p className="athena-muted mb-4 text-sm">
+      <p className="movvo-muted mb-4 text-sm">
         {steps[current]?.description || `Etapa ${current + 1} de ${steps.length}`}
       </p>
-      <div className="athena-wizard-body">{children}</div>
-      <div className="athena-form-actions">
+      <div className="movvo-wizard-body">{children}</div>
+      <div className="movvo-form-actions">
         <Button
           type="button"
           variant="secondary"

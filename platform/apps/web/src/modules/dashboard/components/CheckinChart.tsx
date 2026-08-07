@@ -1,14 +1,14 @@
 'use client';
 
-import type { DashboardChartPoint } from '@athena/shared';
-import { chartColors, EmptyState } from '@athena/ui';
+import type { DashboardChartPoint } from '@movvo/shared';
+import { chartColors, EmptyState } from '@movvo/ui';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 export function CheckinChart({ data }: { data: DashboardChartPoint[] }) {
   const hasData = data.some((d) => (d.value || 0) > 0);
   return (
-    <div className="athena-card h-full min-h-[280px]" data-testid="checkin-chart">
-      <h3 className="athena-h3 mb-3 text-[var(--primary)]">Check-ins semanais</h3>
+    <div className="movvo-card h-full min-h-[280px]" data-testid="checkin-chart">
+      <h3 className="movvo-h3 mb-3 text-[var(--primary)]">Check-ins semanais</h3>
       {!hasData ? (
         <EmptyState title="Nenhum check-in esta semana" description="O gráfico aparece assim que houver acessos." />
       ) : (

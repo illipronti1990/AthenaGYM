@@ -10,8 +10,8 @@ import type {
   StockAlert,
   StockMovement,
   Supplier,
-} from '@athena/shared';
-import { isLowStock, isRupture, signedStockDelta } from '@athena/shared';
+} from '@movvo/shared';
+import { isLowStock, isRupture, signedStockDelta } from '@movvo/shared';
 
 @Injectable()
 export class InventoryRepository {

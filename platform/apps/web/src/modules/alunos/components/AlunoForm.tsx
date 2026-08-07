@@ -3,8 +3,8 @@
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { STUDENT_STATUSES, STUDENT_STATUS_LABELS, isValidCpf, normalizeCpf } from '@athena/shared';
-import type { Plan, UserListItem } from '@athena/shared';
+import { STUDENT_STATUSES, STUDENT_STATUS_LABELS, isValidCpf, normalizeCpf } from '@movvo/shared';
+import type { Plan, UserListItem } from '@movvo/shared';
 import {
   Button,
   Form,
@@ -19,7 +19,7 @@ import {
   PhoneInput,
   CepInput,
   DatePicker,
-} from '@athena/ui';
+} from '@movvo/ui';
 import { createAluno, updateAluno } from '../services/alunosApi';
 import { salesApi } from '@/modules/sales/services/salesApi';
 import { apiGetMe, apiListUsers } from '@/services/api';
@@ -359,7 +359,7 @@ export function AlunoForm({
       <FormProgress value={progress} />
 
       {existing ? (
-        <div className="athena-existing-student" data-testid="existing-student-banner">
+        <div className="movvo-existing-student" data-testid="existing-student-banner">
           <div>
             <p className="font-medium text-[var(--text)]">Este aluno já existe.</p>
             <p className="text-sm text-[var(--muted)]">

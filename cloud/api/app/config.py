@@ -17,17 +17,17 @@ DATA_DIR = ROOT / "data"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 # Padrão: SQLite (zero instalação). Produção: PostgreSQL.
-# Ex.: postgresql+psycopg://athenas:athenas@localhost:5432/athenas
+# Ex.: postgresql+psycopg://athena:athena@localhost:5432/athena
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    f"sqlite:///{(DATA_DIR / 'athenas.db').as_posix()}",
+    f"sqlite:///{(DATA_DIR / 'athena.db').as_posix()}",
 )
 
-API_TITLE = "ATHENAS GYM API"
+API_TITLE = "ATHENA GYM API"
 API_VERSION = "0.19.0"
-SECRET_KEY = os.getenv("ATHENAS_SECRET", "athenas-gym-dev-secret-change-me")
-TOKEN_HOURS = int(os.getenv("ATHENAS_TOKEN_HOURS", "168"))
-CORS_ORIGINS = os.getenv("ATHENAS_CORS", "*").split(",")
+SECRET_KEY = os.getenv("ATHENA_SECRET", "athena-gym-dev-secret-change-me")
+TOKEN_HOURS = int(os.getenv("ATHENA_TOKEN_HOURS", "168"))
+CORS_ORIGINS = os.getenv("ATHENA_CORS", "*").split(",")
 
 # Pacote oficial supabase-py (PostgREST / Auth / Storage)
 SUPABASE_URL = os.getenv("SUPABASE_URL") or os.getenv("PUBLIC_SUPABASE_URL", "")
@@ -44,7 +44,7 @@ SUPABASE_SECRET_KEY = (
 )
 SUPABASE_JWKS_URL = os.getenv("SUPABASE_JWKS_URL", "")
 
-PROJECT_ROOT = ROOT.parent.parent  # ATHENAS GYM/
+PROJECT_ROOT = ROOT.parent.parent  # ATHENA GYM/
 SYNC_JSON_CANDIDATES = [
     DATA_DIR / "portal_export.json",
     PROJECT_ROOT / "Sync" / "portal_export.json",

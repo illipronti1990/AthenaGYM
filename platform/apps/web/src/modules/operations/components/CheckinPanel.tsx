@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import { Button } from '@athena/ui';
+import { Button } from '@movvo/ui';
 import { operationsApi } from '../services/operationsApi';
 import { StudentSelect } from './StudentSelect';
 import { ExportButtons } from '@/modules/polish/components/ExportButtons';
@@ -203,7 +203,7 @@ export function CheckinPanel({ accessToken }: { accessToken: string }) {
               value={cpf}
               onChange={(e) => setCpf(e.target.value)}
               placeholder="Somente números"
-              className="athena-input block w-full"
+              className="movvo-input block w-full"
               data-testid="checkin-cpf"
             />
             <Button type="button" disabled={busy !== null} onClick={() => void onCpf()}>
@@ -218,7 +218,7 @@ export function CheckinPanel({ accessToken }: { accessToken: string }) {
               value={code}
               onChange={(e) => setCode(e.target.value)}
               placeholder="Código de acesso"
-              className="athena-input block w-full"
+              className="movvo-input block w-full"
               data-testid="checkin-code"
             />
             <Button type="button" disabled={busy !== null} onClick={() => void onCode()}>
@@ -256,19 +256,19 @@ export function CheckinPanel({ accessToken }: { accessToken: string }) {
           value={qrInput}
           onChange={(e) => setQrInput(e.target.value)}
           placeholder="Cole o token do QR aqui"
-          className="athena-input mt-1 block w-full max-w-xl font-mono text-xs"
+          className="movvo-input mt-1 block w-full max-w-xl font-mono text-xs"
           data-testid="qr-token-input"
         />
       </label>
 
       <div>
-        <h2 className="athena-title mb-2 text-sm">Histórico</h2>
+        <h2 className="movvo-title mb-2 text-sm">Histórico</h2>
         {history.length === 0 ? (
           <p className="text-sm text-[var(--muted)]">Nenhum check-in ainda.</p>
         ) : (
-          <ul className="athena-list text-sm">
+          <ul className="movvo-list text-sm">
             {history.slice(0, 20).map((h) => (
-              <li key={h.id} className="athena-list-item">
+              <li key={h.id} className="movvo-list-item">
                 <span>
                   {h.method === 'qr' ? 'QR' : h.method === 'manual' ? 'Manual' : h.method} ·{' '}
                   {h.direction === 'in' ? 'Entrada' : 'Saída'}

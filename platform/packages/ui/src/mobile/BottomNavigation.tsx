@@ -44,7 +44,7 @@ export function BottomNavigation({ items = DEFAULT_ITEMS }: { items?: BottomNavI
   const pathname = usePathname() || '/app';
 
   return (
-    <nav className="athena-bottom-nav" aria-label="Navegação principal mobile" data-testid="bottom-nav">
+    <nav className="movvo-bottom-nav" aria-label="Navegação principal mobile" data-testid="bottom-nav">
       {items.map((item) => {
         const active = item.match ? item.match(pathname) : pathname === item.href;
         const Icon = item.icon;
@@ -52,7 +52,7 @@ export function BottomNavigation({ items = DEFAULT_ITEMS }: { items?: BottomNavI
           <Link
             key={item.href}
             href={item.href}
-            className={`athena-bottom-nav-item ${active ? 'is-active' : ''}`}
+            className={`movvo-bottom-nav-item ${active ? 'is-active' : ''}`}
             aria-current={active ? 'page' : undefined}
           >
             <Icon size={20} aria-hidden />

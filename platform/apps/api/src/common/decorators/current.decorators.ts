@@ -1,5 +1,5 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import type { AuthContext } from '@athena/shared';
+import type { AuthContext } from '@movvo/shared';
 import {
   AUTH_CONTEXT_KEY,
   AUTH_USER_KEY,

@@ -10,7 +10,7 @@ const API_URL = process.env.API_URL || 'http://localhost:3001/api/v1';
 const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && req.url === '/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ status: 'ok', service: 'athena-ai-service', api: API_URL }));
+    res.end(JSON.stringify({ status: 'ok', service: 'movvo-ai-service', api: API_URL }));
     return;
   }
 

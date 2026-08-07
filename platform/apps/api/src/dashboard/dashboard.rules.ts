@@ -2,8 +2,8 @@ import {
   DEFAULT_DASHBOARD_LAYOUT,
   type DashboardLayoutItem,
   type DashboardWidgetId,
-} from '@athena/shared';
-import { percentDelta } from '@athena/shared';
+} from '@movvo/shared';
+import { percentDelta } from '@movvo/shared';
 
 const VALID = new Set(DEFAULT_DASHBOARD_LAYOUT.map((i) => i.id));
 

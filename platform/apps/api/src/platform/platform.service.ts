@@ -7,8 +7,8 @@ import {
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { createHash, createHmac, randomBytes, timingSafeEqual } from 'crypto';
-import type { AuthContext, PublicApiContext } from '@athena/shared';
-import { INTEGRATION_CATALOG } from '@athena/integrations';
+import type { AuthContext, PublicApiContext } from '@movvo/shared';
+import { INTEGRATION_CATALOG } from '@movvo/integrations';
 import { AuditService } from '../audit/audit.service';
 import {
   CreateApiClientDto,

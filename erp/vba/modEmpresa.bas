@@ -181,7 +181,7 @@ Public Sub TrocarEmpresa()
         MsgErro "Somente SuperAdmin pode trocar de empresa."
         Exit Sub
     End If
-    s = InputBox("Informe o EmpresaID para assumir (ex.: 1 = ATHENAS GYM):", "Trocar Empresa", "1")
+    s = InputBox("Informe o EmpresaID para assumir (ex.: 1 = ATHENA GYM):", "Trocar Empresa", "1")
     If Len(Trim$(s)) = 0 Then Exit Sub
     eid = CLng(Val(s))
     If Not CarregarEmpresa(eid) Then

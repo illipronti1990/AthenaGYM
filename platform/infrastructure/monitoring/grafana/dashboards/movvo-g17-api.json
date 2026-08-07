@@ -1,0 +1,154 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": { "type": "grafana", "uid": "-- Grafana --" },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "id": 1,
+      "title": "API latency avg (ms)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "movvo_http_latency_avg_ms",
+          "legendFormat": "avg ms",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "id": 2,
+      "title": "HTTP requests / errors",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "movvo_http_requests_total",
+          "legendFormat": "requests",
+          "refId": "A"
+        },
+        {
+          "expr": "movvo_http_errors_total",
+          "legendFormat": "5xx",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "max": 1,
+          "min": 0
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "id": 3,
+      "title": "Cache hit rate",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "movvo_cache_hit_rate",
+          "legendFormat": "hit rate",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "id": 4,
+      "title": "Cache hits / misses",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "movvo_cache_hits",
+          "legendFormat": "hits",
+          "refId": "A"
+        },
+        {
+          "expr": "movvo_cache_misses",
+          "legendFormat": "misses",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 16 },
+      "id": 5,
+      "title": "Queue depth",
+      "description": "BullMQ waiting/active/failed — from API /metrics (aggregates) or worker :3011/metrics (per-queue labels).",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "sum(movvo_queue_waiting)",
+          "legendFormat": "waiting",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(movvo_queue_active)",
+          "legendFormat": "active",
+          "refId": "B"
+        },
+        {
+          "expr": "sum(movvo_queue_failed)",
+          "legendFormat": "failed",
+          "refId": "C"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["movvo", "g17", "api"],
+  "templating": { "list": [] },
+  "time": { "from": "now-1h", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Movvo G-17 — API / Cache / Queues",
+  "uid": "movvo-g17-scale",
+  "version": 1
+}

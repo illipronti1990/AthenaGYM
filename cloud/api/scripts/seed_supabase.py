@@ -19,25 +19,25 @@ def _upsert_empresas(client) -> None:
         [
             {
                 "id": 0,
-                "razao_social": "ATHENAS PLATFORM LTDA",
-                "nome_fantasia": "ATHENAS PLATFORM",
+                "razao_social": "ATHENA PLATFORM LTDA",
+                "nome_fantasia": "ATHENA PLATFORM",
                 "cnpj": "00.000.000/0001-00",
                 "plano": "Enterprise",
                 "status": "Ativo",
                 "cidade": "São Paulo",
                 "estado": "SP",
-                "email": "platform@athenas.gym",
+                "email": "platform@athena.gym",
             },
             {
                 "id": 1,
-                "razao_social": "ATHENAS GYM ACADEMIA LTDA",
-                "nome_fantasia": "ATHENAS GYM",
+                "razao_social": "ATHENA GYM ACADEMIA LTDA",
+                "nome_fantasia": "ATHENA GYM",
                 "cnpj": "12.345.678/0001-90",
                 "plano": "Enterprise",
                 "status": "Ativo",
                 "cidade": "São Paulo",
                 "estado": "SP",
-                "email": "contato@athenas.gym",
+                "email": "contato@athena.gym",
                 "data_expiracao": (datetime.now().astimezone() + timedelta(days=365)).isoformat(),
             },
         ]
@@ -50,7 +50,7 @@ def _upsert_unidades(client) -> None:
             {
                 "id": 1,
                 "empresa_id": 1,
-                "nome": "ATHENAS GYM Matriz",
+                "nome": "ATHENA GYM Matriz",
                 "codigo": "MX",
                 "cidade": "São Paulo",
                 "estado": "SP",
@@ -60,7 +60,7 @@ def _upsert_unidades(client) -> None:
             {
                 "id": 2,
                 "empresa_id": 1,
-                "nome": "ATHENAS GYM Zona Sul",
+                "nome": "ATHENA GYM Zona Sul",
                 "codigo": "ZS",
                 "cidade": "São Paulo",
                 "estado": "SP",
@@ -129,7 +129,7 @@ def _ensure_aluno(client) -> None:
                 "professor": "Carlos Mendes",
                 "status": "Ativo",
                 "telefone": "(11) 98888-0001",
-                "email": "mariana@demo.athenas.gym",
+                "email": "mariana@demo.athena.gym",
                 "data_cadastro": (date.today() - timedelta(days=120)).isoformat(),
             }
         ).execute()

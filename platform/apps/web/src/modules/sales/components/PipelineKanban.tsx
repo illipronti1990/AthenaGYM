@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { Lead, PipelineColumn } from '@athena/shared';
-import { Card } from '@athena/ui';
+import type { Lead, PipelineColumn } from '@movvo/shared';
+import { Card } from '@movvo/ui';
 import { salesApi } from '../services/salesApi';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';

@@ -1,4 +1,4 @@
-"""Identidade visual ATHENAS GYM — sistema premium (não planilha)."""
+"""Identidade visual ATHENA GYM — sistema premium (não planilha)."""
 
 from __future__ import annotations
 
@@ -26,7 +26,7 @@ GREEN_BG = "C8E6C9"
 YELLOW_BG = "FFF9C4"
 RED_BG = "FFCDD2"
 
-LOGO_PATH = Path(__file__).resolve().parent / "assets" / "athenas_logo_a.png"
+LOGO_PATH = Path(__file__).resolve().parent / "assets" / "athena_logo_a.png"
 
 fill_gold = PatternFill("solid", fgColor=GOLD)
 fill_black = PatternFill("solid", fgColor=BLACK)
@@ -171,7 +171,7 @@ def paint_title_bar(ws, title: str, subtitle: str = "", last_col: int = 10) -> N
     c1.font = font_title
     c1.fill = fill_brand
     c1.alignment = center
-    c2 = ws.cell(row=2, column=1, value=subtitle or "ATHENAS GYM — ERP 2.0")
+    c2 = ws.cell(row=2, column=1, value=subtitle or "ATHENA GYM — ERP 2.0")
     c2.font = font_subtitle
     c2.fill = fill_brand_dark
     c2.alignment = center
@@ -230,7 +230,7 @@ def add_sidebar(
     if labels:
         add_logo(ws, "A1", 36, 36)
 
-    ws.cell(row=2, column=1, value="ATHENAS GYM").font = Font(
+    ws.cell(row=2, column=1, value="ATHENA GYM").font = Font(
         name="Georgia", size=11, bold=True, color=GOLD
     )
     ws.cell(row=2, column=1).fill = fill_brand_deep
@@ -275,7 +275,7 @@ def add_sidebar(
 def add_top_bar(ws, start_col: int = 2, end_col: int = 12, perfil_cell: str = "'BD_SESSAO'!B3") -> None:
     """Barra superior limpa — sem merges sobrepostos.
 
-    Linha 1: ATHENAS GYM | ERP 2.0
+    Linha 1: ATHENA GYM | ERP 2.0
     Linha 2: Bem-vindo, Nome · Perfil | data/hora
     """
     for col in range(start_col, end_col + 1):
@@ -295,7 +295,7 @@ def add_top_bar(ws, start_col: int = 2, end_col: int = 12, perfil_cell: str = "'
         ws.merge_cells(
             start_row=1, start_column=brand_start, end_row=1, end_column=brand_end - 1
         )
-    ws.cell(row=1, column=brand_start, value="ATHENAS GYM").font = font_brand
+    ws.cell(row=1, column=brand_start, value="ATHENA GYM").font = font_brand
     ws.cell(row=1, column=brand_start).fill = fill_brand
     ws.cell(row=1, column=brand_start).alignment = left
 

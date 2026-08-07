@@ -16,7 +16,7 @@ Elevar a Movvo de “funciona” para produto de mercado sem novos módulos admi
 - Command Palette com `aria-modal` + AbortController
 - Dashboard: lazy `RevenueChart` / `CheckinChart` / `DashboardCustomizer`
 - Polling pausa com `document.visibilityState`
-- Script Lighthouse: `pnpm --filter @athena/web lighthouse:m4` (landing + login)
+- Script Lighthouse: `pnpm --filter @movvo/web lighthouse:m4` (landing + login)
 
 ### Features aprofundadas (Sprint C)
 - Busca: planos, produtos, professores, agenda, settings

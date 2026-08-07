@@ -1,3 +1,3 @@
 'use client';
 
-export { ConfirmDialog } from '@athena/ui';
+export { ConfirmDialog } from '@movvo/ui';

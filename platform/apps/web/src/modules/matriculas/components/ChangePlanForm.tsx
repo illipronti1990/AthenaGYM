@@ -2,8 +2,8 @@
 
 import { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import type { Plan } from '@athena/shared';
-import { Button, FormSection, FormSelect, formatCurrencyBRL } from '@athena/ui';
+import type { Plan } from '@movvo/shared';
+import { Button, FormSection, FormSelect, formatCurrencyBRL } from '@movvo/ui';
 import { matriculasApi } from '../services/matriculasApi';
 import { useToast } from '@/components/ui/Toast';
 

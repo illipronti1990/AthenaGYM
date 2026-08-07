@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import type { Workout } from '@athena/shared';
+import type { Workout } from '@movvo/shared';
 import { workoutsApi } from '@/modules/workouts/services/workoutsApi';
 
 export function SignWorkoutBar({
@@ -59,7 +59,7 @@ export function SignWorkoutBar({
       </span>
       <button
         type="button"
-        className="athena-btn"
+        className="movvo-btn"
         disabled={busy || Boolean(workout.signedTrainerAt)}
         onClick={signTrainer}
         data-testid="sign-trainer"
@@ -68,7 +68,7 @@ export function SignWorkoutBar({
       </button>
       <button
         type="button"
-        className="athena-btn athena-btn-ghost"
+        className="movvo-btn movvo-btn-ghost"
         disabled={busy || Boolean(workout.signedStudentAt)}
         onClick={signStudent}
         data-testid="sign-student"
@@ -77,7 +77,7 @@ export function SignWorkoutBar({
       </button>
       {workout.id ? (
         <a
-          className="athena-btn athena-btn-ghost"
+          className="movvo-btn movvo-btn-ghost"
           href={workoutsApi.printWorkoutUrl(workout.id)}
           target="_blank"
           rel="noreferrer"

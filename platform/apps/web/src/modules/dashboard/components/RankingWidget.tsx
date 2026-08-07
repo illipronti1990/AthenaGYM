@@ -1,14 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import type { DashboardRankingRow } from '@athena/shared';
-import { EmptyState } from '@athena/ui';
+import type { DashboardRankingRow } from '@movvo/shared';
+import { EmptyState } from '@movvo/ui';
 import { Trophy } from 'lucide-react';
 
 export function RankingWidget({ rows }: { rows: DashboardRankingRow[] }) {
   return (
-    <div className="athena-card h-full" data-testid="ranking-widget">
-      <h3 className="athena-h3 mb-3 inline-flex items-center gap-2 text-[var(--gold)]">
+    <div className="movvo-card h-full" data-testid="ranking-widget">
+      <h3 className="movvo-h3 mb-3 inline-flex items-center gap-2 text-[var(--gold)]">
         <Trophy size={18} /> Ranking de professores
       </h3>
       {rows.length === 0 ? (
@@ -16,14 +16,14 @@ export function RankingWidget({ rows }: { rows: DashboardRankingRow[] }) {
           title="Sem ranking ainda"
           description="Publique treinos e avaliações para gerar o ranking."
           action={
-            <Link href="/app/workouts" className="athena-btn athena-btn-primary athena-btn-sm">
+            <Link href="/app/workouts" className="movvo-btn movvo-btn-primary movvo-btn-sm">
               Ir para Treinos
             </Link>
           }
         />
       ) : (
         <div className="overflow-x-auto">
-          <table className="athena-table">
+          <table className="movvo-table">
             <thead>
               <tr>
                 <th>Professor</th>

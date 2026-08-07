@@ -11,7 +11,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import type { ProgressSummary } from '@athena/shared';
+import type { ProgressSummary } from '@movvo/shared';
 import { workoutsApi } from '@/modules/workouts/services/workoutsApi';
 import { AlunoSelect } from '@/modules/alunos/components/AlunoSelect';
 
@@ -65,7 +65,7 @@ export function EvolutionCharts({
           <button
             key={r}
             type="button"
-            className={`athena-chip-nav ${range === r ? 'athena-chip-nav-active' : ''}`}
+            className={`movvo-chip-nav ${range === r ? 'movvo-chip-nav-active' : ''}`}
             onClick={() => setRange(r)}
           >
             {r === 'all' ? 'Tudo' : `${r}d`}
@@ -73,7 +73,7 @@ export function EvolutionCharts({
         ))}
         {studentId ? (
           <a
-            className="athena-btn athena-btn-ghost text-xs"
+            className="movvo-btn movvo-btn-ghost text-xs"
             href={workoutsApi.printProgressUrl(studentId)}
             target="_blank"
             rel="noreferrer"

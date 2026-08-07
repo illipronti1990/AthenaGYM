@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import { Button } from '@athena/ui';
+import { Button } from '@movvo/ui';
 
 export type ContextualAction = {
   id: string;
@@ -22,8 +22,8 @@ export function ContextualActions({
   if (!actions.length) return null;
 
   return (
-    <div className="athena-contextual" data-testid="contextual-actions">
-      <p className="athena-contextual-label">{title}</p>
+    <div className="movvo-contextual" data-testid="contextual-actions">
+      <p className="movvo-contextual-label">{title}</p>
       {actions.map((a) => {
         const btn = (
           <Button

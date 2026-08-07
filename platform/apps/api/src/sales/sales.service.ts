@@ -7,8 +7,8 @@ import {
   forwardRef,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import type { AuthContext, PipelineColumn, SalesDashboard } from '@athena/shared';
-import { calcConversionRate } from '@athena/shared';
+import type { AuthContext, PipelineColumn, SalesDashboard } from '@movvo/shared';
+import { calcConversionRate } from '@movvo/shared';
 import { AuditService } from '../audit/audit.service';
 import { AuthUser } from '../auth/auth.types';
 import { FinanceService } from '../finance/finance.service';

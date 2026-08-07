@@ -7,7 +7,7 @@ import {
   deltaPercent,
   startOfMonth,
   startOfYear,
-} from '@athena/sdk-bi';
+} from '@movvo/sdk-bi';
 import type {
   AnalyticsDashboard,
   BiAlert,
@@ -19,8 +19,8 @@ import type {
   PredictionItem,
   ReportDefinition,
   ReportSchedule,
-} from '@athena/shared';
-import { progressPct } from '@athena/sdk-bi';
+} from '@movvo/shared';
+import { progressPct } from '@movvo/sdk-bi';
 import { SupabaseService } from '../supabase/supabase.service';
 
 type PeriodFilter = { from?: string; to?: string; unitId?: string };

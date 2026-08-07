@@ -1,4 +1,4 @@
-# ATHENAS GYM — App Mobile (Flutter) · Sprint 11.0
+# ATHENA GYM — App Mobile (Flutter) · Sprint 11.0
 
 Scaffold do aplicativo do aluno. A UI completa será implementada nas próximas iterações;
 a API já está em `cloud/api`.
@@ -19,8 +19,8 @@ a API já está em `cloud/api`.
 ## Criar o projeto
 
 ```bash
-flutter create athenas_gym_app
-cd athenas_gym_app
+flutter create athena_gym_app
+cd athena_gym_app
 ```
 
 ## Endpoint

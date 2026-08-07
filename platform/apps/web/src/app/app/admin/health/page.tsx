@@ -15,7 +15,7 @@ export default async function AdminHealthPage() {
         ]}
       />
       <div>
-        <h1 className="athena-title text-3xl">Saúde do sistema</h1>
+        <h1 className="movvo-title text-3xl">Saúde do sistema</h1>
         <p className="mt-1 text-sm text-[var(--muted)]">Status de API, banco e serviços</p>
       </div>
       <HealthPanel />

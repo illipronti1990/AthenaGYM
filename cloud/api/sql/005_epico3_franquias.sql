@@ -1,4 +1,4 @@
--- ATHENAS GYM — Épico 3 Franquias (Sprint A+B)
+-- ATHENA GYM — Épico 3 Franquias (Sprint A+B)
 -- python -m scripts.apply_sql_supabase sql/005_epico3_franquias.sql
 
 alter table public.empresas add column if not exists franqueadora_id integer default 0;
@@ -61,14 +61,14 @@ create index if not exists idx_royalties_comp on public.royalties(competencia);
 create index if not exists idx_royalties_fdo on public.royalties(franqueado_id);
 
 insert into public.franqueadoras (id, nome, cnpj, razao_social, ceo, email, telefone, site, status)
-values (1, 'ATHENAS FRANCHISE', '00.111.222/0001-33', 'ATHENAS FRANCHISE HOLDING LTDA',
-        'Renan Athenas', 'franchise@athenas.gym', '(11) 3000-0100', 'https://franchise.athenas.gym', 'Ativa')
+values (1, 'ATHENA FRANCHISE', '00.111.222/0001-33', 'ATHENA FRANCHISE HOLDING LTDA',
+        'Renan Athena', 'franchise@athena.gym', '(11) 3000-0100', 'https://franchise.athena.gym', 'Ativa')
 on conflict (id) do update set nome = excluded.nome, status = excluded.status;
 
 insert into public.empresas (id, razao_social, nome_fantasia, cnpj, plano, status, cidade, estado, email, franqueadora_id, franqueado_id)
 values
-  (2, 'ATHENAS GYM CAMPINAS LTDA', 'ATHENAS Campinas', '23.456.789/0001-01', 'Enterprise', 'Ativo', 'Campinas', 'SP', 'campinas@athenas.gym', 1, 2),
-  (3, 'ATHENAS GYM SANTOS LTDA', 'ATHENAS Santos', '34.567.890/0001-12', 'Enterprise', 'Ativo', 'Santos', 'SP', 'santos@athenas.gym', 1, 3)
+  (2, 'ATHENA GYM CAMPINAS LTDA', 'ATHENA Campinas', '23.456.789/0001-01', 'Enterprise', 'Ativo', 'Campinas', 'SP', 'campinas@athena.gym', 1, 2),
+  (3, 'ATHENA GYM SANTOS LTDA', 'ATHENA Santos', '34.567.890/0001-12', 'Enterprise', 'Ativo', 'Santos', 'SP', 'santos@athena.gym', 1, 3)
 on conflict (id) do update set
   franqueadora_id = excluded.franqueadora_id,
   franqueado_id = excluded.franqueado_id,

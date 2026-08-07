@@ -1,3 +1,3 @@
 'use client';
 
-export { Breadcrumb } from '@athena/ui';
+export { Breadcrumb } from '@movvo/ui';

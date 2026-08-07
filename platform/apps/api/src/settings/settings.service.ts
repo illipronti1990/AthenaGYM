@@ -7,9 +7,10 @@ import type {
   AuthContext,
   GymSettingsResponse,
   OpsDashboard,
-} from '@athena/shared';
+} from '@movvo/shared';
 import { AuthUser } from '../auth/auth.types';
 import { AuditService } from '../audit/audit.service';
+import { RedisCacheService } from '../cache/redis-cache.service';
 import { SupabaseService } from '../supabase/supabase.service';
 import { PatchGymSettingsDto } from './dto/settings.dto';
 import { mapAccountSummary, mapGymSettings } from './settings.mapper';
@@ -22,6 +23,7 @@ export class SettingsService {
   constructor(
     private readonly supabase: SupabaseService,
     private readonly audit: AuditService,
+    private readonly cache: RedisCacheService,
   ) {}
 
   private companyId(auth: AuthContext, override?: string | null): string {
@@ -37,6 +39,13 @@ export class SettingsService {
 
   async getSettings(auth: AuthContext): Promise<GymSettingsResponse> {
     const companyId = this.companyId(auth);
+    const cacheKey = this.cache.key(companyId, 'settings', 'gym');
+    return this.cache.wrap(cacheKey, RedisCacheService.TTL.settings, () =>
+      this.loadSettings(companyId),
+    );
+  }
+
+  private async loadSettings(companyId: string): Promise<GymSettingsResponse> {
     const admin = this.supabase.getAdmin();
 
     let { data, error } = await admin
@@ -141,6 +150,8 @@ export class SettingsService {
       metadata: { fields: Object.keys(dto) },
     });
 
+    await this.cache.del(this.cache.key(companyId, 'settings', 'gym'));
+    await this.cache.invalidatePrefix(this.cache.key(companyId, 'branding', ''));
     return this.getSettings(auth);
   }
 
@@ -190,6 +201,8 @@ export class SettingsService {
       metadata: { path },
     });
 
+    await this.cache.del(this.cache.key(companyId, 'settings', 'gym'));
+    await this.cache.invalidatePrefix(this.cache.key(companyId, 'branding', ''));
     return this.getSettings(auth);
   }
 
@@ -501,15 +514,52 @@ export class SettingsService {
     const stamp = new Date().toISOString().replace(/[:.]/g, '-');
     const path = `companies/${companyId}/documents/backups/backup-${stamp}.json`;
 
+    const { data: blog } = await admin
+      .from('backup_logs')
+      .insert({
+        company_id: companyId,
+        backup_type: 'tenant_export',
+        status: 'running',
+        triggered_by: user.id,
+        storage_path: path,
+        meta: { version: '1.0' },
+      })
+      .select('id')
+      .maybeSingle();
+
     const { error: upErr } = await admin.storage
       .from('documents')
       .upload(path, json, { contentType: 'application/json', upsert: false });
-    if (upErr) throw new BadRequestException(upErr.message);
+    if (upErr) {
+      if (blog?.id) {
+        await admin
+          .from('backup_logs')
+          .update({
+            status: 'failed',
+            error: upErr.message,
+            finished_at: new Date().toISOString(),
+          })
+          .eq('id', blog.id);
+      }
+      throw new BadRequestException(upErr.message);
+    }
 
     const { data: signed, error: signErr } = await admin.storage
       .from('documents')
       .createSignedUrl(path, 60 * 60);
     if (signErr) throw new BadRequestException(signErr.message);
+
+    if (blog?.id) {
+      await admin
+        .from('backup_logs')
+        .update({
+          status: 'success',
+          bytes: json.length,
+          finished_at: new Date().toISOString(),
+          storage_path: path,
+        })
+        .eq('id', blog.id);
+    }
 
     await this.audit.log({
       companyId,
@@ -518,7 +568,7 @@ export class SettingsService {
       action: 'created',
       entity: 'backup',
       entityId: path,
-      metadata: { bytes: json.length },
+      metadata: { bytes: json.length, backupLogId: blog?.id },
     });
 
     return {
@@ -526,6 +576,7 @@ export class SettingsService {
       downloadUrl: signed.signedUrl,
       bytes: json.length,
       exportedAt: payload.exportedAt,
+      backupLogId: blog?.id || null,
     };
   }
 }

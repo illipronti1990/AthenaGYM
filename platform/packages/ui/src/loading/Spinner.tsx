@@ -12,7 +12,7 @@ export function Spinner({
 }) {
   return (
     <span
-      className={`athena-spinner ${className}`}
+      className={`movvo-spinner ${className}`}
       role="status"
       aria-label={label || 'Carregando'}
       data-testid="spinner"

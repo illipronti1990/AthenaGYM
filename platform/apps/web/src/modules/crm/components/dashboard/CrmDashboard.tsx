@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, chartColors } from '@athena/ui';
+import { Card, chartColors } from '@movvo/ui';
 import type { CrmDashboardView } from '../../services/crmApi';
 import { crmApi } from '../../services/crmApi';
 import { TableSkeleton } from '@/components/ui/Skeleton';

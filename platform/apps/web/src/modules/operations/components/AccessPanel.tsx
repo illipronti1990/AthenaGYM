@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { AccessDevice, Room } from '@athena/shared';
+import type { AccessDevice, Room } from '@movvo/shared';
 import { operationsApi } from '../services/operationsApi';
 
 export function AccessPanel({ accessToken }: { accessToken: string }) {
@@ -34,7 +34,7 @@ export function AccessPanel({ accessToken }: { accessToken: string }) {
       {msg ? <p className="text-sm text-emerald-700">{msg}</p> : null}
       {error ? <p className="text-sm text-[var(--primary-hover)]">{error}</p> : null}
       <section>
-        <h2 className="athena-title mb-2 text-sm">Dispositivos / catracas</h2>
+        <h2 className="movvo-title mb-2 text-sm">Dispositivos / catracas</h2>
         <ul className="divide-y divide-[var(--border)]">
           {devices.map((d) => (
             <li key={d.id} className="flex items-center justify-between py-3 text-sm">
@@ -47,7 +47,7 @@ export function AccessPanel({ accessToken }: { accessToken: string }) {
               <button
                 type="button"
                 onClick={() => open(d.id)}
-                className="athena-btn athena-btn-secondary"
+                className="movvo-btn movvo-btn-secondary"
               >
                 Abrir catraca
               </button>
@@ -59,7 +59,7 @@ export function AccessPanel({ accessToken }: { accessToken: string }) {
         </ul>
       </section>
       <section>
-        <h2 className="athena-title mb-2 text-sm">Salas</h2>
+        <h2 className="movvo-title mb-2 text-sm">Salas</h2>
         <ul className="divide-y divide-[var(--border)] text-sm">
           {rooms.map((r) => (
             <li key={r.id} className="flex justify-between py-2">

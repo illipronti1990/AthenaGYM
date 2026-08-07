@@ -1,10 +1,10 @@
-import { Badge, type BadgeTone } from '@athena/ui';
+import { Badge, type BadgeTone } from '@movvo/ui';
 import {
   STUDENT_STATUS_LABELS,
   STUDENT_DISPLAY_STATUS_LABELS,
   type StudentDisplayStatus,
   type StudentStatus,
-} from '@athena/shared';
+} from '@movvo/shared';
 
 const dbTones: Record<string, BadgeTone> = {
   lead: 'novo',

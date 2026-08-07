@@ -1,5 +1,5 @@
 {
-  "name": "@athena/sdk-notifications",
+  "name": "@movvo/sdk-notifications",
   "version": "0.8.0",
   "private": true,
   "main": "./dist/index.js",

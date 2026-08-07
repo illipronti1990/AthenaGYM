@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { BottomNavigation } from '@athena/ui';
+import { BottomNavigation } from '@movvo/ui';
 import { Home, Settings, Dumbbell, LineChart } from 'lucide-react';
 import { PathnameSyncProvider } from '@/components/layout/PathnameSyncProvider';
 import { LayoutProvider, useLayout } from '@/components/layout/LayoutProvider';
@@ -13,7 +13,7 @@ import { PageTransition } from '@/components/ux/PageTransition';
 import { AuthNavProvider, useAuthNav } from '@/components/auth/AuthNavProvider';
 import { StudentRouteGuard } from '@/components/auth/StudentRouteGuard';
 import { ProfessorRouteGuard } from '@/components/auth/ProfessorRouteGuard';
-import { AthenaChatWidget } from '@/modules/bi/components/AthenaChatWidget';
+import { MovvoChatWidget } from '@/modules/bi/components/MovvoChatWidget';
 import { useFeatureFlags } from '@/components/FeatureFlagsProvider';
 import { useUiPreferences } from '@/hooks/useUiPreferences';
 import { ProductTour } from '@/components/ux/ProductTour';
@@ -63,18 +63,18 @@ function ShellInner({
 
   return (
     <div
-      className={`athena-shell athena-shell-px2 ${collapsed ? 'sidebar-collapsed' : ''}${prefs.denseLayout ? ' is-dense' : ''}${prefs.widgetsCompact ? ' widgets-compact' : ''}`}
+      className={`movvo-shell movvo-shell-px2 ${collapsed ? 'sidebar-collapsed' : ''}${prefs.denseLayout ? ' is-dense' : ''}${prefs.widgetsCompact ? ' widgets-compact' : ''}`}
     >
-      <a href="#athena-main-content" className="athena-skip-link">
+      <a href="#movvo-main-content" className="movvo-skip-link">
         Ir para o conteúdo
       </a>
       <StudentRouteGuard />
       <ProfessorRouteGuard />
       <Sidebar userName={userName} />
-      <div className="athena-main-column">
+      <div className="movvo-main-column">
         <Topbar accessToken={accessToken} userName={userName} />
-        <main id="athena-main-content" className="athena-main" tabIndex={-1}>
-          <div className="athena-main-inner">
+        <main id="movvo-main-content" className="movvo-main" tabIndex={-1}>
+          <div className="movvo-main-inner">
             <PageTransition>{children}</PageTransition>
           </div>
         </main>
@@ -83,7 +83,7 @@ function ShellInner({
       <BottomNavigation items={bottomItems} />
       <CommandPalette accessToken={accessToken} />
       {!studentOnly ? <ProductTour /> : null}
-      {enabled('ai') ? <AthenaChatWidget accessToken={accessToken} /> : null}
+      {enabled('ai') ? <MovvoChatWidget accessToken={accessToken} /> : null}
     </div>
   );
 }

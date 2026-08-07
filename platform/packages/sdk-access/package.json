@@ -1,5 +1,5 @@
 {
-  "name": "@athena/sdk-access",
+  "name": "@movvo/sdk-access",
   "version": "0.7.0",
   "private": true,
   "main": "./dist/index.js",

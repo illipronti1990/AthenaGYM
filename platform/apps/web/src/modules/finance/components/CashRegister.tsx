@@ -1,8 +1,8 @@
 'use client';
 
 import { FormEvent, useCallback, useEffect, useState } from 'react';
-import type { CashSession, CashSessionReport } from '@athena/shared';
-import { Button, Card } from '@athena/ui';
+import type { CashSession, CashSessionReport } from '@movvo/shared';
+import { Button, Card } from '@movvo/ui';
 import { financeApi } from '../services/financeApi';
 import { useToast } from '@/components/ui/Toast';
 import { TableSkeleton } from '@/components/ui/Skeleton';
@@ -134,10 +134,10 @@ export function CashRegister({ accessToken }: { accessToken: string }) {
     <div className="space-y-4" data-testid="cash-register">
       {!isOpen ? (
         <Card>
-          <h2 className="athena-title mb-3 text-sm">Abrir caixa</h2>
+          <h2 className="movvo-title mb-3 text-sm">Abrir caixa</h2>
           <form onSubmit={onOpen} className="flex flex-wrap items-end gap-3">
             <label className="block text-sm">
-              <span className="athena-label">Valor de abertura (R$)</span>
+              <span className="movvo-label">Valor de abertura (R$)</span>
               <input
                 type="number"
                 min={0}
@@ -145,7 +145,7 @@ export function CashRegister({ accessToken }: { accessToken: string }) {
                 required
                 value={openingAmount}
                 onChange={(e) => setOpeningAmount(Number(e.target.value))}
-                className="athena-input mt-1 w-40"
+                className="movvo-input mt-1 w-40"
               />
             </label>
             <Button type="submit" loading={busy} loadingLabel="Abrindo…">
@@ -170,10 +170,10 @@ export function CashRegister({ accessToken }: { accessToken: string }) {
 
           <div className="grid gap-4 md:grid-cols-2">
             <Card>
-              <h2 className="athena-title mb-3 text-sm">Sangria</h2>
+              <h2 className="movvo-title mb-3 text-sm">Sangria</h2>
               <form onSubmit={onSangria} className="grid gap-2">
                 <label className="block text-sm">
-                  <span className="athena-label">Valor (R$)</span>
+                  <span className="movvo-label">Valor (R$)</span>
                   <input
                     type="number"
                     min={0.01}
@@ -181,15 +181,15 @@ export function CashRegister({ accessToken }: { accessToken: string }) {
                     required
                     value={sangriaAmount}
                     onChange={(e) => setSangriaAmount(Number(e.target.value))}
-                    className="athena-input mt-1"
+                    className="movvo-input mt-1"
                   />
                 </label>
                 <label className="block text-sm">
-                  <span className="athena-label">Observações</span>
+                  <span className="movvo-label">Observações</span>
                   <input
                     value={sangriaNotes}
                     onChange={(e) => setSangriaNotes(e.target.value)}
-                    className="athena-input mt-1"
+                    className="movvo-input mt-1"
                   />
                 </label>
                 <Button type="submit" variant="secondary" loading={busy}>
@@ -199,10 +199,10 @@ export function CashRegister({ accessToken }: { accessToken: string }) {
             </Card>
 
             <Card>
-              <h2 className="athena-title mb-3 text-sm">Suprimento</h2>
+              <h2 className="movvo-title mb-3 text-sm">Suprimento</h2>
               <form onSubmit={onSupply} className="grid gap-2">
                 <label className="block text-sm">
-                  <span className="athena-label">Valor (R$)</span>
+                  <span className="movvo-label">Valor (R$)</span>
                   <input
                     type="number"
                     min={0.01}
@@ -210,15 +210,15 @@ export function CashRegister({ accessToken }: { accessToken: string }) {
                     required
                     value={supplyAmount}
                     onChange={(e) => setSupplyAmount(Number(e.target.value))}
-                    className="athena-input mt-1"
+                    className="movvo-input mt-1"
                   />
                 </label>
                 <label className="block text-sm">
-                  <span className="athena-label">Observações</span>
+                  <span className="movvo-label">Observações</span>
                   <input
                     value={supplyNotes}
                     onChange={(e) => setSupplyNotes(e.target.value)}
-                    className="athena-input mt-1"
+                    className="movvo-input mt-1"
                   />
                 </label>
                 <Button type="submit" variant="secondary" loading={busy}>
@@ -229,10 +229,10 @@ export function CashRegister({ accessToken }: { accessToken: string }) {
           </div>
 
           <Card>
-            <h2 className="athena-title mb-3 text-sm">Fechar caixa</h2>
+            <h2 className="movvo-title mb-3 text-sm">Fechar caixa</h2>
             <form onSubmit={onClose} className="grid gap-2 sm:grid-cols-2">
               <label className="block text-sm">
-                <span className="athena-label">Valor contado (R$)</span>
+                <span className="movvo-label">Valor contado (R$)</span>
                 <input
                   type="number"
                   min={0}
@@ -240,15 +240,15 @@ export function CashRegister({ accessToken }: { accessToken: string }) {
                   required
                   value={countedAmount}
                   onChange={(e) => setCountedAmount(Number(e.target.value))}
-                  className="athena-input mt-1"
+                  className="movvo-input mt-1"
                 />
               </label>
               <label className="block text-sm">
-                <span className="athena-label">Observações</span>
+                <span className="movvo-label">Observações</span>
                 <input
                   value={closeNotes}
                   onChange={(e) => setCloseNotes(e.target.value)}
-                  className="athena-input mt-1"
+                  className="movvo-input mt-1"
                 />
               </label>
               <div className="sm:col-span-2">
@@ -266,7 +266,7 @@ export function CashRegister({ accessToken }: { accessToken: string }) {
 
       {report ? (
         <Card data-testid="cash-session-report">
-          <h2 className="athena-title mb-3 text-sm">Relatório da sessão</h2>
+          <h2 className="movvo-title mb-3 text-sm">Relatório da sessão</h2>
           <ul className="divide-y divide-[var(--border)] text-sm">
             <li className="flex justify-between py-2">
               <span>Abertura</span>

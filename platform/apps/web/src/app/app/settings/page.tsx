@@ -1,4 +1,4 @@
-import { Page, PageHeader, PageContent } from '@athena/ui';
+import { Page, PageHeader, PageContent } from '@movvo/ui';
 import { requireAccessToken } from '@/lib/auth/token';
 import { SettingsHub } from '@/modules/settings/components/SettingsHub';
 

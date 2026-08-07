@@ -19,33 +19,33 @@ export function AppBreadcrumb() {
   const items = breadcrumbForPath(hydrated ? pathname : initialPathname);
 
   return (
-    <nav aria-label="Breadcrumb" className="athena-breadcrumb" data-testid="app-breadcrumb">
+    <nav aria-label="Breadcrumb" className="movvo-breadcrumb" data-testid="app-breadcrumb">
       <ol>
         {items.map((item, i) => {
           const isLast = i === items.length - 1;
           return (
             <li key={`${item.label}-${i}`}>
-              {i > 0 ? <span className="athena-breadcrumb-sep">›</span> : null}
+              {i > 0 ? <span className="movvo-breadcrumb-sep">›</span> : null}
               {i === 0 ? (
                 item.href && !isLast ? (
-                  <Link href={item.href} className="athena-breadcrumb-link" title="Dashboard">
+                  <Link href={item.href} className="movvo-breadcrumb-link" title="Dashboard">
                     <House size={14} aria-hidden />
                     <span className="sr-only">Dashboard</span>
                   </Link>
                 ) : (
-                  <span className="athena-breadcrumb-current inline-flex items-center gap-1">
+                  <span className="movvo-breadcrumb-current inline-flex items-center gap-1">
                     <House size={14} aria-hidden />
                     <span className="hidden sm:inline">Dashboard</span>
                   </span>
                 )
               ) : item.href && !isLast ? (
-                <Link href={item.href} className="athena-breadcrumb-link">
+                <Link href={item.href} className="movvo-breadcrumb-link">
                   {item.label}
                 </Link>
               ) : isLast ? (
-                <span className="athena-breadcrumb-current">{item.label}</span>
+                <span className="movvo-breadcrumb-current">{item.label}</span>
               ) : (
-                <span className="athena-breadcrumb-link">{item.label}</span>
+                <span className="movvo-breadcrumb-link">{item.label}</span>
               )}
             </li>
           );

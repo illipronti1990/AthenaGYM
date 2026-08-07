@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { MOVVO_PRODUCT } from '@athena/shared';
+import { MOVVO_PRODUCT } from '@movvo/shared';
 
 export const metadata: Metadata = {
   title: 'Contato — Movvo ERP',

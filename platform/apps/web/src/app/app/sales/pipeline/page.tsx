@@ -9,10 +9,10 @@ export default async function SalesPipelinePage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <h1 className="athena-title text-3xl">Pipeline</h1>
+          <h1 className="movvo-title text-3xl">Pipeline</h1>
           <p className="mt-1 text-sm text-[var(--muted)]">Arraste o lead para mudar a etapa</p>
         </div>
-        <Link href="/app/sales" className="athena-link text-sm text-[var(--gold)]">
+        <Link href="/app/sales" className="movvo-link text-sm text-[var(--gold)]">
           ← Comercial
         </Link>
       </div>

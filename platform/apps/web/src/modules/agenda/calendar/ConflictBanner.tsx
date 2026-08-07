@@ -1,6 +1,6 @@
 'use client';
 
-import type { Schedule } from '@athena/shared';
+import type { Schedule } from '@movvo/shared';
 
 export function ConflictBanner({ items }: { items: Schedule[] }) {
   const conflicts = items.filter((item, index) => items.some((other, otherIndex) => otherIndex > index && item.roomId && item.roomId === other.roomId && new Date(item.startAt) < new Date(other.endAt) && new Date(other.startAt) < new Date(item.endAt)));

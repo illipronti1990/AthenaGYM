@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import type { Company } from '@athena/shared';
+import type { Company } from '@movvo/shared';
 import { useBranding } from '@/components/BrandingProvider';
 
 /**

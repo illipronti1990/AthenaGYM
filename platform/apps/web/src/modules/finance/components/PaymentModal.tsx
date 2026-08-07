@@ -1,9 +1,9 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import type { PaymentMethod, Receivable } from '@athena/shared';
-import { calcReceivableRemaining } from '@athena/shared';
-import { Button, Modal } from '@athena/ui';
+import type { PaymentMethod, Receivable } from '@movvo/shared';
+import { calcReceivableRemaining } from '@movvo/shared';
+import { Button, Modal } from '@movvo/ui';
 import { financeApi, type ReceivePaymentBody } from '../services/financeApi';
 import { useToast } from '@/components/ui/Toast';
 
@@ -88,7 +88,7 @@ export function PaymentModal({ open, accessToken, receivable, onClose, onSuccess
           </p>
 
           <label className="block text-sm">
-            <span className="athena-label">Valor recebido (R$)</span>
+            <span className="movvo-label">Valor recebido (R$)</span>
             <input
               type="number"
               min={0.01}
@@ -96,14 +96,14 @@ export function PaymentModal({ open, accessToken, receivable, onClose, onSuccess
               required
               value={amount}
               onChange={(e) => setAmount(Number(e.target.value))}
-              className="athena-input mt-1"
+              className="movvo-input mt-1"
             />
           </label>
 
           <label className="block text-sm">
-            <span className="athena-label">Forma de pagamento</span>
+            <span className="movvo-label">Forma de pagamento</span>
             <select
-              className="athena-input mt-1"
+              className="movvo-input mt-1"
               value={paymentMethodId}
               onChange={(e) => setPaymentMethodId(e.target.value)}
             >
@@ -118,67 +118,67 @@ export function PaymentModal({ open, accessToken, receivable, onClose, onSuccess
 
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="block text-sm">
-              <span className="athena-label">Juros (R$)</span>
+              <span className="movvo-label">Juros (R$)</span>
               <input
                 type="number"
                 min={0}
                 step={0.01}
                 value={interest}
                 onChange={(e) => setInterest(Number(e.target.value))}
-                className="athena-input mt-1"
+                className="movvo-input mt-1"
               />
             </label>
             <label className="block text-sm">
-              <span className="athena-label">Multa (R$)</span>
+              <span className="movvo-label">Multa (R$)</span>
               <input
                 type="number"
                 min={0}
                 step={0.01}
                 value={fine}
                 onChange={(e) => setFine(Number(e.target.value))}
-                className="athena-input mt-1"
+                className="movvo-input mt-1"
               />
             </label>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="block text-sm">
-              <span className="athena-label">NSU</span>
+              <span className="movvo-label">NSU</span>
               <input
                 value={nsu}
                 onChange={(e) => setNsu(e.target.value)}
-                className="athena-input mt-1"
+                className="movvo-input mt-1"
               />
             </label>
             <label className="block text-sm">
-              <span className="athena-label">Código de autorização</span>
+              <span className="movvo-label">Código de autorização</span>
               <input
                 value={authorizationCode}
                 onChange={(e) => setAuthorizationCode(e.target.value)}
-                className="athena-input mt-1"
+                className="movvo-input mt-1"
               />
             </label>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="block text-sm">
-              <span className="athena-label">Bandeira do cartão</span>
+              <span className="movvo-label">Bandeira do cartão</span>
               <input
                 value={cardBrand}
                 onChange={(e) => setCardBrand(e.target.value)}
-                className="athena-input mt-1"
+                className="movvo-input mt-1"
                 placeholder="Visa, Master…"
               />
             </label>
             <label className="block text-sm">
-              <span className="athena-label">Parcelas</span>
+              <span className="movvo-label">Parcelas</span>
               <input
                 type="number"
                 min={1}
                 max={24}
                 value={installments}
                 onChange={(e) => setInstallments(Number(e.target.value))}
-                className="athena-input mt-1"
+                className="movvo-input mt-1"
               />
             </label>
           </div>

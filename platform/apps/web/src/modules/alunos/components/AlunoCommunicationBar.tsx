@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@athena/ui';
+import { Button } from '@movvo/ui';
 import { Copy, Mail, Phone } from 'lucide-react';
 import { useToast } from '@/components/ui/Toast';
 

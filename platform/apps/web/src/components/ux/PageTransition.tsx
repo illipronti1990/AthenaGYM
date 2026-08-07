@@ -6,7 +6,7 @@ import type { ReactNode } from 'react';
 export function PageTransition({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   return (
-    <div key={pathname} className="athena-page-fade" data-testid="page-transition">
+    <div key={pathname} className="movvo-page-fade" data-testid="page-transition">
       {children}
     </div>
   );

@@ -1,5 +1,5 @@
 {
-  "name": "@athena/analytics-service",
+  "name": "@movvo/analytics-service",
   "version": "0.9.0",
   "private": true,
   "description": "ATHENA analytics microservice stub — Nest still owns /analytics/*",

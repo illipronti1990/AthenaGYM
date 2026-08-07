@@ -10,7 +10,7 @@ export function ValidationMessage({
   if (!children || state === 'idle') return null;
   return (
     <span
-      className={`athena-field-hint ${
+      className={`movvo-field-hint ${
         state === 'valid' ? 'is-ok' : state === 'invalid' ? 'is-error' : 'is-warn'
       }`}
       data-testid="validation-message"

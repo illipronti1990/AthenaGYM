@@ -12,8 +12,8 @@ import {
   ATHENA_ACADEMIA_BRANDING,
   MOVVO_PRODUCT,
   resolveCompanyBranding,
-} from '@athena/shared/branding/athena';
-import type { Company, ResolvedCompanyBranding } from '@athena/shared';
+} from '@movvo/shared/branding/athena';
+import type { Company, ResolvedCompanyBranding } from '@movvo/shared';
 import { applyBrandingToDocument } from '@/lib/branding/applyBranding';
 import { brandingApi, type PublicBranding } from '@/services/brandingApi';
 

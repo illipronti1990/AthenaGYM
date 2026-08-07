@@ -1,8 +1,8 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import type { Exercise, Workout } from '@athena/shared';
-import { Button, Card } from '@athena/ui';
+import type { Exercise, Workout } from '@movvo/shared';
+import { Button, Card } from '@movvo/ui';
 import { workoutsApi } from '@/modules/workouts/services/workoutsApi';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
@@ -113,13 +113,13 @@ export function AlunoWorkoutsPanel({
         />
       ) : null}
       <Card>
-        <h3 className="athena-title mb-3 text-lg">Novo treino</h3>
+        <h3 className="movvo-title mb-3 text-lg">Novo treino</h3>
         <form onSubmit={onCreate} className="space-y-3">
           <input
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="athena-input max-w-xs"
+            className="movvo-input max-w-xs"
             placeholder="Nome do treino"
           />
           {exercises.length > 0 ? (
@@ -173,13 +173,13 @@ export function AlunoWorkoutsPanel({
       </Card>
 
       <section>
-        <h3 className="athena-title mb-3 text-lg">Treinos do aluno</h3>
+        <h3 className="movvo-title mb-3 text-lg">Treinos do aluno</h3>
         {items.length === 0 ? (
           <p className="text-sm text-[var(--muted)]">Nenhum treino cadastrado.</p>
         ) : (
-          <ul className="athena-list" data-testid="student-workouts-list">
+          <ul className="movvo-list" data-testid="student-workouts-list">
             {items.map((w) => (
-              <li key={w.id} className="athena-list-item flex-wrap">
+              <li key={w.id} className="movvo-list-item flex-wrap">
                 <span>
                   {w.name} · {STATUS_LABEL[String(w.status)] || w.status} · v{w.version}
                   {w.exercises?.length ? ` · ${w.exercises.length} exercício(s)` : ''}

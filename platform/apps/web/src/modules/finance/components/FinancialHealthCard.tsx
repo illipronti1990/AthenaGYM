@@ -1,7 +1,7 @@
 'use client';
 
-import type { FinancialHealthScore } from '@athena/shared';
-import { Card } from '@athena/ui';
+import type { FinancialHealthScore } from '@movvo/shared';
+import { Card } from '@movvo/ui';
 
 const LEVEL_LABELS: Record<string, string> = {
   excelente: 'Excelente',

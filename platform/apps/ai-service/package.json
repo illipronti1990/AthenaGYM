@@ -1,5 +1,5 @@
 {
-  "name": "@athena/ai-service",
+  "name": "@movvo/ai-service",
   "version": "0.8.0",
   "private": true,
   "description": "ATHENA AI assistant microservice stub",

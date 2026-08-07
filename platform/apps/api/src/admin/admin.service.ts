@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import type { AuthContext } from '@athena/shared';
+import type { AuthContext } from '@movvo/shared';
 import { AuditService } from '../audit/audit.service';
 import { AuthUser } from '../auth/auth.types';
 import { SupabaseService } from '../supabase/supabase.service';

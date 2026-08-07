@@ -1,4 +1,4 @@
-"""Dados mestres e massa de exemplo do ERP ATHENAS GYM."""
+"""Dados mestres e massa de exemplo do ERP ATHENA GYM."""
 
 from datetime import date, timedelta
 
@@ -66,7 +66,7 @@ PRODUTOS = [
     ("Whey Protein 900g", "Suplementos", 20, 5, 89.90, 149.90),
     ("Creatina 300g", "Suplementos", 25, 5, 45.00, 79.90),
     ("Barra Proteica", "Suplementos", 40, 10, 6.50, 12.90),
-    ("Camiseta Athenas", "Vestuário", 30, 5, 25.00, 69.90),
+    ("Camiseta Athena", "Vestuário", 30, 5, 25.00, 69.90),
     ("Garrafa Squeeze", "Acessórios", 20, 5, 12.00, 39.90),
     ("Luvas Treino", "Acessórios", 15, 3, 18.00, 49.90),
 ]

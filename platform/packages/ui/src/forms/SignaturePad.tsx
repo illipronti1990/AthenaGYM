@@ -55,11 +55,11 @@ export function SignaturePad({
   }
 
   return (
-    <div className="athena-field" data-testid="signature-pad">
-      {label ? <span className="athena-label">{label}</span> : null}
+    <div className="movvo-field" data-testid="signature-pad">
+      {label ? <span className="movvo-label">{label}</span> : null}
       <canvas
         ref={canvasRef}
-        className="athena-signature-canvas"
+        className="movvo-signature-canvas"
         onPointerDown={(e) => {
           drawing.current = true;
           const ctx = e.currentTarget.getContext('2d');

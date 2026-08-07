@@ -47,7 +47,7 @@ Public Function ValidarLogin(ByVal usuario As String, ByVal senha As String) As 
             eid = CLng(Val(LerCampo(lr, "EmpresaID")))
             On Error GoTo TrataErro
             perfil = NzStr(LerCampo(lr, "Perfil"))
-            nomeEmp = "ATHENAS GYM"
+            nomeEmp = "ATHENA GYM"
             plano = "Enterprise"
             Dim uid As Long, nomeUni As String
             uid = 0
@@ -56,14 +56,14 @@ Public Function ValidarLogin(ByVal usuario As String, ByVal senha As String) As 
             uid = CLng(Val(LerCampo(lr, "UnidadeID")))
             On Error GoTo TrataErro
             If StrComp(perfil, "SuperAdmin", vbTextCompare) = 0 Or eid = 0 Then
-                nomeEmp = "ATHENAS PLATFORM"
+                nomeEmp = "ATHENA PLATFORM"
                 plano = "Enterprise"
                 eid = 0
                 uid = 0
                 nomeUni = "Todas as unidades"
             Else
                 If Not ValidarLicenca(eid) Then
-                    MsgErro "Licença da academia inválida ou expirada. Contate o suporte ATHENAS."
+                    MsgErro "Licença da academia inválida ou expirada. Contate o suporte ATHENA."
                     ValidarLogin = False
                     Exit Function
                 End If
@@ -82,14 +82,14 @@ Public Function ValidarLogin(ByVal usuario As String, ByVal senha As String) As 
                     uid = 1
                     On Error Resume Next
                     nomeUni = NomeUnidadePorId(1)
-                    If Len(nomeUni) = 0 Then nomeUni = "ATHENAS GYM Matriz"
+                    If Len(nomeUni) = 0 Then nomeUni = "ATHENA GYM Matriz"
                     On Error GoTo TrataErro
                 End If
             End If
             Call GravarSessaoCompleta(NzStr(LerCampo(lr, "Usuário")), NzStr(LerCampo(lr, "Nome")), perfil, eid, nomeEmp, plano, uid, nomeUni)
             On Error Resume Next
             If StrComp(perfil, "Franqueadora", vbTextCompare) = 0 Then
-                Call DefinirFranquiaSessao(1, 0, "ATHENAS FRANCHISE")
+                Call DefinirFranquiaSessao(1, 0, "ATHENA FRANCHISE")
             ElseIf StrComp(perfil, "SuperAdmin", vbTextCompare) = 0 Then
                 Call DefinirFranquiaSessao(0, 0, "")
             Else

@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from 'react';
 import Link from 'next/link';
-import { Button } from '@athena/ui';
+import { Button } from '@movvo/ui';
 import { apiResetPassword } from '@/services/api';
 import { useToast } from '@/components/ui/Toast';
 
@@ -33,14 +33,14 @@ export function ForgotPasswordForm() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="athena-input mt-1"
+          className="movvo-input mt-1"
           data-testid="forgot-email"
         />
       </label>
       <Button type="submit" disabled={loading} className="w-full">
         {loading ? 'Enviando…' : 'Enviar link'}
       </Button>
-      <Link href="/login" className="athena-link text-center text-sm text-[var(--gold)]">
+      <Link href="/login" className="movvo-link text-center text-sm text-[var(--gold)]">
         Voltar ao login
       </Link>
     </form>

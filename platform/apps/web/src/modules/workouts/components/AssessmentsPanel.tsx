@@ -1,8 +1,8 @@
 'use client';
 
 import { FormEvent, useEffect, useRef, useState } from 'react';
-import type { Assessment, ProgressSummary } from '@athena/shared';
-import { Button, Card } from '@athena/ui';
+import type { Assessment, ProgressSummary } from '@movvo/shared';
+import { Button, Card } from '@movvo/ui';
 import { workoutsApi } from '../services/workoutsApi';
 import { AlunoSelect } from '@/modules/alunos/components/AlunoSelect';
 import { useToast } from '@/components/ui/Toast';
@@ -88,12 +88,12 @@ export function AssessmentsPanel({ accessToken }: { accessToken: string }) {
             accessToken={accessToken}
             value={studentId}
             onChange={setStudentId}
-            className="athena-input mt-1 block w-72"
+            className="movvo-input mt-1 block w-72"
           />
           <label className="text-sm text-[var(--muted)]">
             Peso
             <input
-              className="athena-input mt-1 block w-20"
+              className="movvo-input mt-1 block w-20"
               value={weight}
               onChange={(e) => setWeight(e.target.value)}
             />
@@ -101,7 +101,7 @@ export function AssessmentsPanel({ accessToken }: { accessToken: string }) {
           <label className="text-sm text-[var(--muted)]">
             Altura
             <input
-              className="athena-input mt-1 block w-20"
+              className="movvo-input mt-1 block w-20"
               value={height}
               onChange={(e) => setHeight(e.target.value)}
             />
@@ -109,7 +109,7 @@ export function AssessmentsPanel({ accessToken }: { accessToken: string }) {
           <label className="text-sm text-[var(--muted)]">
             % Gordura
             <input
-              className="athena-input mt-1 block w-20"
+              className="movvo-input mt-1 block w-20"
               value={bodyFat}
               onChange={(e) => setBodyFat(e.target.value)}
             />
@@ -121,9 +121,9 @@ export function AssessmentsPanel({ accessToken }: { accessToken: string }) {
       </Card>
       {msg ? <p className="text-sm text-[var(--gold)]">{msg}</p> : null}
       {error ? <p className="text-sm text-[var(--primary-hover)]">{error}</p> : null}
-      <ul className="athena-list text-sm" data-testid="assessments-list">
+      <ul className="movvo-list text-sm" data-testid="assessments-list">
         {items.map((a) => (
-          <li key={a.id} className="athena-list-item text-[var(--text)]">
+          <li key={a.id} className="movvo-list-item text-[var(--text)]">
             <span>
               {new Date(a.createdAt).toLocaleDateString('pt-BR')} · {a.weight}kg · IMC {a.bmi} · BF{' '}
               {a.bodyFat}%
@@ -256,7 +256,7 @@ export function EvolutionPanel({ accessToken }: { accessToken: string }) {
             onPickFile(null);
           }}
           required={false}
-          className="athena-input mt-1 block w-72"
+          className="movvo-input mt-1 block w-72"
         />
         <Button type="button" disabled={!studentId} onClick={() => void load()}>
           Carregar evolução
@@ -289,7 +289,7 @@ export function EvolutionPanel({ accessToken }: { accessToken: string }) {
               <select
                 value={photoType}
                 onChange={(e) => setPhotoType(e.target.value as typeof photoType)}
-                className="athena-input mt-1 block w-auto"
+                className="movvo-input mt-1 block w-auto"
               >
                 <option value="front">Frente</option>
                 <option value="side">Lateral</option>
@@ -352,9 +352,9 @@ export function EvolutionPanel({ accessToken }: { accessToken: string }) {
             </p>
           )}
           {data && data.photos.length > 0 ? (
-            <ul className="athena-list">
+            <ul className="movvo-list">
               {data.photos.map((p) => (
-                <li key={p.id} className="athena-list-item text-xs">
+                <li key={p.id} className="movvo-list-item text-xs">
                   <span className="flex min-w-0 items-center gap-2">
                     {p.publicUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element

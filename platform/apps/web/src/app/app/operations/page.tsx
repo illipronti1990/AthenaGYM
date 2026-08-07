@@ -18,14 +18,14 @@ export default async function OperationsPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="athena-title text-3xl">Operações</h1>
+          <h1 className="movvo-title text-3xl">Operações</h1>
           <p className="mt-1 text-sm text-[var(--muted)]">
             Agenda, check-in, acesso, Wellhub/TotalPass e ocupação
           </p>
         </div>
         <nav className="flex flex-wrap gap-2">
           {links.map(([label, href]) => (
-            <Link key={href} href={href} className="athena-chip-nav">
+            <Link key={href} href={href} className="movvo-chip-nav">
               {label}
             </Link>
           ))}

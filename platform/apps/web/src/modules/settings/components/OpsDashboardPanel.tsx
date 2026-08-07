@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import type { OpsDashboard, UserFavorite } from '@athena/shared';
-import { Button, Card, EmptyState, chartColors } from '@athena/ui';
+import type { OpsDashboard, UserFavorite } from '@movvo/shared';
+import { Button, Card, EmptyState, chartColors } from '@movvo/ui';
 import {
   Area,
   AreaChart,
@@ -109,7 +109,7 @@ export function OpsDashboardPanel({ accessToken }: { accessToken: string }) {
   return (
     <div className="space-y-8">
       <section>
-        <h2 className="athena-title mb-3 text-sm uppercase tracking-wide">Ações rápidas</h2>
+        <h2 className="movvo-title mb-3 text-sm uppercase tracking-wide">Ações rápidas</h2>
         <div className="flex flex-wrap gap-2">
           {QUICK.map((q) => (
             <Link key={q.label} href={q.href}>
@@ -120,7 +120,7 @@ export function OpsDashboardPanel({ accessToken }: { accessToken: string }) {
       </section>
 
       <section>
-        <h2 className="athena-title mb-3 text-sm uppercase tracking-wide">Favoritos</h2>
+        <h2 className="movvo-title mb-3 text-sm uppercase tracking-wide">Favoritos</h2>
         <div className="flex flex-wrap gap-2">
           {DEFAULT_FAVS.map((f) => {
             const starred = favorites.some((x) => x.href === f.href);
@@ -220,7 +220,7 @@ export function OpsDashboardPanel({ accessToken }: { accessToken: string }) {
       </section>
 
       <section>
-        <h2 className="athena-title mb-3 text-sm uppercase tracking-wide">
+        <h2 className="movvo-title mb-3 text-sm uppercase tracking-wide">
           Próximos aniversariantes
         </h2>
         {data.birthdaysSoon.length === 0 ? (
@@ -230,7 +230,7 @@ export function OpsDashboardPanel({ accessToken }: { accessToken: string }) {
             <ul className="divide-y divide-[var(--border)]">
               {data.birthdaysSoon.map((b) => (
                 <li key={b.id} className="flex items-center justify-between py-2 text-sm">
-                  <Link href={`/app/alunos/${b.id}`} className="athena-link">
+                  <Link href={`/app/alunos/${b.id}`} className="movvo-link">
                     {b.fullName}
                   </Link>
                   <span className="text-[var(--muted)]">
@@ -249,7 +249,7 @@ export function OpsDashboardPanel({ accessToken }: { accessToken: string }) {
 function ChartCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <Card>
-      <p className="athena-title mb-2 text-sm">{title}</p>
+      <p className="movvo-title mb-2 text-sm">{title}</p>
       {children}
     </Card>
   );

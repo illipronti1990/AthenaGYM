@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Page, PageHeader, PageContent } from '@athena/ui';
+import { Page, PageHeader, PageContent } from '@movvo/ui';
 import { requireAccessToken } from '@/lib/auth/token';
 import { CashRegister } from '@/modules/finance/components/CashRegister';
 
@@ -12,7 +12,7 @@ export default async function FinanceiroCaixaPage() {
         title="Caixa"
         description="Abertura, sangria, suprimento e fechamento do caixa."
         actions={
-          <Link href="/app/financeiro" className="athena-link text-sm text-[var(--gold)]">
+          <Link href="/app/financeiro" className="movvo-link text-sm text-[var(--gold)]">
             ← Financeiro
           </Link>
         }

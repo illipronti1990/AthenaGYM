@@ -589,7 +589,7 @@ Public Sub MostrarAlertasAoAbrir()
     On Error Resume Next
     Call AtualizarBI
     Set lo = ObterTabela(SHT_NOTIF, TBL_NOTIF)
-    txt = "ALERTAS INTELIGENTES — ATHENAS GYM" & vbCrLf & vbCrLf
+    txt = "ALERTAS INTELIGENTES — ATHENA GYM" & vbCrLf & vbCrLf
     For Each lr In lo.ListRows
         If Len(NzStr(LerCampo(lr, "Mensagem"))) > 0 Then
             n = n + 1

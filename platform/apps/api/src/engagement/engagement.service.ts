@@ -10,8 +10,8 @@ import {
   LOYALTY_POINTS,
   loyaltyTier,
   type NotificationChannel,
-} from '@athena/sdk-notifications';
-import type { AuthContext, AiChatResponse } from '@athena/shared';
+} from '@movvo/sdk-notifications';
+import type { AuthContext, AiChatResponse } from '@movvo/shared';
 import { AuthUser } from '../auth/auth.types';
 import {
   AiChatDto,

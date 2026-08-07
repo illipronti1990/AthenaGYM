@@ -123,7 +123,7 @@ export function LoginForm() {
 
       attempts.registerSuccess();
       void reportLoginEvent({ email, success: true });
-      push('Bem-vindo ao Athena.', 'ok');
+      push('Bem-vindo ao Movvo.', 'ok');
       router.push('/app');
       router.refresh();
     } finally {
@@ -138,14 +138,14 @@ export function LoginForm() {
       onSubmit={onSubmit}
       method="post"
       action="/login"
-      className="athena-login-form"
+      className="movvo-login-form"
       data-testid="login-form"
       noValidate
     >
-      <div className="athena-login-field">
+      <div className="movvo-login-field">
         <label htmlFor={emailId}>E-mail</label>
-        <div className="athena-login-input-wrap">
-          <Mail size={18} aria-hidden className="athena-login-input-icon" />
+        <div className="movvo-login-input-wrap">
+          <Mail size={18} aria-hidden className="movvo-login-input-icon" />
           <input
             ref={emailRef}
             id={emailId}
@@ -157,17 +157,17 @@ export function LoginForm() {
             onChange={(e) => setEmail(e.target.value)}
             onKeyUp={onKeyEvent}
             placeholder="Digite seu e-mail"
-            className="athena-login-input"
+            className="movvo-login-input"
             disabled={disabled}
             data-testid="login-email"
           />
         </div>
       </div>
 
-      <div className="athena-login-field">
+      <div className="movvo-login-field">
         <label htmlFor={passwordId}>Senha</label>
-        <div className="athena-login-input-wrap">
-          <Lock size={18} aria-hidden className="athena-login-input-icon" />
+        <div className="movvo-login-input-wrap">
+          <Lock size={18} aria-hidden className="movvo-login-input-icon" />
           <input
             id={passwordId}
             type={showPassword ? 'text' : 'password'}
@@ -178,13 +178,13 @@ export function LoginForm() {
             onChange={(e) => setPassword(e.target.value)}
             onKeyUp={onKeyEvent}
             placeholder="Digite sua senha"
-            className="athena-login-input athena-login-input-password"
+            className="movvo-login-input movvo-login-input-password"
             disabled={disabled}
             data-testid="login-password"
           />
           <button
             type="button"
-            className="athena-login-eye"
+            className="movvo-login-eye"
             onClick={() => setShowPassword((v) => !v)}
             aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
             tabIndex={0}
@@ -194,13 +194,13 @@ export function LoginForm() {
           </button>
         </div>
         {capsLockOn ? (
-          <p className="athena-login-capslock" role="status" data-testid="caps-lock-warning">
+          <p className="movvo-login-capslock" role="status" data-testid="caps-lock-warning">
             Caps Lock ativado
           </p>
         ) : null}
       </div>
 
-      <label className="athena-login-remember">
+      <label className="movvo-login-remember">
         <input
           type="checkbox"
           checked={remember}
@@ -211,19 +211,19 @@ export function LoginForm() {
       </label>
 
       {DEV_AUTH ? (
-        <p className="athena-login-dev">
+        <p className="movvo-login-dev">
           DEV · teste@athena.local / teste123 · aluno: renan.aluno@athena.local · professora: bruna.professora@athena.local / teste123
         </p>
       ) : null}
 
       {attempts.locked ? (
-        <p className="athena-login-error" role="alert" data-testid="login-locked">
+        <p className="movvo-login-error" role="alert" data-testid="login-locked">
           Conta temporariamente bloqueada. Aguarde {attempts.lockMinutes} minuto(s).
         </p>
       ) : null}
 
       {error && !attempts.locked ? (
-        <p className="athena-login-error" role="alert" data-testid="login-error">
+        <p className="movvo-login-error" role="alert" data-testid="login-error">
           {error}
         </p>
       ) : null}
@@ -231,13 +231,13 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={disabled}
-        className="athena-login-submit"
+        className="movvo-login-submit"
         data-testid="login-submit"
         aria-busy={loading}
       >
         {loading ? (
           <>
-            <span className="athena-login-spinner" aria-hidden />
+            <span className="movvo-login-spinner" aria-hidden />
             Entrando...
           </>
         ) : (
@@ -245,7 +245,7 @@ export function LoginForm() {
         )}
       </button>
 
-      <Link href="/forgot-password" className="athena-login-forgot">
+      <Link href="/forgot-password" className="movvo-login-forgot">
         Esqueci minha senha
       </Link>
     </form>

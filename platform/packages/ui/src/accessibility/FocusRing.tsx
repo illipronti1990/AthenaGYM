@@ -8,5 +8,5 @@ export function FocusRing({
   children: ReactNode;
   className?: string;
 }) {
-  return <span className={`athena-focus-ring ${className}`.trim()}>{children}</span>;
+  return <span className={`movvo-focus-ring ${className}`.trim()}>{children}</span>;
 }

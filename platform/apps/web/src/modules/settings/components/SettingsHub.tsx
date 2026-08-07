@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import { FormEvent, useCallback, useEffect, useState } from 'react';
-import type { AuditLogItem, GymSettings } from '@athena/shared';
-import { Button, ProgressIndicator, SkeletonForm } from '@athena/ui';
+import type { AuditLogItem, GymSettings } from '@movvo/shared';
+import { Button, ProgressIndicator, SkeletonForm } from '@movvo/ui';
 import { settingsApi } from '../services/settingsApi';
 import { useToast } from '@/components/ui/Toast';
 import { CepFields } from '@/components/CepFields';
@@ -206,7 +206,7 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
             key={t.id}
             type="button"
             onClick={() => setTab(t.id)}
-            className={tab === t.id ? 'athena-tab athena-tab-active' : 'athena-tab'}
+            className={tab === t.id ? 'movvo-tab movvo-tab-active' : 'movvo-tab'}
           >
             {t.label}
           </button>
@@ -250,9 +250,9 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
             />
           </div>
           <label className="sm:col-span-2 block text-sm">
-            <span className="athena-label">Rodapé dos recibos</span>
+            <span className="movvo-label">Rodapé dos recibos</span>
             <textarea
-              className="athena-input"
+              className="movvo-input"
               rows={3}
               value={settings.receiptFooter || ''}
               onChange={(e) => updateField('receiptFooter', e.target.value)}
@@ -297,7 +297,7 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
               <button
                 type="submit"
                 disabled={saving}
-                className="athena-btn athena-btn-primary"
+                className="movvo-btn movvo-btn-primary"
               >
                 Salvar financeiro
               </button>
@@ -338,7 +338,7 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
           </div>
           <div className="grid gap-3 rounded-[12px] border border-[var(--border)] p-4 sm:grid-cols-2">
             <label className="text-sm">
-              <span className="athena-label">Layout compacto</span>
+              <span className="movvo-label">Layout compacto</span>
               <input
                 type="checkbox"
                 className="mt-2"
@@ -347,7 +347,7 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
               />
             </label>
             <label className="text-sm">
-              <span className="athena-label">Widgets compactos</span>
+              <span className="movvo-label">Widgets compactos</span>
               <input
                 type="checkbox"
                 className="mt-2"
@@ -358,7 +358,7 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
           </div>
           <div className="flex flex-wrap items-end gap-4">
             <label className="text-sm">
-              <span className="athena-label">Cor principal</span>
+              <span className="movvo-label">Cor principal</span>
               <input
                 type="color"
                 value={settings.primaryColor || '#A00018'}
@@ -366,7 +366,7 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
               />
             </label>
             <label className="text-sm">
-              <span className="athena-label">Cor secundária</span>
+              <span className="movvo-label">Cor secundária</span>
               <input
                 type="color"
                 value={settings.secondaryColor || '#1a1a1a'}
@@ -374,7 +374,7 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
               />
             </label>
             <label className="text-sm">
-              <span className="athena-label">Logo</span>
+              <span className="movvo-label">Logo</span>
               <input
                 type="file"
                 accept="image/*"
@@ -389,7 +389,7 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
           <button
             type="submit"
             disabled={saving}
-            className="athena-btn athena-btn-primary"
+            className="movvo-btn movvo-btn-primary"
           >
             Salvar cores
           </button>
@@ -400,10 +400,10 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
         <div className="space-y-3 text-sm">
           <p>Cadastre funcionários e permissões:</p>
           <div className="flex gap-3">
-            <Link href="/app/users" className="athena-btn athena-btn-primary">
+            <Link href="/app/users" className="movvo-btn movvo-btn-primary">
               Usuários
             </Link>
-            <Link href="/app/roles" className="athena-btn athena-btn-secondary">
+            <Link href="/app/roles" className="movvo-btn movvo-btn-secondary">
               Cargos / Permissões
             </Link>
           </div>
@@ -447,7 +447,7 @@ export function SettingsHub({ accessToken }: { accessToken: string }) {
           {!logs ? (
             <SkeletonForm fields={5} />
           ) : (
-            <table className="athena-table">
+            <table className="movvo-table">
               <thead>
                 <tr>
                   <th className="py-2 pr-2">Quando</th>
@@ -534,10 +534,10 @@ function Field({
 }) {
   return (
     <label className="block text-sm">
-      <span className="athena-label">{label}</span>
+      <span className="movvo-label">{label}</span>
       <input
         type={type}
-        className="athena-input"
+        className="movvo-input"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         step={type === 'number' ? 'any' : undefined}

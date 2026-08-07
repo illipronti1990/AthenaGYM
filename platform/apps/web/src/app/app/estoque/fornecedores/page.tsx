@@ -1,4 +1,4 @@
-import { Page, PageHeader, PageContent, PageFilters, pageQualityAttrs } from '@athena/ui';
+import { Page, PageHeader, PageContent, PageFilters, pageQualityAttrs } from '@movvo/ui';
 import { requireAccessToken } from '@/lib/auth/token';
 import { EstoqueNav } from '@/modules/inventory/components/EstoqueNav';
 import { SuppliersPanel } from '@/modules/inventory/components/InventoryPanels';

@@ -16,7 +16,7 @@ export function FloatingActionButton({
     <Tooltip content={label}>
       <button
         type="button"
-        className={`athena-fab ${className}`}
+        className={`movvo-fab ${className}`}
         aria-label={label}
         {...props}
       >

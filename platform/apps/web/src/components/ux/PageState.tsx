@@ -7,7 +7,7 @@ import {
   SkeletonDashboard,
   SkeletonForm,
   SkeletonTable,
-} from '@athena/ui';
+} from '@movvo/ui';
 
 export type PageStateKind =
   | 'ready'
@@ -48,7 +48,7 @@ export function PageState({
   className,
 }: PageStateProps) {
   const retryAction = onRetry ? (
-    <button type="button" className="athena-btn athena-btn-secondary" onClick={onRetry}>
+    <button type="button" className="movvo-btn movvo-btn-secondary" onClick={onRetry}>
       Tentar de novo
     </button>
   ) : undefined;

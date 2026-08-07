@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Button } from '@athena/ui';
+import { Button } from '@movvo/ui';
 import { apiAcceptInvite } from '@/services/api';
 import { useToast } from '@/components/ui/Toast';
 
@@ -37,7 +37,7 @@ export function AcceptInviteForm() {
           required
           value={token}
           onChange={(e) => setToken(e.target.value)}
-          className="athena-input mt-1"
+          className="movvo-input mt-1"
         />
       </label>
       <label className="text-sm font-medium text-[var(--muted)]">
@@ -45,7 +45,7 @@ export function AcceptInviteForm() {
         <input
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
-          className="athena-input mt-1"
+          className="movvo-input mt-1"
         />
       </label>
       <label className="text-sm font-medium text-[var(--muted)]">
@@ -56,7 +56,7 @@ export function AcceptInviteForm() {
           minLength={8}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="athena-input mt-1"
+          className="movvo-input mt-1"
         />
       </label>
       <Button type="submit" disabled={loading} className="w-full">

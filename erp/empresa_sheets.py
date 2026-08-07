@@ -37,28 +37,28 @@ EMPRESAS_HEADERS = [
 
 EMPRESAS_SEED = [
     (
-        0, "ATHENAS PLATFORM LTDA", "ATHENAS PLATFORM", "00.000.000/0001-00", "",
-        "", "", "platform@athenas.gym", "https://athenas.gym", "", "", "", "",
+        0, "ATHENA PLATFORM LTDA", "ATHENA PLATFORM", "00.000.000/0001-00", "",
+        "", "", "platform@athena.gym", "https://athena.gym", "", "", "", "",
         "", "São Paulo", "SP", "Brasil", "", "#A3001B", "#D4AF37",
         "Enterprise", "Ativo", HOJE, HOJE + timedelta(days=3650), 0, 0,
     ),
     (
-        1, "ATHENAS GYM ACADEMIA LTDA", "ATHENAS GYM", "12.345.678/0001-90", "ISENTO",
-        "(11) 3000-0000", "(11) 99000-0000", "contato@athenas.gym", "https://athenas.gym",
+        1, "ATHENA GYM ACADEMIA LTDA", "ATHENA GYM", "12.345.678/0001-90", "ISENTO",
+        "(11) 3000-0000", "(11) 99000-0000", "contato@athena.gym", "https://athena.gym",
         "01310-100", "Av. Paulista", "1000", "Sala 10", "Bela Vista", "São Paulo", "SP", "Brasil",
         "", "#A3001B", "#D4AF37", "Enterprise", "Ativo", HOJE - timedelta(days=365), HOJE + timedelta(days=365),
         1, 1,
     ),
     (
-        2, "ATHENAS GYM CAMPINAS LTDA", "ATHENAS Campinas", "23.456.789/0001-01", "ISENTO",
-        "(19) 3000-2000", "(19) 99000-2000", "campinas@athenas.gym", "https://athenas.gym",
+        2, "ATHENA GYM CAMPINAS LTDA", "ATHENA Campinas", "23.456.789/0001-01", "ISENTO",
+        "(19) 3000-2000", "(19) 99000-2000", "campinas@athena.gym", "https://athena.gym",
         "13010-100", "Av. Norte-Sul", "500", "", "Centro", "Campinas", "SP", "Brasil",
         "", "#A3001B", "#D4AF37", "Enterprise", "Ativo", HOJE - timedelta(days=200), HOJE + timedelta(days=530),
         1, 2,
     ),
     (
-        3, "ATHENAS GYM SANTOS LTDA", "ATHENAS Santos", "34.567.890/0001-12", "ISENTO",
-        "(13) 3000-3000", "(13) 99000-3000", "santos@athenas.gym", "https://athenas.gym",
+        3, "ATHENA GYM SANTOS LTDA", "ATHENA Santos", "34.567.890/0001-12", "ISENTO",
+        "(13) 3000-3000", "(13) 99000-3000", "santos@athena.gym", "https://athena.gym",
         "11010-100", "Av. Ana Costa", "200", "", "Gonzaga", "Santos", "SP", "Brasil",
         "", "#A3001B", "#D4AF37", "Enterprise", "Ativo", HOJE - timedelta(days=120), HOJE + timedelta(days=610),
         1, 3,
@@ -152,7 +152,7 @@ def build_master_ui(wb) -> None:
     add_sidebar(ws, active="38_MASTER", rows=48, labels=False)
     add_top_bar(ws, start_col=2, end_col=12)
     set_column_widths(ws, {1: 24, 2: 2, 3: 14, 4: 14, 5: 12, 6: 12, 7: 14, 8: 12, 9: 12, 10: 12})
-    _title(ws, "ATHENAS PLATFORM — MASTER")
+    _title(ws, "ATHENA PLATFORM — MASTER")
 
     paint_kpi_card(ws, 8, 3, "Academias", 0, False, 2)
     paint_kpi_card(ws, 8, 5, "Alunos", 0, False, 2)

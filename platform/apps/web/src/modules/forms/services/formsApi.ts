@@ -1,4 +1,4 @@
-import type { CepLookupResult, CpfLookupResult, FormTemplate } from '@athena/shared';
+import type { CepLookupResult, CpfLookupResult, FormTemplate } from '@movvo/shared';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
 

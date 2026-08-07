@@ -13,10 +13,10 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <main className="athena-login-page movvo-login-page" data-testid="login-page">
+    <main className="movvo-login-page movvo-login-page" data-testid="login-page">
       <LoginBackground />
       <LoginHeader />
-      <div className="athena-login-panel">
+      <div className="movvo-login-panel">
         <LoginCard />
         <LoginFooter />
         <p className="sr-only">

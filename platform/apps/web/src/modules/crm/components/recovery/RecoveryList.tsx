@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card } from '@athena/ui';
+import { Card } from '@movvo/ui';
 import type { RecoveryStudent } from '../../services/crmApi';
 import { crmApi } from '../../services/crmApi';
 import { useToast } from '@/components/ui/Toast';

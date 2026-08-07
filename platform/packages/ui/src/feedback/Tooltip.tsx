@@ -25,9 +25,9 @@ export function Tooltip({
     <RadixTooltip.Root>
       <RadixTooltip.Trigger asChild>{children}</RadixTooltip.Trigger>
       <RadixTooltip.Portal>
-        <RadixTooltip.Content className="athena-tooltip" side={side} sideOffset={6}>
+        <RadixTooltip.Content className="movvo-tooltip" side={side} sideOffset={6}>
           {content}
-          <RadixTooltip.Arrow className="athena-tooltip-arrow" />
+          <RadixTooltip.Arrow className="movvo-tooltip-arrow" />
         </RadixTooltip.Content>
       </RadixTooltip.Portal>
     </RadixTooltip.Root>

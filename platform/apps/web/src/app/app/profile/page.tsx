@@ -10,7 +10,7 @@ export default async function ProfilePage() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="athena-title text-3xl">Meu perfil</h1>
+        <h1 className="movvo-title text-3xl">Meu perfil</h1>
         <p className="mt-1 text-sm text-[var(--muted)]">Dados pessoais e preferências</p>
       </div>
       <ProfileForm profile={me.profile} accessToken={accessToken} />

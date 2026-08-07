@@ -1,7 +1,13 @@
-import { Page, PageHeader, PageContent, PageFilters, pageQualityAttrs } from '@athena/ui';
+import dynamic from 'next/dynamic';
+import { Page, PageHeader, PageContent, PageFilters, pageQualityAttrs } from '@movvo/ui';
 import { requireAccessToken } from '@/lib/auth/token';
 import { EstoqueNav } from '@/modules/inventory/components/EstoqueNav';
-import { ProductsPanel } from '@/modules/inventory/components/InventoryPanels';
+
+const ProductsPanel = dynamic(
+  () =>
+    import('@/modules/inventory/components/InventoryPanels').then((m) => m.ProductsPanel),
+  { loading: () => <p className="text-sm text-[var(--muted)]">Carregando produtos…</p> },
+);
 
 export default async function EstoqueProdutosPage() {
   const accessToken = await requireAccessToken();

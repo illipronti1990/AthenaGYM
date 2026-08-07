@@ -151,7 +151,7 @@ def build_bi_executivo(wb) -> None:
         ws,
         {1: 24, 2: 2, 3: 14, 4: 12, 5: 12, 6: 12, 7: 14, 8: 12, 9: 12, 10: 12, 11: 12},
     )
-    _title(ws, "ATHENAS GYM — RESUMO EXECUTIVO")
+    _title(ws, "ATHENA GYM — RESUMO EXECUTIVO")
 
     paint_kpi_card(ws, 7, 3, "Receita", "R$ 0", False, 2)
     paint_kpi_card(ws, 7, 5, "Alunos ativos", 0, False, 2)

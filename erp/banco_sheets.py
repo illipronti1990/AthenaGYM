@@ -64,7 +64,7 @@ PARAMETROS_SEED = [
     ("Integracoes", "Biometria", "NAO", "Habilitar biometria"),
     ("Integracoes", "RFID", "NAO", "Habilitar cartao RFID/NFC"),
     ("Integracoes", "AppAluno", "NAO", "Habilitar app do aluno"),
-    ("Estoque", "UnidadePadrao", "ATHENAS GYM Matriz", "Unidade operacional padrão"),
+    ("Estoque", "UnidadePadrao", "ATHENA GYM Matriz", "Unidade operacional padrão"),
     ("Estoque", "DiasAlertaValidade", 30, "Dias para alertar lote vencendo"),
     ("Estoque", "PerguntarMensalidade", "SIM", "PDV pergunta se lança na mensalidade"),
     ("Estoque", "EstoqueMinimoPadrao", 5, "Mínimo padrão ao cadastrar"),
@@ -86,10 +86,10 @@ PARAMETROS_SEED = [
     ("Financeiro", "MetaReceitaMes", 50000, "Meta de receita do mês"),
     ("Financeiro", "BloquearEmailDuplicado", "NÃO", "SIM ou NÃO"),
     ("Financeiro", "BloquearTelefoneDuplicado", "NÃO", "SIM ou NÃO"),
-    ("Academia", "Nome", "ATHENAS GYM", "Nome da academia"),
+    ("Academia", "Nome", "ATHENA GYM", "Nome da academia"),
     ("Academia", "Cidade", "São Paulo", "Cidade"),
     ("Academia", "Telefone", "(11) 99999-9999", "Contato"),
-    ("Academia", "Email", "contato@athenasgym.com.br", "E-mail de contato"),
+    ("Academia", "Email", "contato@athenagym.com.br", "E-mail de contato"),
     ("Academia", "Moeda", "R$", "Símbolo de moeda"),
 ]
 
@@ -193,7 +193,7 @@ def _date_fmt(cell) -> None:
 def _aluno_row(aluno: dict, idx: int) -> list:
     return [
         idx,
-        1,  # EmpresaID — ATHENAS GYM tenant demo
+        1,  # EmpresaID — ATHENA GYM tenant demo
         1,  # UnidadeID — Matriz
         aluno["matricula"],
         aluno["nome"],

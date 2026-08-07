@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { Schedule } from '@athena/shared';
+import type { Schedule } from '@movvo/shared';
 import { operationsApi } from '../services/operationsApi';
 import { StudentSelect } from './StudentSelect';
 
@@ -62,7 +62,7 @@ export function ClassesPanel({ accessToken }: { accessToken: string }) {
                 type="button"
                 disabled={!studentId}
                 onClick={() => enroll(c.id)}
-                className="athena-btn athena-btn-secondary"
+                className="movvo-btn movvo-btn-secondary"
               >
                 Reservar
               </button>
@@ -70,7 +70,7 @@ export function ClassesPanel({ accessToken }: { accessToken: string }) {
                 type="button"
                 disabled={!studentId}
                 onClick={() => cancel(c.id)}
-                className="athena-btn athena-btn-secondary"
+                className="movvo-btn movvo-btn-secondary"
               >
                 Cancelar
               </button>

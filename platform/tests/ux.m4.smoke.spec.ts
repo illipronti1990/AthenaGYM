@@ -51,7 +51,7 @@ test.describe('M-4 UX polish smoke', () => {
     }
     await page.evaluate(() => {
       localStorage.setItem(
-        'athena_ui_prefs',
+        'movvo_ui_prefs',
         JSON.stringify({ language: 'pt-BR', denseLayout: false, widgetsCompact: false, dateFormat: 'dd/MM/yyyy', tourCompletedV1: false }),
       );
     });

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { requireAccessToken } from '@/lib/auth/token';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
-import { Card } from '@athena/ui';
+import { Card } from '@movvo/ui';
 
 export default async function HelpPage() {
   await requireAccessToken();
@@ -10,7 +10,7 @@ export default async function HelpPage() {
     <div className="space-y-6">
       <Breadcrumb items={[{ label: 'App', href: '/app' }, { label: 'Ajuda' }]} />
       <div>
-        <h1 className="athena-title text-3xl">Central de Ajuda</h1>
+        <h1 className="movvo-title text-3xl">Central de Ajuda</h1>
         <p className="mt-1 text-sm text-[var(--muted)]">
           Manual rápido do Athena para academias de bairro.
         </p>
@@ -18,7 +18,7 @@ export default async function HelpPage() {
       <div className="grid gap-3 sm:grid-cols-2">
         <Link href="/app/help/getting-started">
           <Card hover>
-            <h2 className="athena-title text-base">Primeiros passos</h2>
+            <h2 className="movvo-title text-base">Primeiros passos</h2>
             <p className="mt-1 text-sm text-[var(--muted)]">
               Configure a academia e comece a operar
             </p>
@@ -26,7 +26,7 @@ export default async function HelpPage() {
         </Link>
         <Link href="/app/help/faq">
           <Card hover>
-            <h2 className="athena-title text-base">FAQ</h2>
+            <h2 className="movvo-title text-base">FAQ</h2>
             <p className="mt-1 text-sm text-[var(--muted)]">Perguntas frequentes</p>
           </Card>
         </Link>

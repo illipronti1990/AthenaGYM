@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Button, Card } from '@athena/ui';
+import { Button, Card } from '@movvo/ui';
 import type { ChurnRisk } from '../../services/crmApi';
 import { crmApi } from '../../services/crmApi';
 import { useToast } from '@/components/ui/Toast';
@@ -61,7 +61,7 @@ export function ChurnRiskCard({ accessToken, preview = false }: Props) {
   return (
     <Card data-testid="churn-risk-card">
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="athena-title text-sm">Risco de churn</h2>
+        <h2 className="movvo-title text-sm">Risco de churn</h2>
         {!preview && (
           <Button variant="secondary" onClick={() => void onRefresh()} disabled={refreshing}>
             {refreshing ? 'Atualizando…' : 'Atualizar'}

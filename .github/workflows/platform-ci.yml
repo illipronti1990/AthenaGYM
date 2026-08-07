@@ -29,6 +29,8 @@ jobs:
           cache-dependency-path: platform/pnpm-lock.yaml
       - name: Install
         run: pnpm install --frozen-lockfile
+      - name: G-20 Grep Gate (Athena→Movvo)
+        run: node scripts/grep-athena-gate.mjs
       - name: Lint
         run: pnpm -r run lint
       - name: Unit tests (API)

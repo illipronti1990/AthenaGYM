@@ -3,8 +3,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import type { AuthContext, CepLookupResult, CpfLookupResult } from '@athena/shared';
-import { isValidCpf, normalizeCpf } from '@athena/shared';
+import type { AuthContext, CepLookupResult, CpfLookupResult } from '@movvo/shared';
+import { isValidCpf, normalizeCpf } from '@movvo/shared';
 import { SupabaseService } from '../supabase/supabase.service';
 import { FormsRepository } from './forms.repository';
 

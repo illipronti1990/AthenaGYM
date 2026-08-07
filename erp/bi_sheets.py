@@ -132,7 +132,7 @@ def build_bi_base(wb) -> None:
     ws["A6"] = "Aluno"
     ws["B6"] = "(Todos)"
     ws["A7"] = "Unidade"
-    ws["B7"] = "ATHENAS GYM"
+    ws["B7"] = "ATHENA GYM"
     for r in range(2, 8):
         ws.cell(row=r, column=1).border = border_thin
         ws.cell(row=r, column=2).border = border_thin

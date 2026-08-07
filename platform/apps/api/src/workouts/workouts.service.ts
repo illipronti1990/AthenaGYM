@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { getWorkoutRecommendationService } from '@athena/ai-sdk';
+import { getWorkoutRecommendationService } from '@movvo/ai-sdk';
 import {
   calcBmi,
   calcBmr,
@@ -13,8 +13,8 @@ import {
   leanMassKg,
   slugify,
   storageProgressPath,
-} from '@athena/exercise-engine';
-import type { AuthContext, ProgressPoint, ProgressSummary } from '@athena/shared';
+} from '@movvo/exercise-engine';
+import type { AuthContext, ProgressPoint, ProgressSummary } from '@movvo/shared';
 import { AuthUser } from '../auth/auth.types';
 import { SupabaseService } from '../supabase/supabase.service';
 import {

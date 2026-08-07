@@ -54,52 +54,52 @@ KIT_ITENS_HEADERS = ["Kit Código", "Produto Código", "Produto", "Qtde"]
 
 UNIDADES_SEED = [
     (
-        1, 1, "ATHENAS GYM Matriz", "MX", "12.345.678/0001-90",
-        "(11) 3000-0001", "(11) 99000-0001", "matriz@athenas.gym",
+        1, 1, "ATHENA GYM Matriz", "MX", "12.345.678/0001-90",
+        "(11) 3000-0001", "(11) 99000-0001", "matriz@athena.gym",
         "01310-100", "Av. Paulista, 1000", "São Paulo", "SP", "Carlos Mendes", "Ativa", HOJE,
     ),
     (
-        2, 1, "ATHENAS GYM Zona Sul", "ZS", "12.345.678/0002-71",
-        "(11) 3000-0002", "(11) 99000-0002", "zonasul@athenas.gym",
+        2, 1, "ATHENA GYM Zona Sul", "ZS", "12.345.678/0002-71",
+        "(11) 3000-0002", "(11) 99000-0002", "zonasul@athena.gym",
         "04038-001", "Av. Ibirapuera, 500", "São Paulo", "SP", "Ana Paula Souza", "Ativa", HOJE,
     ),
     (
-        3, 2, "ATHENAS Campinas Centro", "CP", "23.456.789/0001-01",
-        "(19) 3000-2001", "(19) 99000-2001", "campinas@athenas.gym",
+        3, 2, "ATHENA Campinas Centro", "CP", "23.456.789/0001-01",
+        "(19) 3000-2001", "(19) 99000-2001", "campinas@athena.gym",
         "13010-100", "Av. Norte-Sul, 500", "Campinas", "SP", "Marcos Silva", "Ativa", HOJE,
     ),
     (
-        4, 3, "ATHENAS Santos Gonzaga", "ST", "34.567.890/0001-12",
-        "(13) 3000-3001", "(13) 99000-3001", "santos@athenas.gym",
+        4, 3, "ATHENA Santos Gonzaga", "ST", "34.567.890/0001-12",
+        "(13) 3000-3001", "(13) 99000-3001", "santos@athena.gym",
         "11010-100", "Av. Ana Costa, 200", "Santos", "SP", "Patricia Reis", "Ativa", HOJE,
     ),
 ]
 
 PRODUTOS_SEED = [
     ("PRD-001", "7891000100011", "Whey Protein 900g", "Suplementos", "AthMax", "UN",
-     89.90, 149.90, 20, 5, 50, "Prateleira A1", "Ativo", "ATHENAS GYM Matriz", 1, "A"),
+     89.90, 149.90, 20, 5, 50, "Prateleira A1", "Ativo", "ATHENA GYM Matriz", 1, "A"),
     ("PRD-002", "7891000100028", "Creatina 300g", "Suplementos", "AthMax", "UN",
-     45.00, 79.90, 3, 10, 40, "Prateleira A2", "Ativo", "ATHENAS GYM Matriz", 1, "A"),
+     45.00, 79.90, 3, 10, 40, "Prateleira A2", "Ativo", "ATHENA GYM Matriz", 1, "A"),
     ("PRD-003", "7891000100035", "Barra Proteica", "Barras de Proteína", "FitBar", "UN",
-     6.50, 12.90, 40, 10, 100, "Balcão", "Ativo", "ATHENAS GYM Matriz", 1, "B"),
-    ("PRD-004", "7891000100042", "Camiseta Athenas", "Roupas", "Athenas", "UN",
-     25.00, 69.90, 30, 5, 60, "Vitrine", "Ativo", "ATHENAS GYM Matriz", 1, "B"),
+     6.50, 12.90, 40, 10, 100, "Balcão", "Ativo", "ATHENA GYM Matriz", 1, "B"),
+    ("PRD-004", "7891000100042", "Camiseta Athena", "Roupas", "Athena", "UN",
+     25.00, 69.90, 30, 5, 60, "Vitrine", "Ativo", "ATHENA GYM Matriz", 1, "B"),
     ("PRD-005", "7891000100059", "Garrafa Squeeze", "Garrafas", "Hydra", "UN",
-     12.00, 39.90, 20, 5, 40, "Balcão", "Ativo", "ATHENAS GYM Matriz", 1, "C"),
+     12.00, 39.90, 20, 5, 40, "Balcão", "Ativo", "ATHENA GYM Matriz", 1, "C"),
     ("PRD-006", "7891000100066", "Luvas Treino", "Luvas", "GripPro", "PAR",
-     18.00, 49.90, 15, 3, 30, "Vitrine", "Ativo", "ATHENAS GYM Matriz", 1, "C"),
+     18.00, 49.90, 15, 3, 30, "Vitrine", "Ativo", "ATHENA GYM Matriz", 1, "C"),
     ("PRD-007", "7891000100073", "Pré-Treino 300g", "Suplementos", "AthMax", "UN",
-     55.00, 99.90, 12, 4, 30, "Prateleira A3", "Ativo", "ATHENAS GYM Matriz", 1, "A"),
+     55.00, 99.90, 12, 4, 30, "Prateleira A3", "Ativo", "ATHENA GYM Matriz", 1, "A"),
     ("PRD-008", "7891000100080", "Coqueteleira", "Coqueteleiras", "ShakeIt", "UN",
-     8.00, 29.90, 25, 5, 50, "Balcão", "Ativo", "ATHENAS GYM Matriz", 1, "C"),
+     8.00, 29.90, 25, 5, 50, "Balcão", "Ativo", "ATHENA GYM Matriz", 1, "C"),
     ("PRD-009", "7891000100097", "Água 500ml", "Bebidas", "Crystal", "UN",
-     1.20, 4.00, 80, 20, 200, "Geladeira", "Ativo", "ATHENAS GYM Matriz", 1, "B"),
+     1.20, 4.00, 80, 20, 200, "Geladeira", "Ativo", "ATHENA GYM Matriz", 1, "B"),
     ("PRD-010", "7891000100103", "Vitamina D", "Vitaminas", "VitaPlus", "UN",
-     22.00, 49.90, 8, 5, 25, "Prateleira B1", "Ativo", "ATHENAS GYM Matriz", 1, "B"),
+     22.00, 49.90, 8, 5, 25, "Prateleira B1", "Ativo", "ATHENA GYM Matriz", 1, "B"),
     ("PRD-001", "7891000100011", "Whey Protein 900g", "Suplementos", "AthMax", "UN",
-     89.90, 149.90, 8, 3, 30, "Prateleira A1", "Ativo", "ATHENAS GYM Zona Sul", 2, "A"),
+     89.90, 149.90, 8, 3, 30, "Prateleira A1", "Ativo", "ATHENA GYM Zona Sul", 2, "A"),
     ("PRD-003", "7891000100035", "Barra Proteica", "Barras de Proteína", "FitBar", "UN",
-     6.50, 12.90, 15, 5, 50, "Balcão", "Ativo", "ATHENAS GYM Zona Sul", 2, "B"),
+     6.50, 12.90, 15, 5, 50, "Balcão", "Ativo", "ATHENA GYM Zona Sul", 2, "B"),
 ]
 
 FORNECEDORES_SEED = [
@@ -110,15 +110,15 @@ FORNECEDORES_SEED = [
 ]
 
 COMPRAS_SEED = [
-    (1, "CMP-001", "Whey Protein 900g", "PRD-001", 10, 899.00, "Nutri Distribuidora LTDA", HOJE - timedelta(days=10), "ATHENAS GYM Matriz", 1),
-    (2, "CMP-001", "Creatina 300g", "PRD-002", 15, 675.00, "Nutri Distribuidora LTDA", HOJE - timedelta(days=10), "ATHENAS GYM Matriz", 1),
+    (1, "CMP-001", "Whey Protein 900g", "PRD-001", 10, 899.00, "Nutri Distribuidora LTDA", HOJE - timedelta(days=10), "ATHENA GYM Matriz", 1),
+    (2, "CMP-001", "Creatina 300g", "PRD-002", 15, 675.00, "Nutri Distribuidora LTDA", HOJE - timedelta(days=10), "ATHENA GYM Matriz", 1),
 ]
 
 MOV_SEED = [
-    (1, HOJE - timedelta(days=10), "Whey Protein 900g", "PRD-001", "Entrada", 10, "Admin", "Compra CMP-001", "ATHENAS GYM Matriz", 1),
-    (2, HOJE - timedelta(days=10), "Creatina 300g", "PRD-002", "Entrada", 15, "Admin", "Compra CMP-001", "ATHENAS GYM Matriz", 1),
-    (3, HOJE - timedelta(days=1), "Creatina 300g", "PRD-002", "Venda", 2, "Recepção", "PDV", "ATHENAS GYM Matriz", 1),
-    (4, HOJE, "Barra Proteica", "PRD-003", "Venda", 3, "Recepção", "PDV", "ATHENAS GYM Matriz", 1),
+    (1, HOJE - timedelta(days=10), "Whey Protein 900g", "PRD-001", "Entrada", 10, "Admin", "Compra CMP-001", "ATHENA GYM Matriz", 1),
+    (2, HOJE - timedelta(days=10), "Creatina 300g", "PRD-002", "Entrada", 15, "Admin", "Compra CMP-001", "ATHENA GYM Matriz", 1),
+    (3, HOJE - timedelta(days=1), "Creatina 300g", "PRD-002", "Venda", 2, "Recepção", "PDV", "ATHENA GYM Matriz", 1),
+    (4, HOJE, "Barra Proteica", "PRD-003", "Venda", 3, "Recepção", "PDV", "ATHENA GYM Matriz", 1),
 ]
 
 LOTES_SEED = [
@@ -128,8 +128,8 @@ LOTES_SEED = [
 ]
 
 VENDAS_SEED = [
-    (1, HOJE - timedelta(days=1), "Balcão", "", 1, 159.80, 90.00, 69.80, "PIX", "Finalizada", "Recepção", "NÃO", "ATHENAS GYM Matriz", 1),
-    (2, HOJE, "Balcão", "", 1, 38.70, 19.50, 19.20, "Dinheiro", "Finalizada", "Recepção", "NÃO", "ATHENAS GYM Matriz", 1),
+    (1, HOJE - timedelta(days=1), "Balcão", "", 1, 159.80, 90.00, 69.80, "PIX", "Finalizada", "Recepção", "NÃO", "ATHENA GYM Matriz", 1),
+    (2, HOJE, "Balcão", "", 1, 38.70, 19.50, 19.20, "Dinheiro", "Finalizada", "Recepção", "NÃO", "ATHENA GYM Matriz", 1),
 ]
 
 VENDA_ITENS_SEED = [

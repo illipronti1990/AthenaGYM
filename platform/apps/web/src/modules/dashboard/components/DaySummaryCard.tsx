@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import type { DashboardDaySummary } from '@athena/shared';
+import type { DashboardDaySummary } from '@movvo/shared';
 import { formatKpi } from '../utils/format';
 
 export function DaySummaryCard({ summary }: { summary: DashboardDaySummary }) {
@@ -9,10 +9,10 @@ export function DaySummaryCard({ summary }: { summary: DashboardDaySummary }) {
 
   return (
     <div
-      className="athena-card border-[var(--gold)]/30 bg-gradient-to-br from-[var(--card)] to-[var(--surface)]"
+      className="movvo-card border-[var(--gold)]/30 bg-gradient-to-br from-[var(--card)] to-[var(--surface)]"
       data-testid="day-summary"
     >
-      <p className="athena-h2 text-[var(--gold)]">{summary.greeting} 👋</p>
+      <p className="movvo-h2 text-[var(--gold)]">{summary.greeting} 👋</p>
       {hasItems ? (
         <>
           <p className="mt-2 text-sm text-[var(--muted)]">Hoje você possui:</p>

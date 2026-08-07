@@ -11,15 +11,15 @@ export function ProgressIndicator({
 }) {
   const pct = Math.max(0, Math.min(100, Math.round(value)));
   return (
-    <div className={`athena-progress ${className}`} data-testid="progress-indicator">
+    <div className={`movvo-progress ${className}`} data-testid="progress-indicator">
       {label ? (
         <div className="mb-2 flex items-center justify-between text-sm">
           <span>{label}</span>
           <span className="text-[var(--muted)]">{pct}%</span>
         </div>
       ) : null}
-      <div className="athena-progress-track">
-        <div className="athena-progress-bar" style={{ width: `${pct}%` }} />
+      <div className="movvo-progress-track">
+        <div className="movvo-progress-bar" style={{ width: `${pct}%` }} />
       </div>
     </div>
   );

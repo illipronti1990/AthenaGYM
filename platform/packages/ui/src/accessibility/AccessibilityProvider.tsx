@@ -14,7 +14,7 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
   }, []);
 
   function announce(message: string, politeness: 'polite' | 'assertive' = 'polite') {
-    const id = politeness === 'assertive' ? 'athena-live-assertive' : 'athena-live-polite';
+    const id = politeness === 'assertive' ? 'movvo-live-assertive' : 'movvo-live-polite';
     const el = document.getElementById(id);
     if (!el) return;
     el.textContent = '';
@@ -25,12 +25,12 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
 
   return (
     <Ctx.Provider value={{ announce }}>
-      <a href="#athena-main-content" className="athena-skip-link">
+      <a href="#movvo-main-content" className="movvo-skip-link">
         Ir para o conteúdo principal
       </a>
-      <div id="athena-live-polite" className="sr-only" aria-live="polite" aria-atomic="true" />
+      <div id="movvo-live-polite" className="sr-only" aria-live="polite" aria-atomic="true" />
       <div
-        id="athena-live-assertive"
+        id="movvo-live-assertive"
         className="sr-only"
         aria-live="assertive"
         aria-atomic="true"

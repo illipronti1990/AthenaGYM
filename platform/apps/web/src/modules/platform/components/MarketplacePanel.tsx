@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { MarketplaceInstallation, MarketplacePlugin } from '@athena/shared';
+import type { MarketplaceInstallation, MarketplacePlugin } from '@movvo/shared';
 import { platformApi } from '../services/platformApi';
 
 export function MarketplacePanel({ accessToken }: { accessToken: string }) {

@@ -17,7 +17,7 @@ export * from './dashboard/presets';
 export * from './forms/types';
 export * from './datagrid/types';
 export * from './branding/types';
-export * from './branding/athena';
+export * from './branding/movvo';
 export * from './inventory/types';
 export * from './admin/types';
 export * from './saas/types';

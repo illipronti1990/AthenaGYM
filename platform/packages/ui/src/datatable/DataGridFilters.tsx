@@ -25,14 +25,14 @@ export function DataGridFilters({
   if (!open) return null;
 
   return (
-    <div className="athena-dg-filters" data-testid="datagrid-filters">
-      <div className="athena-dg-filters-grid">
+    <div className="movvo-dg-filters" data-testid="datagrid-filters">
+      <div className="movvo-dg-filters-grid">
         {defs.map((def) => (
-          <label key={def.id} className="athena-field">
-            <span className="athena-label">{def.label}</span>
+          <label key={def.id} className="movvo-field">
+            <span className="movvo-label">{def.label}</span>
             {def.type === 'select' ? (
               <select
-                className="athena-input"
+                className="movvo-input"
                 value={values[def.id] || ''}
                 onChange={(e) => onChange({ ...values, [def.id]: e.target.value })}
               >
@@ -45,7 +45,7 @@ export function DataGridFilters({
               </select>
             ) : (
               <input
-                className="athena-input"
+                className="movvo-input"
                 value={values[def.id] || ''}
                 placeholder={def.placeholder}
                 onChange={(e) => onChange({ ...values, [def.id]: e.target.value })}
@@ -56,7 +56,7 @@ export function DataGridFilters({
       </div>
 
       {onSave ? (
-        <div className="athena-dg-saved-row">
+        <div className="movvo-dg-saved-row">
           <Button
             type="button"
             variant="secondary"
@@ -72,9 +72,9 @@ export function DataGridFilters({
       ) : null}
 
       {savedFilters && savedFilters.length > 0 ? (
-        <div className="athena-dg-saved-list" data-testid="saved-filters">
+        <div className="movvo-dg-saved-list" data-testid="saved-filters">
           {savedFilters.map((f) => (
-            <div key={f.id} className="athena-dg-saved-item">
+            <div key={f.id} className="movvo-dg-saved-item">
               <button type="button" onClick={() => onApplySaved?.(f)}>
                 ⭐ {f.name}
               </button>

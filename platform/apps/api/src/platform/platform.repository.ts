@@ -7,7 +7,7 @@ import type {
   SandboxEnvironment,
   WebhookDelivery,
   WebhookSubscription,
-} from '@athena/shared';
+} from '@movvo/shared';
 import { SupabaseService } from '../supabase/supabase.service';
 
 @Injectable()

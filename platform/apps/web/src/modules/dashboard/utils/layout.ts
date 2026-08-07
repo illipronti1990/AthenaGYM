@@ -1,6 +1,6 @@
-import type { DashboardLayoutItem } from '@athena/shared';
+import type { DashboardLayoutItem } from '@movvo/shared';
 
-/** Local fallback — evita importar o barrel CJS de @athena/shared no client. */
+/** Local fallback — evita importar o barrel CJS de @movvo/shared no client. */
 export const FALLBACK_DASHBOARD_LAYOUT: DashboardLayoutItem[] = [
   { id: 'daySummary', visible: true, order: 0 },
   { id: 'alerts', visible: true, order: 1 },

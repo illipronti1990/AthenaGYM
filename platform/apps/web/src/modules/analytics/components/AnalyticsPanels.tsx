@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState, useTransition } from 'react';
-import type { ExecutiveDashboard, KpiItem, PredictionItem, ReportDefinition } from '@athena/shared';
-import { Button, Card, chartColors } from '@athena/ui';
+import type { ExecutiveDashboard, KpiItem, PredictionItem, ReportDefinition } from '@movvo/shared';
+import { Button, Card, chartColors } from '@movvo/ui';
 import { analyticsApi } from '../services/analyticsApi';
 
 function money(n: number) {
@@ -82,7 +82,7 @@ export function KpiGrid({ accessToken }: { accessToken: string }) {
     <div className="space-y-6" data-testid="kpi-grid">
       {categories.map((cat) => (
         <section key={cat}>
-          <h3 className="athena-title mb-3 text-sm uppercase tracking-wide">{cat}</h3>
+          <h3 className="movvo-title mb-3 text-sm uppercase tracking-wide">{cat}</h3>
           <Card>
             <ul className="grid gap-1 sm:grid-cols-2 lg:grid-cols-3">
               {kpis
@@ -128,7 +128,7 @@ export function ChurnPanel({ accessToken }: { accessToken: string }) {
   return (
     <div className="space-y-3" data-testid="churn-panel">
       <div className="flex items-center justify-between gap-2">
-        <h2 className="athena-title text-lg">Predição de churn</h2>
+        <h2 className="movvo-title text-lg">Predição de churn</h2>
         <Button
           type="button"
           variant="secondary"
@@ -152,9 +152,9 @@ export function ChurnPanel({ accessToken }: { accessToken: string }) {
       {!items.length && (
         <p className="text-sm text-[var(--muted)]">Nenhuma predição ainda. Execute o engine.</p>
       )}
-      <ul className="athena-list">
+      <ul className="movvo-list">
         {items.slice(0, 10).map((p) => (
-          <li key={p.id} className="athena-list-item flex-wrap">
+          <li key={p.id} className="movvo-list-item flex-wrap">
             <div>
               <p className="font-medium text-[var(--text)]">
                 {(p.features.name as string) || p.entityId.slice(0, 8)}
@@ -186,7 +186,7 @@ export function ReportsPanel({ accessToken }: { accessToken: string }) {
 
   return (
     <div className="space-y-4" data-testid="reports-panel">
-      <h2 className="athena-title text-lg">Report builder</h2>
+      <h2 className="movvo-title text-lg">Report builder</h2>
       <form
         className="flex flex-wrap items-end gap-2"
         onSubmit={(e) => {
@@ -211,7 +211,7 @@ export function ReportsPanel({ accessToken }: { accessToken: string }) {
         <label className="text-sm text-[var(--muted)]">
           Nome
           <input
-            className="athena-input mt-1"
+            className="movvo-input mt-1"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
@@ -237,9 +237,9 @@ export function ReportsPanel({ accessToken }: { accessToken: string }) {
         </Button>
       </form>
       {msg && <p className="text-sm text-[var(--muted)]">{msg}</p>}
-      <ul className="athena-list text-sm">
+      <ul className="movvo-list text-sm">
         {reports.map((r) => (
-          <li key={r.id} className="athena-list-item">
+          <li key={r.id} className="movvo-list-item">
             {r.name} · {r.source} · {r.fields.join(', ')}
           </li>
         ))}
@@ -255,7 +255,7 @@ export function AiInsightsPanel({ accessToken }: { accessToken: string }) {
 
   return (
     <div className="space-y-3" data-testid="ai-insights-panel">
-      <h2 className="athena-title text-lg">IA BI</h2>
+      <h2 className="movvo-title text-lg">IA BI</h2>
       <form
         className="flex flex-wrap gap-2"
         onSubmit={(e) => {
@@ -267,7 +267,7 @@ export function AiInsightsPanel({ accessToken }: { accessToken: string }) {
         }}
       >
         <input
-          className="athena-input min-w-[240px] flex-1"
+          className="movvo-input min-w-[240px] flex-1"
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
         />

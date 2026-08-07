@@ -12,7 +12,7 @@ export function AnimatedCard({
   children: ReactNode;
 }) {
   return (
-    <div className={`athena-card ${hover ? 'athena-card-hover' : ''} ${className}`}>
+    <div className={`movvo-card ${hover ? 'movvo-card-hover' : ''} ${className}`}>
       {children}
     </div>
   );

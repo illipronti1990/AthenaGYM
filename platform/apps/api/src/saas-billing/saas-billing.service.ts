@@ -8,9 +8,10 @@ import type {
   SaasInvoice,
   SaasPlan,
   SaasSubscription,
-} from '@athena/shared';
+} from '@movvo/shared';
 import { AuditService } from '../audit/audit.service';
 import { AuthUser } from '../auth/auth.types';
+import { RedisCacheService } from '../cache/redis-cache.service';
 import { SupabaseService } from '../supabase/supabase.service';
 import { TenantsService } from '../platform/tenants.service';
 
@@ -20,6 +21,7 @@ export class SaasBillingService {
     private readonly supabase: SupabaseService,
     private readonly audit: AuditService,
     private readonly tenants: TenantsService,
+    private readonly cache: RedisCacheService,
   ) {}
 
   private admin() {
@@ -37,6 +39,11 @@ export class SaasBillingService {
   }
 
   async listPlans(): Promise<SaasPlan[]> {
+    const cacheKey = this.cache.key('global', 'plans', 'active');
+    return this.cache.wrap(cacheKey, RedisCacheService.TTL.plans, () => this.loadPlans());
+  }
+
+  private async loadPlans(): Promise<SaasPlan[]> {
     const { data: plans, error } = await this.admin()
       .from('saas_plans')
       .select('*')
@@ -126,6 +133,7 @@ export class SaasBillingService {
       entity: 'saas_plan',
       entityId: data.id,
     });
+    await this.cache.del(this.cache.key('global', 'plans', 'active'));
     const plans = await this.listPlans();
     return plans.find((p) => p.id === data.id)!;
   }

@@ -10,9 +10,9 @@ import {
   type ReactNode,
 } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { ShortcutDialog } from '@athena/ui';
+import { ShortcutDialog } from '@movvo/ui';
 
-const SIDEBAR_KEY = 'athena_sidebar_collapsed';
+const SIDEBAR_KEY = 'movvo_sidebar_collapsed';
 
 type LayoutCtx = {
   collapsed: boolean;
@@ -55,8 +55,14 @@ export function LayoutProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(SIDEBAR_KEY);
+      const saved =
+        localStorage.getItem(SIDEBAR_KEY) ||
+        localStorage.getItem('athena_sidebar_collapsed');
       if (saved === '1') setCollapsedState(true);
+      if (!localStorage.getItem(SIDEBAR_KEY) && localStorage.getItem('athena_sidebar_collapsed')) {
+        localStorage.setItem(SIDEBAR_KEY, localStorage.getItem('athena_sidebar_collapsed')!);
+        localStorage.removeItem('athena_sidebar_collapsed');
+      }
     } catch {
       /* ignore */
     }

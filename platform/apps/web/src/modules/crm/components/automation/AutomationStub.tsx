@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { AutomationFlow } from '@athena/shared';
-import { Button, Card } from '@athena/ui';
+import type { AutomationFlow } from '@movvo/shared';
+import { Button, Card } from '@movvo/ui';
 import { crmApi } from '../../services/crmApi';
 import { useToast } from '@/components/ui/Toast';
 
@@ -47,9 +47,9 @@ export function AutomationStub({ accessToken }: { accessToken: string }) {
           <p className="text-sm text-[var(--muted)]">Nenhuma automação configurada.</p>
         </Card>
       )}
-      <ul className="athena-list text-sm">
+      <ul className="movvo-list text-sm">
         {automations.map((a) => (
-          <li key={a.id} className="athena-list-item">
+          <li key={a.id} className="movvo-list-item">
             <div>
               <p className="font-medium text-[var(--text)]">{a.name}</p>
               <p className="text-xs text-[var(--muted)]">Gatilho: {a.triggerEvent}</p>

@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import type { Exercise } from '@athena/shared';
+import type { Exercise } from '@movvo/shared';
 import { workoutsApi } from '../services/workoutsApi';
 import { capitalizeLabel, MuscleGroupMultiSelect } from './MuscleGroupMultiSelect';
 import {
@@ -63,7 +63,7 @@ export function ExercisesPanel({ accessToken }: { accessToken: string }) {
         <label className="text-sm text-[var(--muted)]">
           Nome
           <input
-            className="mt-1 block athena-input"
+            className="mt-1 block movvo-input"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
@@ -77,7 +77,7 @@ export function ExercisesPanel({ accessToken }: { accessToken: string }) {
         <label className="text-sm text-[var(--muted)]">
           Nível
           <select
-            className="mt-1 block athena-input"
+            className="mt-1 block movvo-input"
             value={difficulty}
             onChange={(e) => setDifficulty(e.target.value as DifficultyValue)}
             data-testid="exercise-difficulty"
@@ -89,7 +89,7 @@ export function ExercisesPanel({ accessToken }: { accessToken: string }) {
             ))}
           </select>
         </label>
-        <button type="submit" className="athena-btn athena-btn-primary mt-6" data-testid="exercise-submit">
+        <button type="submit" className="movvo-btn movvo-btn-primary mt-6" data-testid="exercise-submit">
           Adicionar
         </button>
       </form>

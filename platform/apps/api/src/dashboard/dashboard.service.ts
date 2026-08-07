@@ -16,8 +16,9 @@ import type {
   DashboardLayoutItem,
   DashboardRankingRow,
   CommandDashboard,
-} from '@athena/shared';
-import { layoutForPreset, resolveDashboardPreset } from '@athena/shared';
+} from '@movvo/shared';
+import { layoutForPreset, resolveDashboardPreset } from '@movvo/shared';
+import { RedisCacheService } from '../cache/redis-cache.service';
 import { SupabaseService } from '../supabase/supabase.service';
 import { DashboardRepository } from './dashboard.repository';
 import {
@@ -32,6 +33,7 @@ export class DashboardService {
   constructor(
     private readonly supabase: SupabaseService,
     private readonly repo: DashboardRepository,
+    private readonly cache: RedisCacheService,
   ) {}
 
   private companyId(auth: AuthContext) {
@@ -51,6 +53,19 @@ export class DashboardService {
     const companyId = this.companyId(auth);
     const period = opts?.period || '30d';
     const firstName = opts?.firstName || 'gestor';
+    const cacheKey = this.cache.key(companyId, 'dashboard', `exec:${period}:${firstName}`);
+    return this.cache.wrap(cacheKey, RedisCacheService.TTL.dashboard, () =>
+      this.buildExecutive(auth, { period, firstName }),
+    );
+  }
+
+  private async buildExecutive(
+    auth: AuthContext,
+    opts: { period: DashboardChartPeriod; firstName: string },
+  ): Promise<CommandDashboard> {
+    const companyId = this.companyId(auth);
+    const period = opts.period;
+    const firstName = opts.firstName;
     const [
       kpis,
       revenueChart,

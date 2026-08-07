@@ -1,4 +1,4 @@
-import { isValidCpf, normalizeCpf } from '@athena/shared';
+import { isValidCpf, normalizeCpf } from '@movvo/shared';
 import { assertValidCpf } from './cpf.validator';
 
 describe('CPF helpers', () => {

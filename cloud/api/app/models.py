@@ -190,7 +190,7 @@ class Aluno(Base):
     status: Mapped[str] = mapped_column(String(30), default="Ativo")
     telefone: Mapped[str | None] = mapped_column(String(40))
     email: Mapped[str | None] = mapped_column(String(120))
-    unidade: Mapped[str | None] = mapped_column(String(120), default="ATHENAS GYM Matriz")
+    unidade: Mapped[str | None] = mapped_column(String(120), default="ATHENA GYM Matriz")
     data_cadastro: Mapped[date | None] = mapped_column(Date)
     atualizado_em: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

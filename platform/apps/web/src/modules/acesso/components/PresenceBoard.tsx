@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { PresenceSnapshot } from '@athena/shared';
+import type { PresenceSnapshot } from '@movvo/shared';
 import { acessoApi } from '../services/acessoApi';
 
 function formatDuration(sec: number) {
@@ -71,7 +71,7 @@ function Kpi({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-[10px] border border-[var(--border)] bg-[var(--card)] px-4 py-3">
       <p className="text-xs text-[var(--muted)]">{label}</p>
-      <p className="athena-title mt-1 text-2xl">{value}</p>
+      <p className="movvo-title mt-1 text-2xl">{value}</p>
     </div>
   );
 }

@@ -1,3 +1,3 @@
 'use client';
 
-export { EmptyState } from '@athena/ui';
+export { EmptyState } from '@movvo/ui';

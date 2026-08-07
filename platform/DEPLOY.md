@@ -1,5 +1,7 @@
 # Deploy Movvo ERP — produção
 
+> **G-20:** packages são `@movvo/*`. Slugs Vercel/Render `athena-gym` / `athena-api` permanecem como **exceção de infra** (DNS já bound a movvoerp.com.br) — não renomear sem checklist operacional.
+
 **Domínios oficiais (Vercel):**
 
 | Serviço | Domínio | Projeto Vercel |
@@ -50,6 +52,26 @@ Painel: https://vercel.com/illipronti1990s-projects/athena-gym/settings/domains
 | `CORS_ORIGINS` | `https://movvoerp.com.br,https://www.movvoerp.com.br,https://athena-gym.vercel.app` |
 | `PASSWORD_RESET_REDIRECT` | `https://movvoerp.com.br/login` |
 | `QR_SIGNING_SECRET` / `FINANCE_WEBHOOK_SECRET` | secrets fortes |
+| `REDIS_URL` | Redis obrigatório em staging/prod (Upstash ou gerenciado); mesmo URL para API cache + worker BullMQ |
+| `WORKER_HEALTH_URL` | URL do health do worker (ex. `https://worker.example.com/health`) — usado em `/health` e `/health/queues` |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | opcional; ex. `http://otel-collector:4318` |
+| `OTEL_SERVICE_NAME` | `movvo-api` (worker: `movvo-worker`) |
+| `SENTRY_DSN` | opcional; só inicializa se setado |
+| `LOG_LEVEL` | Pino (`info` default) |
+| `SECRETS_ENCRYPTION_KEY` | G-16 AES-GCM (prod) |
+
+### Worker (Render / Fly — long-running, **não** Vercel serverless)
+
+| Key | Valor |
+|-----|--------|
+| `REDIS_URL` | mesmo da API |
+| `SUPABASE_*` | service role para processadores |
+| `PORT` | health HTTP do worker (ex. 3011) |
+| `OTEL_*` / `SENTRY_DSN` | opcional |
+
+Deploy: serviço separado com process sempre-on; API serverless apenas **produz** jobs e lê cache. Ver `Documentacao/MOVVO_SCALE_G17.md` (RPO/RTO filas/cache + runbooks flush Redis / redrive DLQ).
+
+Health: `https://api.movvoerp.com.br/api/v1/health` · cache `.../health/cache` · métricas `.../metrics`
 
 ### Supabase Auth → URL Configuration
 

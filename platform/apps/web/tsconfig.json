@@ -20,10 +20,10 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@athena/shared": ["../../packages/shared/src/index.ts"],
-      "@athena/shared/*": ["../../packages/shared/src/*"],
-      "@athena/ui": ["../../packages/ui/src/index.ts"],
-      "@athena/ui/*": ["../../packages/ui/src/*"]
+      "@movvo/shared": ["../../packages/shared/src/index.ts"],
+      "@movvo/shared/*": ["../../packages/shared/src/*"],
+      "@movvo/ui": ["../../packages/ui/src/index.ts"],
+      "@movvo/ui/*": ["../../packages/ui/src/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

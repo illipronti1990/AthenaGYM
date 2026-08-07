@@ -1,9 +1,9 @@
-import { hasPermission, hasRole, canAccessUnit } from '@athena/shared';
+import { hasPermission, hasRole, canAccessUnit } from '@movvo/shared';
 import { PermissionsGuard, RolesGuard, UnitGuard } from './rbac.guards';
 import { AUTH_CONTEXT_KEY } from '../../auth/auth.types';
 import { Reflector } from '@nestjs/core';
 import { ForbiddenException } from '@nestjs/common';
-import type { AuthContext } from '@athena/shared';
+import type { AuthContext } from '@movvo/shared';
 import { PERMISSIONS_KEY, ROLES_KEY } from '../decorators/rbac.decorators';
 
 describe('permission helpers', () => {

@@ -1,4 +1,4 @@
--- ATHENAS GYM — tabelas do portal (treino, financeiro, chat, etc.)
+-- ATHENA GYM — tabelas do portal (treino, financeiro, chat, etc.)
 -- Cole em: Dashboard → SQL Editor → Run
 -- Ou: python -m scripts.apply_sql_supabase sql/002_portal_tables_supabase.sql
 

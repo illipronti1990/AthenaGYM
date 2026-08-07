@@ -28,20 +28,20 @@ export function Modal({
 
   return (
     <div
-      className="athena-modal-overlay athena-modal-enter"
+      className="movvo-modal-overlay movvo-modal-enter"
       role="presentation"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
       <div
-        className="athena-card athena-modal-panel athena-modal-panel-enter"
+        className="movvo-card movvo-modal-panel movvo-modal-panel-enter"
         role="dialog"
         aria-modal
         aria-label={title}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-          <h2 className="athena-h3" style={{ color: 'var(--gold)' }}>
+          <h2 className="movvo-h3" style={{ color: 'var(--gold)' }}>
             {title}
           </h2>
           <Button type="button" variant="secondary" size="sm" onClick={onClose}>

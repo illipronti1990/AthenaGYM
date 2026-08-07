@@ -2,7 +2,7 @@ import {
   canCancelClassReservation,
   classCancelBlockMessage,
   CLASS_CANCEL_CUTOFF_MINUTES,
-} from '@athena/shared';
+} from '@movvo/shared';
 import {
   assertStudentActive,
   assertUnitMatch,

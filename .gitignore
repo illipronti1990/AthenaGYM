@@ -52,3 +52,5 @@ Desktop.ini
 # Cursor / local agent noise (optional local)
 .cursor/projects/
 agent-transcripts/
+.vercel
+.env*

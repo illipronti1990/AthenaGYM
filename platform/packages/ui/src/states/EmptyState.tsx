@@ -14,17 +14,17 @@ export function EmptyState({
   illustration?: ReactNode;
 }) {
   return (
-    <div className="athena-empty" data-testid="empty-state">
+    <div className="movvo-empty" data-testid="empty-state">
       {illustration || icon ? (
-        <div className="athena-empty-icon" aria-hidden>
+        <div className="movvo-empty-icon" aria-hidden>
           {illustration || icon}
         </div>
       ) : null}
-      <p className="athena-h3" style={{ color: 'var(--gold)' }}>
+      <p className="movvo-h3" style={{ color: 'var(--gold)' }}>
         {title}
       </p>
       {description ? (
-        <p className="athena-muted" style={{ marginTop: 8, fontSize: '0.875rem' }}>
+        <p className="movvo-muted" style={{ marginTop: 8, fontSize: '0.875rem' }}>
           {description}
         </p>
       ) : null}
@@ -35,9 +35,9 @@ export function EmptyState({
 
 export function SuccessState({ title, description }: { title: string; description?: string }) {
   return (
-    <div className="athena-state athena-state-success">
-      <p className="athena-h3">✔ {title}</p>
-      {description ? <p className="athena-muted mt-2 text-sm">{description}</p> : null}
+    <div className="movvo-state movvo-state-success">
+      <p className="movvo-h3">✔ {title}</p>
+      {description ? <p className="movvo-muted mt-2 text-sm">{description}</p> : null}
     </div>
   );
 }
@@ -52,9 +52,9 @@ export function ErrorState({
   action?: ReactNode;
 }) {
   return (
-    <div className="athena-state athena-state-error" data-testid="error-state">
-      <p className="athena-h3">⚠ {title}</p>
-      {description ? <p className="athena-muted mt-2 text-sm">{description}</p> : null}
+    <div className="movvo-state movvo-state-error" data-testid="error-state">
+      <p className="movvo-h3">⚠ {title}</p>
+      {description ? <p className="movvo-muted mt-2 text-sm">{description}</p> : null}
       {action ? <div className="mt-4">{action}</div> : null}
     </div>
   );
@@ -63,8 +63,8 @@ export function ErrorState({
 export function OfflineBanner({ online }: { online: boolean }) {
   if (online) return null;
   return (
-    <div className="athena-offline-banner" role="status" data-testid="offline-banner">
-      <span className="athena-offline-dot" />
+    <div className="movvo-offline-banner" role="status" data-testid="offline-banner">
+      <span className="movvo-offline-dot" />
       Sem conexão. Tentando reconectar…
     </div>
   );

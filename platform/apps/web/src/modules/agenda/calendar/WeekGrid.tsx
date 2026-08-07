@@ -1,6 +1,6 @@
 'use client';
 
-import type { Schedule } from '@athena/shared';
+import type { Schedule } from '@movvo/shared';
 import { operationsApi } from '@/modules/operations/services/operationsApi';
 
 export function WeekGrid({ accessToken, date, items, onRefresh }: { accessToken: string; date: Date; items: Schedule[]; onRefresh: () => void }) {
@@ -15,7 +15,7 @@ export function WeekGrid({ accessToken, date, items, onRefresh }: { accessToken:
     onRefresh();
   }
   return <div className="space-y-3">
-    <div className="flex items-center justify-between"><h3 className="font-semibold">Semana de {start.toLocaleDateString('pt-BR')}</h3><button className="athena-btn athena-btn-secondary" onClick={copyWeek}>Copiar semana</button></div>
+    <div className="flex items-center justify-between"><h3 className="font-semibold">Semana de {start.toLocaleDateString('pt-BR')}</h3><button className="movvo-btn movvo-btn-secondary" onClick={copyWeek}>Copiar semana</button></div>
     <div className="grid gap-2 md:grid-cols-7">{days.map((day) => {
       const dayItems = items.filter((item) => new Date(item.startAt).toDateString() === day.toDateString());
       return <section key={day.toISOString()} className="min-h-32 rounded border border-[var(--border)] p-2">

@@ -1,8 +1,8 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import type { Lead, LeadSource } from '@athena/shared';
-import { Button, Card } from '@athena/ui';
+import type { Lead, LeadSource } from '@movvo/shared';
+import { Button, Card } from '@movvo/ui';
 import { salesApi } from '../services/salesApi';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
@@ -72,26 +72,26 @@ export function LeadsPanel({ accessToken }: { accessToken: string }) {
             placeholder="Nome"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            className="athena-input"
+            className="movvo-input"
             data-testid="lead-name"
           />
           <input
             placeholder="Telefone / WhatsApp"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            className="athena-input"
+            className="movvo-input"
           />
           <input
             placeholder="E-mail"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="athena-input"
+            className="movvo-input"
           />
           <select
             value={sourceId}
             onChange={(e) => setSourceId(e.target.value)}
-            className="athena-input"
+            className="movvo-input"
           >
             {sources.map((s) => (
               <option key={s.id} value={s.id}>
@@ -103,7 +103,7 @@ export function LeadsPanel({ accessToken }: { accessToken: string }) {
             placeholder="Interesse"
             value={interest}
             onChange={(e) => setInterest(e.target.value)}
-            className="athena-input"
+            className="movvo-input"
           />
           <Button type="submit" disabled={loading}>
             {loading ? 'Salvando…' : 'Novo lead'}
@@ -114,8 +114,8 @@ export function LeadsPanel({ accessToken }: { accessToken: string }) {
       {!leads ? (
         <TableSkeleton />
       ) : (
-        <div className="athena-list overflow-x-auto">
-          <table className="athena-table" data-testid="leads-table">
+        <div className="movvo-list overflow-x-auto">
+          <table className="movvo-table" data-testid="leads-table">
             <thead>
               <tr>
                 <th>Nome</th>

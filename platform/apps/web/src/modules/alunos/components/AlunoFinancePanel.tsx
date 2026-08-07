@@ -1,8 +1,8 @@
 'use client';
 
 import { FormEvent, useEffect, useMemo, useState } from 'react';
-import type { FinanceSubscription, Receivable } from '@athena/shared';
-import { Button, Card } from '@athena/ui';
+import type { FinanceSubscription, Receivable } from '@movvo/shared';
+import { Button, Card } from '@movvo/ui';
 import { financeApi } from '@/modules/finance/services/financeApi';
 import { isReceivableOpen, receivableStatusLabel } from '@/modules/finance/utils/statusLabels';
 import { TableSkeleton } from '@/components/ui/Skeleton';
@@ -132,10 +132,10 @@ export function AlunoFinancePanel({
 
       {subscriptions.length > 0 ? (
         <section>
-          <h3 className="athena-title mb-2 text-lg">Assinaturas</h3>
-          <ul className="athena-list">
+          <h3 className="movvo-title mb-2 text-lg">Assinaturas</h3>
+          <ul className="movvo-list">
             {subscriptions.map((s) => (
-              <li key={s.id} className="athena-list-item">
+              <li key={s.id} className="movvo-list-item">
                 <span>
                   {s.recurrence} · {money(s.amount)} · {subscriptionStatusLabel(String(s.status))}
                   {s.nextDueDate ? ` · próxima ${s.nextDueDate}` : ''}
@@ -147,13 +147,13 @@ export function AlunoFinancePanel({
       ) : null}
 
       <section>
-        <h3 className="athena-title mb-3 text-lg">Nova cobrança</h3>
+        <h3 className="movvo-title mb-3 text-lg">Nova cobrança</h3>
         <form onSubmit={onCreate} className="flex flex-wrap gap-2" data-testid="student-finance-form">
           <input
             required
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="athena-input max-w-xs"
+            className="movvo-input max-w-xs"
             placeholder="Descrição"
           />
           <input
@@ -163,14 +163,14 @@ export function AlunoFinancePanel({
             required
             value={amount}
             onChange={(e) => setAmount(Number(e.target.value))}
-            className="athena-input w-28"
+            className="movvo-input w-28"
           />
           <input
             type="date"
             required
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
-            className="athena-input w-auto"
+            className="movvo-input w-auto"
           />
           <Button type="submit" disabled={saving}>
             {saving ? 'Salvando…' : 'Gerar cobrança'}
@@ -179,13 +179,13 @@ export function AlunoFinancePanel({
       </section>
 
       <section>
-        <h3 className="athena-title mb-3 text-lg">Cobranças</h3>
+        <h3 className="movvo-title mb-3 text-lg">Cobranças</h3>
         {receivables.length === 0 ? (
           <p className="text-sm text-[var(--muted)]">Nenhuma cobrança para este aluno.</p>
         ) : (
-          <ul className="athena-list" data-testid="student-receivables-list">
+          <ul className="movvo-list" data-testid="student-receivables-list">
             {receivables.map((r) => (
-              <li key={r.id} className="athena-list-item flex-wrap">
+              <li key={r.id} className="movvo-list-item flex-wrap">
                 <span>
                   {r.description} · {money(r.amount)} · venc. {r.dueDate} ·{' '}
                   {receivableStatusLabel(String(r.status))}

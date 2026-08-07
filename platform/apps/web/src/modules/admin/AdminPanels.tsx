@@ -1,8 +1,8 @@
 'use client';
 
 import { FormEvent, useEffect, useMemo, useState } from 'react';
-import type { Employee, Role } from '@athena/shared';
-import { Button, Card } from '@athena/ui';
+import type { Employee, Role } from '@movvo/shared';
+import { Button, Card } from '@movvo/ui';
 import { apiListPermissions, apiListRoles, apiListUsers } from '@/services/api';
 import {
   apiAdminAnnouncements,
@@ -95,7 +95,7 @@ export function AdminDashboardPanel({ accessToken }: { accessToken: string }) {
       {cards.map(([label, value]) => (
         <Card key={label}>
           <p className="text-xs text-[var(--muted)]">{label}</p>
-          <p className="athena-title mt-1 text-2xl">
+          <p className="movvo-title mt-1 text-2xl">
             {label.includes('Custo')
               ? Number(value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
               : value ?? 0}
@@ -305,7 +305,7 @@ export function AdminRolesPanel({ accessToken }: { accessToken: string }) {
 
       <div className="grid gap-4 lg:grid-cols-2">
         <Card>
-          <h3 className="athena-title text-base">Cargos</h3>
+          <h3 className="movvo-title text-base">Cargos</h3>
           <ul className="mt-3 space-y-2">
             {roles.map((r) => (
               <li key={r.id}>
@@ -321,7 +321,7 @@ export function AdminRolesPanel({ accessToken }: { accessToken: string }) {
           </ul>
         </Card>
         <Card>
-          <h3 className="athena-title text-base">Matriz de permissões</h3>
+          <h3 className="movvo-title text-base">Matriz de permissões</h3>
           <div className="mt-3 max-h-72 overflow-y-auto space-y-1">
             {perms.map((p) => (
               <label key={p.id} className="flex items-center gap-2 text-sm">
@@ -357,7 +357,7 @@ export function AdminRolesPanel({ accessToken }: { accessToken: string }) {
       </div>
 
       <Card>
-        <h3 className="athena-title text-base">Atribuir cargo a usuário</h3>
+        <h3 className="movvo-title text-base">Atribuir cargo a usuário</h3>
         <div className="mt-3 grid gap-3 sm:grid-cols-3">
           <Field label="Usuário">
             <select className={inputCls} value={profileId} onChange={(e) => setProfileId(e.target.value)}>
@@ -420,7 +420,7 @@ export function AdminConfigPanel({ accessToken }: { accessToken: string }) {
     <div className="space-y-4" data-testid="admin-config">
       <div className="grid gap-4 lg:grid-cols-2">
         <Card>
-          <h3 className="athena-title text-base">Departamentos</h3>
+          <h3 className="movvo-title text-base">Departamentos</h3>
           <ul className="mt-2 text-sm">
             {deps.map((d) => (
               <li key={d.id}>{d.name}</li>
@@ -443,7 +443,7 @@ export function AdminConfigPanel({ accessToken }: { accessToken: string }) {
           </form>
         </Card>
         <Card>
-          <h3 className="athena-title text-base">Cargos HR</h3>
+          <h3 className="movvo-title text-base">Cargos HR</h3>
           <ul className="mt-2 text-sm">
             {titles.map((t) => (
               <li key={t.id}>{t.name}</li>
@@ -467,7 +467,7 @@ export function AdminConfigPanel({ accessToken }: { accessToken: string }) {
         </Card>
       </div>
       <Card>
-        <h3 className="athena-title text-base">Settings (JSON)</h3>
+        <h3 className="movvo-title text-base">Settings (JSON)</h3>
         <textarea
           className={`${inputCls} mt-2 min-h-[160px] font-mono text-xs`}
           value={settingsJson}
@@ -906,7 +906,7 @@ export function AnnouncementsPanel({ accessToken }: { accessToken: string }) {
       <div className="space-y-3">
         {rows.map((r) => (
           <Card key={String(r.id)}>
-            <h3 className="athena-title text-base">{String(r.title)}</h3>
+            <h3 className="movvo-title text-base">{String(r.title)}</h3>
             <p className="mt-1 text-sm text-[var(--muted)]">{String(r.audience)}</p>
             <p className="mt-2 text-sm whitespace-pre-wrap">{String(r.body)}</p>
           </Card>
@@ -1082,7 +1082,7 @@ export function ReportsPanel({ accessToken }: { accessToken: string }) {
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" data-testid="admin-reports">
       {kinds.map(([kind, label]) => (
         <Card key={kind}>
-          <h3 className="athena-title text-base">{label}</h3>
+          <h3 className="movvo-title text-base">{label}</h3>
           <p className="mt-1 text-xs text-[var(--muted)]">Exportação CSV</p>
           <Button className="mt-3" type="button" onClick={() => void download(kind, label)}>
             Baixar CSV

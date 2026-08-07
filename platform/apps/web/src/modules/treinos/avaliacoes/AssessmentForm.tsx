@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import type { Assessment } from '@athena/shared';
+import type { Assessment } from '@movvo/shared';
 import { workoutsApi } from '@/modules/workouts/services/workoutsApi';
 import { AlunoSelect } from '@/modules/alunos/components/AlunoSelect';
 
@@ -88,7 +88,7 @@ export function AssessmentForm({ accessToken }: { accessToken: string }) {
           <label key={label} className="text-sm text-[var(--muted)]">
             {label}
             <input
-              className="mt-1 block athena-input"
+              className="mt-1 block movvo-input"
               value={val}
               onChange={(e) => set(e.target.value)}
             />
@@ -96,7 +96,7 @@ export function AssessmentForm({ accessToken }: { accessToken: string }) {
         ))}
         <label className="text-sm text-[var(--muted)]">
           Meta
-          <select className="mt-1 block athena-input" value={goal} onChange={(e) => setGoal(e.target.value)}>
+          <select className="mt-1 block movvo-input" value={goal} onChange={(e) => setGoal(e.target.value)}>
             <option value="hipertrofia">Hipertrofia</option>
             <option value="emagrecimento">Emagrecimento</option>
             <option value="condicionamento">Condicionamento</option>
@@ -107,13 +107,13 @@ export function AssessmentForm({ accessToken }: { accessToken: string }) {
           Próxima avaliação
           <input
             type="date"
-            className="mt-1 block athena-input"
+            className="mt-1 block movvo-input"
             value={nextDue}
             onChange={(e) => setNextDue(e.target.value)}
           />
         </label>
         <div className="sm:col-span-2 lg:col-span-3">
-          <button type="submit" className="athena-btn athena-btn-primary" data-testid="assessment-submit">
+          <button type="submit" className="movvo-btn movvo-btn-primary" data-testid="assessment-submit">
             Salvar avaliação
           </button>
         </div>
@@ -139,7 +139,7 @@ export function AssessmentForm({ accessToken }: { accessToken: string }) {
 
       {last?.id ? (
         <a
-          className="athena-btn athena-btn-ghost"
+          className="movvo-btn movvo-btn-ghost"
           href={workoutsApi.printAssessmentUrl(last.id)}
           target="_blank"
           rel="noreferrer"

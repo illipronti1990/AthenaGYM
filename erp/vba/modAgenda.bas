@@ -596,7 +596,7 @@ Public Sub NotificacoesAgenda()
           "✔ " & ContarEventosNaData(hoje, "Aniversário") & " aniversariante(s)" & vbCrLf & vbCrLf & _
           "Total de eventos hoje: " & ContarEventosHoje()
 
-    MsgBox txt, vbInformation, "ATHENAS GYM — Agenda do Dia"
+    MsgBox txt, vbInformation, "ATHENA GYM — Agenda do Dia"
     On Error GoTo 0
 End Sub
 

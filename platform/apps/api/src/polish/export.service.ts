@@ -1,5 +1,5 @@
 import { Injectable, BadRequestException, StreamableFile } from '@nestjs/common';
-import type { AuthContext } from '@athena/shared';
+import type { AuthContext } from '@movvo/shared';
 import ExcelJS from 'exceljs';
 import { buildPdf } from '../prints/pdf.util';
 import { SupabaseService } from '../supabase/supabase.service';

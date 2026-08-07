@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import type { AuthContext, DataGridSort, SavedFilter, TablePreferences } from '@athena/shared';
+import type { AuthContext, DataGridSort, SavedFilter, TablePreferences } from '@movvo/shared';
 import { DatagridRepository } from './datagrid.repository';
 
 const DEV_COMPANY = '00000000-0000-4000-8000-000000000001';

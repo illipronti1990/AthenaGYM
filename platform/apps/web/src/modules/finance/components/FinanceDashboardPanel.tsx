@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { FinanceDashboard } from '@athena/shared';
-import { Card, chartColors, SkeletonCard } from '@athena/ui';
+import type { FinanceDashboard } from '@movvo/shared';
+import { Card, chartColors, SkeletonCard } from '@movvo/ui';
 import { financeApi } from '../services/financeApi';
 import { FinancialHealthCard } from './FinancialHealthCard';
 import { useToast } from '@/components/ui/Toast';

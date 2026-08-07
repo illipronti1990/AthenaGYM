@@ -1,8 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import type { CashflowSummary } from '@athena/shared';
-import { Button, Card } from '@athena/ui';
+import type { CashflowSummary } from '@movvo/shared';
+import { Button, Card } from '@movvo/ui';
 import { financeApi, type CashflowSummaryParams } from '../services/financeApi';
 import { useToast } from '@/components/ui/Toast';
 import { TableSkeleton } from '@/components/ui/Skeleton';
@@ -71,21 +71,21 @@ export function CashFlowSummary({ accessToken }: { accessToken: string }) {
         {range === 'custom' ? (
           <>
             <label className="block text-sm">
-              <span className="athena-label">De</span>
+              <span className="movvo-label">De</span>
               <input
                 type="date"
                 value={from}
                 onChange={(e) => setFrom(e.target.value)}
-                className="athena-input mt-1 w-auto"
+                className="movvo-input mt-1 w-auto"
               />
             </label>
             <label className="block text-sm">
-              <span className="athena-label">Até</span>
+              <span className="movvo-label">Até</span>
               <input
                 type="date"
                 value={to}
                 onChange={(e) => setTo(e.target.value)}
-                className="athena-input mt-1 w-auto"
+                className="movvo-input mt-1 w-auto"
               />
             </label>
             <Button type="button" size="sm" onClick={() => void load()} disabled={!from || !to}>

@@ -1,5 +1,5 @@
 {
-  "name": "@athena/branding",
+  "name": "@movvo/branding",
   "version": "0.1.0",
   "private": true,
   "main": "./src/index.ts",
@@ -13,8 +13,8 @@
     "lint": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@athena/shared": "workspace:*",
-    "@athena/theme": "workspace:*"
+    "@movvo/shared": "workspace:*",
+    "@movvo/theme": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.7.3"

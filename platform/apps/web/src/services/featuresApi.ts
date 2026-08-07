@@ -1,5 +1,5 @@
-import type { FeatureFlags } from '@athena/shared';
-import { DEFAULT_FEATURE_FLAGS } from '@athena/shared';
+import type { FeatureFlags } from '@movvo/shared';
+import { DEFAULT_FEATURE_FLAGS } from '@movvo/shared';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
 

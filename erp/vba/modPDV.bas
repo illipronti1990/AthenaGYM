@@ -356,7 +356,7 @@ Public Sub EmitirComprovante(ByVal idVenda As Long, ByVal cliente As String, _
           "Total: R$ " & Format$(total, "#,##0.00") & vbCrLf & _
           "Pagamento: " & forma & vbCrLf & _
           "Data: " & Format$(DataAtual(), "DD/MM/YYYY") & vbCrLf & _
-          "ATHENAS GYM"
+          "ATHENA GYM"
 End Sub
 
 Public Sub AtualizarDashboardPDV()

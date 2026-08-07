@@ -32,7 +32,7 @@ export { FloatingActionButton } from './feedback/FloatingActionButton';
 export { Page, PageHeader, PageActions, PageFilters, PageContent } from './Page';
 
 export {
-  AthenaDataGrid,
+  MovvoDataGrid,
   DataGridToolbar,
   DataGridFilters,
   ColumnSelector,
@@ -102,8 +102,8 @@ export { reportClientError, getBufferedErrors, type ClientErrorPayload } from '.
 export { PAGE_QUALITY_CHECKLIST, pageQualityAttrs, type PageQualityFlag } from './quality';
 
 export {
-  athenaColors,
-  athenaColorsLight,
+  movvoColorsLegacy,
+  movvoColorsLegacyLight,
   athenaSpacing,
   space,
   athenaTypography,
@@ -114,7 +114,7 @@ export {
   getAthenaIcon,
 } from '../theme';
 
-export type { AthenaIconName, AthenaColorPalette, AthenaSpacing, AthenaTypographyKey } from '../theme';
+export type { AthenaIconName, MovvoColorPalette, AthenaSpacing, AthenaTypographyKey } from '../theme';
 
 export const chartColors = {
   revenue: '#22C55E',

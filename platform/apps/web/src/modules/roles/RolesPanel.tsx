@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { Role } from '@athena/shared';
-import { Card } from '@athena/ui';
+import type { Role } from '@movvo/shared';
+import { Card } from '@movvo/ui';
 import { apiListRoles } from '@/services/api';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
@@ -28,7 +28,7 @@ export function RolesPanel({ accessToken }: { accessToken: string }) {
     <div className="space-y-4">
       {roles.map((r) => (
         <Card key={r.id} hover>
-          <h3 className="athena-title text-base">
+          <h3 className="movvo-title text-base">
             {r.name}{' '}
             <span className="text-xs font-normal text-[var(--muted)]">({r.slug})</span>
           </h3>

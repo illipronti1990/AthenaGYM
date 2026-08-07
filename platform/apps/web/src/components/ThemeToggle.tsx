@@ -1,7 +1,7 @@
 'use client';
 
 import { Monitor, Moon, Sun } from 'lucide-react';
-import { Tooltip } from '@athena/ui';
+import { Tooltip } from '@movvo/ui';
 import { useTheme, type ThemePreference } from '@/components/ThemeProvider';
 
 const CYCLE: ThemePreference[] = ['system', 'light', 'dark'];
@@ -26,7 +26,7 @@ export function ThemeToggle() {
     <Tooltip content={`${label} (clique para alternar)`}>
       <button
         type="button"
-        className="athena-icon-btn"
+        className="movvo-icon-btn"
         onClick={cycle}
         aria-label={`${label}. Alternar tema claro, escuro ou sistema`}
         data-testid="theme-toggle"

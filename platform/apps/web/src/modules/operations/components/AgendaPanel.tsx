@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import type { Schedule } from '@athena/shared';
+import type { Schedule } from '@movvo/shared';
 import { operationsApi } from '../services/operationsApi';
 
 const UNIT_ID = '22222222-2222-2222-2222-222222222222';
@@ -52,7 +52,7 @@ export function AgendaPanel({ accessToken }: { accessToken: string }) {
         <label className="text-sm text-[var(--muted)]">
           Título
           <input
-            className="mt-1 block w-56 athena-input"
+            className="mt-1 block w-56 movvo-input"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
@@ -61,7 +61,7 @@ export function AgendaPanel({ accessToken }: { accessToken: string }) {
         <label className="text-sm text-[var(--muted)]">
           Tipo
           <select
-            className="mt-1 block athena-input"
+            className="mt-1 block movvo-input"
             value={type}
             onChange={(e) => setType(e.target.value)}
           >
@@ -77,7 +77,7 @@ export function AgendaPanel({ accessToken }: { accessToken: string }) {
         <button
           type="submit"
           disabled={loading}
-          className="athena-btn athena-btn-primary disabled:opacity-60"
+          className="movvo-btn movvo-btn-primary disabled:opacity-60"
         >
           {loading ? 'Salvando…' : 'Nova agenda'}
         </button>

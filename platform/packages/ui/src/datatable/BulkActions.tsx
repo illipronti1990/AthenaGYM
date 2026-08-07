@@ -19,7 +19,7 @@ export function BulkActions({
 
   return (
     <>
-      <div className="athena-dg-bulk" data-testid="bulk-actions">
+      <div className="movvo-dg-bulk" data-testid="bulk-actions">
         <span className="text-sm">{selectedCount} selecionado(s)</span>
         {actions.map((a) => (
           <Button

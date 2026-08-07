@@ -8,7 +8,7 @@ import type {
   WebhookDelivery,
   WebhookSubscription,
   WebhookSubscriptionCreated,
-} from '@athena/shared';
+} from '@movvo/shared';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
 

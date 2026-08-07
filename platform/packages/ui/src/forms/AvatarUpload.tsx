@@ -26,12 +26,12 @@ export function AvatarUpload({
   }
 
   return (
-    <div className="athena-field" data-testid="avatar-upload">
-      {label ? <span className="athena-label">{label}</span> : null}
-      <div className="athena-avatar-upload">
+    <div className="movvo-field" data-testid="avatar-upload">
+      {label ? <span className="movvo-label">{label}</span> : null}
+      <div className="movvo-avatar-upload">
         <button
           type="button"
-          className="athena-avatar-preview"
+          className="movvo-avatar-preview"
           onClick={() => inputRef.current?.click()}
           aria-label="Selecionar foto"
         >
@@ -46,7 +46,7 @@ export function AvatarUpload({
             <Camera size={28} />
           )}
         </button>
-        <div className="athena-avatar-controls">
+        <div className="movvo-avatar-controls">
           <label className="text-xs text-[var(--muted)]">
             Zoom
             <input
@@ -69,7 +69,7 @@ export function AvatarUpload({
               onChange={(e) => setRotation(Number(e.target.value))}
             />
           </label>
-          <button type="button" className="athena-btn athena-btn-secondary athena-btn-sm" onClick={() => inputRef.current?.click()}>
+          <button type="button" className="movvo-btn movvo-btn-secondary movvo-btn-sm" onClick={() => inputRef.current?.click()}>
             Escolher imagem
           </button>
         </div>

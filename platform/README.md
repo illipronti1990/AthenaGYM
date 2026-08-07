@@ -77,7 +77,7 @@ ETL leve via worker outbox `analytics.warehouse.*` (CDC completo = evolução).
 ## Branding & feature flags (M-1+)
 
 - **Produção:** https://movvoerp.com.br · API https://api.movvoerp.com.br
-- Design tokens: `@athena/theme` → `DesignTokens` (spacing, motion, icons, charts, zIndex).
+- Design tokens: `@movvo/theme` → `DesignTokens` (spacing, motion, icons, charts, zIndex).
 - Brand book: `Documentacao/MOVVO_BRAND_BOOK.md`
 - `GET /api/v1/branding` — produto Movvo (+ tenant via `X-Company-Id`)
 - `GET /api/v1/platform/features` — flags comerciais (`inventory`, `crm`, `ai`, `bi`, `pdv`, `marketplace`, `whiteLabel`, `mobile`)

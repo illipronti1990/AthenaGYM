@@ -11,7 +11,7 @@ export default async function AdminLogsPage() {
         items={[{ label: 'App', href: '/app' }, { label: 'Admin' }, { label: 'Logs' }]}
       />
       <div>
-        <h1 className="athena-title text-3xl">Logs administrativos</h1>
+        <h1 className="movvo-title text-3xl">Logs administrativos</h1>
         <p className="mt-1 text-sm text-[var(--muted)]">Auditoria de ações do sistema</p>
       </div>
       <AdminLogsPanel accessToken={accessToken} />

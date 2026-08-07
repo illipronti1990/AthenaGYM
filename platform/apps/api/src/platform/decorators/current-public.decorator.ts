@@ -1,5 +1,5 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import type { PublicApiContext } from '@athena/shared';
+import type { PublicApiContext } from '@movvo/shared';
 import { PUBLIC_API_CONTEXT_KEY, RequestPublic } from '../guards/public-api.guard';
 
 export const CurrentPublic = createParamDecorator(

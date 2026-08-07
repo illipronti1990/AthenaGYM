@@ -11,7 +11,10 @@ services:
     ports:
       - '3002:3000'
     environment:
-      GF_SECURITY_ADMIN_PASSWORD: athena
+      GF_SECURITY_ADMIN_PASSWORD: movvo
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
     depends_on:
       - prometheus
       - loki

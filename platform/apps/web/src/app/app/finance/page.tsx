@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Page, PageHeader, PageContent, PageFilters, pageQualityAttrs } from '@athena/ui';
+import { Page, PageHeader, PageContent, PageFilters, pageQualityAttrs } from '@movvo/ui';
 import { requireAccessToken } from '@/lib/auth/token';
 import { FinanceDashboardPanel } from '@/modules/finance/components/FinanceDashboardPanel';
 import { FinancePrefetch } from '@/modules/finance/components/FinancePrefetch';
@@ -26,7 +26,7 @@ export default async function FinancePage() {
       />
       <PageFilters>
         {links.map(([label, href]) => (
-          <Link key={href} href={href} className="athena-chip-nav">
+          <Link key={href} href={href} className="movvo-chip-nav">
             {label}
           </Link>
         ))}

@@ -15,14 +15,14 @@ export function ColumnSelector<T>({
 }) {
   if (!open) return null;
   return (
-    <div className="athena-dg-columns" data-testid="column-selector">
-      <p className="athena-caption mb-2">Colunas visíveis</p>
+    <div className="movvo-dg-columns" data-testid="column-selector">
+      <p className="movvo-caption mb-2">Colunas visíveis</p>
       <ul className="space-y-1">
         {columns.map((col) => {
           const checked = visibleIds.includes(col.id);
           return (
             <li key={col.id}>
-              <label className="athena-check">
+              <label className="movvo-check">
                 <input
                   type="checkbox"
                   checked={checked}

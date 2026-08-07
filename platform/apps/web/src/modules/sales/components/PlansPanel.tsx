@@ -1,8 +1,8 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import type { Plan } from '@athena/shared';
-import { Button } from '@athena/ui';
+import type { Plan } from '@movvo/shared';
+import { Button } from '@movvo/ui';
 import { salesApi } from '../services/salesApi';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
@@ -96,14 +96,14 @@ export function PlansPanel({ accessToken }: { accessToken: string }) {
           placeholder="Nome"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="athena-input max-w-xs"
+          className="movvo-input max-w-xs"
           data-testid="plan-name"
         />
         <input
           type="number"
           value={durationDays}
           onChange={(e) => setDurationDays(Number(e.target.value))}
-          className="athena-input w-28"
+          className="movvo-input w-28"
           data-testid="plan-duration"
         />
         <input
@@ -111,7 +111,7 @@ export function PlansPanel({ accessToken }: { accessToken: string }) {
           step="0.01"
           value={price}
           onChange={(e) => setPrice(Number(e.target.value))}
-          className="athena-input w-28"
+          className="movvo-input w-28"
           data-testid="plan-price"
         />
         <Button type="submit" data-testid="plan-submit">
@@ -126,8 +126,8 @@ export function PlansPanel({ accessToken }: { accessToken: string }) {
       {!plans ? (
         <TableSkeleton />
       ) : (
-        <div className="athena-list overflow-x-auto">
-          <table className="athena-table" data-testid="plans-table">
+        <div className="movvo-list overflow-x-auto">
+          <table className="movvo-table" data-testid="plans-table">
             <thead>
               <tr>
                 <th>Plano</th>

@@ -1,6 +1,6 @@
 'use client';
 
-import { SPLIT_TYPES, type WorkoutSplitType } from '@athena/shared';
+import { SPLIT_TYPES, type WorkoutSplitType } from '@movvo/shared';
 
 const LABELS: Record<string, string> = {
   A: 'Dia A',
@@ -27,7 +27,7 @@ export function SplitPicker({
     <label className="text-sm text-[var(--muted)]" data-testid="split-picker">
       Divisão
       <select
-        className="mt-1 block athena-input"
+        className="mt-1 block movvo-input"
         value={value}
         onChange={(e) => onChange(e.target.value as WorkoutSplitType)}
       >

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Page, PageHeader, PageContent } from '@athena/ui';
+import { Page, PageHeader, PageContent } from '@movvo/ui';
 import { requireAccessToken } from '@/lib/auth/token';
 import { SettingsPanel } from '@/modules/finance/components/FinancePanels';
 
@@ -12,7 +12,7 @@ export default async function FinanceiroConfiguracoesPage() {
         title="Configurações financeiras"
         description="Contas bancárias, PIX e centros de custo."
         actions={
-          <Link href="/app/financeiro" className="athena-link text-sm text-[var(--gold)]">
+          <Link href="/app/financeiro" className="movvo-link text-sm text-[var(--gold)]">
             ← Financeiro
           </Link>
         }

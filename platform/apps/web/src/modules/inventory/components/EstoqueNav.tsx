@@ -9,7 +9,7 @@ export function EstoqueNav({ excludeCurrent = true }: { excludeCurrent?: boolean
   return (
     <>
       {ESTOQUE_LINKS.filter(([, href]) => !excludeCurrent || href !== pathname).map(([label, href]) => (
-        <Link key={href} href={href} className="athena-chip-nav" data-testid={`estoque-nav-${href.split('/').pop()}`}>
+        <Link key={href} href={href} className="movvo-chip-nav" data-testid={`estoque-nav-${href.split('/').pop()}`}>
           {label}
         </Link>
       ))}

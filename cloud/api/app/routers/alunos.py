@@ -77,8 +77,8 @@ def gerar_pix(body: PagamentoIn, user: AuthUser = Depends(get_current_user)) -> 
     return {
         "matricula": body.matricula,
         "forma": body.forma,
-        "qr_code": "ATHENAS-PIX-DEMO-QR",
-        "copia_cola": "00020126ATHENASGYMPIXDEMO",
+        "qr_code": "ATHENA-PIX-DEMO-QR",
+        "copia_cola": "00020126ATHENAGYMPIXDEMO",
         "status": "Aguardando pagamento",
         "origem": "supabase",
     }

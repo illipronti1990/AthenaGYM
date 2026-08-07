@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card } from '@athena/ui';
+import { Card } from '@movvo/ui';
 import type { ChurnRisk } from '../../services/crmApi';
 import { crmApi } from '../../services/crmApi';
 import { useToast } from '@/components/ui/Toast';
@@ -37,7 +37,7 @@ export function NextBestActionList({ accessToken }: { accessToken: string }) {
 
   return (
     <Card data-testid="next-best-action-list">
-      <h2 className="athena-title mb-3 text-sm">Próximas ações sugeridas</h2>
+      <h2 className="movvo-title mb-3 text-sm">Próximas ações sugeridas</h2>
       {withActions.length === 0 ? (
         <p className="text-sm text-[var(--muted)]">Nenhuma ação sugerida no momento.</p>
       ) : (

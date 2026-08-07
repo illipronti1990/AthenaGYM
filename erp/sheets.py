@@ -1,4 +1,4 @@
-"""Construção das abas do ERP ATHENAS GYM."""
+"""Construção das abas do ERP ATHENA GYM."""
 
 from __future__ import annotations
 

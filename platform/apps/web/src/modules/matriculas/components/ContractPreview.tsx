@@ -1,6 +1,6 @@
 'use client';
 
-import { formatCurrencyBRL } from '@athena/ui';
+import { formatCurrencyBRL } from '@movvo/ui';
 
 export function ContractPreview({
   studentName,
@@ -21,7 +21,7 @@ export function ContractPreview({
       className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 text-sm leading-relaxed"
       data-testid="contract-preview"
     >
-      <h3 className="athena-title mb-3 text-lg text-[var(--gold)]">Contrato de Matrícula</h3>
+      <h3 className="movvo-title mb-3 text-lg text-[var(--gold)]">Contrato de Matrícula</h3>
       <p>
         Eu, <strong>{studentName}</strong>, CPF <strong>{cpf}</strong>, declaro estar ciente das
         condições do plano <strong>{planName}</strong> no valor de{' '}

@@ -2,7 +2,7 @@ import type {
   GymBusinessHours,
   GymSettings,
   GymSettingsFinancialAccountSummary,
-} from '@athena/shared';
+} from '@movvo/shared';
 
 type GymSettingsRow = {
   id: string;

@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import type { MeResponse } from '@athena/shared';
+import type { MeResponse } from '@movvo/shared';
 import { apiGetMe } from '@/services/api';
 import {
   applyFeatureFlagsToNav,

@@ -1,7 +1,7 @@
 import {
   ATHENA_ACADEMIA_BRANDING,
   resolveCompanyBranding,
-} from '@athena/shared';
+} from '@movvo/shared';
 
 describe('company branding resolution', () => {
   it('defaults to Athena Academia', () => {

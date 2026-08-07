@@ -7,8 +7,8 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY packages ./packages
 COPY apps/api ./apps/api
 
-RUN pnpm install --frozen-lockfile --filter @athena/api...
-RUN pnpm --filter @athena/api... run build
+RUN pnpm install --frozen-lockfile --filter @movvo/api...
+RUN pnpm --filter @movvo/api... run build
 
 FROM node:20-alpine AS runner
 ENV NODE_ENV=production

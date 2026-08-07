@@ -3,7 +3,7 @@ import {
   isRupture,
   productMargin,
   signedStockDelta,
-} from '@athena/shared';
+} from '@movvo/shared';
 
 describe('inventory helpers (G-13)', () => {
   it('computes margin', () => {

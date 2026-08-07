@@ -9,7 +9,7 @@ export default async function SalesDashboardPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="athena-title text-3xl">Comercial</h1>
+          <h1 className="movvo-title text-3xl">Comercial</h1>
           <p className="mt-1 text-sm text-[var(--muted)]">KPIs do funil (últimos 30 dias)</p>
         </div>
         <nav className="flex flex-wrap gap-2">
@@ -20,7 +20,7 @@ export default async function SalesDashboardPage() {
             ['Matrículas', '/app/matriculas'],
             ['Contratos', '/app/matriculas/contratos'],
           ].map(([label, href]) => (
-            <Link key={href} href={href} className="athena-chip-nav">
+            <Link key={href} href={href} className="movvo-chip-nav">
               {label}
             </Link>
           ))}

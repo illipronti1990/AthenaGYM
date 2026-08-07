@@ -1,12 +1,12 @@
-ATHENAS GYM — ERP em Excel (Fase 3 — Login Real)
+ATHENA GYM — ERP em Excel (Fase 3 — Login Real)
 ================================================
 
 Arquivo principal:
-  ATHENAS_GYM_ERP_COMERCIAL.xlsm
+  ATHENA_GYM_ERP_COMERCIAL.xlsm
 
 DOCUMENTAÇÃO TÉCNICA
 --------------------
-  erp/docs/ARQUITETURA_ATHENAS_ERP.md
+  erp/docs/ARQUITETURA_ATHENA_ERP.md
 
 IDENTIDADE VISUAL
 -----------------
@@ -14,7 +14,7 @@ Vermelho (#A3001E) + Dourado (#D4AF37) + painéis brancos
 
 COMO ABRIR
 ----------
-1. Abra ATHENAS_GYM_ERP_COMERCIAL.xlsm no Microsoft Excel.
+1. Abra ATHENA_GYM_ERP_COMERCIAL.xlsm no Microsoft Excel.
 2. Habilite macros.
 3. Na tela 00_LOGIN clique em ENTRAR (abre o formulário frmLogin).
 4. Informe usuário e senha (senha mascarada; opção "Mostrar senha").
@@ -37,7 +37,7 @@ ARQUITETURA (Fase 3)
 --------------------
   Interface: 00_LOGIN, 01_DASHBOARD, FORM_ALUNO, ...
   Banco:     BD_USUARIOS, BD_SESSAO, BD_LOG (+ abas legadas 02_…15_)
-  VBA:       modLogin, modSessao, modPermissoes, modLog, modUtil, ModuloAthenas
+  VBA:       modLogin, modSessao, modPermissoes, modLog, modUtil, ModuloAthena
   UserForm:  frmLogin
 
 AUDITORIA

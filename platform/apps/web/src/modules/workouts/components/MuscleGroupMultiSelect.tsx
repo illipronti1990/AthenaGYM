@@ -73,7 +73,7 @@ export function MuscleGroupMultiSelect({
       <button
         type="button"
         id={id}
-        className="athena-input mt-1 flex w-full items-center justify-between gap-2 text-left"
+        className="movvo-input mt-1 flex w-full items-center justify-between gap-2 text-left"
         aria-haspopup="listbox"
         aria-expanded={open}
         data-testid="muscle-group-combobox"

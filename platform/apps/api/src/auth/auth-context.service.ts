@@ -1,13 +1,24 @@
 import { Injectable, UnauthorizedException, ForbiddenException } from '@nestjs/common';
-import type { AuthContext, MeResponse, Profile, Role, Unit, Company, Membership } from '@athena/shared';
+import type { AuthContext, MeResponse, Profile, Role, Unit, Company, Membership } from '@movvo/shared';
+import { RedisCacheService } from '../cache/redis-cache.service';
 import { SupabaseService } from '../supabase/supabase.service';
 import { AuthUser } from './auth.types';
 
 @Injectable()
 export class AuthContextService {
-  constructor(private readonly supabase: SupabaseService) {}
+  constructor(
+    private readonly supabase: SupabaseService,
+    private readonly cache: RedisCacheService,
+  ) {}
 
   async buildContext(user: AuthUser): Promise<AuthContext> {
+    const cacheKey = this.cache.key('global', 'permissions', `ctx:${user.id}`);
+    return this.cache.wrap(cacheKey, RedisCacheService.TTL.permissions, () =>
+      this.loadContext(user),
+    );
+  }
+
+  private async loadContext(user: AuthUser): Promise<AuthContext> {
     const admin = this.supabase.getAdmin();
 
     const profileRes = await admin

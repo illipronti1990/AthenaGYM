@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { ProgressSummary, Workout } from '@athena/shared';
+import type { ProgressSummary, Workout } from '@movvo/shared';
 import { workoutsApi } from '@/modules/workouts/services/workoutsApi';
 import { EvolutionCharts } from '../evolucao/EvolutionCharts';
 

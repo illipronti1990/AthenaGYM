@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { MessageTemplate } from '@athena/shared';
-import { Button, Card } from '@athena/ui';
+import type { MessageTemplate } from '@movvo/shared';
+import { Button, Card } from '@movvo/ui';
 import { crmApi } from '../../services/crmApi';
 import { useToast } from '@/components/ui/Toast';
 
@@ -69,13 +69,13 @@ export function TemplateEditor({ accessToken }: { accessToken: string }) {
             placeholder="Nome do template"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="athena-input"
+            className="movvo-input"
             data-testid="template-name"
           />
           <select
             value={channel}
             onChange={(e) => setChannel(e.target.value as Channel)}
-            className="athena-input"
+            className="movvo-input"
           >
             {CHANNELS.map((c) => (
               <option key={c} value={c}>
@@ -88,7 +88,7 @@ export function TemplateEditor({ accessToken }: { accessToken: string }) {
             value={body}
             onChange={(e) => setBody(e.target.value)}
             rows={4}
-            className="athena-input sm:col-span-2 font-mono text-sm"
+            className="movvo-input sm:col-span-2 font-mono text-sm"
           />
           <div className="sm:col-span-2 flex justify-end">
             <Button type="button" disabled={loading || !name || !body} onClick={() => void onCreate()}>
@@ -98,9 +98,9 @@ export function TemplateEditor({ accessToken }: { accessToken: string }) {
         </div>
       </Card>
 
-      <ul className="athena-list text-sm">
+      <ul className="movvo-list text-sm">
         {templates.map((t) => (
-          <li key={t.id} className="athena-list-item flex-col items-start gap-1">
+          <li key={t.id} className="movvo-list-item flex-col items-start gap-1">
             <div className="flex w-full items-center justify-between">
               <span className="font-medium text-[var(--text)]">{t.name}</span>
               <span className="text-xs text-[var(--muted)]">{t.channel.toUpperCase()}</span>

@@ -8,7 +8,7 @@ export default async function Page() {
     <div className="space-y-4">
       <Breadcrumb items={[{ label: 'App', href: '/app' }, { label: 'Admin', href: '/app/admin/dashboard' }, { label: 'Calendário' }]} />
       <div>
-        <h1 className="athena-title text-3xl">Calendário administrativo</h1>
+        <h1 className="movvo-title text-3xl">Calendário administrativo</h1>
         <p className="mt-1 text-sm text-[var(--muted)]">Férias, manutenções, docs e anúncios</p>
       </div>
       <CalendarPanel accessToken={accessToken} />

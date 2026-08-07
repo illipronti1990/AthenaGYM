@@ -54,4 +54,4 @@ Aplicar `platform/supabase/migrations/20260807_0003_marketing_commercial_m3.sql`
 
 ## Fora de escopo
 
-Gateway de pagamento, CMS headless, assinatura eletrônica, app mobile, rename `@athena/*`.
+Gateway de pagamento, CMS headless, assinatura eletrônica, app mobile, rename `@movvo/*`.

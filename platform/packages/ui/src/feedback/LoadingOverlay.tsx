@@ -11,8 +11,8 @@ export function LoadingOverlay({
 }) {
   if (!show) return null;
   return (
-    <div className="athena-loading-overlay" data-testid="loading-overlay">
-      <div className="athena-card athena-loading-panel">
+    <div className="movvo-loading-overlay" data-testid="loading-overlay">
+      <div className="movvo-card movvo-loading-panel">
         <Loading label={label} />
       </div>
     </div>

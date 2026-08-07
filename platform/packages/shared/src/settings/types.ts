@@ -141,6 +141,7 @@ export interface SystemHealth {
     supabase: { status: 'ok' | 'down'; error?: string };
     storage: { status: 'ok' | 'down'; buckets?: number; error?: string };
     worker: { status: 'ok' | 'down' | 'unknown'; error?: string };
+    cache?: { status: 'ok' | 'down'; latencyMs?: number; error?: string };
   };
 }
 

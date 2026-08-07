@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { AccessLiveEvent } from '@athena/shared';
+import type { AccessLiveEvent } from '@movvo/shared';
 import { acessoApi } from '../services/acessoApi';
 
 export function LiveAccessMonitor({ accessToken }: { accessToken: string }) {

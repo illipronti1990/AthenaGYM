@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import type { ProgressSummary, Workout } from '@athena/shared';
+import type { ProgressSummary, Workout } from '@movvo/shared';
 import { MinhaEvolucao } from '@/modules/treinos/evolucao/MinhaEvolucao';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
@@ -51,13 +51,13 @@ export function PortalHome({ accessToken }: { accessToken: string }) {
           {data.student.status}
         </p>
         <div className="mt-3 flex flex-wrap gap-2">
-          <Link href="/app/portal/treinos" className="athena-chip-nav">
+          <Link href="/app/portal/treinos" className="movvo-chip-nav">
             Meus treinos
           </Link>
-          <Link href="/app/portal/evolucao" className="athena-chip-nav">
+          <Link href="/app/portal/evolucao" className="movvo-chip-nav">
             Minha evolução
           </Link>
-          <Link href="/app/profile" className="athena-chip-nav">
+          <Link href="/app/profile" className="movvo-chip-nav">
             Meu perfil
           </Link>
         </div>

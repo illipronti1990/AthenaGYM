@@ -8,8 +8,8 @@ import type {
   StudentStatusHistory,
   StudentTimelineEvent,
   Student360Summary,
-} from '@athena/shared';
-import { resolveStudentDisplayStatus } from '@athena/shared';
+} from '@movvo/shared';
+import { resolveStudentDisplayStatus } from '@movvo/shared';
 import { SupabaseService } from '../supabase/supabase.service';
 
 @Injectable()

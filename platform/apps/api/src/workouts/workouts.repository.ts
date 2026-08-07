@@ -14,7 +14,7 @@ import type {
   WorkoutExercise,
   WorkoutTemplate,
   WorkoutsDashboard,
-} from '@athena/shared';
+} from '@movvo/shared';
 import { SupabaseService } from '../supabase/supabase.service';
 
 @Injectable()

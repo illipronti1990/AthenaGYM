@@ -1,8 +1,8 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import type { Lead, LeadSource } from '@athena/shared';
-import { Button, Card } from '@athena/ui';
+import type { Lead, LeadSource } from '@movvo/shared';
+import { Button, Card } from '@movvo/ui';
 import { salesApi } from '@/modules/sales/services/salesApi';
 import { crmApi } from '../../services/crmApi';
 import { TableSkeleton } from '@/components/ui/Skeleton';
@@ -90,26 +90,26 @@ export function LeadForm({ accessToken }: { accessToken: string }) {
             placeholder="Nome completo"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            className="athena-input"
+            className="movvo-input"
             data-testid="lead-name"
           />
           <input
             placeholder="Telefone / WhatsApp"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            className="athena-input"
+            className="movvo-input"
           />
           <input
             placeholder="E-mail"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="athena-input"
+            className="movvo-input"
           />
           <select
             value={sourceId}
             onChange={(e) => setSourceId(e.target.value)}
-            className="athena-input"
+            className="movvo-input"
           >
             <option value="">Origem</option>
             {sources.map((s) => (
@@ -122,13 +122,13 @@ export function LeadForm({ accessToken }: { accessToken: string }) {
             placeholder="Interesse / objetivo"
             value={interest}
             onChange={(e) => setInterest(e.target.value)}
-            className="athena-input"
+            className="movvo-input"
           />
           <input
             placeholder="Meta (ex: emagrecer, hipertrofia)"
             value={goal}
             onChange={(e) => setGoal(e.target.value)}
-            className="athena-input"
+            className="movvo-input"
           />
           <div className="sm:col-span-2">
             <label className="text-xs text-[var(--muted)]">
@@ -137,7 +137,7 @@ export function LeadForm({ accessToken }: { accessToken: string }) {
                 type="date"
                 value={firstContactAt}
                 onChange={(e) => setFirstContactAt(e.target.value)}
-                className="athena-input mt-1 block w-full"
+                className="movvo-input mt-1 block w-full"
               />
             </label>
           </div>
@@ -153,7 +153,7 @@ export function LeadForm({ accessToken }: { accessToken: string }) {
         <TableSkeleton />
       ) : (
         <div className="overflow-x-auto">
-          <table className="athena-table" data-testid="leads-table">
+          <table className="movvo-table" data-testid="leads-table">
             <thead>
               <tr>
                 <th>Nome</th>
@@ -176,7 +176,7 @@ export function LeadForm({ accessToken }: { accessToken: string }) {
                         type="button"
                         disabled={convertingId === l.id}
                         onClick={() => void onConvert(l.id)}
-                        className="athena-link text-[var(--gold)] disabled:opacity-50"
+                        className="movvo-link text-[var(--gold)] disabled:opacity-50"
                       >
                         {convertingId === l.id ? 'Convertendo…' : 'Converter'}
                       </button>

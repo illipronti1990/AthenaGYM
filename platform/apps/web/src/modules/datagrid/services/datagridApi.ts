@@ -1,4 +1,4 @@
-import type { DataGridSort, SavedFilter, TablePreferences } from '@athena/shared';
+import type { DataGridSort, SavedFilter, TablePreferences } from '@movvo/shared';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
 

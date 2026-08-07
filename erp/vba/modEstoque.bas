@@ -53,7 +53,7 @@ Private Function UnidadePadrao() As String
     On Error Resume Next
     n = NomeUnidadeSessao()
     If Len(n) = 0 Or StrComp(n, "Todas as unidades", vbTextCompare) = 0 Then
-        n = ObterParametro("Estoque", "UnidadePadrao", "ATHENAS GYM Matriz")
+        n = ObterParametro("Estoque", "UnidadePadrao", "ATHENA GYM Matriz")
     End If
     UnidadePadrao = n
 End Function

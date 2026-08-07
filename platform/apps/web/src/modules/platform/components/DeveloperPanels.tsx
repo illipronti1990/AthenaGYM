@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { ApiClient, ApiUsageSummary, SandboxEnvironment, WebhookSubscription } from '@athena/shared';
-import { OAUTH_SCOPES } from '@athena/shared';
+import type { ApiClient, ApiUsageSummary, SandboxEnvironment, WebhookSubscription } from '@movvo/shared';
+import { OAUTH_SCOPES } from '@movvo/shared';
 import { platformApi } from '../services/platformApi';
 
 export function DeveloperOverview({ accessToken }: { accessToken: string }) {

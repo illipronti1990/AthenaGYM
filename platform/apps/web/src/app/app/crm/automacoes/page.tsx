@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Page, PageHeader, PageContent, PageFilters, pageQualityAttrs } from '@athena/ui';
+import { Page, PageHeader, PageContent, PageFilters, pageQualityAttrs } from '@movvo/ui';
 import { requireAccessToken } from '@/lib/auth/token';
 import { CRM_LINKS } from '@/modules/crm/utils/crmLinks';
 import { AutomationStub } from '@/modules/crm/components/automation/AutomationStub';
@@ -15,7 +15,7 @@ export default async function CrmAutomacoesPage() {
       />
       <PageFilters>
         {CRM_LINKS.filter(([, href]) => href !== '/app/crm/automacoes').map(([label, href]) => (
-          <Link key={href} href={href} className="athena-chip-nav">
+          <Link key={href} href={href} className="movvo-chip-nav">
             {label}
           </Link>
         ))}

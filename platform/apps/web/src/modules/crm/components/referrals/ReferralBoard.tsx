@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { Referral } from '@athena/shared';
-import { Button, Card } from '@athena/ui';
+import type { Referral } from '@movvo/shared';
+import { Button, Card } from '@movvo/ui';
 import { crmApi } from '../../services/crmApi';
 import { useToast } from '@/components/ui/Toast';
 
@@ -60,7 +60,7 @@ export function ReferralBoard({ accessToken }: { accessToken: string }) {
     <div className="grid gap-4 md:grid-cols-3" data-testid="referral-board">
       {(Object.keys(grouped) as (keyof typeof grouped)[]).map((status) => (
         <Card key={status}>
-          <h2 className="athena-title mb-3 text-sm">
+          <h2 className="movvo-title mb-3 text-sm">
             {STATUS_LABEL[status]}{' '}
             <span className="font-normal text-[var(--muted)]">({grouped[status].length})</span>
           </h2>

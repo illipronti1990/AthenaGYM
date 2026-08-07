@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { Bell, Check, CheckCheck } from 'lucide-react';
-import type { AppNotification } from '@athena/shared';
-import { EmptyStatePreset, ErrorState, Tooltip } from '@athena/ui';
+import type { AppNotification } from '@movvo/shared';
+import { EmptyStatePreset, ErrorState, Tooltip } from '@movvo/ui';
 import { engagementApi } from '@/modules/engagement/services/engagementApi';
 import { useLayout } from './LayoutProvider';
 
@@ -122,14 +122,14 @@ export function NotificationPanel({ accessToken }: { accessToken: string }) {
       <Tooltip content="Notificações">
         <button
           type="button"
-          className="athena-icon-btn"
+          className="movvo-icon-btn"
           onClick={() => setNotificationsOpen(!notificationsOpen)}
           aria-label="Notificações"
           data-testid="notifications-toggle"
         >
           <Bell size={18} />
           {unread > 0 ? (
-            <span className="athena-badge-dot">{unread > 9 ? '9+' : unread}</span>
+            <span className="movvo-badge-dot">{unread > 9 ? '9+' : unread}</span>
           ) : null}
         </button>
       </Tooltip>
@@ -138,21 +138,21 @@ export function NotificationPanel({ accessToken }: { accessToken: string }) {
         <>
           <button
             type="button"
-            className="athena-drawer-backdrop"
+            className="movvo-drawer-backdrop"
             aria-label="Fechar notificações"
             onClick={() => setNotificationsOpen(false)}
           />
-          <aside className="athena-notification-drawer" data-testid="notification-panel" aria-label="Central de notificações">
+          <aside className="movvo-notification-drawer" data-testid="notification-panel" aria-label="Central de notificações">
             <header className="flex items-center justify-between border-b border-[var(--border)] px-4 py-3 gap-2">
               <div>
-                <h2 className="athena-h3">Notificações</h2>
-                <p className="athena-caption">{unread} não lidas</p>
+                <h2 className="movvo-h3">Notificações</h2>
+                <p className="movvo-caption">{unread} não lidas</p>
               </div>
               <div className="flex gap-2">
                 {unread > 0 ? (
                   <button
                     type="button"
-                    className="athena-btn athena-btn-secondary athena-btn-sm"
+                    className="movvo-btn movvo-btn-secondary movvo-btn-sm"
                     onClick={() => void markAll()}
                     disabled={busy}
                     data-testid="notifications-mark-all"
@@ -162,7 +162,7 @@ export function NotificationPanel({ accessToken }: { accessToken: string }) {
                 ) : null}
                 <button
                   type="button"
-                  className="athena-btn athena-btn-secondary athena-btn-sm"
+                  className="movvo-btn movvo-btn-secondary movvo-btn-sm"
                   onClick={() => setNotificationsOpen(false)}
                 >
                   Fechar
@@ -174,7 +174,7 @@ export function NotificationPanel({ accessToken }: { accessToken: string }) {
                 <button
                   key={f.id}
                   type="button"
-                  className={`athena-btn athena-btn-sm ${filter === f.id ? 'athena-btn-primary' : 'athena-btn-secondary'}`}
+                  className={`movvo-btn movvo-btn-sm ${filter === f.id ? 'movvo-btn-primary' : 'movvo-btn-secondary'}`}
                   onClick={() => setFilter(f.id)}
                   data-testid={`notif-filter-${f.id}`}
                 >
@@ -185,7 +185,7 @@ export function NotificationPanel({ accessToken }: { accessToken: string }) {
             <div className="flex-1 overflow-y-auto p-3">
               {error ? (
                 <ErrorState title="Falha ao carregar" description={error} action={
-                  <button type="button" className="athena-btn athena-btn-secondary" onClick={() => void load()}>
+                  <button type="button" className="movvo-btn movvo-btn-secondary" onClick={() => void load()}>
                     Tentar de novo
                   </button>
                 } />
@@ -198,7 +198,7 @@ export function NotificationPanel({ accessToken }: { accessToken: string }) {
                 <>
                   {today.length > 0 ? (
                     <section className="mb-4">
-                      <h3 className="athena-caption mb-2 px-1">Hoje</h3>
+                      <h3 className="movvo-caption mb-2 px-1">Hoje</h3>
                       <ul className="space-y-2">
                         {today.map((n) => (
                           <NotificationRow key={n.id} n={n} onMark={() => void mark(n.id)} />
@@ -208,7 +208,7 @@ export function NotificationPanel({ accessToken }: { accessToken: string }) {
                   ) : null}
                   {earlier.length > 0 ? (
                     <section>
-                      <h3 className="athena-caption mb-2 px-1">Anteriores</h3>
+                      <h3 className="movvo-caption mb-2 px-1">Anteriores</h3>
                       <ul className="space-y-2">
                         {earlier.slice(0, 20).map((n) => (
                           <NotificationRow key={n.id} n={n} onMark={() => void mark(n.id)} />
@@ -245,7 +245,7 @@ function NotificationRow({ n, onMark }: { n: AppNotification; onMark: () => void
           ) : null}
         </div>
         {!n.readAt ? (
-          <button type="button" className="athena-icon-btn" aria-label="Marcar como lida" onClick={onMark}>
+          <button type="button" className="movvo-icon-btn" aria-label="Marcar como lida" onClick={onMark}>
             <Check size={16} />
           </button>
         ) : null}

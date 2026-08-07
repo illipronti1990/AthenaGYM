@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { Schedule } from '@athena/shared';
+import type { Schedule } from '@movvo/shared';
 import { operationsApi } from '@/modules/operations/services/operationsApi';
 
 export function BookingBoard({ accessToken }: { accessToken: string }) {

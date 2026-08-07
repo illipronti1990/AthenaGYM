@@ -5,6 +5,6 @@ module.exports = {
   transform: { '^.+\\.(t|j)s$': 'ts-jest' },
   testEnvironment: 'node',
   moduleNameMapper: {
-    '^@athena/shared$': '<rootDir>/../../../packages/shared/src/index.ts',
+    '^@movvo/shared$': '<rootDir>/../../../packages/shared/src/index.ts',
   },
 };

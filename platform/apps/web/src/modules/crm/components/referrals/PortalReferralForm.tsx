@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import { Button, Card } from '@athena/ui';
+import { Button, Card } from '@movvo/ui';
 import { crmApi } from '../../services/crmApi';
 import { useToast } from '@/components/ui/Toast';
 
@@ -53,21 +53,21 @@ export function PortalReferralForm({ accessToken }: { accessToken: string }) {
           placeholder="Nome do amigo"
           value={referredName}
           onChange={(e) => setReferredName(e.target.value)}
-          className="athena-input"
+          className="movvo-input"
           data-testid="referral-name"
         />
         <input
           placeholder="Telefone / WhatsApp"
           value={referredPhone}
           onChange={(e) => setReferredPhone(e.target.value)}
-          className="athena-input"
+          className="movvo-input"
         />
         <textarea
           placeholder="Observações (opcional)"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           rows={2}
-          className="athena-input"
+          className="movvo-input"
         />
         <Button type="submit" disabled={loading || !referredName}>
           {loading ? 'Enviando…' : 'Indicar amigo'}

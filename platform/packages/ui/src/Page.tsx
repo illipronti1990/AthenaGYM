@@ -6,7 +6,7 @@ export function Page({
   ...props
 }: HTMLAttributes<HTMLDivElement> & { children: ReactNode }) {
   return (
-    <div className={`athena-page ${className}`} {...props}>
+    <div className={`movvo-page ${className}`} {...props}>
       {children}
     </div>
   );
@@ -26,28 +26,28 @@ export function PageHeader({
   children?: ReactNode;
 }) {
   return (
-    <header className="athena-page-header">
+    <header className="movvo-page-header">
       <div className="min-w-0 flex-1">
-        <h1 className="athena-h1 inline-flex items-center gap-3">
+        <h1 className="movvo-h1 inline-flex items-center gap-3">
           {icon ? <span className="text-[var(--gold)]">{icon}</span> : null}
           {title}
         </h1>
-        {description ? <p className="athena-page-desc">{description}</p> : null}
+        {description ? <p className="movvo-page-desc">{description}</p> : null}
         {children}
       </div>
-      {actions ? <div className="athena-page-actions">{actions}</div> : null}
+      {actions ? <div className="movvo-page-actions">{actions}</div> : null}
     </header>
   );
 }
 
 export function PageActions({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return <div className={`athena-page-actions ${className}`}>{children}</div>;
+  return <div className={`movvo-page-actions ${className}`}>{children}</div>;
 }
 
 export function PageFilters({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return <div className={`athena-page-filters ${className}`}>{children}</div>;
+  return <div className={`movvo-page-filters ${className}`}>{children}</div>;
 }
 
 export function PageContent({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return <div className={`athena-page-content ${className}`}>{children}</div>;
+  return <div className={`movvo-page-content ${className}`}>{children}</div>;
 }

@@ -2,17 +2,22 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import compression from 'compression';
 import express, { type Request, type Response } from 'express';
 import { AppModule } from './app.module';
+import { PinoNestLogger } from './observability/observability.core';
+import { startOtelIfConfigured } from './observability/otel';
 
 type ExpressApp = ReturnType<typeof express>;
 
 let cached: ExpressApp | null = null;
 
 async function createApp(): Promise<ExpressApp> {
+  startOtelIfConfigured('movvo-api');
   const server = express();
+  server.use(compression());
   const app = await NestFactory.create(AppModule, new ExpressAdapter(server), {
-    logger: ['error', 'warn', 'log'],
+    logger: new PinoNestLogger(),
   });
 
   app.useGlobalPipes(
@@ -38,7 +43,7 @@ async function createApp(): Promise<ExpressApp> {
   const config = new DocumentBuilder()
     .setTitle('Movvo ERP API')
     .setDescription('PaaS official API')
-    .setVersion('0.10.0')
+    .setVersion('0.13.0')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);

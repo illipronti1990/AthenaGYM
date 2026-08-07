@@ -1,7 +1,7 @@
 'use client';
 
 import { Keyboard, Menu, Search } from 'lucide-react';
-import { Tooltip } from '@athena/ui';
+import { Tooltip } from '@movvo/ui';
 import { useLayout } from './LayoutProvider';
 import { AppBreadcrumb } from './AppBreadcrumb';
 import { NotificationPanel } from './NotificationPanel';
@@ -18,13 +18,13 @@ export function Topbar({
   const { toggleMobile, openSearch, pageLoading, setShortcutsOpen } = useLayout();
 
   return (
-    <header className="athena-topbar athena-topbar-px2" data-testid="app-topbar">
-      {pageLoading ? <div className="athena-page-progress" aria-hidden /> : null}
+    <header className="movvo-topbar movvo-topbar-px2" data-testid="app-topbar">
+      {pageLoading ? <div className="movvo-page-progress" aria-hidden /> : null}
       <div className="flex items-center gap-3">
         <Tooltip content="Abrir menu">
           <button
             type="button"
-            className="athena-icon-btn md:hidden"
+            className="movvo-icon-btn md:hidden"
             onClick={toggleMobile}
             aria-label="Abrir menu"
             data-testid="mobile-menu"
@@ -39,13 +39,13 @@ export function Topbar({
         <Tooltip content="Pesquisar (Ctrl+K)">
           <button
             type="button"
-            className="athena-search-trigger"
+            className="movvo-search-trigger"
             onClick={openSearch}
             data-testid="open-search"
           >
             <Search size={16} className="shrink-0 text-[var(--muted)]" />
             <span className="hidden truncate sm:inline">Pesquisar…</span>
-            <kbd className="athena-kbd">Ctrl+K</kbd>
+            <kbd className="movvo-kbd">Ctrl+K</kbd>
           </button>
         </Tooltip>
       </div>
@@ -54,7 +54,7 @@ export function Topbar({
         <Tooltip content="Atalhos (?)">
           <button
             type="button"
-            className="athena-icon-btn"
+            className="movvo-icon-btn"
             onClick={() => setShortcutsOpen(true)}
             aria-label="Abrir atalhos de teclado"
             data-testid="open-shortcuts"

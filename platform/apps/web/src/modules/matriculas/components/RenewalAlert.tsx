@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import type { RenewalDueItem } from '@athena/shared';
-import { Button } from '@athena/ui';
+import type { RenewalDueItem } from '@movvo/shared';
+import { Button } from '@movvo/ui';
 
 export function RenewalAlert({ items }: { items: RenewalDueItem[] }) {
   if (!items.length) return null;

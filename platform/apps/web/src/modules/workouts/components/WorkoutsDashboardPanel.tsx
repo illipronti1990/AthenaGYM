@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { WorkoutsDashboard } from '@athena/shared';
-import { Card, chartColors } from '@athena/ui';
+import type { WorkoutsDashboard } from '@movvo/shared';
+import { Card, chartColors } from '@movvo/ui';
 import { workoutsApi } from '../services/workoutsApi';
 
 export function WorkoutsDashboardPanel({ accessToken }: { accessToken: string }) {

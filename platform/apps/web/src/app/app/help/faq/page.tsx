@@ -1,6 +1,6 @@
 import { requireAccessToken } from '@/lib/auth/token';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
-import { Card } from '@athena/ui';
+import { Card } from '@movvo/ui';
 
 const FAQ = [
   {
@@ -33,11 +33,11 @@ export default async function FaqPage() {
           { label: 'FAQ' },
         ]}
       />
-      <h1 className="athena-title text-3xl">FAQ</h1>
+      <h1 className="movvo-title text-3xl">FAQ</h1>
       <dl className="space-y-4">
         {FAQ.map((item) => (
           <Card key={item.q}>
-            <dt className="athena-title text-base">{item.q}</dt>
+            <dt className="movvo-title text-base">{item.q}</dt>
             <dd className="mt-1 text-sm text-[var(--muted)]">{item.a}</dd>
           </Card>
         ))}

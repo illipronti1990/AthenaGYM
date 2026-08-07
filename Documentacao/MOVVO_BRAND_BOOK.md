@@ -44,7 +44,7 @@
 
 ## Design Tokens (canônico)
 
-Fonte: `@athena/theme` → `DesignTokens` em `platform/packages/theme/src/design-tokens.ts`.  
+Fonte: `@movvo/theme` → `DesignTokens` em `platform/packages/theme/src/design-tokens.ts`.  
 CSS vars espelhadas em `packages/ui/src/styles.css`.
 
 ### Spacing / Grid
@@ -82,7 +82,7 @@ Lucide; strokes **2**. Tamanhos: 16 / 18 / 20 / 24 / 32 (`DesignTokens.icons`).
 | Meta | `--chart-goal` | `#D4AF37` |
 | Check-ins | `--chart-checkins` | `#D90429` |
 
-Usar `chartColors` de `@athena/ui` / `DesignTokens.charts` — evitar hex hardcoded em hubs BI.
+Usar `chartColors` de `@movvo/ui` / `DesignTokens.charts` — evitar hex hardcoded em hubs BI.
 
 ### z-index
 
@@ -143,9 +143,9 @@ Web: `useFeatureFlags()` oculta nav (estoque/PDV/CRM/BI) e FAB AI quando off.
 
 ## Componentes e tema
 
-- Biblioteca: `@athena/ui` (pacotes npm mantêm escopo `@athena` nesta fase).
-- Tokens: `@athena/theme` + CSS vars em `packages/ui/src/styles.css`.
-- Product constants: `@athena/shared` / `@athena/branding` (`MOVVO_PRODUCT`).
+- Biblioteca: `@movvo/ui` (pacotes npm mantêm escopo `@athena` nesta fase).
+- Tokens: `@movvo/theme` + CSS vars em `packages/ui/src/styles.css`.
+- Product constants: `@movvo/shared` / `@movvo/branding` (`MOVVO_PRODUCT`).
 - Tema: dark / light / system (`localStorage` key `movvo_theme`).
 - Footer app: `Movvo ERP · v0.7.0-beta · Build 2026.08`.
 

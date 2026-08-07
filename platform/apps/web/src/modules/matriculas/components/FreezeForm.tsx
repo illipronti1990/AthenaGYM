@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, FormInput, FormRow, FormSection } from '@athena/ui';
+import { Button, FormInput, FormRow, FormSection } from '@movvo/ui';
 import { matriculasApi } from '../services/matriculasApi';
 import { useToast } from '@/components/ui/Toast';
 

@@ -72,8 +72,8 @@ End Function
 
 Public Function NomeAcademia() As String
     Dim n As String
-    n = NzStr(ObterParametro("Academia", "Nome", "ATHENAS GYM"))
-    If Len(n) = 0 Then n = "ATHENAS GYM"
+    n = NzStr(ObterParametro("Academia", "Nome", "ATHENA GYM"))
+    If Len(n) = 0 Then n = "ATHENA GYM"
     NomeAcademia = n
 End Function
 

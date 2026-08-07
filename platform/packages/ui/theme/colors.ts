@@ -1,10 +1,10 @@
 export {
-  athenaColors,
-  athenaColorsLight,
+  movvoColorsLegacy,
+  movvoColorsLegacyLight,
   movvoColorsDark,
   movvoColorsLight,
-} from '@athena/theme';
+} from '@movvo/theme';
 
-import type { athenaColors } from '@athena/theme';
+import { movvoColorsLegacy } from '@movvo/theme';
 
-export type AthenaColorPalette = typeof athenaColors;
+export type MovvoColorPalette = typeof movvoColorsLegacy;

@@ -1,8 +1,8 @@
 'use client';
 
 import { FormEvent, useEffect, useMemo, useState } from 'react';
-import type { PartnerAccessRequest, PartnerIntegration, PartnerProvider } from '@athena/shared';
-import { Button } from '@athena/ui';
+import type { PartnerAccessRequest, PartnerIntegration, PartnerProvider } from '@movvo/shared';
+import { Button } from '@movvo/ui';
 import { operationsApi } from '../services/operationsApi';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
@@ -141,7 +141,7 @@ export function PartnersPanel({ accessToken }: { accessToken: string }) {
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <h2 className="athena-title text-lg">{PROVIDER_LABEL[item.provider]}</h2>
+                  <h2 className="movvo-title text-lg">{PROVIDER_LABEL[item.provider]}</h2>
                   <p className="mt-1 text-sm text-[var(--muted)]">
                     Status:{' '}
                     <span className="text-[var(--gold)]">
@@ -169,7 +169,7 @@ export function PartnersPanel({ accessToken }: { accessToken: string }) {
       <section className="space-y-3">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <h2 className="athena-title text-xl">Aprovar logins externos</h2>
+            <h2 className="movvo-title text-xl">Aprovar logins externos</h2>
             <p className="text-sm text-[var(--muted)]">
               Libere ou recuse check-ins Wellhub e TotalPass na recepção
               {pendingCount != null ? ` · ${pendingCount} pendente(s)` : ''}
@@ -180,7 +180,7 @@ export function PartnersPanel({ accessToken }: { accessToken: string }) {
               <button
                 key={f}
                 type="button"
-                className={`athena-chip-nav ${filter === f ? 'bg-[var(--primary)] text-white' : ''}`}
+                className={`movvo-chip-nav ${filter === f ? 'bg-[var(--primary)] text-white' : ''}`}
                 onClick={() => setFilter(f)}
                 data-testid={`filter-${f}`}
               >
@@ -203,8 +203,8 @@ export function PartnersPanel({ accessToken }: { accessToken: string }) {
             Nenhuma solicitação neste filtro. Use o formulário abaixo para simular um login parceiro.
           </p>
         ) : (
-          <div className="athena-list overflow-x-auto">
-            <table className="athena-table" data-testid="partner-requests-table">
+          <div className="movvo-list overflow-x-auto">
+            <table className="movvo-table" data-testid="partner-requests-table">
               <thead>
                 <tr>
                   <th>Parceiro</th>
@@ -262,7 +262,7 @@ export function PartnersPanel({ accessToken }: { accessToken: string }) {
       </section>
 
       <section>
-        <h2 className="athena-title mb-3 text-lg">Registrar login parceiro</h2>
+        <h2 className="movvo-title mb-3 text-lg">Registrar login parceiro</h2>
         <p className="mb-3 text-sm text-[var(--muted)]">
           Use para testar ou registrar manualmente um check-in que chegou pela Wellhub/TotalPass.
         </p>
@@ -272,7 +272,7 @@ export function PartnersPanel({ accessToken }: { accessToken: string }) {
           data-testid="partner-sim-form"
         >
           <select
-            className="athena-input"
+            className="movvo-input"
             value={provider}
             onChange={(e) => setProvider(e.target.value as PartnerProvider)}
             data-testid="partner-provider"
@@ -282,14 +282,14 @@ export function PartnersPanel({ accessToken }: { accessToken: string }) {
           </select>
           <input
             required
-            className="athena-input"
+            className="movvo-input"
             placeholder="Nome do beneficiário"
             value={memberName}
             onChange={(e) => setMemberName(e.target.value)}
             data-testid="partner-member-name"
           />
           <input
-            className="athena-input sm:col-span-2"
+            className="movvo-input sm:col-span-2"
             placeholder="Documento (opcional)"
             value={memberDocument}
             onChange={(e) => setMemberDocument(e.target.value)}

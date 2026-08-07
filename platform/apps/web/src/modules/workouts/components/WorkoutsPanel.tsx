@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import type { Exercise, Workout } from '@athena/shared';
+import type { Exercise, Workout } from '@movvo/shared';
 import { workoutsApi } from '../services/workoutsApi';
 
 export function WorkoutsPanel({ accessToken }: { accessToken: string }) {
@@ -104,7 +104,7 @@ export function WorkoutsPanel({ accessToken }: { accessToken: string }) {
           <label className="text-sm text-[var(--muted)]">
             ID do aluno
             <input
-              className="mt-1 block w-72 athena-input font-mono text-xs"
+              className="mt-1 block w-72 movvo-input font-mono text-xs"
               value={studentId}
               onChange={(e) => setStudentId(e.target.value)}
               required
@@ -113,7 +113,7 @@ export function WorkoutsPanel({ accessToken }: { accessToken: string }) {
           <label className="text-sm text-[var(--muted)]">
             Nome
             <input
-              className="mt-1 block w-48 athena-input"
+              className="mt-1 block w-48 movvo-input"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
@@ -139,14 +139,14 @@ export function WorkoutsPanel({ accessToken }: { accessToken: string }) {
           </ul>
         </div>
         <div className="flex flex-wrap gap-2">
-          <button type="submit" className="athena-btn athena-btn-primary">
+          <button type="submit" className="movvo-btn movvo-btn-primary">
             Criar treino
           </button>
           <button
             type="button"
             disabled={!studentId}
             onClick={aiSuggest}
-            className="athena-btn athena-btn-secondary"
+            className="movvo-btn movvo-btn-secondary"
           >
             Sugestão IA
           </button>
@@ -165,14 +165,14 @@ export function WorkoutsPanel({ accessToken }: { accessToken: string }) {
             </div>
             <div className="flex flex-wrap gap-2 text-sm">
               {w.status === 'draft' ? (
-                <button type="button" onClick={() => publish(w.id)} className="athena-btn athena-btn-secondary">
+                <button type="button" onClick={() => publish(w.id)} className="movvo-btn movvo-btn-secondary">
                   Publicar
                 </button>
               ) : null}
-              <button type="button" onClick={() => duplicate(w.id)} className="athena-btn athena-btn-secondary">
+              <button type="button" onClick={() => duplicate(w.id)} className="movvo-btn movvo-btn-secondary">
                 Duplicar
               </button>
-              <button type="button" onClick={() => complete(w.id)} className="athena-btn athena-btn-secondary">
+              <button type="button" onClick={() => complete(w.id)} className="movvo-btn movvo-btn-secondary">
                 Concluir sessão
               </button>
             </div>

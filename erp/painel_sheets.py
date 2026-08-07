@@ -96,7 +96,7 @@ def build_home(wb) -> None:
     )
 
     ws.merge_cells("C5:G5")
-    ws["C5"] = "ATHENAS GYM ERP — OPERATION CENTER"
+    ws["C5"] = "ATHENA GYM ERP — OPERATION CENTER"
     ws["C5"].font = Font(name="Georgia", size=18, bold=True, color=BRAND_RED)
     ws["C5"].fill = fill_light
 

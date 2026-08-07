@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Patch, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import type { AuthContext, DashboardChartPeriod } from '@athena/shared';
+import type { AuthContext, DashboardChartPeriod } from '@movvo/shared';
 import { CurrentAuth, CurrentUser } from '../common/decorators/current.decorators';
 import { Permissions } from '../common/decorators/rbac.decorators';
 import { CompanyGuard, PermissionsGuard } from '../common/guards/rbac.guards';

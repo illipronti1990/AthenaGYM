@@ -1,4 +1,4 @@
-import { athenaIcons } from '@athena/ui';
+import { athenaIcons } from '@movvo/ui';
 import type { NavGroup, NavItem } from './navigation';
 import { navGroups } from './navigation';
 

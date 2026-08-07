@@ -1,6 +1,6 @@
 'use client';
 
-import type { EnrollmentEvent } from '@athena/shared';
+import type { EnrollmentEvent } from '@movvo/shared';
 
 export function EnrollmentTimeline({ events }: { events: EnrollmentEvent[] }) {
   if (!events.length) {

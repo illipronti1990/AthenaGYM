@@ -1,9 +1,0 @@
-Option Explicit
-
-Private Sub Worksheet_BeforeDoubleClick(ByVal Target As Range, Cancel As Boolean)
-    On Error Resume Next
-    If Target.Row >= 10 And Target.Row <= 19 And Target.Column >= 3 And Target.Column <= 7 Then
-        Cancel = True
-        Call AbrirAcaoSelecionada
-    End If
-End Sub

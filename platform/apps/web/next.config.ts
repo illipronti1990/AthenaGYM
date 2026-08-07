@@ -3,7 +3,7 @@ import type { NextConfig } from 'next';
 const isProd = process.env.NODE_ENV === 'production';
 
 const nextConfig: NextConfig = {
-  transpilePackages: ['@athena/ui', '@athena/shared', '@athena/theme', '@athena/branding'],
+  transpilePackages: ['@movvo/ui', '@movvo/shared', '@movvo/theme', '@movvo/branding'],
   compress: true,
   poweredByHeader: false,
   // Do NOT use optimizePackageImports on workspace packages — breaks webpack
@@ -14,6 +14,13 @@ const nextConfig: NextConfig = {
   images: {
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 60 * 60 * 24 * 30,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+        pathname: '/storage/v1/object/**',
+      },
+    ],
   },
   async redirects() {
     return [

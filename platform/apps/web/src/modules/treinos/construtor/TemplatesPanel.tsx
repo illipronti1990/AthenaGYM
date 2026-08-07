@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { WorkoutTemplate } from '@athena/shared';
+import type { WorkoutTemplate } from '@movvo/shared';
 import { workoutsApi } from '@/modules/workouts/services/workoutsApi';
 import { AlunoSelect } from '@/modules/alunos/components/AlunoSelect';
 
@@ -58,10 +58,10 @@ export function TemplatesPanel({ accessToken }: { accessToken: string }) {
               </div>
             </div>
             <div className="flex gap-2">
-              <button type="button" className="athena-btn" onClick={() => apply(t.id)}>
+              <button type="button" className="movvo-btn" onClick={() => apply(t.id)}>
                 Aplicar ao aluno
               </button>
-              <button type="button" className="athena-btn athena-btn-ghost" onClick={() => duplicate(t.id)}>
+              <button type="button" className="movvo-btn movvo-btn-ghost" onClick={() => duplicate(t.id)}>
                 Duplicar
               </button>
             </div>

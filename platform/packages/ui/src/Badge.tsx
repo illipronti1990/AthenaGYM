@@ -9,12 +9,12 @@ export type BadgeTone =
   | 'novo';
 
 const toneClass: Record<BadgeTone, string> = {
-  primary: 'athena-badge-primary',
-  gold: 'athena-badge-gold',
-  ativo: 'athena-badge-ativo',
-  inadimplente: 'athena-badge-inadimplente',
-  cancelado: 'athena-badge-cancelado',
-  novo: 'athena-badge-novo',
+  primary: 'movvo-badge-primary',
+  gold: 'movvo-badge-gold',
+  ativo: 'movvo-badge-ativo',
+  inadimplente: 'movvo-badge-inadimplente',
+  cancelado: 'movvo-badge-cancelado',
+  novo: 'movvo-badge-novo',
 };
 
 export function Badge({
@@ -27,7 +27,7 @@ export function Badge({
   children: ReactNode;
 }) {
   return (
-    <span className={`athena-badge ${toneClass[tone]} ${className}`} {...props}>
+    <span className={`movvo-badge ${toneClass[tone]} ${className}`} {...props}>
       {children}
     </span>
   );

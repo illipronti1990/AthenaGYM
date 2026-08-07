@@ -70,28 +70,28 @@ def seed_if_empty(db: Session) -> None:
         db.add(
             Empresa(
                 id=0,
-                razao_social="ATHENAS PLATFORM LTDA",
-                nome_fantasia="ATHENAS PLATFORM",
+                razao_social="ATHENA PLATFORM LTDA",
+                nome_fantasia="ATHENA PLATFORM",
                 cnpj="00.000.000/0001-00",
                 plano="Enterprise",
                 status="Ativo",
                 cidade="São Paulo",
                 estado="SP",
-                email="platform@athenas.gym",
+                email="platform@athena.gym",
                 data_expiracao=datetime.utcnow() + timedelta(days=3650),
             )
         )
         db.add(
             Empresa(
                 id=1,
-                razao_social="ATHENAS GYM ACADEMIA LTDA",
-                nome_fantasia="ATHENAS GYM",
+                razao_social="ATHENA GYM ACADEMIA LTDA",
+                nome_fantasia="ATHENA GYM",
                 cnpj="12.345.678/0001-90",
                 plano="Enterprise",
                 status="Ativo",
                 cidade="São Paulo",
                 estado="SP",
-                email="contato@athenas.gym",
+                email="contato@athena.gym",
                 data_expiracao=datetime.utcnow() + timedelta(days=365),
             )
         )
@@ -126,8 +126,8 @@ def seed_if_empty(db: Session) -> None:
         db.commit()
 
     if db.query(Unidade).count() == 0:
-        db.add(Unidade(empresa_id=1, nome="ATHENAS GYM Matriz", cidade="São Paulo", status="Ativa"))
-        db.add(Unidade(empresa_id=1, nome="ATHENAS GYM Zona Sul", cidade="São Paulo", status="Planejada"))
+        db.add(Unidade(empresa_id=1, nome="ATHENA GYM Matriz", cidade="São Paulo", status="Ativa"))
+        db.add(Unidade(empresa_id=1, nome="ATHENA GYM Zona Sul", cidade="São Paulo", status="Planejada"))
         db.commit()
 
     if db.query(Aluno).count() == 0:

@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import type { DashboardFinanceSnapshot } from '@athena/shared';
-import { EmptyState } from '@athena/ui';
+import type { DashboardFinanceSnapshot } from '@movvo/shared';
+import { EmptyState } from '@movvo/ui';
 import { Wallet } from 'lucide-react';
 import { formatKpi } from '../utils/format';
 
@@ -10,9 +10,9 @@ export function FinanceSnapshotWidget({ snapshot }: { snapshot: DashboardFinance
   const empty = snapshot.inflows === 0 && snapshot.outflows === 0;
 
   return (
-    <div className="athena-card athena-card-hover h-full cursor-pointer transition duration-200" data-testid="finance-snapshot">
+    <div className="movvo-card movvo-card-hover h-full cursor-pointer transition duration-200" data-testid="finance-snapshot">
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="athena-h3 inline-flex items-center gap-2 text-[var(--gold)]">
+        <h3 className="movvo-h3 inline-flex items-center gap-2 text-[var(--gold)]">
           <Wallet size={18} /> Financeiro
         </h3>
         <Link href="/app/finance/cashflow" className="text-xs text-[var(--gold)]">
@@ -24,7 +24,7 @@ export function FinanceSnapshotWidget({ snapshot }: { snapshot: DashboardFinance
           title="Nenhum recebimento registrado"
           description="Registre a primeira movimentação do caixa."
           action={
-            <Link href="/app/finance/receivables" className="athena-btn athena-btn-primary athena-btn-sm">
+            <Link href="/app/finance/receivables" className="movvo-btn movvo-btn-primary movvo-btn-sm">
               Novo Recebimento
             </Link>
           }

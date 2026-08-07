@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { DashboardLayoutItem } from '@athena/shared';
+import type { DashboardLayoutItem } from '@movvo/shared';
 import { SupabaseService } from '../supabase/supabase.service';
 import { normalizeLayout } from './dashboard.rules';
 

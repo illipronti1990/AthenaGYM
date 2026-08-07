@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { Campaign } from '@athena/shared';
-import { Button, Card } from '@athena/ui';
+import type { Campaign } from '@movvo/shared';
+import { Button, Card } from '@movvo/ui';
 import { engagementApi } from '@/modules/engagement/services/engagementApi';
 import { useToast } from '@/components/ui/Toast';
 
@@ -74,13 +74,13 @@ export function CampaignForm({ accessToken }: { accessToken: string }) {
             placeholder="Nome da campanha"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="athena-input"
+            className="movvo-input"
             data-testid="campaign-name"
           />
           <select
             value={channel}
             onChange={(e) => setChannel(e.target.value as 'push' | 'email' | 'sms')}
-            className="athena-input"
+            className="movvo-input"
           >
             <option value="push">Push</option>
             <option value="email">E-mail</option>
@@ -91,7 +91,7 @@ export function CampaignForm({ accessToken }: { accessToken: string }) {
             value={body}
             onChange={(e) => setBody(e.target.value)}
             rows={3}
-            className="athena-input sm:col-span-2"
+            className="movvo-input sm:col-span-2"
           />
           <div className="sm:col-span-2 flex justify-end">
             <Button type="button" disabled={loading || !name || !body} onClick={() => void onCreate()}>
@@ -101,9 +101,9 @@ export function CampaignForm({ accessToken }: { accessToken: string }) {
         </div>
       </Card>
 
-      <ul className="athena-list text-sm">
+      <ul className="movvo-list text-sm">
         {campaigns.map((c) => (
-          <li key={c.id} className="athena-list-item">
+          <li key={c.id} className="movvo-list-item">
             <span className="text-[var(--text)]">
               {c.name} · <span className="text-[var(--muted)]">{c.status}</span> · {c.channel}
             </span>
@@ -112,7 +112,7 @@ export function CampaignForm({ accessToken }: { accessToken: string }) {
                 type="button"
                 disabled={sending === c.id}
                 onClick={() => void onSend(c.id)}
-                className="athena-link text-[var(--gold)] disabled:opacity-50"
+                className="movvo-link text-[var(--gold)] disabled:opacity-50"
               >
                 {sending === c.id ? 'Enviando…' : 'Enviar'}
               </button>

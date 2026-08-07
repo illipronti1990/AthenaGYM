@@ -27,15 +27,15 @@ export function MobileCardView<T>({
   const rest = columns.filter((c) => c.id !== primary?.id).slice(0, 4);
 
   return (
-    <ul className="athena-dg-mobile" data-testid="datagrid-mobile">
+    <ul className="movvo-dg-mobile" data-testid="datagrid-mobile">
       {rows.map((row) => {
         const id = getRowId(row);
         return (
-          <li key={id} className="athena-dg-mobile-card">
-            <label className="athena-check">
+          <li key={id} className="movvo-dg-mobile-card">
+            <label className="movvo-check">
               <input type="checkbox" checked={selectedIds.has(id)} onChange={() => onToggle(id)} />
             </label>
-            <button type="button" className="athena-dg-mobile-body" onClick={() => onOpen?.(row)}>
+            <button type="button" className="movvo-dg-mobile-body" onClick={() => onOpen?.(row)}>
               <p className="font-medium text-[var(--text)]">
                 {primary ? renderValue(primary, row) : id}
               </p>

@@ -3,16 +3,16 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import type { StudentListItem } from '@athena/shared';
-import { formatCpf, STUDENT_STATUS_LABELS, type StudentStatus } from '@athena/shared';
+import type { StudentListItem } from '@movvo/shared';
+import { formatCpf, STUDENT_STATUS_LABELS, type StudentStatus } from '@movvo/shared';
 import {
-  AthenaDataGrid,
+  MovvoDataGrid,
   formatCurrencyBRL,
   type DataGridColumn,
   type DataGridFilterDef,
   type DataGridSort,
   type WorkPanel,
-} from '@athena/ui';
+} from '@movvo/ui';
 import { useToast } from '@/components/ui/Toast';
 import { ExportButtons } from '@/modules/polish/components/ExportButtons';
 import { useDataGridPrefs } from '@/modules/datagrid/hooks/useDataGridPrefs';
@@ -249,7 +249,7 @@ export function AlunosListPanel({
 
   return (
     <div className="space-y-3">
-      <AthenaDataGrid<StudentListItem>
+      <MovvoDataGrid<StudentListItem>
         tableId={TABLE_ID}
         columns={columns}
         rows={items}
@@ -313,7 +313,7 @@ export function AlunosListPanel({
         primaryAction={
           <Link
             href="/app/matriculas/nova"
-            className="athena-btn athena-btn-secondary athena-btn-sm"
+            className="movvo-btn movvo-btn-secondary movvo-btn-sm"
           >
             Matrícula rápida
           </Link>
@@ -329,7 +329,7 @@ export function AlunosListPanel({
             : 'Cadastre o primeiro aluno e comece a operar a academia.'
         }
         emptyAction={
-          <Link href="/app/alunos/novo" className="athena-btn athena-btn-primary">
+          <Link href="/app/alunos/novo" className="movvo-btn movvo-btn-primary">
             Novo aluno
           </Link>
         }

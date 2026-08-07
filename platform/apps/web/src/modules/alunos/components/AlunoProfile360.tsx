@@ -1,8 +1,8 @@
 'use client';
 
-import type { Student360Summary } from '@athena/shared';
-import { formatCurrencyBRL } from '@athena/ui';
-import { Card } from '@athena/ui';
+import type { Student360Summary } from '@movvo/shared';
+import { formatCurrencyBRL } from '@movvo/ui';
+import { Card } from '@movvo/ui';
 
 function Metric({
   label,

@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import type { DashboardDuesSummary } from '@athena/shared';
-import { EmptyState } from '@athena/ui';
+import type { DashboardDuesSummary } from '@movvo/shared';
+import { EmptyState } from '@movvo/ui';
 import { ContextualActions } from '@/components/ux/ContextualActions';
 
 export function DuesWidget({ dues }: { dues: DashboardDuesSummary }) {
@@ -13,9 +13,9 @@ export function DuesWidget({ dues }: { dues: DashboardDuesSummary }) {
     { label: 'Recebidas', value: dues.receivedMonth, tone: 'text-[var(--success)]' },
   ];
   return (
-    <div className="athena-card h-full space-y-3" data-testid="dues-widget">
+    <div className="movvo-card h-full space-y-3" data-testid="dues-widget">
       <div className="flex items-center justify-between">
-        <h3 className="athena-h3 text-[var(--gold)]">Mensalidades</h3>
+        <h3 className="movvo-h3 text-[var(--gold)]">Mensalidades</h3>
         <Link href="/app/finance/subscriptions" className="text-xs text-[var(--gold)]">
           Abrir
         </Link>
@@ -25,7 +25,7 @@ export function DuesWidget({ dues }: { dues: DashboardDuesSummary }) {
           title="Nenhum recebimento registrado"
           description="Lance a primeira mensalidade ou recebimento."
           action={
-            <Link href="/app/finance/receivables" className="athena-btn athena-btn-primary athena-btn-sm">
+            <Link href="/app/finance/receivables" className="movvo-btn movvo-btn-primary movvo-btn-sm">
               Novo Recebimento
             </Link>
           }
@@ -50,9 +50,9 @@ export function DuesWidget({ dues }: { dues: DashboardDuesSummary }) {
               <Link
                 key={c.label}
                 href="/app/finance/receivables"
-                className="athena-card-hover cursor-pointer rounded-[12px] border border-[var(--border)] p-3 text-center transition duration-200 no-underline"
+                className="movvo-card-hover cursor-pointer rounded-[12px] border border-[var(--border)] p-3 text-center transition duration-200 no-underline"
               >
-                <p className={`athena-h2 ${c.tone}`}>{c.value}</p>
+                <p className={`movvo-h2 ${c.tone}`}>{c.value}</p>
                 <p className="mt-1 text-xs text-[var(--muted)]">{c.label}</p>
               </Link>
             ))}

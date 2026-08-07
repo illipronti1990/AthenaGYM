@@ -6,7 +6,7 @@ import type {
   LeadActivity,
   Plan,
   PipelineStage,
-} from '@athena/shared';
+} from '@movvo/shared';
 import { SupabaseService } from '../supabase/supabase.service';
 
 @Injectable()

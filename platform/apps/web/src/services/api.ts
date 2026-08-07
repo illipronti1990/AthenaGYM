@@ -1,4 +1,4 @@
-import type { MeResponse, Role, UserListItem, Profile } from '@athena/shared';
+import type { MeResponse, Role, UserListItem, Profile } from '@movvo/shared';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
 

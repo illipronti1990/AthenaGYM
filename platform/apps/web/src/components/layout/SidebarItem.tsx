@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import type { LucideIcon } from 'lucide-react';
-import { Tooltip } from '@athena/ui';
+import { Tooltip } from '@movvo/ui';
 
 export function SidebarItem({
   href,
@@ -25,8 +25,8 @@ export function SidebarItem({
     <Link
       href={href}
       onClick={onNavigate}
-      className={`athena-sidebar-link ${nested ? 'athena-sidebar-link-nested' : ''} ${
-        active ? 'athena-sidebar-link-active' : ''
+      className={`movvo-sidebar-link ${nested ? 'movvo-sidebar-link-nested' : ''} ${
+        active ? 'movvo-sidebar-link-active' : ''
       }`}
       data-testid={`nav-${href.replace(/\//g, '-')}`}
       aria-label={label}

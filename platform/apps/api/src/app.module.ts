@@ -30,17 +30,27 @@ import { BrandingModule } from './branding/branding.module';
 import { MarketingModule } from './marketing/marketing.module';
 import { AdminModule } from './admin/admin.module';
 import { SaasBillingModule } from './saas-billing/saas-billing.module';
+import { SecurityModule } from './security/security.module';
+import { CacheModule } from './cache/cache.module';
+import { QueueModule } from './queue/queue.module';
+import { ObservabilityModule } from './observability/observability.module';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     SupabaseModule,
+    CacheModule,
+    QueueModule,
+    ObservabilityModule,
+    StorageModule,
     AuditModule,
     HealthModule,
     BrandingModule,
     MarketingModule,
     AdminModule,
     SaasBillingModule,
+    SecurityModule,
     AuthModule,
     ProfilesModule,
     CompaniesModule,
@@ -67,4 +77,3 @@ import { SaasBillingModule } from './saas-billing/saas-billing.module';
   ],
 })
 export class AppModule {}
-

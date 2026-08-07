@@ -1,8 +1,8 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import type { AccessRules } from '@athena/shared';
-import { Button } from '@athena/ui';
+import type { AccessRules } from '@movvo/shared';
+import { Button } from '@movvo/ui';
 import { useToast } from '@/components/ui/Toast';
 import { acessoApi } from '../services/acessoApi';
 
@@ -52,7 +52,7 @@ export function AccessRulesForm({ accessToken }: { accessToken: string }) {
         <input
           type="number"
           min={1}
-          className="athena-input mt-1 block w-full"
+          className="movvo-input mt-1 block w-full"
           value={rules.maxCheckinsPerDay}
           onChange={(e) => setRules({ ...rules, maxCheckinsPerDay: Number(e.target.value) })}
         />
@@ -62,7 +62,7 @@ export function AccessRulesForm({ accessToken }: { accessToken: string }) {
         <input
           type="number"
           min={0}
-          className="athena-input mt-1 block w-full"
+          className="movvo-input mt-1 block w-full"
           value={rules.minIntervalMinutes}
           onChange={(e) => setRules({ ...rules, minIntervalMinutes: Number(e.target.value) })}
         />
@@ -72,7 +72,7 @@ export function AccessRulesForm({ accessToken }: { accessToken: string }) {
         <input
           type="number"
           min={0}
-          className="athena-input mt-1 block w-full"
+          className="movvo-input mt-1 block w-full"
           value={rules.graceDays}
           onChange={(e) => setRules({ ...rules, graceDays: Number(e.target.value) })}
         />
@@ -81,7 +81,7 @@ export function AccessRulesForm({ accessToken }: { accessToken: string }) {
         Horário início
         <input
           type="time"
-          className="athena-input mt-1 block w-full"
+          className="movvo-input mt-1 block w-full"
           value={rules.allowedHoursJson.start}
           onChange={(e) =>
             setRules({
@@ -95,7 +95,7 @@ export function AccessRulesForm({ accessToken }: { accessToken: string }) {
         Horário fim
         <input
           type="time"
-          className="athena-input mt-1 block w-full"
+          className="movvo-input mt-1 block w-full"
           value={rules.allowedHoursJson.end}
           onChange={(e) =>
             setRules({

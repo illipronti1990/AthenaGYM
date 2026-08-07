@@ -127,13 +127,13 @@ FICHA_SEED = [
 
 FOTOS_SEED = [
     (1, f"ATH-{ANO}-000001", date(2026, 1, 10),
-     r"C:\ATHENAS\Fotos\ATH2026001\2026-01-10_Frente.jpg",
-     r"C:\ATHENAS\Fotos\ATH2026001\2026-01-10_Lado.jpg",
-     r"C:\ATHENAS\Fotos\ATH2026001\2026-01-10_Costas.jpg"),
+     r"C:\ATHENA\Fotos\ATH2026001\2026-01-10_Frente.jpg",
+     r"C:\ATHENA\Fotos\ATH2026001\2026-01-10_Lado.jpg",
+     r"C:\ATHENA\Fotos\ATH2026001\2026-01-10_Costas.jpg"),
     (2, f"ATH-{ANO}-000001", date(2026, 4, 10),
-     r"C:\ATHENAS\Fotos\ATH2026001\2026-04-10_Frente.jpg",
-     r"C:\ATHENAS\Fotos\ATH2026001\2026-04-10_Lado.jpg",
-     r"C:\ATHENAS\Fotos\ATH2026001\2026-04-10_Costas.jpg"),
+     r"C:\ATHENA\Fotos\ATH2026001\2026-04-10_Frente.jpg",
+     r"C:\ATHENA\Fotos\ATH2026001\2026-04-10_Lado.jpg",
+     r"C:\ATHENA\Fotos\ATH2026001\2026-04-10_Costas.jpg"),
 ]
 
 

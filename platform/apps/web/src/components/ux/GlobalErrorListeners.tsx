@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect } from 'react';
-import { reportClientError } from '@athena/ui';
+import { reportClientError } from '@movvo/ui';
 
-const CHUNK_RELOAD_KEY = 'athena-chunk-reload';
+const CHUNK_RELOAD_KEY = 'movvo-chunk-reload';
 
 function isStaleChunkError(value: unknown): boolean {
   const message =

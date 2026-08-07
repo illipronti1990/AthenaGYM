@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import type { StudentListItem } from '@athena/shared';
-import { formatCpf } from '@athena/shared';
+import type { StudentListItem } from '@movvo/shared';
+import { formatCpf } from '@movvo/shared';
 import { AlunoAvatar } from './AlunoAvatar';
 import { AlunoStatusBadge } from './AlunoStatus';
 

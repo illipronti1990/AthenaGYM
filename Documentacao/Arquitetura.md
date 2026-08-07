@@ -1,11 +1,11 @@
-# Arquitetura — ATHENAS PLATFORM
+# Arquitetura — Movvo Platform
 
 ## Visão oficial (Sprint 0–4 — SaaS + IAM + Students + Sales + Finance)
 
 A partir do Sprint 0, o **produto oficial** é SaaS. Sprint 1 = IAM/RBAC. Sprint 2 = **Students**. Sprint 3 = funil **Comercial**. Sprint 4 = **Financeiro Enterprise** (receivables, payables, subscriptions, PIX, cashflow, DRE, conciliação).
 
 ```
-ATHENAS PLATFORM
+MOVVO PLATFORM
       │
  Frontend Next.js (platform/apps/web)
       │ HTTPS /api/v1 + Bearer Supabase JWT
@@ -32,14 +32,14 @@ Detalhes de setup: [`platform/README.md`](../platform/README.md).
 
 ---
 
-# Arquitetura — ATHENAS GYM ERP 2.0 (legado Excel)
+# Arquitetura — ATHENA GYM ERP 2.0 (legado Excel)
 
 ## Visão
 
 O ERP Excel continua como **software versionado** e canal de sync, não como produto SaaS.
 
 ```
-ATHENAS GYM/
+ATHENA GYM/
 ├── Excel/                 # Releases do .xlsm (cópia pós-build)
 ├── Documentacao/          # Manuais, arquitetura, changelog
 ├── Export_VBA/            # Módulos .bas/.frm para Git
@@ -65,10 +65,10 @@ ATHENAS GYM/
 ## Multi-Tenant SaaS (Épico 1)
 
 ```
-ATHENAS PLATFORM (EmpresaID=0 SuperAdmin)
+MOVVO PLATFORM (EmpresaID=0 SuperAdmin)
         │
    BD único + EmpresaID
-   ├── Empresa 1 ATHENAS GYM
+   ├── Empresa 1 ATHENA GYM
    ├── Empresa 2 …
    └── Isolamento por sessão
 ```
@@ -80,7 +80,7 @@ ATHENAS PLATFORM (EmpresaID=0 SuperAdmin)
 ## ATHENA AI (Sprint 12.0)
 
 ```
-                  ATHENAS GYM ERP
+                  ATHENA GYM ERP
              Banco de Dados Central
                      │
               Motor ATHENA AI (modAthenaAI)

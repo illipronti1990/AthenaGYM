@@ -12,9 +12,9 @@ import type {
   StockMovement,
   StockMovementType,
   Supplier,
-} from '@athena/shared';
-import { productMargin } from '@athena/shared';
-import { Button } from '@athena/ui';
+} from '@movvo/shared';
+import { productMargin } from '@movvo/shared';
+import { Button } from '@movvo/ui';
 import { listAlunos } from '@/modules/alunos/services/alunosApi';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
@@ -181,7 +181,7 @@ export function ProductsPanel({ accessToken }: { accessToken: string }) {
       <form onSubmit={onCreate} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <input
           data-testid="product-name"
-          className="athena-input"
+          className="movvo-input"
           placeholder="Nome"
           value={form.name}
           onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
@@ -189,7 +189,7 @@ export function ProductsPanel({ accessToken }: { accessToken: string }) {
         />
         <input
           data-testid="product-sku"
-          className="athena-input"
+          className="movvo-input"
           placeholder="SKU"
           value={form.sku}
           onChange={(e) => setForm((f) => ({ ...f, sku: e.target.value }))}
@@ -197,14 +197,14 @@ export function ProductsPanel({ accessToken }: { accessToken: string }) {
         />
         <input
           data-testid="product-barcode"
-          className="athena-input"
+          className="movvo-input"
           placeholder="Código de barras"
           value={form.barcode}
           onChange={(e) => setForm((f) => ({ ...f, barcode: e.target.value }))}
         />
         <select
           data-testid="product-category"
-          className="athena-input"
+          className="movvo-input"
           value={form.categoryId}
           onChange={(e) => setForm((f) => ({ ...f, categoryId: e.target.value }))}
         >
@@ -217,7 +217,7 @@ export function ProductsPanel({ accessToken }: { accessToken: string }) {
         </select>
         <input
           data-testid="product-cost"
-          className="athena-input"
+          className="movvo-input"
           type="number"
           step="0.01"
           placeholder="Custo"
@@ -226,7 +226,7 @@ export function ProductsPanel({ accessToken }: { accessToken: string }) {
         />
         <input
           data-testid="product-sale"
-          className="athena-input"
+          className="movvo-input"
           type="number"
           step="0.01"
           placeholder="Venda"
@@ -235,7 +235,7 @@ export function ProductsPanel({ accessToken }: { accessToken: string }) {
         />
         <input
           data-testid="product-min"
-          className="athena-input"
+          className="movvo-input"
           type="number"
           placeholder="Estoque mín."
           value={form.minStock}
@@ -243,7 +243,7 @@ export function ProductsPanel({ accessToken }: { accessToken: string }) {
         />
         <input
           data-testid="product-qty"
-          className="athena-input"
+          className="movvo-input"
           type="number"
           placeholder="Qtd inicial"
           value={form.qtyOnHand}
@@ -251,7 +251,7 @@ export function ProductsPanel({ accessToken }: { accessToken: string }) {
         />
         <input
           data-testid="product-photo"
-          className="athena-input"
+          className="movvo-input"
           placeholder="URL da foto"
           value={form.photoUrl}
           onChange={(e) => setForm((f) => ({ ...f, photoUrl: e.target.value }))}
@@ -266,7 +266,7 @@ export function ProductsPanel({ accessToken }: { accessToken: string }) {
       <div className="flex gap-2">
         <input
           data-testid="product-search"
-          className="athena-input max-w-sm"
+          className="movvo-input max-w-sm"
           placeholder="Buscar nome/SKU/barcode"
           value={q}
           onChange={(e) => setQ(e.target.value)}
@@ -374,7 +374,7 @@ export function StockMovementsPanel({ accessToken }: { accessToken: string }) {
       <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <select
           data-testid="movement-product"
-          className="athena-input"
+          className="movvo-input"
           value={productId}
           onChange={(e) => setProductId(e.target.value)}
           required
@@ -388,7 +388,7 @@ export function StockMovementsPanel({ accessToken }: { accessToken: string }) {
         </select>
         <select
           data-testid="movement-type"
-          className="athena-input"
+          className="movvo-input"
           value={type}
           onChange={(e) => setType(e.target.value as StockMovementType)}
         >
@@ -400,7 +400,7 @@ export function StockMovementsPanel({ accessToken }: { accessToken: string }) {
         </select>
         <input
           data-testid="movement-qty"
-          className="athena-input"
+          className="movvo-input"
           type="number"
           step="0.001"
           value={qty}
@@ -409,7 +409,7 @@ export function StockMovementsPanel({ accessToken }: { accessToken: string }) {
         />
         <input
           data-testid="movement-reason"
-          className="athena-input"
+          className="movvo-input"
           placeholder="Motivo"
           value={reason}
           onChange={(e) => setReason(e.target.value)}
@@ -565,7 +565,7 @@ export function PdvWorkstation({ accessToken }: { accessToken: string }) {
       <form onSubmit={addByCode} className="flex flex-wrap gap-2">
         <input
           data-testid="pdv-code"
-          className="athena-input min-w-[220px] flex-1"
+          className="movvo-input min-w-[220px] flex-1"
           placeholder="SKU ou código de barras"
           value={code}
           onChange={(e) => setCode(e.target.value)}
@@ -592,7 +592,7 @@ export function PdvWorkstation({ accessToken }: { accessToken: string }) {
                 <td className="py-2">{l.name}</td>
                 <td>
                   <input
-                    className="athena-input w-20"
+                    className="movvo-input w-20"
                     type="number"
                     min={0.001}
                     step={0.001}
@@ -630,7 +630,7 @@ export function PdvWorkstation({ accessToken }: { accessToken: string }) {
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <input
           data-testid="pdv-discount"
-          className="athena-input"
+          className="movvo-input"
           type="number"
           min={0}
           step={0.01}
@@ -640,7 +640,7 @@ export function PdvWorkstation({ accessToken }: { accessToken: string }) {
         />
         <select
           data-testid="pdv-payment"
-          className="athena-input"
+          className="movvo-input"
           value={paymentMethod}
           onChange={(e) => setPaymentMethod(e.target.value as PosPaymentMethod)}
         >
@@ -653,7 +653,7 @@ export function PdvWorkstation({ accessToken }: { accessToken: string }) {
         <div className="flex gap-2 sm:col-span-2">
           <input
             data-testid="pdv-student-q"
-            className="athena-input flex-1"
+            className="movvo-input flex-1"
             placeholder="Buscar aluno"
             value={studentQ}
             onChange={(e) => setStudentQ(e.target.value)}
@@ -665,7 +665,7 @@ export function PdvWorkstation({ accessToken }: { accessToken: string }) {
         {students.length > 0 ? (
           <select
             data-testid="pdv-student"
-            className="athena-input sm:col-span-2"
+            className="movvo-input sm:col-span-2"
             value={studentId}
             onChange={(e) => setStudentId(e.target.value)}
           >
@@ -754,26 +754,26 @@ export function SuppliersPanel({ accessToken }: { accessToken: string }) {
       <form onSubmit={onCreate} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <input
           data-testid="supplier-name"
-          className="athena-input"
+          className="movvo-input"
           placeholder="Nome"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
         />
         <input
-          className="athena-input"
+          className="movvo-input"
           placeholder="CNPJ/CPF"
           value={document}
           onChange={(e) => setDocument(e.target.value)}
         />
         <input
-          className="athena-input"
+          className="movvo-input"
           placeholder="Telefone"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
         />
         <input
-          className="athena-input"
+          className="movvo-input"
           placeholder="E-mail"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -885,7 +885,7 @@ export function PurchaseOrdersPanel({ accessToken }: { accessToken: string }) {
       <form onSubmit={onCreate} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <select
           data-testid="purchase-supplier"
-          className="athena-input"
+          className="movvo-input"
           value={supplierId}
           onChange={(e) => setSupplierId(e.target.value)}
           required
@@ -899,7 +899,7 @@ export function PurchaseOrdersPanel({ accessToken }: { accessToken: string }) {
         </select>
         <select
           data-testid="purchase-product"
-          className="athena-input"
+          className="movvo-input"
           value={productId}
           onChange={(e) => setProductId(e.target.value)}
           required
@@ -913,7 +913,7 @@ export function PurchaseOrdersPanel({ accessToken }: { accessToken: string }) {
         </select>
         <input
           data-testid="purchase-qty"
-          className="athena-input"
+          className="movvo-input"
           type="number"
           min={0.001}
           step={0.001}
@@ -1050,7 +1050,7 @@ export function InventoryCountWizard({ accessToken }: { accessToken: string }) {
                   <td>
                     <input
                       data-testid={`count-qty-${line.productId}`}
-                      className="athena-input w-28"
+                      className="movvo-input w-28"
                       type="number"
                       step={0.001}
                       value={qtys[line.productId] ?? ''}

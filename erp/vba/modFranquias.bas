@@ -157,7 +157,7 @@ Public Sub CadastrarFranqueadora()
         MsgErro "Módulo Franquias exige plano Enterprise."
         Exit Sub
     End If
-    nome = Trim$(InputBox("Nome da franqueadora:", "Nova Franqueadora", "ATHENAS FRANCHISE"))
+    nome = Trim$(InputBox("Nome da franqueadora:", "Nova Franqueadora", "ATHENA FRANCHISE"))
     If Len(nome) = 0 Then Exit Sub
     cnpj = Trim$(InputBox("CNPJ:", "Nova Franqueadora"))
     razao = Trim$(InputBox("Razão Social:", "Nova Franqueadora", nome & " LTDA"))

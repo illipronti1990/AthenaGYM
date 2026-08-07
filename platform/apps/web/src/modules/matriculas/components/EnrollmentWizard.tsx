@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import type { Plan, StudentListItem } from '@athena/shared';
-import { PLAN_TYPE_LABELS, type PlanType } from '@athena/shared';
+import type { Plan, StudentListItem } from '@movvo/shared';
+import { PLAN_TYPE_LABELS, type PlanType } from '@movvo/shared';
 import {
   Button,
   FormInput,
@@ -14,7 +14,7 @@ import {
   Wizard,
   formatCurrencyBRL,
   type WizardStep,
-} from '@athena/ui';
+} from '@movvo/ui';
 import { listAlunos } from '@/modules/alunos/services/alunosApi';
 import { matriculasApi } from '../services/matriculasApi';
 import { useToast } from '@/components/ui/Toast';
@@ -30,7 +30,7 @@ const STEPS: WizardStep[] = [
   { id: 'done', title: 'Concluir', description: 'Finalizar matrícula' },
 ];
 
-const DRAFT_KEY = 'athena_enrollment_wizard_draft';
+const DRAFT_KEY = 'movvo_enrollment_wizard_draft';
 
 export function EnrollmentWizard({
   accessToken,
@@ -266,7 +266,7 @@ export function EnrollmentWizard({
               }}
             />
             <div>
-              <p className="athena-label">Valor final</p>
+              <p className="movvo-label">Valor final</p>
               <p className="text-xl text-[var(--gold)]">{formatCurrencyBRL(finalPrice)}</p>
             </div>
           </FormRow>

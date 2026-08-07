@@ -9,7 +9,7 @@ import {
   ToastProvider,
   TooltipProvider,
   useNetworkStatus,
-} from '@athena/ui';
+} from '@movvo/ui';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { BrandingProvider } from '@/components/BrandingProvider';
 import { FeatureFlagsProvider } from '@/components/FeatureFlagsProvider';
@@ -44,7 +44,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
                 <TooltipProvider>
                   <ToastProvider>
                     <ConfirmProvider>
-                      <PerformanceMonitor />
+                      <PerformanceMonitor
+                        rumEndpoint={`${API_URL.replace(/\/$/, '')}/observability/rum`}
+                      />
                       <GlobalErrorListeners />
                       <NetworkChrome>{children}</NetworkChrome>
                     </ConfirmProvider>

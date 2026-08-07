@@ -10,7 +10,7 @@ export function Navbar({
   className?: string;
 }) {
   return (
-    <header className={`athena-navbar ${className}`}>
+    <header className={`movvo-navbar ${className}`}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>{left}</div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>{right}</div>
     </header>

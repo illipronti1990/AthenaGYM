@@ -11,7 +11,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { STUDENT_STATUSES } from '@athena/shared';
+import { STUDENT_STATUSES } from '@movvo/shared';
 import { IsUuidString } from '../../common/validators/is-uuid-string';
 
 export class StudentAddressDto {

@@ -4,7 +4,7 @@ import {
   NotFoundException,
   StreamableFile,
 } from '@nestjs/common';
-import type { AuthContext } from '@athena/shared';
+import type { AuthContext } from '@movvo/shared';
 import { SupabaseService } from '../supabase/supabase.service';
 import { SettingsService } from '../settings/settings.service';
 import { buildPdf } from './pdf.util';

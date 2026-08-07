@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { mapInternalToPublic } from '@athena/event-sdk';
+import { mapInternalToPublic } from '@movvo/event-sdk';
 import { PlatformService } from '../platform.service';
 import {
   API_CLIENT_CREATED,

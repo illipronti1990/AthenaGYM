@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Page, PageHeader, PageContent } from '@athena/ui';
+import { Page, PageHeader, PageContent } from '@movvo/ui';
 import { requireAccessToken } from '@/lib/auth/token';
 import { apiGetMe, apiListUsers } from '@/services/api';
 import { AlunosListPanel } from '@/modules/alunos/components/AlunosListPanel';
@@ -46,7 +46,7 @@ export default async function StudentsPage() {
         title="Alunos"
         description="CRM da academia — visão completa de cada aluno em um só lugar."
         actions={
-          <Link href="/app/alunos/novo" className="athena-btn athena-btn-primary">
+          <Link href="/app/alunos/novo" className="movvo-btn movvo-btn-primary">
             Novo aluno
           </Link>
         }

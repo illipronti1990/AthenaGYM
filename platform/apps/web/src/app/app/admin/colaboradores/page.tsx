@@ -8,7 +8,7 @@ export default async function AdminEmployeesPage() {
     <div className="space-y-4">
       <Breadcrumb items={[{ label: 'App', href: '/app' }, { label: 'Admin', href: '/app/admin/dashboard' }, { label: 'Colaboradores' }]} />
       <div>
-        <h1 className="athena-title text-3xl">Colaboradores</h1>
+        <h1 className="movvo-title text-3xl">Colaboradores</h1>
         <p className="mt-1 text-sm text-[var(--muted)]">Cadastro RH (independente do login)</p>
       </div>
       <EmployeesPanel accessToken={accessToken} />

@@ -1,4 +1,4 @@
-import { athenaIcons, type AthenaIconName } from '@athena/ui';
+import { athenaIcons, type AthenaIconName } from '@movvo/ui';
 import type { LucideIcon } from 'lucide-react';
 
 export type NavItem = {
@@ -213,8 +213,56 @@ export const navGroups: NavGroup[] = [
       { href: '/app/platform/marketplace', label: 'Marketplace SaaS', icon: athenaIcons.store, anyOfPermissions: ['marketplace.read'] },
       { href: '/app/platform/environments', label: 'Ambientes', icon: athenaIcons.settings, anyOfPermissions: ['saas.read'] },
       { href: '/app/platform/reports', label: 'Relatórios SaaS', icon: athenaIcons.exports, anyOfPermissions: ['saas.reports'] },
+      {
+        href: '/app/platform/observability',
+        label: 'Observabilidade',
+        icon: athenaIcons.health,
+        keywords: ['health', 'redis', 'métricas', 'filas', 'devops'],
+        anyOfPermissions: ['observability.read', 'platform.manage', 'saas.read'],
+      },
       { href: '/app/developers', label: 'Developers', icon: athenaIcons.help, anyOfPermissions: ['platform.read'] },
       { href: '/app/marketplace', label: 'Marketplace', icon: athenaIcons.store, anyOfPermissions: ['marketplace.read'] },
+    ],
+  },
+  {
+    id: 'security',
+    label: 'Segurança',
+    icon: athenaIcons.admin,
+    items: [
+      {
+        href: '/app/security/dashboard',
+        label: 'Dashboard segurança',
+        icon: athenaIcons.dashboard,
+        keywords: ['mfa', 'lgpd', 'compliance'],
+        anyOfPermissions: ['security.read', 'audit.read'],
+      },
+      {
+        href: '/app/security/sessions',
+        label: 'Sessões e MFA',
+        icon: athenaIcons.profile,
+        keywords: ['sessão', 'dispositivo', 'mfa', 'otp'],
+      },
+      {
+        href: '/app/security/audit',
+        label: 'Auditoria',
+        icon: athenaIcons.exports,
+        keywords: ['logs', 'audit'],
+        anyOfPermissions: ['audit.read', 'security.read'],
+      },
+      {
+        href: '/app/security/lgpd',
+        label: 'LGPD',
+        icon: athenaIcons.users,
+        keywords: ['privacidade', 'exportar', 'anonimizar'],
+        anyOfPermissions: ['lgpd.manage', 'lgpd.read'],
+      },
+      {
+        href: '/app/security/retention',
+        label: 'Retenção',
+        icon: athenaIcons.settings,
+        keywords: ['retenção', 'purge'],
+        anyOfPermissions: ['security.write', 'security.read'],
+      },
     ],
   },
   {

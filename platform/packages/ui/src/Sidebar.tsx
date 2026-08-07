@@ -18,7 +18,7 @@ export function SidebarNav({
   footer?: ReactNode;
 }) {
   return (
-    <aside className="athena-sidebar">
+    <aside className="movvo-sidebar">
       {header}
       <div style={{ flex: 1, overflowY: 'auto', paddingTop: 8 }}>
         {items.map((item) => {
@@ -30,7 +30,7 @@ export function SidebarNav({
             <a
               key={item.href}
               href={item.href}
-              className={`athena-sidebar-link ${active ? 'athena-sidebar-link-active' : ''}`}
+              className={`movvo-sidebar-link ${active ? 'movvo-sidebar-link-active' : ''}`}
             >
               {item.icon ? <span aria-hidden style={{ display: 'inline-flex' }}>{item.icon}</span> : null}
               <span>{item.label}</span>

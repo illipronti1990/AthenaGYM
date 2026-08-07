@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { CommandDashboard, DashboardChartPeriod, DashboardLayoutItem } from '@athena/shared';
+import type { CommandDashboard, DashboardChartPeriod, DashboardLayoutItem } from '@movvo/shared';
 import {
   Button,
   ErrorState,
@@ -11,7 +11,7 @@ import {
   PageHeader,
   PageContent,
   pageQualityAttrs,
-} from '@athena/ui';
+} from '@movvo/ui';
 import { Settings2 } from 'lucide-react';
 import { useBranding } from '@/components/BrandingProvider';
 import { dashboardApi } from '../services/dashboardApi';
@@ -37,11 +37,11 @@ import { FALLBACK_DASHBOARD_LAYOUT } from '../utils/layout';
 
 const RevenueChart = dynamic(() => import('./RevenueChart').then((m) => m.RevenueChart), {
   ssr: false,
-  loading: () => <div className="athena-card h-48 animate-pulse" />,
+  loading: () => <div className="movvo-card h-48 animate-pulse" />,
 });
 const CheckinChart = dynamic(() => import('./CheckinChart').then((m) => m.CheckinChart), {
   ssr: false,
-  loading: () => <div className="athena-card h-48 animate-pulse" />,
+  loading: () => <div className="movvo-card h-48 animate-pulse" />,
 });
 const DashboardCustomizer = dynamic(
   () => import('./DashboardCustomizer').then((m) => m.DashboardCustomizer),

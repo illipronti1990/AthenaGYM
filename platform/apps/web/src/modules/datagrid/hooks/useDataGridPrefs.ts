@@ -1,8 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { DataGridSort, SavedFilter, TablePreferences } from '@athena/shared';
-import type { TablePreferencesState } from '@athena/ui';
+import type { DataGridSort, SavedFilter, TablePreferences } from '@movvo/shared';
+import type { TablePreferencesState } from '@movvo/ui';
 import { datagridApi } from '../services/datagridApi';
 
 const cache = new Map<string, TablePreferencesState>();

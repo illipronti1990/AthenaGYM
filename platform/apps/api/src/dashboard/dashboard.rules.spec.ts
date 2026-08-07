@@ -1,4 +1,4 @@
-import { DEFAULT_DASHBOARD_LAYOUT, layoutForPreset, percentDelta } from '@athena/shared';
+import { DEFAULT_DASHBOARD_LAYOUT, layoutForPreset, percentDelta } from '@movvo/shared';
 import {
   activityKindFromAudit,
   greetingForHour,

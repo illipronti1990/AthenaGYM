@@ -1,8 +1,8 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import type { StudentDocument } from '@athena/shared';
-import { Button, Card } from '@athena/ui';
+import type { StudentDocument } from '@movvo/shared';
+import { Button, Card } from '@movvo/ui';
 import { useToast } from '@/components/ui/Toast';
 import { uploadAlunoDocument } from '../services/alunosApi';
 
@@ -53,7 +53,7 @@ export function AlunoDocumentsPanel({
           <label className="flex flex-col gap-1 text-sm">
             Tipo
             <select
-              className="athena-input"
+              className="movvo-input"
               value={docType}
               onChange={(e) => setDocType(e.target.value)}
             >

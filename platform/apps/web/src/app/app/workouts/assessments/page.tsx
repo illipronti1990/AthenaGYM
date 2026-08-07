@@ -6,10 +6,10 @@ export default async function AssessmentsPage() {
   const accessToken = await requireAccessToken();
   return (
     <div className="space-y-4">
-      <Link href="/app/workouts" className="athena-link text-sm text-[var(--gold)]">
+      <Link href="/app/workouts" className="movvo-link text-sm text-[var(--gold)]">
         ← Treinos
       </Link>
-      <h1 className="athena-title text-3xl">Avaliações físicas</h1>
+      <h1 className="movvo-title text-3xl">Avaliações físicas</h1>
       <AssessmentsPanel accessToken={accessToken} />
     </div>
   );

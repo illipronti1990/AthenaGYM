@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Logo } from '@athena/ui';
+import { Logo } from '@movvo/ui';
 import { trackEvent } from '../lib/analytics';
 
 export function MarketingHero() {

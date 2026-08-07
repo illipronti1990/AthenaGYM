@@ -1,5 +1,5 @@
-import type { ClassEnrollment, Schedule } from '@athena/shared';
-import { canCancelClassReservation, classCancelBlockMessage } from '@athena/shared';
+import type { ClassEnrollment, Schedule } from '@movvo/shared';
+import { canCancelClassReservation, classCancelBlockMessage } from '@movvo/shared';
 
 export type AgendaClassSummary = {
   id: string;

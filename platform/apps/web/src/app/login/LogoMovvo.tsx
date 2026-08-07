@@ -34,12 +34,9 @@ export function LogoMovvo({
       alt="Movvo ERP"
       width={dims.width}
       height={dims.height}
-      className={`movvo-login-logo athena-login-logo ${className}`.trim()}
+      className={`movvo-login-logo movvo-login-logo ${className}`.trim()}
       decoding="async"
       data-testid="logo-movvo"
     />
   );
 }
-
-/** @deprecated Use LogoMovvo */
-export const LogoAthena = LogoMovvo;

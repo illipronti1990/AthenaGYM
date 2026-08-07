@@ -5,7 +5,7 @@ import {
   SkeletonForm,
   SkeletonCard,
   SkeletonChart,
-} from '@athena/ui';
+} from '@movvo/ui';
 
 export function Skeleton({ className = '' }: { className?: string }) {
   return <AthenaSkeleton className={className} />;

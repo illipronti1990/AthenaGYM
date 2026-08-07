@@ -1,20 +1,20 @@
 'use client';
 
 import Link from 'next/link';
-import type { DashboardGoal } from '@athena/shared';
-import { EmptyState } from '@athena/ui';
+import type { DashboardGoal } from '@movvo/shared';
+import { EmptyState } from '@movvo/ui';
 import { formatKpi } from '../utils/format';
 
 export function GoalWidget({ goals }: { goals: DashboardGoal[] }) {
   if (!goals.length) {
     return (
-      <div className="athena-card h-full" data-testid="goal-widget">
-        <h3 className="athena-h3 mb-4 text-[var(--gold)]">Metas do mês</h3>
+      <div className="movvo-card h-full" data-testid="goal-widget">
+        <h3 className="movvo-h3 mb-4 text-[var(--gold)]">Metas do mês</h3>
         <EmptyState
           title="Nenhuma meta configurada"
           description="Defina metas de receita e matrículas para acompanhar o progresso."
           action={
-            <Link href="/app/finance" className="athena-btn athena-btn-primary athena-btn-sm">
+            <Link href="/app/finance" className="movvo-btn movvo-btn-primary movvo-btn-sm">
               Ver Financeiro
             </Link>
           }
@@ -24,8 +24,8 @@ export function GoalWidget({ goals }: { goals: DashboardGoal[] }) {
   }
 
   return (
-    <div className="athena-card h-full" data-testid="goal-widget">
-      <h3 className="athena-h3 mb-4 text-[var(--gold)]">Metas do mês</h3>
+    <div className="movvo-card h-full" data-testid="goal-widget">
+      <h3 className="movvo-h3 mb-4 text-[var(--gold)]">Metas do mês</h3>
       <ul className="space-y-4">
         {goals.map((g) => {
           const pct = g.target > 0 ? Math.min(100, Math.round((g.current / g.target) * 100)) : 0;

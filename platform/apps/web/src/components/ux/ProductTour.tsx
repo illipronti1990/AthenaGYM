@@ -78,28 +78,28 @@ export function ProductTour() {
         <p className="text-xs uppercase tracking-wide text-[var(--gold)] mb-2">
           Tour · passo {step + 1} de {STEPS.length}
         </p>
-        <h2 className="athena-title text-xl">{current.title}</h2>
+        <h2 className="movvo-title text-xl">{current.title}</h2>
         <p className="text-sm text-[var(--muted)] mt-2">{current.body}</p>
         <div className="mt-4 flex flex-wrap gap-2 justify-between">
-          <button type="button" className="athena-btn athena-btn-secondary text-sm" onClick={finish} data-testid="tour-skip">
+          <button type="button" className="movvo-btn movvo-btn-secondary text-sm" onClick={finish} data-testid="tour-skip">
             Pular tour
           </button>
           <div className="flex gap-2">
             <Link
               href={current.href}
-              className="athena-btn athena-btn-secondary text-sm"
+              className="movvo-btn movvo-btn-secondary text-sm"
               onClick={() => (isLast ? finish() : setStep((s) => s + 1))}
             >
               Abrir tela
             </Link>
             {isLast ? (
-              <button type="button" className="athena-btn athena-btn-primary text-sm" onClick={finish} data-testid="tour-finish">
+              <button type="button" className="movvo-btn movvo-btn-primary text-sm" onClick={finish} data-testid="tour-finish">
                 Concluir
               </button>
             ) : (
               <button
                 type="button"
-                className="athena-btn athena-btn-primary text-sm"
+                className="movvo-btn movvo-btn-primary text-sm"
                 onClick={() => setStep((s) => s + 1)}
                 data-testid="tour-next"
               >

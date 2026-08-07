@@ -71,6 +71,7 @@ export const PERMISSION_CODES = [
   'platform.read',
   'platform.manage',
   'platform.webhooks',
+  'observability.read',
   'saas.read',
   'saas.manage',
   'saas.billing',
@@ -98,6 +99,10 @@ export const PERMISSION_CODES = [
   'admin.incidents',
   'admin.announcements',
   'admin.reports',
+  'security.read',
+  'security.write',
+  'lgpd.read',
+  'lgpd.manage',
 ] as const;
 
 export type PermissionCode = (typeof PERMISSION_CODES)[number];

@@ -1,4 +1,4 @@
-import { STUDENT_STATUSES } from '@athena/shared';
+import { STUDENT_STATUSES } from '@movvo/shared';
 
 describe('student status catalog', () => {
   it('includes lifecycle statuses', () => {

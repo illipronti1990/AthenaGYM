@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ATHENAS GYM — Portal</title>
+  <title>ATHENA GYM — Portal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet" />
   <style>
@@ -73,7 +73,7 @@
 </head>
 <body>
   <div class="wrap">
-    <h1>ATHENAS GYM</h1>
+    <h1>ATHENA GYM</h1>
     <p class="sub">Portal Web · Sprint 11.0 · mesma base do ERP via API</p>
 
     <section id="login" class="card">
@@ -108,11 +108,11 @@
   </div>
 
   <script>
-    const API = localStorage.getItem("athenas_api") || "http://127.0.0.1:8002";
+    const API = localStorage.getItem("athena_api") || "http://127.0.0.1:8002";
 
     async function api(path, opts = {}) {
       const headers = { "Content-Type": "application/json", ...(opts.headers || {}) };
-      const token = localStorage.getItem("athenas_token");
+      const token = localStorage.getItem("athena_token");
       if (token) headers.Authorization = `Bearer ${token}`;
       const res = await fetch(API + path, { ...opts, headers });
       if (!res.ok) {
@@ -178,7 +178,7 @@
             senha: document.getElementById("senha").value,
           }),
         });
-        localStorage.setItem("athenas_token", data.token);
+        localStorage.setItem("athena_token", data.token);
         await loadDashboard(data);
       } catch (e) {
         msg.textContent = e.message;
@@ -186,18 +186,18 @@
     };
 
     document.getElementById("btnSair").onclick = () => {
-      localStorage.removeItem("athenas_token");
+      localStorage.removeItem("athena_token");
       location.reload();
     };
 
     (async () => {
-      const token = localStorage.getItem("athenas_token");
+      const token = localStorage.getItem("athena_token");
       if (!token) return;
       try {
         const me = await api("/me");
         await loadDashboard(me);
       } catch {
-        localStorage.removeItem("athenas_token");
+        localStorage.removeItem("athena_token");
       }
     })();
   </script>

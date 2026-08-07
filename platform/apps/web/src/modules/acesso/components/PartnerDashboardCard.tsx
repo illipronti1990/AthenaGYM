@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Button } from '@athena/ui';
+import { Button } from '@movvo/ui';
 import { useToast } from '@/components/ui/Toast';
 import { integracoesApi } from '../services/acessoApi';
 
@@ -62,7 +62,7 @@ export function PartnerDashboardCard({
     >
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h2 className="athena-title text-xl">{title}</h2>
+          <h2 className="movvo-title text-xl">{title}</h2>
           <p className="text-xs text-[var(--muted)]">
             {dash?.status || '…'}
             {dash?.lastSyncAt

@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { SalesDashboard } from '@athena/shared';
-import { Card, chartColors } from '@athena/ui';
+import type { SalesDashboard } from '@movvo/shared';
+import { Card, chartColors } from '@movvo/ui';
 import { salesApi } from '../services/salesApi';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';

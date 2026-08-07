@@ -1,8 +1,8 @@
 'use client';
 
 import { FormEvent, useEffect, useMemo, useState } from 'react';
-import type { Role, UserListItem } from '@athena/shared';
-import { Button } from '@athena/ui';
+import type { Role, UserListItem } from '@movvo/shared';
+import { Button } from '@movvo/ui';
 import { apiDeleteUser, apiInviteUser, apiListRoles, apiListUsers } from '@/services/api';
 import { useToast } from '@/components/ui/Toast';
 import { useConfirm } from '@/components/ux/ConfirmProvider';
@@ -124,15 +124,15 @@ export function TrainersPanel({ accessToken }: { accessToken: string }) {
   return (
     <div className="space-y-8">
       <section>
-        <h2 className="athena-title mb-3 text-lg">Professores cadastrados</h2>
+        <h2 className="movvo-title mb-3 text-lg">Professores cadastrados</h2>
         <PageState
           state={!trainers ? 'loading' : trainers.length === 0 ? 'empty' : 'ready'}
           emptyTitle="Nenhum professor cadastrado"
           emptyDescription="Convide a equipe para começar."
           onRetry={() => void load()}
         >
-          <div className="athena-list athena-table-scroll overflow-x-auto">
-            <table className="athena-table" data-testid="trainers-table">
+          <div className="movvo-list movvo-table-scroll overflow-x-auto">
+            <table className="movvo-table" data-testid="trainers-table">
               <thead>
                 <tr>
                   <th>Nome</th>
@@ -176,7 +176,7 @@ export function TrainersPanel({ accessToken }: { accessToken: string }) {
       </section>
 
       <section>
-        <h2 className="athena-title mb-3 text-lg">Novo professor</h2>
+        <h2 className="movvo-title mb-3 text-lg">Novo professor</h2>
         <form
           onSubmit={onCreate}
           className="grid max-w-xl gap-3 sm:grid-cols-2"
@@ -188,7 +188,7 @@ export function TrainersPanel({ accessToken }: { accessToken: string }) {
             placeholder="Nome completo"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            className="athena-input sm:col-span-2"
+            className="movvo-input sm:col-span-2"
             data-testid="trainer-name"
           />
           <input
@@ -197,21 +197,21 @@ export function TrainersPanel({ accessToken }: { accessToken: string }) {
             placeholder="E-mail"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="athena-input"
+            className="movvo-input"
             data-testid="trainer-email"
           />
           <input
             placeholder="Telefone"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            className="athena-input"
+            className="movvo-input"
             data-testid="trainer-phone"
           />
           <select
             required
             value={roleId}
             onChange={(e) => setRoleId(e.target.value)}
-            className="athena-input sm:col-span-2"
+            className="movvo-input sm:col-span-2"
             data-testid="trainer-role"
           >
             {trainerRoles.length === 0 ? (

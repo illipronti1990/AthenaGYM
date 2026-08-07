@@ -10,7 +10,7 @@ import {
   predictChurn,
   predictLeadConversion,
   toCsv,
-} from '@athena/sdk-bi';
+} from '@movvo/sdk-bi';
 
 describe('analytics BI rules', () => {
   it('computes KPI helpers', () => {

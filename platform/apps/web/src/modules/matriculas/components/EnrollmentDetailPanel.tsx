@@ -2,9 +2,9 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import type { Enrollment, EnrollmentEvent } from '@athena/shared';
-import { ENROLLMENT_STATUS_LABELS, type EnrollmentStatus } from '@athena/shared';
-import { Button, formatCurrencyBRL } from '@athena/ui';
+import type { Enrollment, EnrollmentEvent } from '@movvo/shared';
+import { ENROLLMENT_STATUS_LABELS, type EnrollmentStatus } from '@movvo/shared';
+import { Button, formatCurrencyBRL } from '@movvo/ui';
 import { matriculasApi } from '../services/matriculasApi';
 import { EnrollmentTimeline } from './EnrollmentTimeline';
 import { useToast } from '@/components/ui/Toast';
@@ -53,7 +53,7 @@ export function EnrollmentDetailPanel({
       <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
         <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h2 className="athena-title text-2xl">{data.studentName || 'Aluno'}</h2>
+            <h2 className="movvo-title text-2xl">{data.studentName || 'Aluno'}</h2>
             <p className="text-sm text-[var(--muted)]">{data.planName}</p>
           </div>
           <span className="rounded-full border border-[var(--border)] px-3 py-1 text-sm">
@@ -111,7 +111,7 @@ export function EnrollmentDetailPanel({
       </div>
 
       <div>
-        <h3 className="athena-title mb-3 text-lg">Histórico</h3>
+        <h3 className="movvo-title mb-3 text-lg">Histórico</h3>
         <EnrollmentTimeline events={data.events || []} />
       </div>
     </div>

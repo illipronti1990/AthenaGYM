@@ -1,8 +1,8 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import type { Contract, Enrollment, Lead, Plan } from '@athena/shared';
-import { Button } from '@athena/ui';
+import type { Contract, Enrollment, Lead, Plan } from '@movvo/shared';
+import { Button } from '@movvo/ui';
 import { AlunoSelect } from '@/modules/alunos/components/AlunoSelect';
 import { salesApi } from '../services/salesApi';
 import { TableSkeleton } from '@/components/ui/Skeleton';
@@ -53,12 +53,12 @@ export function EnrollmentsPanel({ accessToken }: { accessToken: string }) {
           accessToken={accessToken}
           value={studentId}
           onChange={setStudentId}
-          className="athena-input min-w-[280px]"
+          className="movvo-input min-w-[280px]"
         />
         <select
           value={planId}
           onChange={(e) => setPlanId(e.target.value)}
-          className="athena-input w-auto"
+          className="movvo-input w-auto"
         >
           {plans.map((p) => (
             <option key={p.id} value={p.id}>
@@ -71,9 +71,9 @@ export function EnrollmentsPanel({ accessToken }: { accessToken: string }) {
       {!items ? (
         <TableSkeleton />
       ) : (
-        <ul className="athena-list">
+        <ul className="movvo-list">
           {items.map((i) => (
-            <li key={i.id} className="athena-list-item">
+            <li key={i.id} className="movvo-list-item">
               {i.id.slice(0, 8)}… · aluno {i.studentId.slice(0, 8)}… · plano {i.planId.slice(0, 8)}… ·{' '}
               {i.status}
             </li>
@@ -145,7 +145,7 @@ export function ContractsPanel({ accessToken }: { accessToken: string }) {
         <select
           value={leadId}
           onChange={(e) => setLeadId(e.target.value)}
-          className="athena-input w-auto"
+          className="movvo-input w-auto"
         >
           <option value="">Lead (opcional se já houver aluno)</option>
           {leads.map((l) => (
@@ -157,7 +157,7 @@ export function ContractsPanel({ accessToken }: { accessToken: string }) {
         <select
           value={planId}
           onChange={(e) => setPlanId(e.target.value)}
-          className="athena-input w-auto"
+          className="movvo-input w-auto"
         >
           {plans.map((p) => (
             <option key={p.id} value={p.id}>
@@ -170,9 +170,9 @@ export function ContractsPanel({ accessToken }: { accessToken: string }) {
       {!items ? (
         <TableSkeleton />
       ) : (
-        <ul className="athena-list">
+        <ul className="movvo-list">
           {items.map((c) => (
-            <li key={c.id} className="athena-list-item flex-wrap">
+            <li key={c.id} className="movvo-list-item flex-wrap">
               <span>
                 {c.contractNumber} · {c.status}
                 {c.signedAt ? ` · ${new Date(c.signedAt).toLocaleString('pt-BR')}` : ''}

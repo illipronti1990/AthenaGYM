@@ -1,8 +1,19 @@
 import Link from 'next/link';
-import { Page, PageHeader, PageContent, PageFilters, pageQualityAttrs } from '@athena/ui';
+import dynamic from 'next/dynamic';
+import { Page, PageHeader, PageContent, PageFilters, pageQualityAttrs } from '@movvo/ui';
 import { requireAccessToken } from '@/lib/auth/token';
 import { BI_LINKS } from '@/modules/bi/utils/biLinks';
-import { ExecutiveBiPanel, InsightsBiPanel } from '@/modules/bi/components/BiPanels';
+
+const ExecutiveBiPanel = dynamic(
+  () =>
+    import('@/modules/bi/components/BiPanels').then((m) => m.ExecutiveBiPanel),
+  { loading: () => <p className="text-sm text-[var(--muted)]">Carregando executivo…</p> },
+);
+const InsightsBiPanel = dynamic(
+  () =>
+    import('@/modules/bi/components/BiPanels').then((m) => m.InsightsBiPanel),
+  { loading: () => <p className="text-sm text-[var(--muted)]">Carregando insights…</p> },
+);
 
 export default async function BiHubPage() {
   const accessToken = await requireAccessToken();
@@ -15,7 +26,7 @@ export default async function BiHubPage() {
       />
       <PageFilters>
         {BI_LINKS.filter(([, href]) => href !== '/app/bi').map(([label, href]) => (
-          <Link key={href} href={href} className="athena-chip-nav">
+          <Link key={href} href={href} className="movvo-chip-nav">
             {label}
           </Link>
         ))}

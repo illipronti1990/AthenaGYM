@@ -31,17 +31,17 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="athena-error-boundary" role="alert" data-testid="error-boundary">
-          <p className="athena-h2" style={{ color: 'var(--gold)' }}>
+        <div className="movvo-error-boundary" role="alert" data-testid="error-boundary">
+          <p className="movvo-h2" style={{ color: 'var(--gold)' }}>
             Ops!
           </p>
-          <h2 className="athena-h3 mt-2">
+          <h2 className="movvo-h3 mt-2">
             {this.props.fallbackTitle || 'Algo deu errado'}
           </h2>
-          <p className="athena-muted mt-2 text-sm">
+          <p className="movvo-muted mt-2 text-sm">
             {this.state.message || 'Erro inesperado. Nossa equipe já pode analisar o registro.'}
           </p>
-          <div className="athena-error-boundary-actions">
+          <div className="movvo-error-boundary-actions">
             <Button type="button" onClick={this.reset}>
               Tentar novamente
             </Button>

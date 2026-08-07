@@ -1,4 +1,4 @@
--- ATHENAS GYM — Épico 2 Sprint C/D
+-- ATHENA GYM — Épico 2 Sprint C/D
 -- Transferências, professor×unidade, usuário×unidade
 -- python -m scripts.apply_sql_supabase sql/004_epico2_sprint_cd.sql
 

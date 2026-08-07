@@ -1,7 +1,7 @@
 'use client';
 
-import type { DashboardLayoutItem, DashboardWidgetId } from '@athena/shared';
-import { Button } from '@athena/ui';
+import type { DashboardLayoutItem, DashboardWidgetId } from '@movvo/shared';
+import { Button } from '@movvo/ui';
 
 const LABELS: Record<DashboardWidgetId, string> = {
   daySummary: 'Resumo do dia',
@@ -44,10 +44,10 @@ export function DashboardCustomizer({
   }
 
   return (
-    <div className="athena-modal-overlay" role="presentation" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="athena-card athena-modal-panel" role="dialog" aria-label="Personalizar dashboard">
-        <h2 className="athena-h3 mb-2 text-[var(--gold)]">Widgets do dashboard</h2>
-        <p className="athena-caption mb-4">Escolha o que aparece. Arraste os cards para reordenar.</p>
+    <div className="movvo-modal-overlay" role="presentation" onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className="movvo-card movvo-modal-panel" role="dialog" aria-label="Personalizar dashboard">
+        <h2 className="movvo-h3 mb-2 text-[var(--gold)]">Widgets do dashboard</h2>
+        <p className="movvo-caption mb-4">Escolha o que aparece. Arraste os cards para reordenar.</p>
         <ul className="mb-4 space-y-2">
           {layout
             .slice()

@@ -12,7 +12,7 @@ export function AutoSaveIndicator({ status }: { status: FormAutosaveStatus }) {
         : '⚠ Erro ao salvar';
   return (
     <span
-      className={`athena-autosave ${status === 'saved' ? 'is-saved' : status === 'saving' ? 'is-saving' : ''}`}
+      className={`movvo-autosave ${status === 'saved' ? 'is-saved' : status === 'saving' ? 'is-saving' : ''}`}
       data-testid="form-autosave"
     >
       {label}

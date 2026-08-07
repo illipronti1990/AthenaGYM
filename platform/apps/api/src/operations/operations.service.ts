@@ -7,14 +7,14 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { getAccessProvider } from '@athena/sdk-access';
-import type { AuthContext } from '@athena/shared';
+import { getAccessProvider } from '@movvo/sdk-access';
+import type { AuthContext } from '@movvo/shared';
 import {
   canCancelClassReservation,
   classCancelBlockMessage,
   CLASS_CANCEL_CUTOFF_MINUTES,
   QR_TTL_SECONDS,
-} from '@athena/shared';
+} from '@movvo/shared';
 import { randomUUID } from 'crypto';
 import { AuthUser } from '../auth/auth.types';
 import {
@@ -87,7 +87,7 @@ export class OperationsService {
     return (
       this.config.get<string>('QR_SIGNING_SECRET') ||
       this.config.get<string>('DEV_JWT_SECRET') ||
-      'athena-qr-dev-secret'
+      'movvo-qr-dev-secret'
     );
   }
 

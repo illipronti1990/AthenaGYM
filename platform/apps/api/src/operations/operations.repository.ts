@@ -20,7 +20,7 @@ import type {
   PresenceSnapshot,
   Room,
   Schedule,
-} from '@athena/shared';
+} from '@movvo/shared';
 import { SupabaseService } from '../supabase/supabase.service';
 
 export type ScheduleListFilters = {

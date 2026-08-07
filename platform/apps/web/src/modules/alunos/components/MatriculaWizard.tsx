@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import type { Plan } from '@athena/shared';
+import type { Plan } from '@movvo/shared';
 import {
   Button,
   CurrencyInput,
@@ -13,7 +13,7 @@ import {
   FormSelect,
   Wizard,
   type WizardStep,
-} from '@athena/ui';
+} from '@movvo/ui';
 import { createAluno } from '../services/alunosApi';
 import { salesApi } from '@/modules/sales/services/salesApi';
 import { financeApi } from '@/modules/finance/services/financeApi';

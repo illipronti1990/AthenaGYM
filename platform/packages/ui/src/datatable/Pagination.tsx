@@ -19,7 +19,7 @@ export function Pagination({
 }) {
   const pages = Math.max(1, Math.ceil(total / pageSize));
   return (
-    <div className="athena-dg-pagination" data-testid="datagrid-pagination">
+    <div className="movvo-dg-pagination" data-testid="datagrid-pagination">
       <div className="flex items-center gap-2">
         <Button type="button" variant="secondary" size="sm" disabled={page <= 1} onClick={() => onPageChange(page - 1)}>
           ←
@@ -40,7 +40,7 @@ export function Pagination({
       <label className="flex items-center gap-2 text-sm text-[var(--muted)]">
         Registros
         <select
-          className="athena-input w-auto"
+          className="movvo-input w-auto"
           value={pageSize}
           onChange={(e) => onPageSizeChange(Number(e.target.value))}
         >

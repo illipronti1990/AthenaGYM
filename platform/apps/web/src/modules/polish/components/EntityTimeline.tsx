@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { TimelineEvent } from '@athena/shared';
+import type { TimelineEvent } from '@movvo/shared';
 import { polishApi } from '../services/polishApi';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { TableSkeleton } from '@/components/ui/Skeleton';

@@ -48,7 +48,7 @@ export const movvoColorsLight = {
 } as const;
 
 /** @deprecated Use movvoColorsDark — alias for transition sprint */
-export const athenaColors = {
+export const movvoColorsLegacy = {
   red: movvoColorsDark.primary,
   redHover: movvoColorsDark.primaryHover,
   redDark: movvoColorsDark.primaryDark,
@@ -70,7 +70,7 @@ export const athenaColors = {
   chart: movvoColorsDark.chart,
 } as const;
 
-export const athenaColorsLight = {
+export const movvoColorsLegacyLight = {
   red: movvoColorsLight.primary,
   redHover: movvoColorsLight.primaryHover,
   redDark: movvoColorsLight.primaryDark,

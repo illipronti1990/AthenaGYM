@@ -52,7 +52,7 @@ export function CommercialLeadsPanel({ accessToken }: { accessToken: string }) {
     <div className="space-y-4" data-testid="commercial-leads">
       <div className="flex flex-wrap gap-2 items-center">
         <select
-          className="athena-input"
+          className="movvo-input"
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
           data-testid="commercial-status-filter"
@@ -62,7 +62,7 @@ export function CommercialLeadsPanel({ accessToken }: { accessToken: string }) {
             <option key={s.id} value={s.id}>{s.label}</option>
           ))}
         </select>
-        <button type="button" className="athena-btn athena-btn-secondary" onClick={() => void load()}>
+        <button type="button" className="movvo-btn movvo-btn-secondary" onClick={() => void load()}>
           Atualizar
         </button>
       </div>
@@ -107,7 +107,7 @@ export function CommercialLeadsPanel({ accessToken }: { accessToken: string }) {
 
       {selected ? (
         <div className="rounded-xl border border-[var(--border)] p-4 space-y-3" data-testid="commercial-lead-detail">
-          <h2 className="athena-title text-xl">{String(selected.academy_name)}</h2>
+          <h2 className="movvo-title text-xl">{String(selected.academy_name)}</h2>
           <p className="text-sm text-[var(--muted)]">
             {String(selected.full_name)} · {String(selected.city)}
             {selected.state ? `/${String(selected.state)}` : ''} · {String(selected.whatsapp || selected.phone)}
@@ -115,7 +115,7 @@ export function CommercialLeadsPanel({ accessToken }: { accessToken: string }) {
           <label className="block text-sm">
             Notas internas
             <textarea
-              className="athena-input mt-1 w-full"
+              className="movvo-input mt-1 w-full"
               rows={3}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
@@ -127,7 +127,7 @@ export function CommercialLeadsPanel({ accessToken }: { accessToken: string }) {
                 key={s.id}
                 type="button"
                 disabled={busy}
-                className="athena-btn athena-btn-secondary text-xs"
+                className="movvo-btn movvo-btn-secondary text-xs"
                 onClick={() => void updateStatus(String(selected.id), s.id)}
               >
                 {s.label}

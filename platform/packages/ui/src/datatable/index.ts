@@ -1,4 +1,4 @@
-export { AthenaDataGrid } from './AthenaDataGrid';
+export { MovvoDataGrid } from './MovvoDataGrid';
 export { DataGridToolbar } from './DataGridToolbar';
 export { DataGridFilters } from './DataGridFilters';
 export { ColumnSelector } from './ColumnSelector';

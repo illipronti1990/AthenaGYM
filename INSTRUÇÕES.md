@@ -1,4 +1,4 @@
-# INSTRUÇÕES — ATHENAS GYM ERP
+# INSTRUÇÕES — ATHENA GYM ERP
 
 Manual de instalação e uso em **outra máquina Windows**.
 
@@ -24,8 +24,8 @@ Há dois caminhos:
 ## 2. Usar o ERP sem regenerar (mais simples)
 
 1. Copie a pasta do projeto (ou pelo menos o arquivo):
-   - `Excel/ATHENAS_GYM_ERP_COMERCIAL.xlsm`  
-   - ou a cópia na raiz: `ATHENAS_GYM_ERP_COMERCIAL.xlsm`
+   - `Excel/ATHENA_GYM_ERP_COMERCIAL.xlsm`  
+   - ou a cópia na raiz: `ATHENA_GYM_ERP_COMERCIAL.xlsm`
 2. Abra o arquivo no Excel.
 3. Se aparecer aviso de segurança:
    - clique em **Habilitar Conteúdo** / **Habilitar Macros**
@@ -88,7 +88,7 @@ Na pasta `erp` existe o arquivo `requirements.txt` com:
 Abra o terminal **na pasta do projeto** e execute:
 
 ```bat
-cd "CAMINHO\ATHENAS GYM\erp"
+cd "CAMINHO\ATHENA GYM\erp"
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
@@ -96,7 +96,7 @@ python -m pip install -r requirements.txt
 Exemplo de caminho:
 
 ```bat
-cd "C:\Users\SeuUsuario\Documents\ATHENAS GYM\erp"
+cd "C:\Users\SeuUsuario\Documents\ATHENA GYM\erp"
 python -m pip install -r requirements.txt
 ```
 
@@ -142,15 +142,15 @@ Sem essa opção, o script gera a base `.xlsx` mas **não** consegue criar o `.x
 2. No terminal:
 
 ```bat
-cd "CAMINHO\ATHENAS GYM\erp"
+cd "CAMINHO\ATHENA GYM\erp"
 python gerar_erp.py
 ```
 
 3. Ao final, você deve ver algo como:
 
 ```text
-ERP Fase 3 gerado: ...\ATHENAS_GYM_ERP_COMERCIAL.xlsm
-Release copiado: ...\Excel\ATHENAS_GYM_ERP_COMERCIAL.xlsm
+ERP Fase 3 gerado: ...\ATHENA_GYM_ERP_COMERCIAL.xlsm
+Release copiado: ...\Excel\ATHENA_GYM_ERP_COMERCIAL.xlsm
 VBA exportado: ...\Export_VBA
 ```
 
@@ -160,7 +160,7 @@ VBA exportado: ...\Export_VBA
 
 | Arquivo / pasta | Conteúdo |
 |-----------------|----------|
-| `ATHENAS_GYM_ERP_COMERCIAL.xlsm` (raiz) | ERP gerado |
+| `ATHENA_GYM_ERP_COMERCIAL.xlsm` (raiz) | ERP gerado |
 | `Excel/` | Cópia de release |
 | `Export_VBA/` | Módulos VBA exportados |
 | `erp/vba/` | Fonte VBA usada no build |
@@ -194,7 +194,7 @@ python -m pip install -r requirements.txt
 - Se o arquivo veio da internet/e-mail: propriedades do arquivo → desmarque **Bloquear** (Unblock).
 
 ### OneDrive
-- Pastas sincronizadas podem travar o `SaveAs`. Se falhar, pause a sincronização ou copie o projeto para `C:\ATHENAS_GYM` e gere lá.
+- Pastas sincronizadas podem travar o `SaveAs`. Se falhar, pause a sincronização ou copie o projeto para `C:\ATHENA_GYM` e gere lá.
 
 ---
 
@@ -214,9 +214,9 @@ python -m pip install -r requirements.txt
 ## 9. Contatos / estrutura do projeto
 
 ```text
-ATHENAS GYM/
+ATHENA GYM/
 ├── INSTRUÇÕES.md              ← este manual
-├── ATHENAS_GYM_ERP_COMERCIAL.xlsm
+├── ATHENA_GYM_ERP_COMERCIAL.xlsm
 ├── Excel/                     ← release
 ├── Documentacao/              ← arquitetura e changelog
 ├── Export_VBA/                ← VBA exportado

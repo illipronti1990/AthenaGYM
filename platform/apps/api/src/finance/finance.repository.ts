@@ -11,8 +11,8 @@ import type {
   PaymentTransaction,
   Receivable,
   Supplier,
-} from '@athena/shared';
-import { calcFinancialHealth, resolveReceivableDisplayStatus } from '@athena/shared';
+} from '@movvo/shared';
+import { calcFinancialHealth, resolveReceivableDisplayStatus } from '@movvo/shared';
 import { SupabaseService } from '../supabase/supabase.service';
 
 @Injectable()

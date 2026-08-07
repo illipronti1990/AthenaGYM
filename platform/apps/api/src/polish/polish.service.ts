@@ -9,7 +9,7 @@ import type {
   GlobalSearchResult,
   TimelineEvent,
   UserFavorite,
-} from '@athena/shared';
+} from '@movvo/shared';
 import { AuthUser } from '../auth/auth.types';
 import { SupabaseService } from '../supabase/supabase.service';
 

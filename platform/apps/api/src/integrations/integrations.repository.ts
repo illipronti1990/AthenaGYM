@@ -1,6 +1,6 @@
 import { createHash } from 'crypto';
 import { Injectable } from '@nestjs/common';
-import type { PartnerApiLog, PartnerHubItem } from '@athena/shared';
+import type { PartnerApiLog, PartnerHubItem } from '@movvo/shared';
 import { SupabaseService } from '../supabase/supabase.service';
 
 @Injectable()

@@ -1,4 +1,4 @@
-# Dicionário de Dados — ATHENAS GYM Platform
+# Dicionário de Dados — Movvo Platform
 
 **Versão:** 5.0.0 · **Épico 3 — Franquias A+B**  
 **Modelo:** Opção 2 — banco único com `EmpresaID` + `UnidadeID` + camada de franquia  

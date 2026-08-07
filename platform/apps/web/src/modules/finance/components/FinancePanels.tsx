@@ -9,9 +9,9 @@ import type {
   FinancialAccount,
   Payable,
   PayableCategory,
-} from '@athena/shared';
-import { PAYABLE_CATEGORIES, PAYABLE_CATEGORY_LABELS } from '@athena/shared';
-import { Button, Card } from '@athena/ui';
+} from '@movvo/shared';
+import { PAYABLE_CATEGORIES, PAYABLE_CATEGORY_LABELS } from '@movvo/shared';
+import { Button, Card } from '@movvo/ui';
 import { financeApi } from '../services/financeApi';
 import { payableStatusLabel } from '../utils/statusLabels';
 import { listAlunos } from '@/modules/alunos/services/alunosApi';
@@ -67,27 +67,27 @@ export function PayablesPanel({ accessToken }: { accessToken: string }) {
         className="grid gap-3 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 md:grid-cols-3"
       >
         <label className="block text-sm">
-          <span className="athena-label">Fornecedor</span>
+          <span className="movvo-label">Fornecedor</span>
           <input
             value={supplierName}
             onChange={(e) => setSupplierName(e.target.value)}
-            className="athena-input mt-1"
+            className="movvo-input mt-1"
             required
           />
         </label>
         <label className="block text-sm">
-          <span className="athena-label">Descrição</span>
+          <span className="movvo-label">Descrição</span>
           <input
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="athena-input mt-1"
+            className="movvo-input mt-1"
             required
           />
         </label>
         <label className="block text-sm">
-          <span className="athena-label">Categoria</span>
+          <span className="movvo-label">Categoria</span>
           <select
-            className="athena-input mt-1"
+            className="movvo-input mt-1"
             value={category}
             onChange={(e) => setCategory(e.target.value as PayableCategory)}
           >
@@ -99,24 +99,24 @@ export function PayablesPanel({ accessToken }: { accessToken: string }) {
           </select>
         </label>
         <label className="block text-sm">
-          <span className="athena-label">Valor (R$)</span>
+          <span className="movvo-label">Valor (R$)</span>
           <input
             type="number"
             min={0.01}
             step={0.01}
             value={amount}
             onChange={(e) => setAmount(Number(e.target.value))}
-            className="athena-input mt-1"
+            className="movvo-input mt-1"
             required
           />
         </label>
         <label className="block text-sm">
-          <span className="athena-label">Vencimento</span>
+          <span className="movvo-label">Vencimento</span>
           <input
             type="date"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
-            className="athena-input mt-1"
+            className="movvo-input mt-1"
             required
           />
         </label>
@@ -127,9 +127,9 @@ export function PayablesPanel({ accessToken }: { accessToken: string }) {
       {!items ? (
         <TableSkeleton />
       ) : (
-        <ul className="athena-list">
+        <ul className="movvo-list">
           {items.map((p) => (
-            <li key={p.id} className="athena-list-item flex-wrap gap-2">
+            <li key={p.id} className="movvo-list-item flex-wrap gap-2">
               <span className="min-w-0 flex-1">
                 {p.description} ·{' '}
                 {p.amount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} ·{' '}
@@ -256,9 +256,9 @@ export function SubscriptionsPanel({ accessToken }: { accessToken: string }) {
           perfil do aluno — a assinatura é gerada automaticamente.
         </p>
       ) : (
-        <ul className="athena-list" data-testid="subscriptions-list">
+        <ul className="movvo-list" data-testid="subscriptions-list">
           {items.map((s) => (
-            <li key={s.id} className="athena-list-item">
+            <li key={s.id} className="movvo-list-item">
               <span>
                 {names[s.studentId] || 'Aluno'} · {planNames[s.planId] || 'Plano'} ·{' '}
                 {RECURRENCE[String(s.recurrence)] || s.recurrence} ·{' '}
@@ -315,8 +315,8 @@ export function CashflowPanel({ accessToken }: { accessToken: string }) {
 
   if (!points) return <TableSkeleton />;
   return (
-    <div className="athena-list overflow-x-auto">
-      <table className="athena-table" data-testid="cashflow-table">
+    <div className="movvo-list overflow-x-auto">
+      <table className="movvo-table" data-testid="cashflow-table">
         <thead>
           <tr>
             <th>Data</th>
@@ -378,9 +378,9 @@ export function DrePanel({ accessToken }: { accessToken: string }) {
     ['Resultado', dre.result],
   ];
   return (
-    <ul className="athena-list">
+    <ul className="movvo-list">
       {rows.map(([label, value]) => (
-        <li key={String(label)} className="athena-list-item">
+        <li key={String(label)} className="movvo-list-item">
           <span>{label}</span>
           <span className="font-semibold text-[var(--gold)]">
             {Number(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
@@ -483,42 +483,42 @@ export function SettingsPanel({ accessToken }: { accessToken: string }) {
   return (
     <div className="grid gap-6 md:grid-cols-2">
       <Card>
-        <h2 className="athena-title mb-3 text-sm">Contas bancárias / PIX</h2>
+        <h2 className="movvo-title mb-3 text-sm">Contas bancárias / PIX</h2>
         <form onSubmit={onSave} className="mb-4 grid gap-2" data-testid="bank-account-form">
           <label className="block text-sm">
-            <span className="athena-label">Banco</span>
+            <span className="movvo-label">Banco</span>
             <input
               required
               value={bankName}
               onChange={(e) => setBankName(e.target.value)}
-              className="athena-input mt-1"
+              className="movvo-input mt-1"
               placeholder="Ex.: Itaú, Nubank"
             />
           </label>
           <div className="grid gap-2 sm:grid-cols-2">
             <label className="block text-sm">
-              <span className="athena-label">Agência</span>
+              <span className="movvo-label">Agência</span>
               <input
                 value={agency}
                 onChange={(e) => setAgency(e.target.value)}
-                className="athena-input mt-1"
+                className="movvo-input mt-1"
               />
             </label>
             <label className="block text-sm">
-              <span className="athena-label">Conta</span>
+              <span className="movvo-label">Conta</span>
               <input
                 value={account}
                 onChange={(e) => setAccount(e.target.value)}
-                className="athena-input mt-1"
+                className="movvo-input mt-1"
               />
             </label>
           </div>
           <label className="block text-sm">
-            <span className="athena-label">Chave PIX</span>
+            <span className="movvo-label">Chave PIX</span>
             <input
               value={pixKey}
               onChange={(e) => setPixKey(e.target.value)}
-              className="athena-input mt-1"
+              className="movvo-input mt-1"
               placeholder="E-mail, CPF, telefone ou aleatória"
             />
           </label>
@@ -559,14 +559,14 @@ export function SettingsPanel({ accessToken }: { accessToken: string }) {
         )}
       </Card>
       <Card>
-        <h2 className="athena-title mb-3 text-sm">Centros de custo</h2>
+        <h2 className="movvo-title mb-3 text-sm">Centros de custo</h2>
         <form onSubmit={onCreateCenter} className="mb-3 flex flex-wrap gap-2">
           <label className="block min-w-[180px] flex-1 text-sm">
-            <span className="athena-label">Nome</span>
+            <span className="movvo-label">Nome</span>
             <input
               value={centerName}
               onChange={(e) => setCenterName(e.target.value)}
-              className="athena-input mt-1"
+              className="movvo-input mt-1"
               required
             />
           </label>
@@ -608,23 +608,23 @@ export function ReconciliationPanel({ accessToken }: { accessToken: string }) {
   return (
     <form onSubmit={onImport} className="space-y-3">
       <label className="block text-sm">
-        <span className="athena-label">Formato</span>
+        <span className="movvo-label">Formato</span>
         <select
           value={format}
           onChange={(e) => setFormat(e.target.value as 'csv' | 'ofx')}
-          className="athena-input mt-1 w-auto"
+          className="movvo-input mt-1 w-auto"
         >
           <option value="csv">CSV</option>
           <option value="ofx">OFX</option>
         </select>
       </label>
       <label className="block text-sm">
-        <span className="athena-label">Conteúdo do extrato</span>
+        <span className="movvo-label">Conteúdo do extrato</span>
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
           rows={8}
-          className="athena-input mt-1 font-mono text-xs"
+          className="movvo-input mt-1 font-mono text-xs"
         />
       </label>
       <Button type="submit">Importar e conciliar</Button>

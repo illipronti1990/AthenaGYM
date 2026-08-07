@@ -1,5 +1,5 @@
 """
-Gera o ERP ATHENAS GYM — Fase 3 (Login Real).
+Gera o ERP ATHENA GYM — Fase 3 (Login Real).
 
 Uso:
     python gerar_erp.py
@@ -18,8 +18,8 @@ from sheets import build_all_sheets
 ROOT = Path(__file__).resolve().parent.parent
 ERP_DIR = Path(__file__).resolve().parent
 VBA_DIR = ERP_DIR / "vba"
-XLSX_PATH = ROOT / "ATHENAS_GYM_ERP.xlsx"
-XLSM_PATH = ROOT / "ATHENAS_GYM_ERP_COMERCIAL.xlsm"
+XLSX_PATH = ROOT / "ATHENA_GYM_ERP.xlsx"
+XLSM_PATH = ROOT / "ATHENA_GYM_ERP_COMERCIAL.xlsm"
 EXCEL_DIR = ROOT / "Excel"
 EXPORT_VBA_DIR = ROOT / "Export_VBA"
 
@@ -373,7 +373,7 @@ def _create_frm_aluno(vbproj) -> None:
 
     form = vbproj.VBComponents.Add(3)
     form.Name = "frmAluno"
-    form.Properties("Caption").Value = "ATHENAS GYM — Cadastro de Aluno"
+    form.Properties("Caption").Value = "ATHENA GYM — Cadastro de Aluno"
     form.Properties("Width").Value = 420
     form.Properties("Height").Value = 520
 
@@ -500,7 +500,7 @@ def _create_frm_login(vbproj) -> None:
     form = vbproj.VBComponents.Add(3)  # vbext_ct_MSForm
     form.Name = "frmLogin"
     # Dimensões/caption via Properties do componente (Designer.Width falha no pywin32)
-    form.Properties("Caption").Value = "ATHENAS GYM — Login"
+    form.Properties("Caption").Value = "ATHENA GYM — Login"
     form.Properties("Width").Value = 320
     form.Properties("Height").Value = 290
 
@@ -516,7 +516,7 @@ def _create_frm_login(vbproj) -> None:
         return ctl
 
     lbl = add("Forms.Label.1", "lblTitulo", 18, 12, 280, 24)
-    lbl.Caption = "ATHENAS GYM — Acesso"
+    lbl.Caption = "ATHENA GYM — Acesso"
     try:
         lbl.Font.Bold = True
         lbl.Font.Size = 12
@@ -575,7 +575,7 @@ def _create_frm_splash(vbproj) -> None:
 
     form = vbproj.VBComponents.Add(3)
     form.Name = "frmSplash"
-    form.Properties("Caption").Value = "ATHENAS GYM"
+    form.Properties("Caption").Value = "ATHENA GYM"
     form.Properties("Width").Value = 360
     form.Properties("Height").Value = 260
 
@@ -591,7 +591,7 @@ def _create_frm_splash(vbproj) -> None:
         return ctl
 
     lbl = add("Forms.Label.1", "lblMarca", 20, 28, 320, 28)
-    lbl.Caption = "ATHENAS GYM"
+    lbl.Caption = "ATHENA GYM"
     try:
         lbl.Font.Bold = True
         lbl.Font.Size = 18
@@ -607,7 +607,7 @@ def _create_frm_splash(vbproj) -> None:
     except Exception:
         pass
     add("Forms.Label.1", "lblVersao", 20, 160, 320, 16).Caption = "Versão 2.0.0"
-    add("Forms.Label.1", "lblCopy", 20, 186, 320, 16).Caption = "© ATHENAS GYM"
+    add("Forms.Label.1", "lblCopy", 20, 186, 320, 16).Caption = "© ATHENA GYM"
 
     code = (VBA_DIR / "frmSplash_Code.txt").read_text(encoding="utf-8")
     cm = form.CodeModule
@@ -627,7 +627,7 @@ def _create_frm_receber(vbproj) -> None:
 
     form = vbproj.VBComponents.Add(3)
     form.Name = "frmReceber"
-    form.Properties("Caption").Value = "ATHENAS GYM — Receber Pagamento"
+    form.Properties("Caption").Value = "ATHENA GYM — Receber Pagamento"
     form.Properties("Width").Value = 340
     form.Properties("Height").Value = 360
 
@@ -816,7 +816,7 @@ def inject_vba_and_ui(xlsx_path: Path, xlsm_path: Path) -> bool:
             return False
 
         # Remove módulos obsoletos (pré-Sprint 3.3)
-        for obsolete in ("ModuloAthenas", "modPermissoes"):
+        for obsolete in ("ModuloAthena", "modPermissoes"):
             try:
                 vbproj.VBComponents.Remove(vbproj.VBComponents(obsolete))
                 print(f"  - {obsolete} (removido)")
@@ -1555,12 +1555,12 @@ def inject_vba_and_ui(xlsx_path: Path, xlsm_path: Path) -> bool:
             try:
                 xlsm_path.unlink()
             except Exception:
-                out = str((ROOT / f"ATHENAS_GYM_ERP_COMERCIAL_{int(time.time())}.xlsm").resolve())
+                out = str((ROOT / f"ATHENA_GYM_ERP_COMERCIAL_{int(time.time())}.xlsm").resolve())
 
         try:
             wb.SaveAs(out, FileFormat=52)
         except Exception as save_exc:
-            alt = str((ROOT / f"ATHENAS_GYM_ERP_COMERCIAL_{int(time.time())}.xlsm").resolve())
+            alt = str((ROOT / f"ATHENA_GYM_ERP_COMERCIAL_{int(time.time())}.xlsm").resolve())
             print(f"  SaveAs falhou ({save_exc}); tentando: {alt}")
             wb.SaveAs(alt, FileFormat=52)
             out = alt

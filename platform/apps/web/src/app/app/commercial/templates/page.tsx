@@ -15,8 +15,8 @@ export default async function CommercialTemplatesPage() {
   return (
     <div className="space-y-4" data-testid="commercial-templates">
       <div className="flex items-center justify-between">
-        <h1 className="athena-title text-3xl">Templates de e-mail Movvo</h1>
-        <Link href="/app/commercial" className="athena-link text-sm text-[var(--gold)]">← CRM</Link>
+        <h1 className="movvo-title text-3xl">Templates de e-mail Movvo</h1>
+        <Link href="/app/commercial" className="movvo-link text-sm text-[var(--gold)]">← CRM</Link>
       </div>
       <p className="text-sm text-[var(--muted)]">
         Envio via Resend (`RESEND_API_KEY`). Sem chave, o lead continua sendo gravado e o e-mail é apenas logado.

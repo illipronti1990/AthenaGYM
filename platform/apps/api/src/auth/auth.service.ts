@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SignJWT } from 'jose';
-import type { AuthContext } from '@athena/shared';
+import type { AuthContext } from '@movvo/shared';
 import { SupabaseService } from '../supabase/supabase.service';
 import { AuthContextService } from './auth-context.service';
 import { AuthUser } from './auth.types';
@@ -59,21 +59,141 @@ export class AuthService {
     browser?: string,
   ) {
     const email = dto.email.trim().toLowerCase();
+    const admin = this.supabase.getAdmin();
+
+    // Lockout check (server-side; client success flag alone is not trusted for unlock)
+    const nowIso = new Date().toISOString();
+    const { data: lock } = await admin
+      .from('security_events')
+      .select('locked_until')
+      .eq('event_type', 'login.lockout')
+      .eq('email', email)
+      .gt('locked_until', nowIso)
+      .order('locked_until', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (lock?.locked_until) {
+      throw new UnauthorizedException(
+        `Account temporarily locked until ${lock.locked_until}`,
+      );
+    }
+
+    const action = dto.success ? 'login.success' : 'login.failed';
     await this.audit.log({
       companyId: null,
       userId: null,
       module: 'auth',
-      action: dto.success ? 'login.success' : 'login.failed',
+      action,
       entity: 'session',
       ip,
       browser,
+      severity: dto.success ? 'info' : 'medium',
       metadata: {
         email,
         reason: dto.reason || null,
         at: new Date().toISOString(),
+        clientReportedSuccess: dto.success,
       },
     });
+
+    await admin.from('security_events').insert({
+      event_type: action,
+      severity: dto.success ? 'info' : 'medium',
+      email,
+      ip: ip || null,
+      details: { reason: dto.reason || null, source: 'login-events' },
+    });
+
+    if (!dto.success) {
+      const since = new Date(Date.now() - 15 * 60_000).toISOString();
+      const { count } = await admin
+        .from('security_events')
+        .select('id', { count: 'exact', head: true })
+        .eq('event_type', 'login.failed')
+        .eq('email', email)
+        .gte('created_at', since);
+      const failures = count || 0;
+      if (failures >= 5) {
+        const lockedUntil = new Date(Date.now() + 15 * 60_000).toISOString();
+        await admin.from('security_events').insert({
+          event_type: 'login.lockout',
+          severity: 'high',
+          email,
+          ip: ip || null,
+          locked_until: lockedUntil,
+          details: { failures, windowMinutes: 15 },
+        });
+        await this.audit.log({
+          companyId: null,
+          userId: null,
+          module: 'security',
+          action: 'login.lockout',
+          entity: 'security_events',
+          ip,
+          browser,
+          severity: 'high',
+          metadata: { email, lockedUntil, failures },
+        });
+      }
+    }
+
     return { ok: true };
+  }
+
+  async recordLogout(user: AuthUser, ip?: string, browser?: string) {
+    await this.audit.log({
+      companyId: null,
+      userId: user.id,
+      module: 'auth',
+      action: 'logout',
+      entity: 'session',
+      ip,
+      browser,
+    });
+    return { ok: true };
+  }
+
+  async registerSessionAfterLogin(input: {
+    userId: string;
+    companyId?: string | null;
+    accessToken: string;
+    ip?: string;
+    browser?: string;
+  }) {
+    const admin = this.supabase.getAdmin();
+    const { createHash } = await import('crypto');
+    const hash = createHash('sha256').update(input.accessToken).digest('hex');
+    const { data, error } = await admin
+      .from('user_sessions')
+      .insert({
+        user_id: input.userId,
+        company_id: input.companyId || null,
+        session_token_hash: hash,
+        browser: input.browser || null,
+        ip: input.ip || null,
+        user_agent: input.browser || null,
+        device: /mobile|android|iphone/i.test(input.browser || '')
+          ? 'Mobile'
+          : 'Desktop',
+        last_seen_at: new Date().toISOString(),
+      })
+      .select('id')
+      .maybeSingle();
+    if (error) {
+      // table may not exist yet
+      return { ok: false, error: error.message };
+    }
+    await this.audit.log({
+      companyId: input.companyId || null,
+      userId: input.userId,
+      module: 'auth',
+      action: 'session.created',
+      entity: 'user_sessions',
+      entityId: data?.id,
+      ip: input.ip,
+      browser: input.browser,
+    });
+    return { ok: true, sessionId: data?.id };
   }
 
   /** Local DEV login: profile lives in Supabase Postgres; JWT minted by Nest. */

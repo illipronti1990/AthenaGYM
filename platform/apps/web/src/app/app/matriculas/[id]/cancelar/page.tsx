@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Page, PageHeader, PageContent } from '@athena/ui';
+import { Page, PageHeader, PageContent } from '@movvo/ui';
 import { requireAccessToken } from '@/lib/auth/token';
 import { CancelForm } from '@/modules/matriculas/components/CancelForm';
 
@@ -15,7 +15,7 @@ export default async function CancelarMatriculaPage({
       <PageHeader
         title="Cancelar matrícula"
         actions={
-          <Link href={`/app/matriculas/${id}`} className="athena-btn athena-btn-secondary athena-btn-sm">
+          <Link href={`/app/matriculas/${id}`} className="movvo-btn movvo-btn-secondary movvo-btn-sm">
             Voltar
           </Link>
         }

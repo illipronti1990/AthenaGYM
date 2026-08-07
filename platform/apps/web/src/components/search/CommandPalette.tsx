@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, Users, Wallet, CreditCard, GraduationCap, LayoutGrid } from 'lucide-react';
-import type { GlobalSearchHit } from '@athena/shared';
-import { Spinner } from '@athena/ui';
+import type { GlobalSearchHit } from '@movvo/shared';
+import { Spinner } from '@movvo/ui';
 import { polishApi } from '@/modules/polish/services/polishApi';
 import { useLayout } from '@/components/layout/LayoutProvider';
 import { useAuthNav } from '@/components/auth/AuthNavProvider';
@@ -121,7 +121,7 @@ export function CommandPalette({ accessToken }: { accessToken: string }) {
 
   return (
     <div
-      className="athena-command-overlay"
+      className="movvo-command-overlay"
       role="presentation"
       onClick={(e) => {
         if (e.target === e.currentTarget) setSearchOpen(false);
@@ -131,7 +131,7 @@ export function CommandPalette({ accessToken }: { accessToken: string }) {
         role="dialog"
         aria-modal="true"
         aria-label="Pesquisa global"
-        className="athena-command-dialog"
+        className="movvo-command-dialog"
         data-testid="command-palette"
       >
         <div className="flex items-center gap-2 border-b border-[var(--border)] px-4">
@@ -156,7 +156,7 @@ export function CommandPalette({ accessToken }: { accessToken: string }) {
             className="w-full bg-transparent py-3 text-sm text-[var(--text)] outline-none placeholder:text-[var(--muted)]"
             data-testid="command-input"
           />
-          <kbd className="athena-kbd">Esc</kbd>
+          <kbd className="movvo-kbd">Esc</kbd>
         </div>
 
         {showQuick ? (
@@ -165,7 +165,7 @@ export function CommandPalette({ accessToken }: { accessToken: string }) {
               <button
                 key={h.href}
                 type="button"
-                className="athena-chip-nav inline-flex items-center gap-1.5 text-xs"
+                className="movvo-chip-nav inline-flex items-center gap-1.5 text-xs"
                 onClick={() => go(h)}
                 data-testid={`command-quick-${h.label.toLowerCase()}`}
               >
@@ -202,7 +202,7 @@ export function CommandPalette({ accessToken }: { accessToken: string }) {
               <button
                 key={r.kind === 'nav' ? `nav-${r.href}-${r.title}` : `hit-${r.hit.type}-${r.hit.id}`}
                 type="button"
-                className={`athena-command-item ${i === active ? 'is-active' : ''}`}
+                className={`movvo-command-item ${i === active ? 'is-active' : ''}`}
                 onMouseEnter={() => setActive(i)}
                 onClick={() => go(r)}
               >

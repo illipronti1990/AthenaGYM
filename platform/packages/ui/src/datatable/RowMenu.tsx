@@ -54,11 +54,11 @@ export function RowMenu<T>({ row, actions }: { row: T; actions: Array<DataGridRo
   if (!visible.length) return null;
 
   return (
-    <div className="athena-dg-row-menu">
+    <div className="movvo-dg-row-menu">
       <button
         ref={btnRef}
         type="button"
-        className="athena-icon-btn"
+        className="movvo-icon-btn"
         aria-label="Ações"
         aria-expanded={open}
         onClick={(e) => {
@@ -72,7 +72,7 @@ export function RowMenu<T>({ row, actions }: { row: T; actions: Array<DataGridRo
         ? createPortal(
             <ul
               ref={menuRef}
-              className="athena-dg-menu is-portal"
+              className="movvo-dg-menu is-portal"
               style={{ top: pos.top, left: pos.left }}
               role="menu"
             >

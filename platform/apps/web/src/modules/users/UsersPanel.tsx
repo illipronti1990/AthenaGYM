@@ -1,8 +1,8 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import type { Role, UserListItem } from '@athena/shared';
-import { Button } from '@athena/ui';
+import type { Role, UserListItem } from '@movvo/shared';
+import { Button } from '@movvo/ui';
 import { apiInviteUser, apiListRoles, apiListUsers } from '@/services/api';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
@@ -70,12 +70,12 @@ export function UsersPanel({ accessToken }: { accessToken: string }) {
   return (
     <div className="space-y-8">
       <section>
-        <h2 className="athena-title mb-3 text-lg">Usuários</h2>
+        <h2 className="movvo-title mb-3 text-lg">Usuários</h2>
         {!users ? (
           <TableSkeleton />
         ) : (
-          <div className="athena-list overflow-x-auto">
-            <table className="athena-table" data-testid="users-table">
+          <div className="movvo-list overflow-x-auto">
+            <table className="movvo-table" data-testid="users-table">
               <thead>
                 <tr>
                   <th>Nome</th>
@@ -106,7 +106,7 @@ export function UsersPanel({ accessToken }: { accessToken: string }) {
       </section>
 
       <section>
-        <h2 className="athena-title mb-3 text-lg">Novo usuário</h2>
+        <h2 className="movvo-title mb-3 text-lg">Novo usuário</h2>
         <form onSubmit={onInvite} className="grid max-w-xl gap-3 sm:grid-cols-2">
           <input
             required
@@ -114,25 +114,25 @@ export function UsersPanel({ accessToken }: { accessToken: string }) {
             placeholder="E-mail"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="athena-input"
+            className="movvo-input"
           />
           <input
             placeholder="Nome"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            className="athena-input"
+            className="movvo-input"
           />
           <input
             placeholder="Telefone"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            className="athena-input"
+            className="movvo-input"
           />
           <select
             required
             value={roleId}
             onChange={(e) => setRoleId(e.target.value)}
-            className="athena-input"
+            className="movvo-input"
           >
             {roles.map((r) => (
               <option key={r.id} value={r.id}>

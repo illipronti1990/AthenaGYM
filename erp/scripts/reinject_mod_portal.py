@@ -9,9 +9,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 BAS = ROOT / "erp" / "vba" / "modPortal.bas"
-XLSM = ROOT / "Excel" / "ATHENAS_GYM_ERP_COMERCIAL.xlsm"
+XLSM = ROOT / "Excel" / "ATHENA_GYM_ERP_COMERCIAL.xlsm"
 if not XLSM.exists():
-    XLSM = ROOT / "ATHENAS_GYM_ERP_COMERCIAL.xlsm"
+    XLSM = ROOT / "ATHENA_GYM_ERP_COMERCIAL.xlsm"
 
 
 def strip_header(code: str) -> str:

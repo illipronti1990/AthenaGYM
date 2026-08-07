@@ -65,12 +65,12 @@ export function CommercialOnboardingPanel({ accessToken }: { accessToken: string
       {error ? <p className="text-red-400">{error}</p> : null}
       <div className="flex gap-2">
         <input
-          className="athena-input flex-1"
+          className="movvo-input flex-1"
           placeholder="Nome da academia"
           value={academyName}
           onChange={(e) => setAcademyName(e.target.value)}
         />
-        <button type="button" className="athena-btn athena-btn-primary" onClick={() => void create()}>
+        <button type="button" className="movvo-btn movvo-btn-primary" onClick={() => void create()}>
           Novo onboarding
         </button>
       </div>
@@ -91,7 +91,7 @@ export function CommercialOnboardingPanel({ accessToken }: { accessToken: string
                 <button
                   key={s.id}
                   type="button"
-                  className="athena-btn athena-btn-secondary text-xs"
+                  className="movvo-btn movvo-btn-secondary text-xs"
                   onClick={() => void advance(row, s.id)}
                 >
                   {s.label}

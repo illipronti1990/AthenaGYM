@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { STUDENT_STATUSES, STUDENT_STATUS_LABELS, formatCpf, resolveStudentDisplayStatus } from '@athena/shared';
-import type { Student, Student360Summary, StudentTimelineEvent } from '@athena/shared';
-import { Button, Card, ConfirmDialog, SkeletonForm } from '@athena/ui';
+import { STUDENT_STATUSES, STUDENT_STATUS_LABELS, formatCpf, resolveStudentDisplayStatus } from '@movvo/shared';
+import type { Student, Student360Summary, StudentTimelineEvent } from '@movvo/shared';
+import { Button, Card, ConfirmDialog, SkeletonForm } from '@movvo/ui';
 import { AlunoAvatar } from './AlunoAvatar';
 import { AlunoStatusBadge } from './AlunoStatus';
 import { AlunoTimeline } from './AlunoTimeline';
@@ -172,7 +172,7 @@ export function AlunoProfile({
           }}
         />
         <div className="min-w-0 flex-1">
-          <h1 className="athena-title text-2xl">{student.fullName}</h1>
+          <h1 className="movvo-title text-2xl">{student.fullName}</h1>
           <p className="text-sm text-[var(--muted)]">
             {student.registrationNumber}
             {student.cpf ? ` · ${formatCpf(student.cpf)}` : ''}
@@ -186,7 +186,7 @@ export function AlunoProfile({
               )}
             />
             <select
-              className="athena-input w-auto"
+              className="movvo-input w-auto"
               value={student.status}
               onChange={async (e) => {
                 try {
@@ -259,7 +259,7 @@ export function AlunoProfile({
             key={id}
             type="button"
             onClick={() => setTab(id)}
-            className={`athena-tab ${tab === id ? 'athena-tab-active' : ''}`}
+            className={`movvo-tab ${tab === id ? 'movvo-tab-active' : ''}`}
           >
             {label}
           </button>
@@ -318,7 +318,7 @@ export function AlunoProfile({
         <div className="space-y-6">
           <AlunoTimeline items={timeline} />
           <div>
-            <h3 className="athena-title mb-2 text-sm">Auditoria</h3>
+            <h3 className="movvo-title mb-2 text-sm">Auditoria</h3>
             <EntityTimeline accessToken={accessToken} entity="student" id={studentId} />
           </div>
         </div>

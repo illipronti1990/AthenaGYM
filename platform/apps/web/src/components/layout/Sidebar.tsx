@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Logo } from '@athena/ui';
+import { Logo } from '@movvo/ui';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { useLayout } from './LayoutProvider';
 import { SidebarGroup } from './SidebarGroup';
@@ -62,14 +62,14 @@ export function Sidebar({ userName }: { userName?: string | null }) {
       {mobileOpen ? (
         <button
           type="button"
-          className="athena-sidebar-backdrop md:hidden"
+          className="movvo-sidebar-backdrop md:hidden"
           aria-label="Fechar menu"
           onClick={closeMobile}
         />
       ) : null}
 
       <aside
-        className={`athena-sidebar athena-sidebar-px2 ${effectiveCollapsed ? 'is-collapsed' : ''} ${
+        className={`movvo-sidebar movvo-sidebar-px2 ${effectiveCollapsed ? 'is-collapsed' : ''} ${
           mobileOpen ? 'is-mobile-open' : ''
         }`}
         data-testid="app-sidebar"

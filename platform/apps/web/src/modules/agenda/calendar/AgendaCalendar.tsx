@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import type { Schedule } from '@athena/shared';
+import type { Schedule } from '@movvo/shared';
 import { operationsApi } from '@/modules/operations/services/operationsApi';
 import { WeekGrid } from './WeekGrid';
 import { ConflictBanner } from './ConflictBanner';
@@ -25,8 +25,8 @@ export function AgendaCalendar({ accessToken }: { accessToken: string }) {
         .catch((e) => setError(e instanceof Error ? e.message : 'Erro ao carregar agenda'));
     reload();
     const onAgendaChanged = () => reload();
-    window.addEventListener('athena-agenda-changed', onAgendaChanged);
-    return () => window.removeEventListener('athena-agenda-changed', onAgendaChanged);
+    window.addEventListener('movvo-agenda-changed', onAgendaChanged);
+    return () => window.removeEventListener('movvo-agenda-changed', onAgendaChanged);
   }, [accessToken, from, to]);
 
   const visible = items.filter(
@@ -38,11 +38,11 @@ export function AgendaCalendar({ accessToken }: { accessToken: string }) {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2">
         {(['day', 'week', 'month', 'list'] as View[]).map((option) => (
-          <button key={option} className={`athena-chip-nav ${view === option ? 'border-[var(--gold)]' : ''}`} onClick={() => setView(option)}>
+          <button key={option} className={`movvo-chip-nav ${view === option ? 'border-[var(--gold)]' : ''}`} onClick={() => setView(option)}>
             {{ day: 'Dia', week: 'Semana', month: 'Mês', list: 'Lista' }[option]}
           </button>
         ))}
-        <button className="athena-btn athena-btn-secondary ml-auto" onClick={() => setDate(new Date(date.getTime() + 86400000))}>Próximo →</button>
+        <button className="movvo-btn movvo-btn-secondary ml-auto" onClick={() => setDate(new Date(date.getTime() + 86400000))}>Próximo →</button>
       </div>
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
       <ConflictBanner items={visible} />

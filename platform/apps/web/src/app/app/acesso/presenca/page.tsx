@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Page, PageHeader, PageContent, pageQualityAttrs } from '@athena/ui';
+import { Page, PageHeader, PageContent, pageQualityAttrs } from '@movvo/ui';
 import { requireAccessToken } from '@/lib/auth/token';
 import { PresenceBoard } from '@/modules/acesso/components/PresenceBoard';
 
@@ -9,7 +9,7 @@ export default async function AcessoPresencaPage() {
     <Page {...pageQualityAttrs()}>
       <PageHeader title="Presença" description="Quem está dentro agora, tempo médio e pico do dia." />
       <p className="mb-4">
-        <Link href="/app/acesso" className="athena-link text-sm text-[var(--gold)]">
+        <Link href="/app/acesso" className="movvo-link text-sm text-[var(--gold)]">
           ← Acesso
         </Link>
       </p>

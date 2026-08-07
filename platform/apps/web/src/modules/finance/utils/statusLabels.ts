@@ -1,8 +1,8 @@
 import {
   receivableStatusLabel as sharedReceivableStatusLabel,
   resolveReceivableDisplayStatus,
-} from '@athena/shared';
-import type { BadgeTone } from '@athena/ui';
+} from '@movvo/shared';
+import type { BadgeTone } from '@movvo/ui';
 
 const RECEIVABLE_STATUS_LABELS: Record<string, string> = {
   open: 'A receber',

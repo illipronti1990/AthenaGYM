@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button, Card } from '@athena/ui';
+import { Button, Card } from '@movvo/ui';
 import { crmApi } from '../../services/crmApi';
 import { useToast } from '@/components/ui/Toast';
 
@@ -67,7 +67,7 @@ export function PortalNpsForm({ accessToken }: { accessToken: string }) {
         value={comment}
         onChange={(e) => setComment(e.target.value)}
         rows={3}
-        className="athena-input w-full"
+        className="movvo-input w-full"
       />
       <Button disabled={score === null || loading} onClick={() => void onSubmit()}>
         {loading ? 'Enviando…' : 'Enviar avaliação'}

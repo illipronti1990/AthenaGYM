@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { SystemHealth } from '@athena/shared';
+import type { SystemHealth } from '@movvo/shared';
 import { polishApi } from '@/modules/polish/services/polishApi';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 
@@ -20,7 +20,7 @@ export function HealthPanel() {
     void polishApi.health().then(setData).catch(() =>
       setData({
         status: 'down',
-        service: 'athena-platform-api',
+        service: 'movvo-platform-api',
         version: '?',
         timestamp: new Date().toISOString(),
         checks: {
@@ -50,9 +50,9 @@ export function HealthPanel() {
         Status geral:{' '}
         <strong className="text-[var(--gold)]">{data.status}</strong> · v{data.version}
       </p>
-      <ul className="athena-list">
+      <ul className="movvo-list">
         {rows.map((r) => (
-          <li key={r.label} className="athena-list-item text-sm">
+          <li key={r.label} className="movvo-list-item text-sm">
             <span className="text-[var(--text)]">{r.label}</span>
             <span className="flex items-center gap-2 text-[var(--muted)]">
               <Dot ok={r.status === 'ok'} />

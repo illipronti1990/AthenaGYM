@@ -6,8 +6,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import type { AuthContext, Student, StudentListResponse } from '@athena/shared';
-import { STUDENT_STATUSES } from '@athena/shared';
+import type { AuthContext, Student, StudentListResponse } from '@movvo/shared';
+import { STUDENT_STATUSES } from '@movvo/shared';
 import { AuditService } from '../audit/audit.service';
 import { AuthUser } from '../auth/auth.types';
 import { SupabaseService } from '../supabase/supabase.service';
@@ -25,6 +25,7 @@ import {
 } from './events/student.events';
 import { StudentsRepository } from './students.repository';
 import { assertValidCpf } from './validators/cpf.validator';
+import { paginate } from '../common/pagination';
 
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 const MAX_DOC_BYTES = 10 * 1024 * 1024;
@@ -74,8 +75,11 @@ export class StudentsService {
         ? companyIds
         : ['11111111-1111-1111-1111-111111111111'];
 
-    const page = Math.max(1, Number(query.page || 1));
-    const pageSize = Math.min(200, Math.max(1, Number(query.pageSize || 20)));
+    const { page, pageSize } = paginate({
+      page: Number(query.page || 1),
+      pageSize: Number(query.pageSize || 20),
+      maxPageSize: 200,
+    });
     const sortMap: Record<string, string> = {
       fullName: 'full_name',
       full_name: 'full_name',

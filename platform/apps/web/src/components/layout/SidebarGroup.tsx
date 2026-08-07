@@ -57,10 +57,10 @@ export function SidebarGroup({
   }
 
   return (
-    <div className="athena-sidebar-group">
+    <div className="movvo-sidebar-group">
       <button
         type="button"
-        className={`athena-sidebar-group-btn ${groupActive ? 'is-active' : ''}`}
+        className={`movvo-sidebar-group-btn ${groupActive ? 'is-active' : ''}`}
         onClick={onToggle}
         aria-expanded={open}
       >
@@ -75,7 +75,7 @@ export function SidebarGroup({
         />
       </button>
       {open ? (
-        <div className="athena-sidebar-group-items">
+        <div className="movvo-sidebar-group-items">
           {group.items.map((item) => (
             <SidebarItem
               key={`${item.href}-${item.label}`}

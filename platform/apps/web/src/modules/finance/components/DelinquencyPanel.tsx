@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { DelinquencyReport } from '@athena/shared';
-import { Button, Card } from '@athena/ui';
+import type { DelinquencyReport } from '@movvo/shared';
+import { Button, Card } from '@movvo/ui';
 import { financeApi } from '../services/financeApi';
 import { useToast } from '@/components/ui/Toast';
 import { TableSkeleton } from '@/components/ui/Skeleton';
@@ -62,9 +62,9 @@ export function DelinquencyPanel({ accessToken }: { accessToken: string }) {
       {data.items.length === 0 ? (
         <p className="text-sm text-[var(--muted)]">Nenhum aluno inadimplente no momento.</p>
       ) : (
-        <ul className="athena-list">
+        <ul className="movvo-list">
           {data.items.map((item) => (
-            <li key={item.studentId} className="athena-list-item flex-wrap gap-3">
+            <li key={item.studentId} className="movvo-list-item flex-wrap gap-3">
               <div className="min-w-0 flex-1">
                 <p className="font-medium">{item.studentName}</p>
                 <p className="text-sm text-[var(--muted)]">
@@ -79,7 +79,7 @@ export function DelinquencyPanel({ accessToken }: { accessToken: string }) {
                     href={whatsappHref(item.phone, item.studentName, item.amount)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="athena-btn athena-btn-secondary athena-btn-sm"
+                    className="movvo-btn movvo-btn-secondary movvo-btn-sm"
                   >
                     WhatsApp
                   </a>
@@ -94,7 +94,7 @@ export function DelinquencyPanel({ accessToken }: { accessToken: string }) {
                         { style: 'currency', currency: 'BRL' },
                       )}.\n\nPodemos ajudar com a regularização?`,
                     )}`}
-                    className="athena-btn athena-btn-secondary athena-btn-sm"
+                    className="movvo-btn movvo-btn-secondary movvo-btn-sm"
                   >
                     E-mail
                   </a>

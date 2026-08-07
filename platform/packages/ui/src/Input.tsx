@@ -13,19 +13,19 @@ export function Input({
   hint?: string;
 }) {
   const stateClass =
-    state === 'valid' ? 'athena-input-valid' : state === 'invalid' ? 'athena-input-invalid' : '';
+    state === 'valid' ? 'movvo-input-valid' : state === 'invalid' ? 'movvo-input-invalid' : '';
   const input = (
-    <input id={id} className={`athena-input ${stateClass} ${className}`} {...props} />
+    <input id={id} className={`movvo-input ${stateClass} ${className}`} {...props} />
   );
 
   if (!label && !hint) return input;
 
   return (
     <label className="block text-sm" htmlFor={id}>
-      {label ? <span className="athena-label">{label}</span> : null}
+      {label ? <span className="movvo-label">{label}</span> : null}
       {input}
       {hint ? (
-        <span className={`athena-field-hint ${state === 'valid' ? 'is-ok' : state === 'invalid' ? 'is-error' : ''}`}>
+        <span className={`movvo-field-hint ${state === 'valid' ? 'is-ok' : state === 'invalid' ? 'is-error' : ''}`}>
           {state === 'valid' ? '✔ ' : state === 'invalid' ? '❌ ' : ''}
           {hint}
         </span>

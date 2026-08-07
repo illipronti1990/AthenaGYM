@@ -40,26 +40,26 @@ export function ShortcutDialog({
 
   return (
     <div
-      className="athena-shortcut-overlay"
+      className="movvo-shortcut-overlay"
       role="dialog"
       aria-modal="true"
-      aria-labelledby="athena-shortcuts-title"
+      aria-labelledby="movvo-shortcuts-title"
       data-testid="shortcut-dialog"
       onClick={onClose}
     >
-      <div className="athena-shortcut-dialog" onClick={(e) => e.stopPropagation()}>
-        <div className="athena-shortcut-head">
-          <h2 id="athena-shortcuts-title" className="athena-h3">
+      <div className="movvo-shortcut-dialog" onClick={(e) => e.stopPropagation()}>
+        <div className="movvo-shortcut-head">
+          <h2 id="movvo-shortcuts-title" className="movvo-h3">
             Atalhos de teclado
           </h2>
-          <button type="button" className="athena-icon-btn" onClick={onClose} aria-label="Fechar">
+          <button type="button" className="movvo-icon-btn" onClick={onClose} aria-label="Fechar">
             <X size={18} />
           </button>
         </div>
-        <ul className="athena-shortcut-list">
+        <ul className="movvo-shortcut-list">
           {shortcuts.map((s) => (
             <li key={s.keys}>
-              <kbd className="athena-kbd">{s.keys}</kbd>
+              <kbd className="movvo-kbd">{s.keys}</kbd>
               <span>{s.description}</span>
             </li>
           ))}

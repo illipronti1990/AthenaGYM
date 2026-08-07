@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Logo } from '@athena/ui';
+import { Logo } from '@movvo/ui';
 import { LogoutButton } from '@/modules/auth/LogoutButton';
 import { NotificationBell } from '@/components/NotificationBell';
 import { CommandPalette } from '@/components/CommandPalette';
@@ -29,7 +29,7 @@ export async function AppNav() {
   const accessToken = await requireAccessToken();
 
   return (
-    <header className="athena-topbar">
+    <header className="movvo-topbar">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
         <div className="flex items-center gap-6">
           <Link href="/app" className="shrink-0">
@@ -37,7 +37,7 @@ export async function AppNav() {
           </Link>
           <nav className="flex flex-wrap gap-3 text-sm">
             {links.map((l) => (
-              <Link key={l.href} href={l.href} className="athena-link text-[var(--gold)]">
+              <Link key={l.href} href={l.href} className="movvo-link text-[var(--gold)]">
                 {l.label}
               </Link>
             ))}
@@ -46,7 +46,7 @@ export async function AppNav() {
         <div className="flex items-center gap-2">
           <button
             type="button"
-            className="athena-btn athena-btn-secondary athena-btn-sm"
+            className="movvo-btn movvo-btn-secondary movvo-btn-sm"
             title="Ctrl+K"
             data-testid="open-search-hint"
           >

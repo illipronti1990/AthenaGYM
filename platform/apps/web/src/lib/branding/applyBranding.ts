@@ -1,4 +1,4 @@
-import type { ResolvedCompanyBranding } from '@athena/shared';
+import type { ResolvedCompanyBranding } from '@movvo/shared';
 
 /** Apply tenant brand tokens to :root (CSS variables + data attributes). */
 export function applyBrandingToDocument(branding: ResolvedCompanyBranding) {

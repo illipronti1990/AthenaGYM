@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Page, PageHeader, PageContent, PageFilters, pageQualityAttrs } from '@athena/ui';
+import { Page, PageHeader, PageContent, PageFilters, pageQualityAttrs } from '@movvo/ui';
 import { requireAccessToken } from '@/lib/auth/token';
 import { TREINOS_LINKS } from '@/modules/treinos/utils/treinosLinks';
 import { WorkoutBuilder } from '@/modules/treinos/construtor/WorkoutBuilder';
@@ -16,7 +16,7 @@ export default async function TreinosConstrutorPage({
       <PageHeader title="Construtor de treinos" description="DnD, RPE, dias A–E e assinatura." />
       <PageFilters>
         {TREINOS_LINKS.map(([label, href]) => (
-          <Link key={href} href={href} className="athena-chip-nav">
+          <Link key={href} href={href} className="movvo-chip-nav">
             {label}
           </Link>
         ))}

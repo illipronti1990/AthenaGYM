@@ -1,12 +1,13 @@
 import { test, expect } from '@playwright/test';
+import { E2E_EMAIL, E2E_PASSWORD, E2E_STUDENT_EMAIL, E2E_TRAINER_EMAIL } from './helpers/e2eEnv';
 import { createHmac } from 'crypto';
 
 const WEB = process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000';
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
 
-const DEV_EMAIL = process.env.ATHENA_E2E_EMAIL || 'teste@athena.local';
-const DEV_PASSWORD = process.env.ATHENA_E2E_PASSWORD || 'teste123';
-const WEBHOOK_SECRET = process.env.PARTNER_WEBHOOK_SECRET || 'athena-partner-webhook-dev';
+const DEV_EMAIL = E2E_EMAIL;
+const DEV_PASSWORD = E2E_PASSWORD;
+const WEBHOOK_SECRET = process.env.PARTNER_WEBHOOK_SECRET || 'movvo-partner-webhook-dev';
 
 async function login(request: import('@playwright/test').APIRequestContext) {
   const res = await request.post(`${API}/auth/dev-login`, {

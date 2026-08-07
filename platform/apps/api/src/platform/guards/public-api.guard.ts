@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import type { PublicApiContext } from '@athena/shared';
+import type { PublicApiContext } from '@movvo/shared';
 import { PlatformService } from '../platform.service';
 
 export const PUBLIC_API_CONTEXT_KEY = 'publicApiContext';

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { CoachDashboard } from '@athena/shared';
+import type { CoachDashboard } from '@movvo/shared';
 import { workoutsApi } from '@/modules/workouts/services/workoutsApi';
 
 export function CoachDashboardPanel({ accessToken }: { accessToken: string }) {

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Button } from '@athena/ui';
+import { Button } from '@movvo/ui';
 import { requireAccessToken } from '@/lib/auth/token';
 import { apiGetMe } from '@/services/api';
 import { AlunoForm } from '@/modules/alunos/components/AlunoForm';
@@ -33,7 +33,7 @@ export default async function NewStudentPage() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="athena-title text-3xl">Novo aluno</h1>
+          <h1 className="movvo-title text-3xl">Novo aluno</h1>
           <p className="mt-1 text-sm text-[var(--muted)]">
             Formulário inteligente com validação em tempo real e CEP automático
           </p>

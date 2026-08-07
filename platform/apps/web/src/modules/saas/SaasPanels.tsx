@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Button, Card } from '@athena/ui';
+import { Button, Card } from '@movvo/ui';
 import { PageState } from '@/components/ux/PageState';
 import { useToast } from '@/components/ui/Toast';
 import { saasApi } from '@/services/saasApi';
@@ -35,7 +35,7 @@ export function SaasDashboardPanel({ accessToken }: { accessToken: string }) {
       {cards.map(([l, v]) => (
         <Card key={l}>
           <p className="text-xs text-[var(--muted)]">{l}</p>
-          <p className="athena-title mt-1 text-2xl">{String(v ?? 0)}</p>
+          <p className="movvo-title mt-1 text-2xl">{String(v ?? 0)}</p>
         </Card>
       ))}
     </div>
@@ -153,7 +153,7 @@ export function TenantBrandingPanel({
   return (
     <div className="space-y-4" data-testid="saas-branding">
       <Card>
-        <h3 className="athena-title text-base">White label</h3>
+        <h3 className="movvo-title text-base">White label</h3>
         <form
           className="mt-3 grid gap-3 sm:grid-cols-3"
           onSubmit={(e) => {
@@ -178,7 +178,7 @@ export function TenantBrandingPanel({
         </form>
       </Card>
       <Card>
-        <h3 className="athena-title text-base">Domínios (DNS + SSL)</h3>
+        <h3 className="movvo-title text-base">Domínios (DNS + SSL)</h3>
         <form
           className="mt-3 flex gap-2"
           onSubmit={(e) => {
@@ -232,7 +232,7 @@ export function PlansPanel({ accessToken }: { accessToken: string }) {
     <div className="grid gap-3 md:grid-cols-3" data-testid="saas-plans">
       {plans.map((p) => (
         <Card key={String(p.id)}>
-          <h3 className="athena-title text-lg">{String(p.name)}</h3>
+          <h3 className="movvo-title text-lg">{String(p.name)}</h3>
           <p className="text-sm text-[var(--muted)]">{String(p.description || '')}</p>
           <p className="mt-2 text-xl">
             {Number(p.priceMonthly || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
@@ -282,7 +282,7 @@ export function BillingPanel({ accessToken }: { accessToken: string }) {
   return (
     <div className="space-y-4" data-testid="saas-billing">
       <Card>
-        <h3 className="athena-title text-base">Assinatura</h3>
+        <h3 className="movvo-title text-base">Assinatura</h3>
         <p className="mt-1 text-sm">{sub ? `${String(sub.planCode || sub.planId)} · ${String(sub.status)}` : 'Sem assinatura'}</p>
         <div className="mt-3 flex flex-wrap gap-2">
           <Button type="button" onClick={() => void saasApi.subscribe(accessToken, { planCode: 'pro' }).then(load)}>
@@ -300,7 +300,7 @@ export function BillingPanel({ accessToken }: { accessToken: string }) {
         </div>
       </Card>
       <Card>
-        <h3 className="athena-title text-base">Faturas</h3>
+        <h3 className="movvo-title text-base">Faturas</h3>
         <ul className="mt-2 space-y-1 text-sm">
           {invoices.map((i) => (
             <li key={String(i.id)}>
@@ -368,7 +368,7 @@ export function PortalPanel({ accessToken }: { accessToken: string }) {
       <BillingPanel accessToken={accessToken} />
       <LicensesPanel accessToken={accessToken} />
       <Card>
-        <h3 className="athena-title text-base">Abrir chamado</h3>
+        <h3 className="movvo-title text-base">Abrir chamado</h3>
         <form
           className="mt-3 space-y-2"
           onSubmit={(e) => {
@@ -543,7 +543,7 @@ export function MarketplaceSaasPanel({ accessToken }: { accessToken: string }) {
     <div className="grid gap-3 md:grid-cols-2" data-testid="saas-marketplace">
       {plugins.map((p) => (
         <Card key={String(p.id)}>
-          <h3 className="athena-title text-base">{String(p.name)}</h3>
+          <h3 className="movvo-title text-base">{String(p.name)}</h3>
           <p className="text-xs text-[var(--muted)]">{String(p.publisher || 'oficial')} · {String(p.slug)}</p>
           <p className="mt-2 text-sm">{String(p.description || '')}</p>
         </Card>
@@ -603,7 +603,7 @@ export function SaasReportsPanel({ accessToken }: { accessToken: string }) {
     <div className="grid gap-3 sm:grid-cols-3" data-testid="saas-reports">
       {['tenants', 'subscriptions', 'invoices'].map((k) => (
         <Card key={k}>
-          <h3 className="athena-title text-base">{k}</h3>
+          <h3 className="movvo-title text-base">{k}</h3>
           <Button className="mt-2" type="button" onClick={() => void dl(k)}>
             CSV
           </Button>

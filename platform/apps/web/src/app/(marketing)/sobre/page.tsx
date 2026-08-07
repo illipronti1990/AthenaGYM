@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { MOVVO_PRODUCT } from '@athena/shared';
+import { MOVVO_PRODUCT } from '@movvo/shared';
 
 export const metadata: Metadata = {
   title: 'Sobre a Movvo — ERP para academias',

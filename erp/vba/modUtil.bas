@@ -5,7 +5,7 @@ Option Explicit
 ' Sprint 3.3 — Utilitários reutilizáveis (sem acesso a planilha)
 '============================================================
 
-Public Const APP_TITLE As String = "ATHENAS GYM"
+Public Const APP_TITLE As String = "ATHENA GYM"
 
 Public Sub MsgErro(ByVal texto As String)
     MsgBox texto, vbExclamation, APP_TITLE

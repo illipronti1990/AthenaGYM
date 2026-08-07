@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { AgendaDashboard, AgendaKpis } from '@athena/shared';
+import type { AgendaDashboard, AgendaKpis } from '@movvo/shared';
 import { operationsApi } from '@/modules/operations/services/operationsApi';
 
 export function AgendaDashboard({ accessToken }: { accessToken: string }) {

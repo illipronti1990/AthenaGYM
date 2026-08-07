@@ -1,4 +1,4 @@
-export { athenaColors, athenaColorsLight, type AthenaColorPalette } from './colors';
+export { movvoColorsLegacy, movvoColorsLegacyLight, type MovvoColorPalette } from './colors';
 export { athenaSpacing, space, type AthenaSpacing } from './spacing';
 export { athenaTypography, type AthenaTypographyKey } from './typography';
 export { athenaRadius } from './radius';

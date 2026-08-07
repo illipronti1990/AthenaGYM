@@ -1,1 +1,1 @@
-"""ATHENAS GYM Cloud API package."""
+"""ATHENA GYM Cloud API package."""

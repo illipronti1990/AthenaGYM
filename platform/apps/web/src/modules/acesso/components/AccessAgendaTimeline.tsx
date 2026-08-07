@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { Checkin } from '@athena/shared';
+import type { Checkin } from '@movvo/shared';
 import { acessoApi } from '../services/acessoApi';
 
 export function AccessAgendaTimeline({ accessToken }: { accessToken: string }) {

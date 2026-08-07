@@ -1,39 +1,39 @@
-@import '@athena/ui/styles.css';
+@import '@movvo/ui/styles.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  font-family: var(--font-athena);
+  font-family: var(--font-movvo);
   background: var(--background);
   color: var(--text);
   min-height: 100vh;
 }
 
-.athena-shell input:not([type='checkbox']):not([type='radio']):not([type='file']),
-.athena-shell select,
-.athena-shell textarea {
+.movvo-shell input:not([type='checkbox']):not([type='radio']):not([type='file']),
+.movvo-shell select,
+.movvo-shell textarea {
   background: var(--input-bg);
   border-color: var(--input-border);
   color: var(--text);
 }
 
-.athena-shell input:not([type='checkbox']):not([type='radio']):not([type='file']):focus,
-.athena-shell select:focus,
-.athena-shell textarea:focus {
+.movvo-shell input:not([type='checkbox']):not([type='radio']):not([type='file']):focus,
+.movvo-shell select:focus,
+.movvo-shell textarea:focus {
   border-color: var(--gold);
   outline: none;
   box-shadow: var(--shadow-focus);
 }
 
 /* Athena AI floating conversation button — above footer, clear of content */
-.athena-shell-px2 .athena-main-inner {
+.movvo-shell-px2 .movvo-main-inner {
   padding-bottom: 5.5rem; /* espaço reservado para o FAB */
   padding-right: 4.5rem; /* evita botões à direita sob o FAB */
 }
 
-.athena-chat-backdrop {
+.movvo-chat-backdrop {
   position: fixed;
   inset: 0;
   z-index: 59;
@@ -44,10 +44,10 @@ body {
   cursor: pointer;
 }
 
-.athena-chat-widget {
+.movvo-chat-widget {
   position: fixed;
   right: 1.25rem;
-  bottom: calc(0.85rem + var(--athena-footer-h, 2.75rem));
+  bottom: calc(0.85rem + var(--movvo-footer-h, 2.75rem));
   z-index: 60; /* abaixo de modais/command palette, acima do conteúdo */
   display: flex;
   flex-direction: column;
@@ -56,22 +56,22 @@ body {
   pointer-events: none; /* só o botão/painel recebem clique */
 }
 
-.athena-chat-widget > * {
+.movvo-chat-widget > * {
   pointer-events: auto;
 }
 
 @media (max-width: 768px) {
-  .athena-shell-px2 .athena-main-inner {
+  .movvo-shell-px2 .movvo-main-inner {
     padding-bottom: 7.5rem;
   }
 
-  .athena-chat-widget {
+  .movvo-chat-widget {
     bottom: calc(0.75rem + 4.25rem); /* acima do bottom nav */
     right: 0.85rem;
   }
 }
 
-.athena-chat-fab {
+.movvo-chat-fab {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -93,8 +93,8 @@ body {
   transition: width 0.2s ease, padding 0.2s ease, transform 0.15s ease, filter 0.15s ease;
 }
 
-.athena-chat-fab:hover,
-.athena-chat-fab:focus-visible {
+.movvo-chat-fab:hover,
+.movvo-chat-fab:focus-visible {
   filter: brightness(1.08);
   transform: translateY(-1px);
   width: auto;
@@ -102,16 +102,16 @@ body {
   gap: 0.5rem;
 }
 
-.athena-chat-fab:active {
+.movvo-chat-fab:active {
   transform: translateY(0);
 }
 
-.athena-chat-fab-mascot {
+.movvo-chat-fab-mascot {
   border-radius: 8px;
   display: block;
 }
 
-.athena-chat-fab-label {
+.movvo-chat-fab-label {
   max-width: 0;
   opacity: 0;
   overflow: hidden;
@@ -119,27 +119,27 @@ body {
   transition: max-width 0.2s ease, opacity 0.15s ease;
 }
 
-.athena-chat-fab:hover .athena-chat-fab-label,
-.athena-chat-fab:focus-visible .athena-chat-fab-label {
+.movvo-chat-fab:hover .movvo-chat-fab-label,
+.movvo-chat-fab:focus-visible .movvo-chat-fab-label {
   max-width: 7rem;
   opacity: 1;
 }
 
 /* Quando aberto, só ícone X (compacto) */
-.athena-chat-fab[aria-expanded='true'] {
+.movvo-chat-fab[aria-expanded='true'] {
   width: 3.25rem;
   padding: 0;
   gap: 0;
 }
 
-.athena-chat-fab[aria-expanded='true'] .athena-chat-fab-label {
+.movvo-chat-fab[aria-expanded='true'] .movvo-chat-fab-label {
   display: none;
 }
 
-.athena-chat-widget-panel {
+.movvo-chat-widget-panel {
   width: min(400px, calc(100vw - 1.75rem));
   height: min(560px, calc(100vh - 9rem));
-  max-height: calc(100vh - var(--athena-footer-h, 2.75rem) - 5.5rem);
+  max-height: calc(100vh - var(--movvo-footer-h, 2.75rem) - 5.5rem);
   border-radius: 1rem;
   overflow: hidden;
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
@@ -147,16 +147,16 @@ body {
   background: var(--surface);
 }
 
-.athena-chat-widget-panel.is-hidden,
-.athena-chat-widget-panel[hidden] {
+.movvo-chat-widget-panel.is-hidden,
+.movvo-chat-widget-panel[hidden] {
   display: none !important;
 }
 
-.athena-chat-widget-panel-inner {
+.movvo-chat-widget-panel-inner {
   height: 100%;
 }
 
-.athena-chat-widget-panel-inner > [data-testid='athena-chat'] {
+.movvo-chat-widget-panel-inner > [data-testid='movvo-chat'] {
   height: 100%;
   border: 0;
   border-radius: 0;

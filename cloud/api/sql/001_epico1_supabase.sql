@@ -1,4 +1,4 @@
--- ATHENAS GYM — Épico 1 schema no Supabase (public)
+-- ATHENA GYM — Épico 1 schema no Supabase (public)
 -- Cole em: Dashboard → SQL Editor → New query → Run
 -- Projeto: https://supabase.com/dashboard/project/jvwcgjfszpzifyfbwtqf
 
@@ -64,7 +64,7 @@ create table if not exists public.alunos (
   status varchar(30) default 'Ativo',
   telefone varchar(40),
   email varchar(120),
-  unidade varchar(120) default 'ATHENAS GYM Matriz',
+  unidade varchar(120) default 'ATHENA GYM Matriz',
   data_cadastro date,
   atualizado_em timestamptz default now(),
   unique (empresa_id, matricula)
@@ -76,8 +76,8 @@ create index if not exists idx_alunos_empresa on public.alunos(empresa_id);
 -- Seed mínimo plataforma + academia demo
 insert into public.empresas (id, razao_social, nome_fantasia, cnpj, plano, status, cidade, estado, email)
 values
-  (0, 'ATHENAS PLATFORM LTDA', 'ATHENAS PLATFORM', '00.000.000/0001-00', 'Enterprise', 'Ativo', 'São Paulo', 'SP', 'platform@athenas.gym'),
-  (1, 'ATHENAS GYM ACADEMIA LTDA', 'ATHENAS GYM', '12.345.678/0001-90', 'Enterprise', 'Ativo', 'São Paulo', 'SP', 'contato@athenas.gym')
+  (0, 'ATHENA PLATFORM LTDA', 'ATHENA PLATFORM', '00.000.000/0001-00', 'Enterprise', 'Ativo', 'São Paulo', 'SP', 'platform@athena.gym'),
+  (1, 'ATHENA GYM ACADEMIA LTDA', 'ATHENA GYM', '12.345.678/0001-90', 'Enterprise', 'Ativo', 'São Paulo', 'SP', 'contato@athena.gym')
 on conflict (id) do nothing;
 
 -- Após rodar: Dashboard → Settings → API → Reload schema (ou aguarde o cache PostgREST)

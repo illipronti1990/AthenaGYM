@@ -16,7 +16,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import type { Exercise, Workout, WorkoutExercise, WorkoutSplitType } from '@athena/shared';
+import type { Exercise, Workout, WorkoutExercise, WorkoutSplitType } from '@movvo/shared';
 import { workoutsApi } from '@/modules/workouts/services/workoutsApi';
 import { AlunoSelect } from '@/modules/alunos/components/AlunoSelect';
 import { SplitPicker } from './SplitPicker';
@@ -73,7 +73,7 @@ function SortableRow({
       </button>
       <span className="min-w-[8rem] flex-1 text-sm font-medium">{row.name}</span>
       <input
-        className="athena-input w-16"
+        className="movvo-input w-16"
         type="number"
         min={1}
         value={row.sets}
@@ -81,46 +81,46 @@ function SortableRow({
         title="Séries"
       />
       <input
-        className="athena-input w-20"
+        className="movvo-input w-20"
         value={row.repetitions}
         onChange={(e) => onChange(row.key, { repetitions: e.target.value })}
         title="Repetições"
       />
       <input
-        className="athena-input w-20"
+        className="movvo-input w-20"
         value={row.load}
         onChange={(e) => onChange(row.key, { load: e.target.value })}
         placeholder="Carga"
       />
       <input
-        className="athena-input w-16"
+        className="movvo-input w-16"
         type="number"
         value={row.restSeconds}
         onChange={(e) => onChange(row.key, { restSeconds: Number(e.target.value) })}
         title="Descanso"
       />
       <input
-        className="athena-input w-16"
+        className="movvo-input w-16"
         value={row.rpe}
         onChange={(e) => onChange(row.key, { rpe: e.target.value })}
         placeholder="RPE"
       />
       <input
-        className="athena-input w-16"
+        className="movvo-input w-16"
         value={row.dayLabel}
         onChange={(e) => onChange(row.key, { dayLabel: e.target.value })}
         placeholder="Dia"
       />
       <input
-        className="athena-input w-20"
+        className="movvo-input w-20"
         value={row.cadence}
         onChange={(e) => onChange(row.key, { cadence: e.target.value })}
         placeholder="Cadência"
       />
-      <button type="button" className="athena-btn athena-btn-ghost text-xs" onClick={() => onDuplicate(row.key)}>
+      <button type="button" className="movvo-btn movvo-btn-ghost text-xs" onClick={() => onDuplicate(row.key)}>
         Dup
       </button>
-      <button type="button" className="athena-btn athena-btn-ghost text-xs" onClick={() => onRemove(row.key)}>
+      <button type="button" className="movvo-btn movvo-btn-ghost text-xs" onClick={() => onRemove(row.key)}>
         Rem
       </button>
     </li>
@@ -267,19 +267,19 @@ export function WorkoutBuilder({
         <label className="text-sm text-[var(--muted)]">
           Nome
           <input
-            className="mt-1 block athena-input"
+            className="mt-1 block movvo-input"
             value={name}
             onChange={(e) => setName(e.target.value)}
             data-testid="workout-name"
           />
         </label>
         <SplitPicker value={splitType} onChange={setSplitType} />
-        <button type="button" className="athena-btn" onClick={() => save(false)} data-testid="workout-save">
+        <button type="button" className="movvo-btn" onClick={() => save(false)} data-testid="workout-save">
           Salvar
         </button>
         <button
           type="button"
-          className="athena-btn athena-btn-primary"
+          className="movvo-btn movvo-btn-primary"
           onClick={() => save(true)}
           data-testid="workout-publish"
         >
@@ -298,7 +298,7 @@ export function WorkoutBuilder({
                 <span>{ex.name}</span>
                 <button
                   type="button"
-                  className="athena-btn athena-btn-ghost text-xs"
+                  className="movvo-btn movvo-btn-ghost text-xs"
                   onClick={() => addExercise(ex)}
                   data-testid={`add-ex-${ex.id}`}
                 >

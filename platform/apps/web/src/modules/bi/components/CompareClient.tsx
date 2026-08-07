@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { CompareResponse } from '@athena/shared';
-import { Card } from '@athena/ui';
+import type { CompareResponse } from '@movvo/shared';
+import { Card } from '@movvo/ui';
 import { biApi } from '@/modules/bi/services/biApi';
 
 export function CompareClient({ accessToken }: { accessToken: string }) {

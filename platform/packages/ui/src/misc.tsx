@@ -6,17 +6,17 @@ export function Breadcrumb({
   items: { label: string; href?: string }[];
 }) {
   return (
-    <nav aria-label="Breadcrumb" className="athena-caption" style={{ marginBottom: 16 }}>
+    <nav aria-label="Breadcrumb" className="movvo-caption" style={{ marginBottom: 16 }}>
       <ol style={{ display: 'flex', flexWrap: 'wrap', gap: 8, listStyle: 'none', padding: 0, margin: 0 }}>
         {items.map((item, i) => (
           <li key={`${item.label}-${i}`} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            {i > 0 ? <span className="athena-muted">/</span> : null}
+            {i > 0 ? <span className="movvo-muted">/</span> : null}
             {item.href ? (
-              <a href={item.href} className="athena-link">
+              <a href={item.href} className="movvo-link">
                 {item.label}
               </a>
             ) : (
-              <span className="athena-muted">{item.label}</span>
+              <span className="movvo-muted">{item.label}</span>
             )}
           </li>
         ))}

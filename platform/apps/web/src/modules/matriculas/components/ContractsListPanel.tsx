@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import type { Contract } from '@athena/shared';
-import { Button } from '@athena/ui';
+import type { Contract } from '@movvo/shared';
+import { Button } from '@movvo/ui';
 import { matriculasApi } from '@/modules/matriculas/services/matriculasApi';
 import { useToast } from '@/components/ui/Toast';
 
@@ -20,7 +20,7 @@ export function ContractsListPanel({ accessToken }: { accessToken: string }) {
 
   return (
     <div className="overflow-auto rounded-2xl border border-[var(--border)]">
-      <table className="athena-dg-table">
+      <table className="movvo-dg-table">
         <thead>
           <tr>
             <th>Número</th>
@@ -37,7 +37,7 @@ export function ContractsListPanel({ accessToken }: { accessToken: string }) {
               <td>{c.signedAt ? new Date(c.signedAt).toLocaleString('pt-BR') : '—'}</td>
               <td>
                 {c.pdfUrl ? (
-                  <a href={c.pdfUrl} target="_blank" rel="noreferrer" className="athena-link text-[var(--gold)]">
+                  <a href={c.pdfUrl} target="_blank" rel="noreferrer" className="movvo-link text-[var(--gold)]">
                     Abrir PDF
                   </a>
                 ) : (
@@ -50,7 +50,7 @@ export function ContractsListPanel({ accessToken }: { accessToken: string }) {
             <tr>
               <td colSpan={4} className="py-8 text-center text-[var(--muted)]">
                 Nenhum contrato.{' '}
-                <Link href="/app/matriculas/nova" className="athena-link text-[var(--gold)]">
+                <Link href="/app/matriculas/nova" className="movvo-link text-[var(--gold)]">
                   Nova matrícula
                 </Link>
               </td>

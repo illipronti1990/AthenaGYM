@@ -9,8 +9,8 @@ import type {
   Conversation,
   EngagementDashboard,
   RankingEntry,
-} from '@athena/shared';
-import { Button, Card, chartColors } from '@athena/ui';
+} from '@movvo/shared';
+import { Button, Card, chartColors } from '@movvo/ui';
 import { engagementApi } from '../services/engagementApi';
 
 export function EngagementDashboardPanel({ accessToken }: { accessToken: string }) {
@@ -86,7 +86,7 @@ export function NotificationsPanel({ accessToken }: { accessToken: string }) {
         <label className="text-sm text-[var(--muted)]">
           User ID (profile)
           <input
-            className="athena-input mt-1 block w-72 font-mono text-xs"
+            className="movvo-input mt-1 block w-72 font-mono text-xs"
             value={userId}
             onChange={(e) => setUserId(e.target.value)}
             required
@@ -95,7 +95,7 @@ export function NotificationsPanel({ accessToken }: { accessToken: string }) {
         <label className="text-sm text-[var(--muted)]">
           Título
           <input
-            className="athena-input mt-1 block"
+            className="movvo-input mt-1 block"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
@@ -103,16 +103,16 @@ export function NotificationsPanel({ accessToken }: { accessToken: string }) {
         <Button type="submit">Enviar push</Button>
       </form>
       {error ? <p className="text-sm text-[var(--primary-hover)]">{error}</p> : null}
-      <ul className="athena-list text-sm">
+      <ul className="movvo-list text-sm">
         {items.map((n) => (
-          <li key={n.id} className="athena-list-item">
+          <li key={n.id} className="movvo-list-item">
             <span className="text-[var(--text)]">
               {n.title} · {n.channel} · {n.status}
             </span>
             {!n.readAt ? (
               <button
                 type="button"
-                className="athena-link text-[var(--gold)]"
+                className="movvo-link text-[var(--gold)]"
                 onClick={() => engagementApi.markRead(accessToken, n.id).then(reload)}
               >
                 Marcar lida
@@ -178,7 +178,7 @@ export function ChatPanel({ accessToken }: { accessToken: string }) {
       <Card className="space-y-3">
         <div className="flex gap-2">
           <input
-            className="athena-input w-full font-mono text-xs"
+            className="movvo-input w-full font-mono text-xs"
             placeholder="Member profile UUID"
             value={memberId}
             onChange={(e) => setMemberId(e.target.value)}
@@ -213,7 +213,7 @@ export function ChatPanel({ accessToken }: { accessToken: string }) {
         </ul>
         <div className="flex gap-2">
           <input
-            className="athena-input w-full"
+            className="movvo-input w-full"
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="Mensagem"
@@ -274,7 +274,7 @@ export function CampaignsPanel({ accessToken }: { accessToken: string }) {
     <div className="space-y-4">
       <div className="flex flex-wrap gap-2">
         <input
-          className="athena-input"
+          className="movvo-input"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
@@ -283,16 +283,16 @@ export function CampaignsPanel({ accessToken }: { accessToken: string }) {
         </Button>
       </div>
       <textarea
-        className="athena-input text-sm"
+        className="movvo-input text-sm"
         rows={2}
         value={body}
         onChange={(e) => setBody(e.target.value)}
       />
       {msg ? <p className="text-sm text-[var(--gold)]">{msg}</p> : null}
       {error ? <p className="text-sm text-[var(--primary-hover)]">{error}</p> : null}
-      <ul className="athena-list text-sm">
+      <ul className="movvo-list text-sm">
         {items.map((c) => (
-          <li key={c.id} className="athena-list-item">
+          <li key={c.id} className="movvo-list-item">
             <span className="text-[var(--text)]">
               {c.name} · {c.status} · {c.channel}
             </span>
@@ -300,7 +300,7 @@ export function CampaignsPanel({ accessToken }: { accessToken: string }) {
               <button
                 type="button"
                 onClick={() => void send(c.id)}
-                className="athena-link text-[var(--gold)]"
+                className="movvo-link text-[var(--gold)]"
               >
                 Enviar
               </button>
@@ -359,7 +359,7 @@ export function LoyaltyPanel({ accessToken }: { accessToken: string }) {
     <div className="space-y-6">
       <div className="flex flex-wrap gap-2">
         <input
-          className="athena-input w-72 font-mono text-xs"
+          className="movvo-input w-72 font-mono text-xs"
           placeholder="ID do aluno"
           value={studentId}
           onChange={(e) => setStudentId(e.target.value)}
@@ -374,7 +374,7 @@ export function LoyaltyPanel({ accessToken }: { accessToken: string }) {
       {aiAnswer ? <p className="text-sm text-[var(--text)]">{aiAnswer}</p> : null}
       {error ? <p className="text-sm text-[var(--primary-hover)]">{error}</p> : null}
       <div>
-        <h2 className="athena-title mb-2 text-sm">TOP 10</h2>
+        <h2 className="movvo-title mb-2 text-sm">TOP 10</h2>
         <Card>
           <ol className="list-decimal space-y-1 pl-5 text-sm text-[var(--text)]">
             {ranking.map((r) => (
@@ -387,10 +387,10 @@ export function LoyaltyPanel({ accessToken }: { accessToken: string }) {
         </Card>
       </div>
       <div>
-        <h2 className="athena-title mb-2 text-sm">Desafios</h2>
-        <ul className="athena-list text-sm">
+        <h2 className="movvo-title mb-2 text-sm">Desafios</h2>
+        <ul className="movvo-list text-sm">
           {challenges.map((c) => (
-            <li key={c.id} className="athena-list-item">
+            <li key={c.id} className="movvo-list-item">
               <span className="text-[var(--text)]">
                 {c.title} · {c.pointsReward} pts
               </span>
@@ -398,7 +398,7 @@ export function LoyaltyPanel({ accessToken }: { accessToken: string }) {
                 type="button"
                 disabled={!studentId}
                 onClick={() => void join(c.id)}
-                className="athena-link text-[var(--gold)] disabled:opacity-50"
+                className="movvo-link text-[var(--gold)] disabled:opacity-50"
               >
                 Participar
               </button>

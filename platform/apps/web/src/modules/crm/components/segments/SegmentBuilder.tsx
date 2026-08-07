@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { AudienceSegment } from '@athena/shared';
-import { Button, Card } from '@athena/ui';
+import type { AudienceSegment } from '@movvo/shared';
+import { Button, Card } from '@movvo/ui';
 import { crmApi } from '../../services/crmApi';
 import { useToast } from '@/components/ui/Toast';
 
@@ -87,7 +87,7 @@ export function SegmentBuilder({ accessToken }: { accessToken: string }) {
             placeholder="Nome do segmento"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="athena-input"
+            className="movvo-input"
             data-testid="segment-name"
           />
           <label className="text-xs text-[var(--muted)]">
@@ -96,7 +96,7 @@ export function SegmentBuilder({ accessToken }: { accessToken: string }) {
               value={filterJson}
               onChange={(e) => setFilterJson(e.target.value)}
               rows={4}
-              className="athena-input mt-1 block w-full font-mono text-xs"
+              className="movvo-input mt-1 block w-full font-mono text-xs"
             />
           </label>
           {jsonError && <p className="text-xs text-[var(--primary-hover)]">{jsonError}</p>}
@@ -108,9 +108,9 @@ export function SegmentBuilder({ accessToken }: { accessToken: string }) {
         </div>
       </Card>
 
-      <ul className="athena-list text-sm">
+      <ul className="movvo-list text-sm">
         {segments.map((s) => (
-          <li key={s.id} className="athena-list-item">
+          <li key={s.id} className="movvo-list-item">
             <div>
               <p className="text-[var(--text)]">{s.name}</p>
               <p className="text-xs text-[var(--muted)]">
@@ -122,7 +122,7 @@ export function SegmentBuilder({ accessToken }: { accessToken: string }) {
               type="button"
               disabled={resolvingId === s.id}
               onClick={() => void onResolve(s.id)}
-              className="athena-link text-[var(--gold)] disabled:opacity-50"
+              className="movvo-link text-[var(--gold)] disabled:opacity-50"
             >
               {resolvingId === s.id ? 'Resolvendo…' : 'Resolver'}
             </button>

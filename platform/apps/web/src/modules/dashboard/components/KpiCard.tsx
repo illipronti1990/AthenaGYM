@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import type { DashboardKpi } from '@athena/shared';
+import type { DashboardKpi } from '@movvo/shared';
 import { AnimatedNumber } from './AnimatedNumber';
 import { formatKpi } from '../utils/format';
 
@@ -17,12 +17,12 @@ const toneBorder: Record<DashboardKpi['tone'], string> = {
 export function KpiCard({ kpi }: { kpi: DashboardKpi }) {
   const content = (
     <div
-      className={`athena-card athena-card-hover flex min-h-[120px] cursor-pointer flex-col justify-between transition duration-200 ${toneBorder[kpi.tone]}`}
+      className={`movvo-card movvo-card-hover flex min-h-[120px] cursor-pointer flex-col justify-between transition duration-200 ${toneBorder[kpi.tone]}`}
       title={kpi.deltaLabel || kpi.label}
       data-testid={`kpi-${kpi.id}`}
     >
       <p className="text-sm text-[var(--muted)]">{kpi.label}</p>
-      <p className="athena-h2 mt-2">
+      <p className="movvo-h2 mt-2">
         <AnimatedNumber value={kpi.value} format={(n) => formatKpi(n, kpi.format)} />
       </p>
       {kpi.delta != null || kpi.deltaLabel ? (

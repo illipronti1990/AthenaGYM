@@ -15,11 +15,11 @@ import {
   toCsv,
   toExcelCsv,
   type ExportFormat,
-} from '@athena/sdk-bi';
+} from '@movvo/sdk-bi';
 import {
   athenaOllamaAnswer,
   isOllamaConfigured,
-} from '@athena/ai-sdk';
+} from '@movvo/ai-sdk';
 import type {
   AthenaAiChatResponse,
   AuthContext,
@@ -29,11 +29,11 @@ import type {
   CompareResponse,
   ForecastResult,
   HeatmapResponse,
-} from '@athena/shared';
+} from '@movvo/shared';
 import {
   classCancelBlockMessage,
   CLASS_CANCEL_CUTOFF_MINUTES,
-} from '@athena/shared';
+} from '@movvo/shared';
 import { AuthUser } from '../auth/auth.types';
 import { OperationsService } from '../operations/operations.service';
 import { StudentsService } from '../students/students.service';
@@ -692,7 +692,7 @@ export class AnalyticsService {
 
     if (q.includes('fatur') || q.includes('receita') || (q.includes('quanto') && q.includes('mês'))) {
       return {
-        provider: 'athena-rules',
+        provider: 'movvo-rules',
         llm: 'not_configured',
         sources: ['receivables', 'fact_revenue'],
         answer: `Receita do mês: R$ ${m.revenueMonth.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}.`,
@@ -702,7 +702,7 @@ export class AnalyticsService {
     if (q.includes('inadimpl')) {
       const overdue = (context.overdueStudents as Array<{ name: string }> | undefined) || [];
       return {
-        provider: 'athena-rules',
+        provider: 'movvo-rules',
         llm: 'not_configured',
         sources: ['receivables'],
         answer: `Inadimplência: R$ ${m.delinquency.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}. Alunos: ${
@@ -715,7 +715,7 @@ export class AnalyticsService {
       const overdue =
         (context.overdueStudents as Array<{ name: string; amount: number }> | undefined) || [];
       return {
-        provider: 'athena-rules',
+        provider: 'movvo-rules',
         llm: 'not_configured',
         sources: ['receivables'],
         answer: overdue.length
@@ -727,7 +727,7 @@ export class AnalyticsService {
     if (q.includes('professor') && (q.includes('mais') || q.includes('retenção') || q.includes('aluno'))) {
       const top = context.topTeacher as { label: string; value: number } | null;
       return {
-        provider: 'athena-rules',
+        provider: 'movvo-rules',
         llm: 'not_configured',
         sources: ['schedules', 'class_enrollments'],
         answer: top
@@ -739,7 +739,7 @@ export class AnalyticsService {
     if (q.includes('plano') && (q.includes('vende') || q.includes('mais') || q.includes('vendido'))) {
       const top = context.topPlan as { label: string; value: number } | null;
       return {
-        provider: 'athena-rules',
+        provider: 'movvo-rules',
         llm: 'not_configured',
         sources: ['enrollments'],
         answer: top
@@ -752,7 +752,7 @@ export class AnalyticsService {
       const days = Number(context.studentsWithoutCheckinDays || 15);
       const list = (context.studentsWithoutCheckin as Array<{ name: string }> | undefined) || [];
       return {
-        provider: 'athena-rules',
+        provider: 'movvo-rules',
         llm: 'not_configured',
         sources: ['checkins', 'students'],
         answer: list.length
@@ -767,7 +767,7 @@ export class AnalyticsService {
     if (q.includes('previsão') || q.includes('projet') || q.includes('final do mês')) {
       const f = context.forecastRevenueMonth as { value: number; confidence: number } | undefined;
       return {
-        provider: 'athena-rules',
+        provider: 'movvo-rules',
         llm: 'not_configured',
         sources: ['forecast'],
         answer: f
@@ -782,7 +782,7 @@ export class AnalyticsService {
       const heat = (context.modalities as Array<{ label: string; value: number }> | undefined) || [];
       const top = heat[0];
       return {
-        provider: 'athena-rules',
+        provider: 'movvo-rules',
         llm: 'not_configured',
         sources: ['schedules'],
         answer: top
@@ -822,7 +822,7 @@ export class AnalyticsService {
           parts.push('Para reservar, diga por exemplo: "reservar a aula 1" ou o nome/data da aula.');
         }
         return {
-          provider: 'athena-rules',
+          provider: 'movvo-rules',
           llm: 'not_configured',
           sources: ['agenda'],
           answer: parts.join('\n\n'),
@@ -831,7 +831,7 @@ export class AnalyticsService {
       }
     }
     return {
-      provider: 'athena-rules',
+      provider: 'movvo-rules',
       llm: 'not_configured',
       sources: [],
       answer:
@@ -867,7 +867,7 @@ export class AnalyticsService {
         : insights.filter((i) => ['peak_occupancy', 'stable', 'premium_freq_down'].includes(i.code));
 
     const base: BiInsightsResponse = {
-      provider: 'athena-rules',
+      provider: 'movvo-rules',
       llm: 'not_configured',
       question: dto.question || null,
       insights: filtered,
@@ -956,7 +956,7 @@ export class AnalyticsService {
 
     if (persona === 'aluno' && /fatur|receita|inadimpl|lucro|caixa|cobrar/i.test(dto.question)) {
       return {
-        provider: 'athena-rules',
+        provider: 'movvo-rules',
         llm: 'not_configured',
         persona,
         sources: ['portal'],
@@ -1009,7 +1009,7 @@ export class AnalyticsService {
     const unitId = auth.defaultUnitId || auth.unitIds?.[0] || null;
     if (!unitId) {
       return {
-        provider: 'athena-action',
+        provider: 'movvo-action',
         llm: 'rules',
         sources: ['agenda'],
         answer:
@@ -1018,7 +1018,7 @@ export class AnalyticsService {
     }
     if (!auth.permissions?.includes('operations.create') && !auth.isSuperAdmin) {
       return {
-        provider: 'athena-action',
+        provider: 'movvo-action',
         llm: 'rules',
         sources: ['agenda'],
         answer: 'Seu perfil não tem permissão para criar aulas na agenda (operations.create).',
@@ -1028,7 +1028,7 @@ export class AnalyticsService {
     const draft = parseScheduleDraft(question);
     if (draft.missingTitle || !draft.title) {
       return {
-        provider: 'athena-action',
+        provider: 'movvo-action',
         llm: 'rules',
         sources: ['agenda'],
         answer:
@@ -1081,7 +1081,7 @@ export class AnalyticsService {
         ? ' (usei amanhã às 10h por padrão — diga data/hora se quiser outro horário)'
         : '';
       return {
-        provider: 'athena-action',
+        provider: 'movvo-action',
         llm: 'rules',
         sources: ['agenda'],
         answer: `Aula criada: "${schedule.title}" em ${formatWhenLabel(schedule.startAt)} · capacidade ${schedule.maxCapacity}${roomNote}.${assumed}`,
@@ -1097,7 +1097,7 @@ export class AnalyticsService {
           ? e.message
           : 'Não foi possível criar a aula.';
       return {
-        provider: 'athena-action',
+        provider: 'movvo-action',
         llm: 'rules',
         sources: ['agenda'],
         answer:
@@ -1119,7 +1119,7 @@ export class AnalyticsService {
     sources.push('agenda');
     if (!auth.permissions?.includes('operations.update') && !auth.isSuperAdmin) {
       return {
-        provider: 'athena-action',
+        provider: 'movvo-action',
         llm: 'rules',
         sources: ['agenda'],
         answer: 'Seu perfil não tem permissão para cancelar aulas na agenda (operations.update).',
@@ -1129,7 +1129,7 @@ export class AnalyticsService {
     const filter = parseScheduleDeleteFilter(question);
     if (filter.missingTitle || !filter.titleHint) {
       return {
-        provider: 'athena-action',
+        provider: 'movvo-action',
         llm: 'rules',
         sources: ['agenda'],
         answer:
@@ -1139,7 +1139,7 @@ export class AnalyticsService {
     }
     if (filter.missingDate || !filter.dayFrom || !filter.dayTo) {
       return {
-        provider: 'athena-action',
+        provider: 'movvo-action',
         llm: 'rules',
         sources: ['agenda'],
         answer: `Para excluir "${filter.titleHint}", informe o dia. Ex.: "exclua todas as aulas ${filter.titleHint} do dia 07/08".`,
@@ -1156,7 +1156,7 @@ export class AnalyticsService {
       });
     } catch (e) {
       return {
-        provider: 'athena-action',
+        provider: 'movvo-action',
         llm: 'rules',
         sources: ['agenda'],
         answer: e instanceof Error ? e.message : 'Não consegui consultar a agenda.',
@@ -1183,7 +1183,7 @@ export class AnalyticsService {
 
     if (!matches.length) {
       return {
-        provider: 'athena-action',
+        provider: 'movvo-action',
         llm: 'rules',
         sources: ['agenda'],
         answer: `Não encontrei aulas "${filter.titleHint}" ativas nesse dia${
@@ -1195,7 +1195,7 @@ export class AnalyticsService {
 
     if (!filter.deleteAll && filter.hour == null && matches.length > 1) {
       return {
-        provider: 'athena-action',
+        provider: 'movvo-action',
         llm: 'rules',
         sources: ['agenda'],
         answer: `Encontrei ${matches.length} aulas "${filter.titleHint}":\n${matches
@@ -1226,7 +1226,7 @@ export class AnalyticsService {
 
     if (!cancelled.length) {
       return {
-        provider: 'athena-action',
+        provider: 'movvo-action',
         llm: 'rules',
         sources: ['agenda'],
         answer: `Não consegui excluir: ${errors.join('; ') || 'erro desconhecido'}.`,
@@ -1245,7 +1245,7 @@ export class AnalyticsService {
       .join(', ');
 
     return {
-      provider: 'athena-action',
+      provider: 'movvo-action',
       llm: 'rules',
       sources: ['agenda'],
       answer: `Excluí ${cancelled.length} aula(s) "${filter.titleHint}" (${hours}).${
@@ -1297,7 +1297,7 @@ export class AnalyticsService {
     } catch {
       if (persona === 'aluno') {
         return {
-          provider: 'athena-rules',
+          provider: 'movvo-rules',
           llm: 'rules',
           sources: ['agenda'],
           answer:
@@ -1317,7 +1317,7 @@ export class AnalyticsService {
         sources.push('agenda');
         if (isReserveIntent(question)) {
           return {
-            provider: 'athena-rules',
+            provider: 'movvo-rules',
             llm: 'rules',
             sources: ['agenda'],
             answer:
@@ -1344,7 +1344,7 @@ export class AnalyticsService {
       if (!target) {
         if (!myAgenda.length) {
           return {
-            provider: 'athena-action',
+            provider: 'movvo-action',
             llm: 'rules',
             sources: ['agenda'],
             answer: 'Você não tem reservas ativas para cancelar.',
@@ -1352,7 +1352,7 @@ export class AnalyticsService {
           };
         }
         return {
-          provider: 'athena-action',
+          provider: 'movvo-action',
           llm: 'rules',
           sources: ['agenda'],
           answer: `Qual reserva deseja cancelar?\n${myAgenda
@@ -1367,7 +1367,7 @@ export class AnalyticsService {
       const blocked = classCancelBlockMessage(target.startAt);
       if (blocked) {
         return {
-          provider: 'athena-action',
+          provider: 'movvo-action',
           llm: 'rules',
           sources: ['agenda'],
           answer: blocked,
@@ -1386,7 +1386,7 @@ export class AnalyticsService {
           /* ignore refresh errors */
         }
         return {
-          provider: 'athena-action',
+          provider: 'movvo-action',
           llm: 'rules',
           sources: ['agenda'],
           answer: `Cancelei sua reserva em "${target.title}" (${formatWhenLabel(target.startAt)}). Status: ${cancelled.status}. A aula voltou para disponíveis, se ainda estiver aberta.`,
@@ -1400,7 +1400,7 @@ export class AnalyticsService {
         };
       } catch (e) {
         return {
-          provider: 'athena-action',
+          provider: 'movvo-action',
           llm: 'rules',
           sources: ['agenda'],
           answer: e instanceof Error ? e.message : 'Não foi possível cancelar a reserva.',
@@ -1414,7 +1414,7 @@ export class AnalyticsService {
       if (!target) {
         if (!openClasses.length) {
           return {
-            provider: 'athena-action',
+            provider: 'movvo-action',
             llm: 'rules',
             sources: ['agenda'],
             answer: 'Não há aulas abertas para reserva no momento. Veja Minha agenda no portal.',
@@ -1422,7 +1422,7 @@ export class AnalyticsService {
           };
         }
         return {
-          provider: 'athena-action',
+          provider: 'movvo-action',
           llm: 'rules',
           sources: ['agenda'],
           answer: `Qual aula deseja reservar?\n${formatOpenClassesList(openClasses)}\n\nResponda com o número (ex.: "reservar a aula 1") ou o nome/data.`,
@@ -1442,7 +1442,7 @@ export class AnalyticsService {
           /* ignore */
         }
         return {
-          provider: 'athena-action',
+          provider: 'movvo-action',
           llm: 'rules',
           sources: ['agenda'],
           answer: waitlist
@@ -1461,7 +1461,7 @@ export class AnalyticsService {
         };
       } catch (e) {
         return {
-          provider: 'athena-action',
+          provider: 'movvo-action',
           llm: 'rules',
           sources: ['agenda'],
           answer: e instanceof Error ? e.message : 'Não foi possível reservar a aula.',

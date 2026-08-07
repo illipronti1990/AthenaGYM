@@ -2,8 +2,8 @@
 
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { CANCEL_REASONS } from '@athena/shared';
-import { Button, FormInput, FormSection, FormSelect } from '@athena/ui';
+import { CANCEL_REASONS } from '@movvo/shared';
+import { Button, FormInput, FormSection, FormSelect } from '@movvo/ui';
 import { matriculasApi } from '../services/matriculasApi';
 import { useToast } from '@/components/ui/Toast';
 

@@ -1,3 +1,3 @@
 'use client';
 
-export { ToastProvider, useToast } from '@athena/ui';
+export { ToastProvider, useToast } from '@movvo/ui';

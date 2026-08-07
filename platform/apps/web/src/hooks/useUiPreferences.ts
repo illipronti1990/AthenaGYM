@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
-const KEY = 'athena_ui_prefs';
+const KEY = 'movvo_ui_prefs';
 
 export type UiPreferences = {
   language: 'pt-BR' | 'en';
@@ -25,10 +25,15 @@ export function useUiPreferences() {
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem(KEY);
+      const raw =
+        localStorage.getItem(KEY) || localStorage.getItem('athena_ui_prefs');
       if (!raw) return;
       const parsed = JSON.parse(raw) as Partial<UiPreferences>;
       setPrefsState({ ...defaults, ...parsed });
+      if (!localStorage.getItem(KEY)) {
+        localStorage.setItem(KEY, raw);
+        localStorage.removeItem('athena_ui_prefs');
+      }
     } catch {
       /* ignore */
     }

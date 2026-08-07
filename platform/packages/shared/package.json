@@ -1,5 +1,5 @@
 {
-  "name": "@athena/shared",
+  "name": "@movvo/shared",
   "version": "0.10.0",
   "private": true,
   "main": "./dist/index.js",
@@ -11,6 +11,12 @@
       "import": "./src/index.ts",
       "require": "./dist/index.js",
       "default": "./src/index.ts"
+    },
+    "./branding/movvo": {
+      "types": "./src/branding/movvo.ts",
+      "import": "./src/branding/movvo.ts",
+      "require": "./dist/branding/movvo.js",
+      "default": "./src/branding/movvo.ts"
     },
     "./branding/athena": {
       "types": "./src/branding/athena.ts",

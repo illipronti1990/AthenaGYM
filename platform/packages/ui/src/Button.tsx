@@ -8,10 +8,10 @@ export type ButtonSize = 'sm' | 'md';
 export type ButtonStatus = 'idle' | 'loading' | 'success' | 'error';
 
 const variantClass: Record<ButtonVariant, string> = {
-  primary: 'athena-btn-primary',
-  secondary: 'athena-btn-secondary',
-  success: 'athena-btn-success',
-  danger: 'athena-btn-danger',
+  primary: 'movvo-btn-primary',
+  secondary: 'movvo-btn-secondary',
+  success: 'movvo-btn-success',
+  danger: 'movvo-btn-danger',
 };
 
 export function Button({
@@ -44,7 +44,7 @@ export function Button({
   if (resolved === 'loading') {
     content = (
       <>
-        <Loader2 size={16} className="athena-spin" aria-hidden />
+        <Loader2 size={16} className="movvo-spin" aria-hidden />
         {loadingLabel || 'Salvando…'}
       </>
     );
@@ -65,12 +65,12 @@ export function Button({
   }
 
   const v =
-    resolved === 'success' ? 'athena-btn-success' : resolved === 'error' ? 'athena-btn-danger' : variantClass[variant];
+    resolved === 'success' ? 'movvo-btn-success' : resolved === 'error' ? 'movvo-btn-danger' : variantClass[variant];
 
   return (
     <button
       type={type}
-      className={`athena-btn athena-btn-animated ${v} ${size === 'sm' ? 'athena-btn-sm' : ''} ${className}`}
+      className={`movvo-btn movvo-btn-animated ${v} ${size === 'sm' ? 'movvo-btn-sm' : ''} ${className}`}
       disabled={disabled || busy}
       aria-busy={busy || undefined}
       {...props}

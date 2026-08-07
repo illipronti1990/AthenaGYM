@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
-import { Logo } from '@athena/ui';
+import { Logo } from '@movvo/ui';
 import { trackEvent } from '../lib/analytics';
 
 const NAV = [

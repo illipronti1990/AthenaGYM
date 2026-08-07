@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { TrainingTimelineItem } from '@athena/shared';
+import type { TrainingTimelineItem } from '@movvo/shared';
 import { workoutsApi } from '@/modules/workouts/services/workoutsApi';
 import { AlunoSelect } from '@/modules/alunos/components/AlunoSelect';
 

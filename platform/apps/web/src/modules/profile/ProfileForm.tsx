@@ -1,8 +1,8 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import type { Profile } from '@athena/shared';
-import { Button } from '@athena/ui';
+import type { Profile } from '@movvo/shared';
+import { Button } from '@movvo/ui';
 import { apiChangePassword, apiUpdateProfile } from '@/services/api';
 import { useToast } from '@/components/ui/Toast';
 import { useTheme } from '@/components/ThemeProvider';
@@ -109,7 +109,7 @@ export function ProfileForm({
       <label className="block text-sm">
         <span className="mb-1 block text-[var(--muted)]">Tema</span>
         <select
-          className="athena-input"
+          className="movvo-input"
           value={theme}
           onChange={(e) => setThemeLocal(e.target.value)}
         >
@@ -149,7 +149,7 @@ export function ProfileForm({
         <label className="block text-sm">
           <span className="mb-1 block text-[var(--muted)]">Formato de data</span>
           <select
-            className="athena-input"
+            className="movvo-input"
             value={prefs.dateFormat}
             onChange={(e) => setPrefs({ dateFormat: e.target.value as 'dd/MM/yyyy' | 'yyyy-MM-dd' })}
           >
@@ -162,7 +162,7 @@ export function ProfileForm({
         </p>
         <button
           type="button"
-          className="athena-btn athena-btn-secondary text-sm"
+          className="movvo-btn movvo-btn-secondary text-sm"
           data-testid="restart-tour"
           onClick={() => window.dispatchEvent(new Event('movvo:restart-tour'))}
         >
@@ -198,7 +198,7 @@ function Field({
       <span className="mb-1 block text-[var(--muted)]">{label}</span>
       <input
         type={type}
-        className="athena-input"
+        className="movvo-input"
         value={value}
         onChange={(e) => onChange(e.target.value)}
       />

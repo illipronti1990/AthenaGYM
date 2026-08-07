@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import type { DashboardActivity, DashboardActivityKind } from '@athena/shared';
-import { Avatar, EmptyState } from '@athena/ui';
+import type { DashboardActivity, DashboardActivityKind } from '@movvo/shared';
+import { Avatar, EmptyState } from '@movvo/ui';
 import {
   Activity,
   ClipboardCheck,
@@ -28,8 +28,8 @@ const kindMeta: Record<
 
 export function ActivityTimeline({ items }: { items: DashboardActivity[] }) {
   return (
-    <div className="athena-card h-full" data-testid="activity-timeline">
-      <h3 className="athena-h3 mb-3 inline-flex items-center gap-2 text-[var(--gold)]">
+    <div className="movvo-card h-full" data-testid="activity-timeline">
+      <h3 className="movvo-h3 mb-3 inline-flex items-center gap-2 text-[var(--gold)]">
         <Activity size={18} /> Últimas movimentações
       </h3>
       {items.length === 0 ? (
@@ -37,7 +37,7 @@ export function ActivityTimeline({ items }: { items: DashboardActivity[] }) {
           title="Nenhuma movimentação encontrada"
           description="Cadastre o primeiro aluno ou registre um pagamento."
           action={
-            <Link href="/app/alunos/novo" className="athena-btn athena-btn-primary athena-btn-sm">
+            <Link href="/app/alunos/novo" className="movvo-btn movvo-btn-primary movvo-btn-sm">
               Novo Aluno
             </Link>
           }

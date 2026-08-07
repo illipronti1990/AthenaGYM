@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { MOVVO_PRODUCT } from '@athena/shared';
-import { Logo } from '@athena/ui';
+import { MOVVO_PRODUCT } from '@movvo/shared';
+import { Logo } from '@movvo/ui';
 
 const PRODUCT = [
   { href: '/planos', label: 'Planos' },
