@@ -52,37 +52,6 @@ export class PinoNestLogger implements LoggerService {
   }
 }
 
-@Injectable()
-export class RequestContextMiddleware implements NestMiddleware {
-  private readonly nestLog = new Logger('HTTP');
-
-  constructor(private readonly metrics: MetricsService) {}
-
-  use(req: Request & { requestId?: string }, res: Response, next: NextFunction) {
-    const requestId =
-      String(req.headers['x-request-id'] || '') || randomUUID();
-    req.requestId = requestId;
-    res.setHeader('x-request-id', requestId);
-    const started = Date.now();
-    res.on('finish', () => {
-      const durationMs = Date.now() - started;
-      this.metrics.recordHttp(res.statusCode, durationMs);
-      getPino().info({
-        requestId,
-        method: req.method,
-        path: req.originalUrl || req.url,
-        statusCode: res.statusCode,
-        durationMs,
-        companyId: req.headers['x-company-id'] || null,
-      }, 'http_request');
-      this.nestLog.debug?.(
-        `${req.method} ${req.originalUrl} ${res.statusCode} ${durationMs}ms`,
-      );
-    });
-    next();
-  }
-}
-
 /** Minimal in-process Prometheus text exposition */
 @Injectable()
 export class MetricsService {
@@ -117,5 +86,36 @@ export class MetricsService {
       lines.push(`# TYPE ${k} gauge`, `${k} ${v}`);
     }
     return lines.join('\n') + '\n';
+  }
+}
+
+@Injectable()
+export class RequestContextMiddleware implements NestMiddleware {
+  private readonly nestLog = new Logger('HTTP');
+
+  constructor(private readonly metrics: MetricsService) {}
+
+  use(req: Request & { requestId?: string }, res: Response, next: NextFunction) {
+    const requestId =
+      String(req.headers['x-request-id'] || '') || randomUUID();
+    req.requestId = requestId;
+    res.setHeader('x-request-id', requestId);
+    const started = Date.now();
+    res.on('finish', () => {
+      const durationMs = Date.now() - started;
+      this.metrics.recordHttp(res.statusCode, durationMs);
+      getPino().info({
+        requestId,
+        method: req.method,
+        path: req.originalUrl || req.url,
+        statusCode: res.statusCode,
+        durationMs,
+        companyId: req.headers['x-company-id'] || null,
+      }, 'http_request');
+      this.nestLog.debug?.(
+        `${req.method} ${req.originalUrl} ${res.statusCode} ${durationMs}ms`,
+      );
+    });
+    next();
   }
 }
