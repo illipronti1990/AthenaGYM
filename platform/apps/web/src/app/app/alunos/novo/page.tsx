@@ -38,7 +38,7 @@ export default async function NewStudentPage() {
             Formulário inteligente com validação em tempo real e CEP automático
           </p>
         </div>
-        <Link href="/app/alunos/matricula">
+        <Link href="/app/matriculas/nova">
           <Button type="button" variant="secondary" size="sm">
             Matrícula rápida (wizard)
           </Button>

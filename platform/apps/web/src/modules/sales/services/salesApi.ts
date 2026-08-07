@@ -66,12 +66,21 @@ export const salesApi = {
       method: 'POST',
       body: JSON.stringify(body),
     }),
+  completeEnrollment: (t: string, body: Record<string, unknown>) =>
+    apiFetch<{ enrollment: Enrollment; contract: Contract; studentId: string }>(
+      '/sales/enrollments/complete',
+      t,
+      { method: 'POST', body: JSON.stringify(body) },
+    ),
   contracts: (t: string) => apiFetch<Contract[]>('/sales/contracts', t),
   createContract: (t: string, body: Record<string, unknown>) =>
     apiFetch<Contract>('/sales/contracts', t, {
       method: 'POST',
       body: JSON.stringify(body),
     }),
-  signContract: (t: string, id: string) =>
-    apiFetch<Contract>(`/sales/contracts/${id}/sign`, t, { method: 'POST', body: '{}' }),
+  signContract: (t: string, id: string, body: Record<string, unknown> = {}) =>
+    apiFetch<Contract>(`/sales/contracts/${id}/sign`, t, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
 };

@@ -126,7 +126,7 @@ export function LayoutProvider({ children }: { children: ReactNode }) {
 
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'n' && !typing) {
         e.preventDefault();
-        router.push('/app/alunos/novo');
+        router.push('/app/matriculas/nova');
       }
 
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {

@@ -57,7 +57,8 @@ export function LoginForm() {
   const attempts = useLoginAttempts();
 
   useEffect(() => {
-    const saved = localStorage.getItem(REMEMBER_KEY);
+    const saved =
+      localStorage.getItem(REMEMBER_KEY) || localStorage.getItem('athena.rememberEmail');
     if (saved) setEmail(saved);
     else if (DEV_AUTH) setEmail('teste@athena.local');
     if (params.get('reason') === 'timeout') {
@@ -73,8 +74,13 @@ export function LoginForm() {
 
     setLoading(true);
     setError(null);
-    if (remember) localStorage.setItem(REMEMBER_KEY, email);
-    else localStorage.removeItem(REMEMBER_KEY);
+    if (remember) {
+      localStorage.setItem(REMEMBER_KEY, email);
+      localStorage.removeItem('athena.rememberEmail');
+    } else {
+      localStorage.removeItem(REMEMBER_KEY);
+      localStorage.removeItem('athena.rememberEmail');
+    }
 
     try {
       if (DEV_AUTH) {
@@ -205,7 +211,9 @@ export function LoginForm() {
       </label>
 
       {DEV_AUTH ? (
-        <p className="athena-login-dev">DEV · teste@athena.local / teste123</p>
+        <p className="athena-login-dev">
+          DEV · teste@athena.local / teste123 · aluno: renan.aluno@athena.local · professora: bruna.professora@athena.local / teste123
+        </p>
       ) : null}
 
       {attempts.locked ? (

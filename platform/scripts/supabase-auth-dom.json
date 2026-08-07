@@ -1,0 +1,27 @@
+{
+  "title": "Supabase",
+  "url": "https://supabase.com/dashboard/sign-in?returnTo=%2Fproject%2Fjvwcgjfszpzifyfbwtqf%2Fauth%2Furl-configuration",
+  "bodyText": "Documentation\nWelcome back\nSign in to your account\nContinue with GitHub\nContinue with ChatGPT\nContinue with SSO\nor\nEmail\nPassword\nForgot password?\nSign in\nDon’t have an account? Sign up\n\nBy continuing, you agree to Supabase’s Terms of Service and Privacy Policy, and to receive periodic emails with updates.\n\n“\n@supabase is insane.\n@codewithbhargav\n\nSupabase",
+  "inputs": [
+    {
+      "type": "email",
+      "name": "email",
+      "id": "email",
+      "placeholder": "you@example.com",
+      "aria": null
+    },
+    {
+      "type": "password",
+      "name": "password",
+      "id": "password",
+      "placeholder": "••••••••",
+      "aria": null
+    }
+  ],
+  "textareas": 0,
+  "buttons": [
+    "Continue with GitHub",
+    "Continue with ChatGPT",
+    "Sign in"
+  ]
+}

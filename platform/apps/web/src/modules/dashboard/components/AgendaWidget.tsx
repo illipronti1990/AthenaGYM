@@ -12,7 +12,7 @@ export function AgendaWidget({ items }: { items: DashboardAgendaItem[] }) {
         <h3 className="athena-h3 inline-flex items-center gap-2 text-sky-400">
           <Calendar size={18} /> Agenda de hoje
         </h3>
-        <Link href="/app/operations/agenda" className="text-xs text-[var(--gold)]">
+        <Link href="/app/acesso/agenda" className="text-xs text-[var(--gold)]">
           Ver tudo
         </Link>
       </div>
@@ -21,7 +21,7 @@ export function AgendaWidget({ items }: { items: DashboardAgendaItem[] }) {
           title="Agenda livre hoje"
           description="Nenhum compromisso agendado. Crie o primeiro evento."
           action={
-            <Link href="/app/operations/agenda" className="athena-btn athena-btn-primary athena-btn-sm">
+            <Link href="/app/acesso/agenda" className="athena-btn athena-btn-primary athena-btn-sm">
               Nova Agenda
             </Link>
           }
@@ -36,7 +36,7 @@ export function AgendaWidget({ items }: { items: DashboardAgendaItem[] }) {
             return (
               <li key={item.id}>
                 <Link
-                  href={item.href || '/app/operations/agenda'}
+                  href={item.href || '/app/acesso/agenda'}
                   className="flex items-center gap-3 rounded-[12px] border border-[var(--border)] px-3 py-2 transition hover:border-sky-500/50"
                 >
                   <span className="font-semibold text-sky-400">{time}</span>

@@ -6,9 +6,13 @@ import {
   LOYALTY_POINTS_EARNED,
   MESSAGE_SENT,
   NOTIFICATION_SENT,
+  NPS_RESPONSE_RECEIVED,
+  REFERRAL_REWARDED,
   type CampaignSentEvent,
   type MessageSentEvent,
   type NotificationSentEvent,
+  type NpsResponseReceivedEvent,
+  type ReferralRewardedEvent,
 } from './engagement.events';
 
 @Injectable()
@@ -49,5 +53,17 @@ export class EngagementEventListeners {
   @OnEvent(LOYALTY_POINTS_EARNED)
   async onLoyalty(payload: Record<string, unknown>) {
     await this.outbox(String(payload.companyId), LOYALTY_POINTS_EARNED, payload);
+  }
+
+  @OnEvent(REFERRAL_REWARDED)
+  async onReferralRewarded(e: ReferralRewardedEvent) {
+    this.log.log(`[CRM] Referral recompensado: ${e.referralId}`);
+    await this.outbox(e.companyId, REFERRAL_REWARDED, { ...e });
+  }
+
+  @OnEvent(NPS_RESPONSE_RECEIVED)
+  async onNpsResponse(e: NpsResponseReceivedEvent) {
+    this.log.log(`[NPS] Resposta recebida: score ${e.score} para survey ${e.surveyId}`);
+    await this.outbox(e.companyId, NPS_RESPONSE_RECEIVED, { ...e });
   }
 }

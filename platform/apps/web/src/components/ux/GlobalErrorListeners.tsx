@@ -24,25 +24,29 @@ function isStaleChunkError(value: unknown): boolean {
   );
 }
 
-function reloadOnceForStaleChunk() {
+function hardReloadForStaleChunk() {
   if (typeof window === 'undefined') return;
   if (sessionStorage.getItem(CHUNK_RELOAD_KEY) === '1') return;
   sessionStorage.setItem(CHUNK_RELOAD_KEY, '1');
-  window.location.reload();
+  const url = new URL(window.location.href);
+  url.searchParams.set('_rsc', String(Date.now()));
+  window.location.replace(url.toString());
 }
 
 export function GlobalErrorListeners() {
   useEffect(() => {
+    sessionStorage.removeItem(CHUNK_RELOAD_KEY);
+
     function onError(event: ErrorEvent) {
       if (isStaleChunkError(event.error || event.message)) {
-        reloadOnceForStaleChunk();
+        hardReloadForStaleChunk();
         return;
       }
       reportClientError(event.error || event.message, 'window');
     }
     function onRejection(event: PromiseRejectionEvent) {
       if (isStaleChunkError(event.reason)) {
-        reloadOnceForStaleChunk();
+        hardReloadForStaleChunk();
         return;
       }
       reportClientError(event.reason, 'unhandledrejection');

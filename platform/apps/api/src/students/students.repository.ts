@@ -605,12 +605,66 @@ export class StudentsRepository {
     const { data, error } = await this.admin()
       .from('students')
       .select(
-        'registration_number, full_name, cpf, email, phone, status, plan_name, trainer_name, unit_id',
+        'id, registration_number, full_name, cpf, email, phone, status, plan_name, trainer_name, unit_id',
       )
       .in('company_id', companyIds)
       .is('deleted_at', null)
       .order('full_name');
     if (error) throw error;
     return data || [];
+  }
+
+  async exportRowsForTrainer(
+    companyIds: string[],
+    opts: { trainerUserId: string; nameHints: string[] },
+  ) {
+    const selectCols =
+      'id, registration_number, full_name, cpf, email, phone, status, plan_name, trainer_name, unit_id';
+    const byId = new Map<string, Record<string, unknown>>();
+
+    const hints = [...new Set(opts.nameHints.map((h) => h.trim()).filter((h) => h.length >= 2))];
+    if (hints.length) {
+      const orFilter = hints
+        .map((h) => `trainer_name.ilike.%${h.replace(/[%_,]/g, '')}%`)
+        .join(',');
+      const { data, error } = await this.admin()
+        .from('students')
+        .select(selectCols)
+        .in('company_id', companyIds)
+        .is('deleted_at', null)
+        .or(orFilter)
+        .order('full_name');
+      if (error) throw error;
+      for (const row of data || []) {
+        byId.set(String(row.id), row as Record<string, unknown>);
+      }
+    }
+
+    const { data: workouts, error: wErr } = await this.admin()
+      .from('workouts')
+      .select('student_id')
+      .eq('trainer_id', opts.trainerUserId)
+      .not('student_id', 'is', null)
+      .limit(2000);
+    if (wErr) throw wErr;
+    const workoutStudentIds = [
+      ...new Set((workouts || []).map((r) => String(r.student_id)).filter(Boolean)),
+    ];
+    if (workoutStudentIds.length) {
+      const { data, error } = await this.admin()
+        .from('students')
+        .select(selectCols)
+        .in('company_id', companyIds)
+        .in('id', workoutStudentIds)
+        .is('deleted_at', null);
+      if (error) throw error;
+      for (const row of data || []) {
+        byId.set(String(row.id), row as Record<string, unknown>);
+      }
+    }
+
+    return [...byId.values()].sort((a, b) =>
+      String(a.full_name || '').localeCompare(String(b.full_name || ''), 'pt-BR'),
+    );
   }
 }

@@ -13,6 +13,7 @@ import { StubPaymentProvider, payloadHash } from './payments/payment-provider';
 describe('finance calculations', () => {
   it('calcReceivableNet', () => {
     expect(calcReceivableNet({ amount: 100, discount: 10, interest: 5, fine: 2 })).toBe(97);
+    expect(calcReceivableNet({ amount: 100, discount: 0, addition: 5, interest: 0, fine: 0 })).toBe(105);
   });
 
   it('interest and fine', () => {

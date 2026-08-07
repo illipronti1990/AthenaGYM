@@ -51,6 +51,21 @@ export class PrintsController {
     return this.prints.assessment(auth, id);
   }
 
+  @Get('workout/:id')
+  @Permissions('workouts.read')
+  workout(@CurrentAuth() auth: AuthContext, @Param('id') id: string) {
+    return this.prints.workout(auth, id);
+  }
+
+  @Get('progress/:studentId')
+  @Permissions('progress.read')
+  progress(
+    @CurrentAuth() auth: AuthContext,
+    @Param('studentId') studentId: string,
+  ) {
+    return this.prints.progress(auth, studentId);
+  }
+
   @Get('student/:id')
   @Permissions('students.read')
   student(@CurrentAuth() auth: AuthContext, @Param('id') id: string) {

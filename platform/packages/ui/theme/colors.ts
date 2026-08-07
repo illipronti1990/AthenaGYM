@@ -1,55 +1,10 @@
-export const athenaColors = {
-  red: '#A00018',
-  redHover: '#C1121F',
-  redDark: '#7A0012',
-  gold: '#D4AF37',
-  goldLight: '#F4D35E',
-  background: '#0B0B0D',
-  surface: '#151515',
-  card: '#1B1B1F',
-  text: '#FFFFFF',
-  muted: '#A1A1AA',
-  border: '#2B2B2B',
-  navbar: '#0B0B0D',
-  inputBg: '#151515',
-  inputBorder: '#333333',
-  success: '#16A34A',
-  successHover: '#15803D',
-  danger: '#7A0012',
-  dangerHover: '#5C000E',
-  chart: {
-    revenue: '#D4AF37',
-    checkins: '#A00018',
-    finance: '#E63946',
-    workouts: '#F4D35E',
-  },
-} as const;
+export {
+  athenaColors,
+  athenaColorsLight,
+  movvoColorsDark,
+  movvoColorsLight,
+} from '@athena/theme';
 
-export const athenaColorsLight = {
-  red: '#A00018',
-  redHover: '#C1121F',
-  redDark: '#7A0012',
-  gold: '#B8962E',
-  goldLight: '#D4AF37',
-  background: '#F7F7F8',
-  surface: '#FFFFFF',
-  card: '#FFFFFF',
-  text: '#18181B',
-  muted: '#71717A',
-  border: '#E4E4E7',
-  navbar: '#FFFFFF',
-  inputBg: '#FFFFFF',
-  inputBorder: '#D4D4D8',
-  success: '#16A34A',
-  successHover: '#15803D',
-  danger: '#7A0012',
-  dangerHover: '#5C000E',
-  chart: {
-    revenue: '#B8962E',
-    checkins: '#A00018',
-    finance: '#E63946',
-    workouts: '#D4AF37',
-  },
-} as const;
+import type { athenaColors } from '@athena/theme';
 
 export type AthenaColorPalette = typeof athenaColors;

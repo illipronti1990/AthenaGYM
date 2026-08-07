@@ -4,8 +4,11 @@ export { AnimatedCard } from './animations/AnimatedCard';
 export { Input } from './Input';
 export { Select } from './Select';
 export { Badge, type BadgeTone } from './Badge';
-export { EmptyState, SuccessState, ErrorState, OfflineBanner } from './EmptyState';
+export { EmptyState, SuccessState, ErrorState, OfflineBanner, EmptyStatePreset, emptyPresets } from './EmptyState';
+export type { EmptyPresetKey } from './EmptyState';
 export { Skeleton, Loading } from './Skeleton';
+export { Spinner } from './loading/Spinner';
+export { ProgressBar } from './loading/ProgressBar';
 export {
   SkeletonCard,
   SkeletonTable,
@@ -114,8 +117,12 @@ export {
 export type { AthenaIconName, AthenaColorPalette, AthenaSpacing, AthenaTypographyKey } from '../theme';
 
 export const chartColors = {
-  revenue: '#D4AF37',
-  checkins: '#A00018',
-  finance: '#E63946',
+  revenue: '#22C55E',
+  expense: '#EF4444',
+  checkins: '#D90429',
+  finance: '#EF4444',
   workouts: '#F4D35E',
+  wellhub: '#3B82F6',
+  totalPass: '#F97316',
+  goal: '#D4AF37',
 } as const;

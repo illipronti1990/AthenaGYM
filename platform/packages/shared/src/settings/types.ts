@@ -96,7 +96,18 @@ export interface UserFavorite {
 }
 
 export interface GlobalSearchHit {
-  type: 'student' | 'enrollment' | 'receivable' | 'workout' | 'assessment' | 'payment';
+  type:
+    | 'student'
+    | 'enrollment'
+    | 'receivable'
+    | 'workout'
+    | 'assessment'
+    | 'payment'
+    | 'plan'
+    | 'product'
+    | 'trainer'
+    | 'class_session'
+    | 'setting';
   id: string;
   title: string;
   subtitle: string | null;

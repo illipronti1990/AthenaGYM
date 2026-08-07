@@ -1,15 +1,19 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   ArrayNotEmpty,
   IsArray,
   IsBoolean,
   IsIn,
+  IsNumber,
   IsObject,
   IsOptional,
   IsString,
   IsUUID,
   MaxLength,
+  Min,
   MinLength,
+  ValidateNested,
 } from 'class-validator';
 
 export class CreateReportDto {
@@ -63,7 +67,7 @@ export class CreateExportDto {
   @IsIn(['excel', 'pdf', 'csv'])
   format!: 'excel' | 'pdf' | 'csv';
 
-  @ApiPropertyOptional({ example: 'revenue' })
+  @ApiPropertyOptional({ example: 'my_students' })
   @IsOptional()
   @IsString()
   source?: string;
@@ -98,16 +102,85 @@ export class CreateScheduleDto {
 }
 
 export class RunPredictionsDto {
-  @ApiPropertyOptional({ enum: ['churn', 'lead_conversion', 'finance_risk'] })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  @IsIn(['churn', 'lead_conversion', 'finance_risk'])
+  @IsIn([
+    'churn',
+    'lead_conversion',
+    'finance_risk',
+    'revenue_month',
+    'revenue_year',
+    'cancellations',
+    'enrollments',
+    'cashflow',
+    'frequency',
+  ])
   type?: string;
 }
 
 export class AiInsightsDto {
-  @ApiProperty({ example: 'Qual unidade teve maior inadimplência?' })
+  @ApiPropertyOptional({ example: 'Onde atacar a inadimplência?' })
+  @IsOptional()
   @IsString()
   @MinLength(3)
+  question?: string;
+}
+
+export class AiChatHistoryItemDto {
+  @ApiProperty({ enum: ['user', 'assistant'] })
+  @IsString()
+  @IsIn(['user', 'assistant'])
+  role!: 'user' | 'assistant';
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  @MaxLength(4000)
+  content!: string;
+}
+
+export class AiChatDto {
+  @ApiProperty({ example: 'Quanto faturei no mês?' })
+  @IsString()
+  @MinLength(1)
+  @MaxLength(2000)
   question!: string;
+
+  @ApiPropertyOptional({ type: [AiChatHistoryItemDto] })
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => AiChatHistoryItemDto)
+  history?: AiChatHistoryItemDto[];
+}
+
+export class CreateGoalDto {
+  @ApiProperty({ example: 'revenue' })
+  @IsString()
+  @IsIn(['revenue', 'checkins', 'enrollments', 'renewals', 'profit'])
+  metric!: string;
+
+  @ApiProperty()
+  @IsNumber()
+  @Min(0)
+  targetValue!: number;
+
+  @ApiProperty({ example: '2026-08-01' })
+  @IsString()
+  periodStart!: string;
+
+  @ApiProperty({ example: '2026-08-31' })
+  @IsString()
+  periodEnd!: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  label?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUUID()
+  unitId?: string;
 }

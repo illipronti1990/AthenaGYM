@@ -3,19 +3,25 @@
 import { useEffect, useState } from 'react';
 import { Logo } from '@athena/ui';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
-import { findActiveGroup, navGroups } from '@/config/navigation';
 import { useLayout } from './LayoutProvider';
 import { SidebarGroup } from './SidebarGroup';
 import { SidebarFooter } from './SidebarFooter';
 import { useInitialPathname } from './PathnameSyncProvider';
 import { useStablePathname } from './useStablePathname';
+import { useAuthNav } from '@/components/auth/AuthNavProvider';
 
 export function Sidebar({ userName }: { userName?: string | null }) {
   const initialPathname = useInitialPathname();
   const pathname = useStablePathname(initialPathname);
   const [hydrated, setHydrated] = useState(false);
   const routePath = hydrated ? pathname : initialPathname;
-  const activeGroupId = findActiveGroup(routePath);
+  const { groups } = useAuthNav();
+  const activeGroupId =
+    groups.find(
+      (g) =>
+        (g.href && (routePath === g.href || routePath.startsWith(`${g.href}/`))) ||
+        g.items.some((i) => routePath === i.href || routePath.startsWith(`${i.href}/`)),
+    )?.id || null;
   const { collapsed, toggleCollapsed, mobileOpen, setMobileOpen } = useLayout();
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
   const effectiveCollapsed = collapsed && !mobileOpen;
@@ -25,11 +31,16 @@ export function Sidebar({ userName }: { userName?: string | null }) {
   }, []);
 
   useEffect(() => {
-    const active = findActiveGroup(pathname);
+    const active =
+      groups.find(
+        (g) =>
+          (g.href && (pathname === g.href || pathname.startsWith(`${g.href}/`))) ||
+          g.items.some((i) => pathname === i.href || pathname.startsWith(`${i.href}/`)),
+      )?.id || null;
     if (active) {
       setOpenGroups((prev) => ({ ...prev, [active]: true }));
     }
-  }, [pathname]);
+  }, [pathname, groups]);
 
   function isGroupOpen(groupId: string) {
     if (groupId in openGroups) return openGroups[groupId];
@@ -80,7 +91,7 @@ export function Sidebar({ userName }: { userName?: string | null }) {
         </div>
 
         <nav className="flex-1 overflow-y-auto py-2">
-          {navGroups.map((group) => (
+          {groups.map((group) => (
             <SidebarGroup
               key={group.id}
               group={group}

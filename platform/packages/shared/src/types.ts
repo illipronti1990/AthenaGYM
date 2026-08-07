@@ -24,14 +24,23 @@ export interface Company {
   id: string;
   name: string;
   legalName: string | null;
+  tradeName?: string | null;
   document: string | null;
   status: string;
+  saasStatus?: string;
+  planCode?: string | null;
+  activatedAt?: string | null;
+  nextDueAt?: string | null;
+  trialEndsAt?: string | null;
   logoUrl?: string | null;
   faviconUrl?: string | null;
   primaryColor?: string | null;
   secondaryColor?: string | null;
   backgroundLogin?: string | null;
   theme?: string | null;
+  fontFamily?: string | null;
+  emailFrom?: string | null;
+  emailReplyTo?: string | null;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
@@ -317,7 +326,57 @@ export type LeadActivityType =
   | 'note';
 
 export type ContractStatus = 'draft' | 'sent' | 'signed' | 'cancelled';
-export type EnrollmentStatus = 'pending' | 'active' | 'expired' | 'cancelled';
+export type EnrollmentStatus = 'pending' | 'active' | 'expired' | 'cancelled' | 'frozen';
+
+export type PlanType =
+  | 'mensal'
+  | 'trimestral'
+  | 'semestral'
+  | 'anual'
+  | 'day_use'
+  | 'experimental'
+  | 'personal'
+  | 'convenio'
+  | 'corporativo';
+
+export const PLAN_TYPE_LABELS: Record<PlanType, string> = {
+  mensal: 'Mensal',
+  trimestral: 'Trimestral',
+  semestral: 'Semestral',
+  anual: 'Anual',
+  day_use: 'Day Use',
+  experimental: 'Experimental',
+  personal: 'Personal',
+  convenio: 'Convênio',
+  corporativo: 'Corporativo',
+};
+
+export type EnrollmentEventKind =
+  | 'enrolled'
+  | 'renewed'
+  | 'frozen'
+  | 'unfrozen'
+  | 'cancelled'
+  | 'upgraded'
+  | 'downgraded'
+  | 'contract_signed'
+  | 'payment';
+
+export const ENROLLMENT_STATUS_LABELS: Record<EnrollmentStatus, string> = {
+  pending: 'Pendente',
+  active: 'Ativa',
+  expired: 'Expirada',
+  cancelled: 'Cancelada',
+  frozen: 'Congelada',
+};
+
+export const CANCEL_REASONS = [
+  { value: 'mudanca', label: 'Mudança' },
+  { value: 'saude', label: 'Saúde' },
+  { value: 'financeiro', label: 'Financeiro' },
+  { value: 'insatisfacao', label: 'Insatisfação' },
+  { value: 'outro', label: 'Outro' },
+] as const;
 
 export interface LeadSource {
   id: string;
@@ -351,6 +410,9 @@ export interface Lead {
   interest: string | null;
   notes: string | null;
   studentId: string | null;
+  objective: string | null;
+  firstContactAt: string | null;
+  goal: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -371,9 +433,17 @@ export interface Plan {
   companyId: string;
   name: string;
   category: string | null;
+  planType: PlanType | string;
   durationDays: number;
   price: number;
   enrollmentFee: number;
+  frequency: string | null;
+  allowedDays: number[] | null;
+  allowedHours: Record<string, unknown> | null;
+  fidelityDays: number;
+  graceDays: number;
+  discountPercent: number;
+  notes: string | null;
   active: boolean;
 }
 
@@ -385,9 +455,21 @@ export interface Enrollment {
   leadId: string | null;
   contractId: string | null;
   salespersonId: string | null;
+  trainerId: string | null;
   startDate: string;
   endDate: string | null;
   status: EnrollmentStatus | string;
+  discountPercent: number;
+  discountAmount: number;
+  paymentMethod: string | null;
+  monthlyFee: number | null;
+  notes: string | null;
+  cancelReason: string | null;
+  cancelledAt: string | null;
+  /** enriched list fields */
+  studentName?: string | null;
+  planName?: string | null;
+  daysUntilExpiry?: number | null;
 }
 
 export interface Contract {
@@ -401,7 +483,60 @@ export interface Contract {
   signedAt: string | null;
   pdfUrl: string | null;
   status: ContractStatus | string;
+  signedName: string | null;
   createdAt: string;
+}
+
+export interface EnrollmentFreeze {
+  id: string;
+  companyId: string;
+  enrollmentId: string;
+  startDate: string;
+  endDate: string;
+  reason: string;
+  notes: string | null;
+  createdBy: string | null;
+  createdAt: string;
+  endedAt: string | null;
+}
+
+export interface EnrollmentEvent {
+  id: string;
+  companyId: string;
+  enrollmentId: string;
+  kind: EnrollmentEventKind | string;
+  title: string;
+  description: string | null;
+  meta: Record<string, unknown> | null;
+  createdBy: string | null;
+  occurredAt: string;
+}
+
+export interface EnrollmentPlanChange {
+  id: string;
+  companyId: string;
+  enrollmentId: string;
+  fromPlanId: string;
+  toPlanId: string;
+  prorationAmount: number;
+  creditAmount: number;
+  effectiveDate: string;
+  notes: string | null;
+  createdBy: string | null;
+  createdAt: string;
+}
+
+export interface EnrollmentCompleteResult {
+  enrollment: Enrollment;
+  contract: Contract;
+  studentId: string;
+}
+
+export interface RenewalDueItem {
+  enrollment: Enrollment;
+  daysUntilExpiry: number;
+  studentName: string;
+  planName: string;
 }
 
 export interface PipelineColumn {
@@ -433,13 +568,18 @@ export function calcConversionRate(won: number, totalLeads: number): number {
 // Finance types re-exported from helpers module for convenience
 export type {
   ReceivableStatus,
+  ReceivableDisplayStatus,
   PayableStatus,
+  PayableCategory,
   SubscriptionStatus,
   SubscriptionRecurrence,
   PaymentGateway,
   PaymentTxStatus,
   CashDirection,
   OutboxStatus,
+  CashSessionStatus,
+  CashSessionMovementType,
+  FinancialHealthLevel,
   FinancialAccount,
   CostCenter,
   PaymentMethod,
@@ -448,9 +588,17 @@ export type {
   Receivable,
   Payable,
   PaymentTransaction,
+  CashSession,
+  CashSessionMovement,
+  CashSessionReport,
+  CashflowSummary,
   CashflowPoint,
   DreReport,
+  FinancialHealthScore,
   FinanceDashboard,
+  DelinquencyItem,
+  DelinquencyReport,
+  DueAlertItem,
   OutboxEvent,
 } from './finance/helpers';
 

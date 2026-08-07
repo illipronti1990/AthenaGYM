@@ -153,6 +153,98 @@ export class PolishService {
       });
     }
 
+    const safe = async <T,>(p: PromiseLike<{ data: T[] | null; error: unknown }>) => {
+      try {
+        const r = await p;
+        if (r.error) return [] as T[];
+        return (r.data || []) as T[];
+      } catch {
+        return [] as T[];
+      }
+    };
+
+    const [planRows, productRows, trainerRows, sessionRows] = await Promise.all([
+      safe(
+        admin
+          .from('plans')
+          .select('id, name, plan_type, price, active')
+          .eq('company_id', companyId)
+          .ilike('name', like)
+          .limit(6),
+      ),
+      safe(
+        admin
+          .from('products')
+          .select('id, name, sku, status')
+          .eq('company_id', companyId)
+          .or(`name.ilike.${like},sku.ilike.${like}`)
+          .limit(6),
+      ),
+      safe(
+        admin
+          .from('profiles')
+          .select('id, full_name, email')
+          .eq('company_id', companyId)
+          .or(`full_name.ilike.${like},email.ilike.${like}`)
+          .limit(6),
+      ),
+      safe(
+        admin
+          .from('class_sessions')
+          .select('id, title, starts_at, status')
+          .eq('company_id', companyId)
+          .ilike('title', like)
+          .limit(6),
+      ),
+    ]);
+
+    for (const p of planRows as Array<Record<string, unknown>>) {
+      hits.push({
+        type: 'plan',
+        id: String(p.id),
+        title: String(p.name),
+        subtitle: `${p.plan_type || 'plano'} · R$ ${Number(p.price || 0).toFixed(2)}`,
+        href: `/app/matriculas/planos`,
+      });
+    }
+    for (const p of productRows as Array<Record<string, unknown>>) {
+      hits.push({
+        type: 'product',
+        id: String(p.id),
+        title: String(p.name),
+        subtitle: `${p.sku || '—'} · ${p.status || 'produto'}`,
+        href: `/app/estoque`,
+      });
+    }
+    for (const t of trainerRows as Array<Record<string, unknown>>) {
+      hits.push({
+        type: 'trainer',
+        id: String(t.id),
+        title: String(t.full_name || t.email || t.id),
+        subtitle: String(t.email || 'Equipe'),
+        href: `/app/trainers`,
+      });
+    }
+    for (const s of sessionRows as Array<Record<string, unknown>>) {
+      hits.push({
+        type: 'class_session',
+        id: String(s.id),
+        title: String(s.title || 'Aula'),
+        subtitle: `${s.status || '—'} · ${s.starts_at || ''}`,
+        href: `/app/agenda`,
+      });
+    }
+
+    if (qLower.includes('config') || qLower.includes('setting') || qLower.includes('preferên')) {
+      hits.push({
+        type: 'setting',
+        id: 'settings',
+        title: 'Configurações',
+        subtitle: 'Preferências da academia',
+        href: '/app/settings',
+      });
+    }
+
     return { query, hits: hits.slice(0, 40) };
   }
 

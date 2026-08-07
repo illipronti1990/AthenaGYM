@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { CommandDashboard, DashboardChartPeriod, DashboardLayoutItem } from '@athena/shared';
 import {
@@ -17,6 +18,7 @@ import { dashboardApi } from '../services/dashboardApi';
 import { useToast } from '@/components/ui/Toast';
 import { SkeletonDashboard } from '@/components/ui/Skeleton';
 import { CACHE_TTL } from '@/lib/queryKeys';
+import { useUiPreferences } from '@/hooks/useUiPreferences';
 import { greetingEmoji } from '../utils/format';
 import { QuickActions } from './QuickActions';
 import { KpiCard } from './KpiCard';
@@ -29,12 +31,22 @@ import { BirthdayWidget } from './BirthdayWidget';
 import { DuesWidget } from './DuesWidget';
 import { GoalWidget } from './GoalWidget';
 import { RankingWidget } from './RankingWidget';
-import { RevenueChart } from './RevenueChart';
-import { CheckinChart } from './CheckinChart';
 import { ActivityTimeline } from './ActivityTimeline';
-import { DashboardCustomizer } from './DashboardCustomizer';
 import { DashboardGrid, type DashboardTile } from './DashboardGrid';
 import { FALLBACK_DASHBOARD_LAYOUT } from '../utils/layout';
+
+const RevenueChart = dynamic(() => import('./RevenueChart').then((m) => m.RevenueChart), {
+  ssr: false,
+  loading: () => <div className="athena-card h-48 animate-pulse" />,
+});
+const CheckinChart = dynamic(() => import('./CheckinChart').then((m) => m.CheckinChart), {
+  ssr: false,
+  loading: () => <div className="athena-card h-48 animate-pulse" />,
+});
+const DashboardCustomizer = dynamic(
+  () => import('./DashboardCustomizer').then((m) => m.DashboardCustomizer),
+  { ssr: false },
+);
 
 function normalizeDashboard(raw: CommandDashboard, firstName: string): CommandDashboard {
   const greeting = raw.daySummary?.greeting || `Olá, ${firstName}`;
@@ -79,9 +91,17 @@ export function ExecutiveDashboard({
   const { push } = useToast();
   const qc = useQueryClient();
   const { branding } = useBranding();
+  const { prefs } = useUiPreferences();
   const [period, setPeriod] = useState<DashboardChartPeriod>('30d');
   const [customOpen, setCustomOpen] = useState(false);
   const [draftLayout, setDraftLayout] = useState<DashboardLayoutItem[] | null>(null);
+  const [tabVisible, setTabVisible] = useState(true);
+
+  useEffect(() => {
+    const onVis = () => setTabVisible(document.visibilityState === 'visible');
+    document.addEventListener('visibilitychange', onVis);
+    return () => document.removeEventListener('visibilitychange', onVis);
+  }, []);
 
   const firstName = (userName || 'gestor').split(' ')[0];
 
@@ -92,7 +112,7 @@ export function ExecutiveDashboard({
       return normalizeDashboard(payload, firstName);
     },
     staleTime: CACHE_TTL.kpis,
-    refetchInterval: CACHE_TTL.kpis,
+    refetchInterval: tabVisible ? CACHE_TTL.kpis : false,
   });
 
   const saveMutation = useMutation({
@@ -105,7 +125,11 @@ export function ExecutiveDashboard({
       setCustomOpen(false);
       setDraftLayout(null);
     },
-    onError: (e: Error) => push(e.message || 'Falha ao salvar layout', 'error'),
+    onError: (e: Error) => {
+      setDraftLayout(null);
+      push(e.message || 'Falha ao salvar layout', 'error');
+      void query.refetch();
+    },
   });
 
   const data = query.data;
@@ -195,6 +219,7 @@ export function ExecutiveDashboard({
   const unitLabel = unitName || 'Unidade';
 
   return (
+    <div className={prefs.widgetsCompact ? 'widgets-compact' : undefined}>
     <Page {...pageQualityAttrs()} data-testid="executive-dashboard">
       <PageHeader
         title={brandName}
@@ -242,5 +267,6 @@ export function ExecutiveDashboard({
         saving={saveMutation.isPending}
       />
     </Page>
+    </div>
   );
 }

@@ -312,7 +312,7 @@ export function AlunosListPanel({
         exportSlot={<ExportButtons accessToken={accessToken} resource="alunos" />}
         primaryAction={
           <Link
-            href="/app/alunos/matricula"
+            href="/app/matriculas/nova"
             className="athena-btn athena-btn-secondary athena-btn-sm"
           >
             Matrícula rápida

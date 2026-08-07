@@ -183,8 +183,13 @@ export class PrintsService {
         `IMC: ${row.bmi ?? '—'}`,
         `TMB: ${row.bmr ?? '—'}`,
         `Gordura visceral: ${row.visceral_fat ?? '—'}`,
+        `Massa gorda: ${row.fat_mass ?? '—'}`,
         `Idade metabólica: ${row.metabolic_age ?? '—'}`,
+        `FC repouso: ${row.hr_rest ?? '—'}`,
+        `PA: ${row.bp_systolic ?? '—'}/${row.bp_diastolic ?? '—'}`,
+        `Meta: ${row.goal || '—'}`,
         `Objetivo: ${row.objective || '—'}`,
+        `Próxima avaliação: ${row.next_due_at || '—'}`,
         '',
         { text: 'Observações', bold: true },
         row.observations || '—',
@@ -192,6 +197,113 @@ export class PrintsService {
     });
 
     return this.asPdf(pdf, `avaliacao-${assessmentId}.pdf`);
+  }
+
+  async workout(auth: AuthContext, workoutId: string) {
+    const admin = this.supabase.getAdmin();
+    const { data: row, error } = await admin
+      .from('workouts')
+      .select('*, students(full_name, registration_number)')
+      .eq('id', workoutId)
+      .is('deleted_at', null)
+      .maybeSingle();
+    if (error) throw new BadRequestException(error.message);
+    if (!row) throw new NotFoundException('Treino não encontrado');
+    this.assertCompany(auth, row.company_id);
+
+    const { data: exercises } = await admin
+      .from('workout_exercises')
+      .select('*, exercises(name)')
+      .eq('workout_id', workoutId)
+      .order('sort_order');
+
+    const gym = await this.gymName(auth);
+    const student = row.students as { full_name?: string; registration_number?: string } | null;
+    const lines: Array<string | { text: string; bold?: boolean; size?: number }> = [
+      `Aluno: ${student?.full_name || '—'} (${student?.registration_number || '—'})`,
+      `Treino: ${row.name}`,
+      `Status: ${row.status}`,
+      `Divisão: ${row.split_type || 'custom'}`,
+      `Objetivo: ${row.objective || '—'}`,
+      `Assinado professor: ${row.signed_trainer_at || '—'}`,
+      `Assinado aluno: ${row.signed_student_at || '—'}`,
+      '',
+      { text: 'Exercícios', bold: true },
+    ];
+    for (const ex of exercises || []) {
+      const e = ex as {
+        sets?: number;
+        repetitions?: string;
+        load?: string;
+        rpe?: number;
+        day_label?: string;
+        rest_seconds?: number;
+        exercises?: { name?: string } | null;
+      };
+      lines.push(
+        `${e.day_label ? `[${e.day_label}] ` : ''}${e.exercises?.name || 'Exercício'}: ${e.sets}x${e.repetitions}${e.load ? ` @ ${e.load}` : ''}${e.rpe != null ? ` RPE ${e.rpe}` : ''} (descanso ${e.rest_seconds ?? 60}s)`,
+      );
+    }
+
+    const pdf = await buildPdf({
+      title: 'Ficha de Treino',
+      subtitle: gym.name,
+      footer: gym.receiptFooter,
+      lines,
+    });
+    return this.asPdf(pdf, `treino-${workoutId}.pdf`);
+  }
+
+  async progress(auth: AuthContext, studentId: string) {
+    const admin = this.supabase.getAdmin();
+    const { data: student, error } = await admin
+      .from('students')
+      .select('*')
+      .eq('id', studentId)
+      .is('deleted_at', null)
+      .maybeSingle();
+    if (error) throw new BadRequestException(error.message);
+    if (!student) throw new NotFoundException('Aluno não encontrado');
+    this.assertCompany(auth, student.company_id);
+
+    const { data: assessments } = await admin
+      .from('assessments')
+      .select('created_at, weight, body_fat, bmi, lean_mass, fat_mass')
+      .eq('student_id', studentId)
+      .eq('company_id', student.company_id)
+      .is('deleted_at', null)
+      .order('created_at', { ascending: true })
+      .limit(20);
+
+    const gym = await this.gymName(auth);
+    const lines: Array<string | { text: string; bold?: boolean; size?: number }> = [
+      `Aluno: ${student.full_name}`,
+      `Matrícula: ${student.registration_number}`,
+      '',
+      { text: 'Evolução (avaliações)', bold: true },
+    ];
+    for (const a of assessments || []) {
+      const row = a as {
+        created_at: string;
+        weight?: number;
+        body_fat?: number;
+        bmi?: number;
+        lean_mass?: number;
+        fat_mass?: number;
+      };
+      lines.push(
+        `${new Date(row.created_at).toLocaleDateString('pt-BR')}: peso ${row.weight ?? '—'} | %G ${row.body_fat ?? '—'} | IMC ${row.bmi ?? '—'} | magra ${row.lean_mass ?? '—'} | gorda ${row.fat_mass ?? '—'}`,
+      );
+    }
+    if (!(assessments || []).length) lines.push('Sem avaliações registradas.');
+
+    const pdf = await buildPdf({
+      title: 'Relatório de Evolução',
+      subtitle: gym.name,
+      footer: gym.receiptFooter,
+      lines,
+    });
+    return this.asPdf(pdf, `evolucao-${studentId}.pdf`);
   }
 
   async studentSheet(auth: AuthContext, studentId: string) {

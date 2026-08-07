@@ -1,4 +1,4 @@
-/** Visual identity for a company (tenant). Product stays ATHENA ERP. */
+/** Visual identity for a company (tenant). Product is Movvo ERP. */
 export interface CompanyBranding {
   logoUrl: string | null;
   faviconUrl: string | null;

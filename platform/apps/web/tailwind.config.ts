@@ -13,11 +13,34 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        athena: ['var(--font-athena)', 'Manrope', 'system-ui', 'sans-serif'],
+        athena: ['var(--font-body)', 'Inter', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'Sora', 'system-ui', 'sans-serif'],
+        body: ['var(--font-body)', 'Inter', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-mono)', 'JetBrains Mono', 'ui-monospace', 'monospace'],
+        movvo: ['var(--font-body)', 'Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
+        movvo: {
+          primary: 'var(--primary)',
+          primaryHover: 'var(--primary-hover)',
+          secondary: 'var(--gold)',
+          secondaryLight: 'var(--gold-light)',
+          black: 'var(--background)',
+          surface: 'var(--surface)',
+          card: 'var(--card)',
+          text: 'var(--text)',
+          muted: 'var(--muted)',
+          border: 'var(--border)',
+          success: 'var(--success)',
+          warning: 'var(--warning)',
+          error: 'var(--error)',
+          info: 'var(--info)',
+          danger: 'var(--danger)',
+          finance: 'var(--chart-finance)',
+        },
+        /** @deprecated Prefer movvo.* — kept one sprint for compatibility */
         athena: {
           red: 'var(--primary)',
           redHover: 'var(--primary-hover)',
@@ -45,11 +68,16 @@ export default {
       borderRadius: {
         athena: 'var(--radius-btn)',
         'athena-card': 'var(--radius-card)',
+        movvo: 'var(--radius-btn)',
+        'movvo-card': 'var(--radius-card)',
       },
       boxShadow: {
         'athena-card': 'var(--shadow-card)',
         'athena-card-hover': 'var(--shadow-card-hover)',
         'athena-focus': 'var(--shadow-focus)',
+        'movvo-card': 'var(--shadow-card)',
+        'movvo-card-hover': 'var(--shadow-card-hover)',
+        'movvo-focus': 'var(--shadow-focus)',
       },
     },
   },

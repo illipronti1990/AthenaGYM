@@ -1,16 +1,16 @@
-import { LogoAthena } from './LogoAthena';
-import { ATHENA_SLOGAN, ATHENA_TENANT_NAME, LOGIN_FEATURES } from './constants';
+import { LogoMovvo } from './LogoMovvo';
+import { LOGIN_FEATURES, PRODUCT_NAME, PRODUCT_SLOGAN, TENANT_DEMO_NAME } from './constants';
 
 export function LoginHeader() {
   return (
-    <aside className="athena-login-brand" data-testid="login-brand">
+    <aside className="athena-login-brand movvo-login-brand" data-testid="login-brand">
       <div className="athena-login-brand-inner">
-        <LogoAthena tone="mark" size="mark" />
-        <p className="athena-login-brand-name">ATHENA</p>
-        <p className="athena-login-tenant">{ATHENA_TENANT_NAME}</p>
-        <h1 className="athena-login-slogan">{ATHENA_SLOGAN}</h1>
+        <LogoMovvo tone="mark" size="mark" />
+        <p className="athena-login-brand-name font-display">{PRODUCT_NAME}</p>
+        <p className="athena-login-tenant">Case: {TENANT_DEMO_NAME}</p>
+        <h1 className="athena-login-slogan font-display">{PRODUCT_SLOGAN}</h1>
         <p className="athena-login-brand-desc">
-          O ERP completo para sua academia — financeiro, operação e experiência do aluno em um só lugar.
+          Tecnologia moderna, simples e inteligente para academias que querem crescer com controle.
         </p>
         <ul className="athena-login-features">
           {LOGIN_FEATURES.map((item) => (

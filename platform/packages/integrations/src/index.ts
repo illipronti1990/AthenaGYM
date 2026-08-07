@@ -1,4 +1,6 @@
-/** Integration Hub provider contracts — Sprint 9 */
+/** Integration Hub provider contracts — Sprint 9 + G-6 benefit partners */
+
+export * from './benefit-partners';
 
 export interface PaymentHubProvider {
   readonly name: string;

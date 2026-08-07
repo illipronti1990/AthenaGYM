@@ -10,7 +10,9 @@ import {
   IsUUID,
   MaxLength,
   Min,
+  IsNumber,
 } from 'class-validator';
+import { IsUuidString } from '../../common/validators/is-uuid-string';
 
 export class CreateNotificationDto {
   @ApiProperty()
@@ -100,6 +102,44 @@ export class CreateCampaignDto {
   @IsOptional()
   @IsArray()
   audienceProfileIds?: string[];
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsDateString()
+  startsAt?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsDateString()
+  endsAt?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  goalValue?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUuidString()
+  ownerId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  discountPct?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUuidString()
+  segmentId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  budget?: number;
 }
 
 export class CreateChallengeDto {
@@ -167,4 +207,254 @@ export class AiChatDto {
   @IsOptional()
   @IsUUID()
   studentId?: string;
+}
+
+// ---------- G-9 DTOs ----------
+
+export class CreateTemplateDto {
+  @ApiProperty()
+  @IsString()
+  name!: string;
+
+  @ApiProperty()
+  @IsString()
+  slug!: string;
+
+  @ApiPropertyOptional({ enum: ['whatsapp', 'email', 'sms', 'push'] })
+  @IsOptional()
+  @IsIn(['whatsapp', 'email', 'sms', 'push'])
+  channel?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  subject?: string;
+
+  @ApiProperty()
+  @IsString()
+  body!: string;
+
+  @ApiPropertyOptional({ type: [String] })
+  @IsOptional()
+  @IsArray()
+  variables?: string[];
+}
+
+export class UpdateTemplateDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  subject?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  body?: string;
+
+  @ApiPropertyOptional({ type: [String] })
+  @IsOptional()
+  @IsArray()
+  variables?: string[];
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  active?: boolean;
+}
+
+export class SendTemplateDto {
+  @ApiProperty({ description: 'Target profile/student ID' })
+  @IsUUID()
+  recipientId!: string;
+
+  @ApiPropertyOptional({ description: 'Variable substitutions' })
+  @IsOptional()
+  variables?: Record<string, string>;
+}
+
+export class CreateReferralDto {
+  @ApiProperty()
+  @IsUUID()
+  referrerStudentId!: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUUID()
+  referredLeadId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUUID()
+  referredStudentId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  notes?: string;
+}
+
+export class RewardReferralDto {
+  @ApiPropertyOptional({ description: 'Override benefit type' })
+  @IsOptional()
+  @IsString()
+  benefitType?: string;
+
+  @ApiPropertyOptional({ description: 'Override benefit value' })
+  @IsOptional()
+  @IsNumber()
+  benefitValue?: number;
+}
+
+export class EarnLoyaltyDto {
+  @ApiProperty()
+  @IsUUID()
+  studentId!: string;
+
+  @ApiProperty({ description: 'Earn rule event slug' })
+  @IsString()
+  event!: string;
+}
+
+export class RedeemLoyaltyDto {
+  @ApiProperty()
+  @IsUUID()
+  studentId!: string;
+
+  @ApiProperty()
+  @IsUuidString()
+  rewardId!: string;
+}
+
+export class CreateNpsSurveyDto {
+  @ApiPropertyOptional({ default: 'Pesquisa NPS' })
+  @IsOptional()
+  @IsString()
+  title?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  question?: string;
+}
+
+export class CreateNpsResponseDto {
+  @ApiProperty()
+  @IsUuidString()
+  surveyId!: string;
+
+  @ApiProperty({ minimum: 0, maximum: 10 })
+  @IsInt()
+  @Min(0)
+  score!: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  comment?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUUID()
+  studentId?: string;
+
+  @ApiPropertyOptional({ default: 'app' })
+  @IsOptional()
+  @IsString()
+  channel?: string;
+}
+
+export class CreateSegmentDto {
+  @ApiProperty()
+  @IsString()
+  name!: string;
+
+  @ApiProperty()
+  @IsString()
+  slug!: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  rules?: Record<string, unknown>;
+}
+
+export class UpdateSegmentDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  rules?: Record<string, unknown>;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  active?: boolean;
+}
+
+export class CreateAutomationFlowDto {
+  @ApiProperty()
+  @IsString()
+  name!: string;
+
+  @ApiProperty({ example: 'lead_created' })
+  @IsString()
+  triggerEvent!: string;
+
+  @ApiPropertyOptional({ type: [Object] })
+  @IsOptional()
+  @IsArray()
+  steps?: unknown[];
+}
+
+export class UpdateAutomationFlowDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsArray()
+  steps?: unknown[];
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  active?: boolean;
+}
+
+export class PortalNpsResponseDto {
+  @ApiProperty({ minimum: 0, maximum: 10 })
+  @IsInt()
+  @Min(0)
+  score!: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  comment?: string;
+}
+
+export class PortalReferralDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  referredName?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  referredPhone?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  notes?: string;
 }

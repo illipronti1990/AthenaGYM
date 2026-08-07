@@ -11,7 +11,9 @@ coverage
 .deploy-api-flat
 .vercel
 vercel.web.json.bak
-public/.keep
 .vercel
 .env*
 .vercel-web-backup
+# Espelho de apps/web/public no deploy monorepo (vercel.json buildCommand)
+/public/**
+!/public/.keep

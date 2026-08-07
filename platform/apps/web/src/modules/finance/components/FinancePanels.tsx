@@ -8,13 +8,17 @@ import type {
   FinanceSubscription,
   FinancialAccount,
   Payable,
+  PayableCategory,
 } from '@athena/shared';
+import { PAYABLE_CATEGORIES, PAYABLE_CATEGORY_LABELS } from '@athena/shared';
 import { Button, Card } from '@athena/ui';
 import { financeApi } from '../services/financeApi';
+import { payableStatusLabel } from '../utils/statusLabels';
 import { listAlunos } from '@/modules/alunos/services/alunosApi';
 import { salesApi } from '@/modules/sales/services/salesApi';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
+import { useConfirm } from '@/components/ux/ConfirmProvider';
 
 export function PayablesPanel({ accessToken }: { accessToken: string }) {
   const { push } = useToast();
@@ -23,6 +27,7 @@ export function PayablesPanel({ accessToken }: { accessToken: string }) {
   const [amount, setAmount] = useState(2500);
   const [dueDate, setDueDate] = useState(new Date().toISOString().slice(0, 10));
   const [supplierName, setSupplierName] = useState('Fornecedor');
+  const [category, setCategory] = useState<PayableCategory>('outros');
 
   async function load() {
     try {
@@ -41,7 +46,13 @@ export function PayablesPanel({ accessToken }: { accessToken: string }) {
   async function onCreate(e: FormEvent) {
     e.preventDefault();
     try {
-      await financeApi.createPayable(accessToken, { description, amount, dueDate, supplierName });
+      await financeApi.createPayable(accessToken, {
+        description,
+        amount,
+        dueDate,
+        supplierName,
+        category,
+      });
       push('Conta a pagar criada');
       await load();
     } catch (err) {
@@ -50,53 +61,109 @@ export function PayablesPanel({ accessToken }: { accessToken: string }) {
   }
 
   return (
-    <div className="space-y-4">
-      <form onSubmit={onCreate} className="flex flex-wrap gap-2">
-        <input
-          value={supplierName}
-          onChange={(e) => setSupplierName(e.target.value)}
-          className="athena-input max-w-[160px]"
-          placeholder="Fornecedor"
-        />
-        <input
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="athena-input max-w-xs"
-        />
-        <input
-          type="number"
-          value={amount}
-          onChange={(e) => setAmount(Number(e.target.value))}
-          className="athena-input w-28"
-        />
-        <input
-          type="date"
-          value={dueDate}
-          onChange={(e) => setDueDate(e.target.value)}
-          className="athena-input w-auto"
-        />
-        <Button type="submit">Adicionar</Button>
+    <div className="space-y-4" data-testid="payables-panel">
+      <form
+        onSubmit={onCreate}
+        className="grid gap-3 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 md:grid-cols-3"
+      >
+        <label className="block text-sm">
+          <span className="athena-label">Fornecedor</span>
+          <input
+            value={supplierName}
+            onChange={(e) => setSupplierName(e.target.value)}
+            className="athena-input mt-1"
+            required
+          />
+        </label>
+        <label className="block text-sm">
+          <span className="athena-label">Descrição</span>
+          <input
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="athena-input mt-1"
+            required
+          />
+        </label>
+        <label className="block text-sm">
+          <span className="athena-label">Categoria</span>
+          <select
+            className="athena-input mt-1"
+            value={category}
+            onChange={(e) => setCategory(e.target.value as PayableCategory)}
+          >
+            {PAYABLE_CATEGORIES.map((c) => (
+              <option key={c} value={c}>
+                {PAYABLE_CATEGORY_LABELS[c]}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="block text-sm">
+          <span className="athena-label">Valor (R$)</span>
+          <input
+            type="number"
+            min={0.01}
+            step={0.01}
+            value={amount}
+            onChange={(e) => setAmount(Number(e.target.value))}
+            className="athena-input mt-1"
+            required
+          />
+        </label>
+        <label className="block text-sm">
+          <span className="athena-label">Vencimento</span>
+          <input
+            type="date"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+            className="athena-input mt-1"
+            required
+          />
+        </label>
+        <div className="flex items-end">
+          <Button type="submit">Adicionar</Button>
+        </div>
       </form>
       {!items ? (
         <TableSkeleton />
       ) : (
         <ul className="athena-list">
           {items.map((p) => (
-            <li key={p.id} className="athena-list-item">
-              <span>
+            <li key={p.id} className="athena-list-item flex-wrap gap-2">
+              <span className="min-w-0 flex-1">
                 {p.description} ·{' '}
-                {p.amount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} · {p.status}
+                {p.amount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} ·{' '}
+                {PAYABLE_CATEGORY_LABELS[p.category as PayableCategory] || p.category} ·{' '}
+                {payableStatusLabel(String(p.status))}
+                {p.supplierName ? ` · ${p.supplierName}` : ''}
               </span>
-              {p.status === 'open' ? (
-                <Button
-                  type="button"
-                  variant="secondary"
-                  className="!px-2 !py-1 text-xs"
-                  onClick={() => void financeApi.payPayable(accessToken, p.id).then(load)}
-                >
-                  Pagar
-                </Button>
-              ) : null}
+              <div className="flex flex-wrap gap-2">
+                {p.status === 'open' ? (
+                  <>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      className="!px-2 !py-1 text-xs"
+                      onClick={() => void financeApi.payPayable(accessToken, p.id).then(load)}
+                    >
+                      Pagar
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      className="!px-2 !py-1 text-xs"
+                      onClick={() =>
+                        void financeApi
+                          .cancelPayable(accessToken, p.id)
+                          .then(load)
+                          .catch((e) => push(String(e), 'error'))
+                      }
+                    >
+                      Cancelar
+                    </Button>
+                  </>
+                ) : null}
+              </div>
             </li>
           ))}
         </ul>
@@ -123,56 +190,92 @@ export function SubscriptionsPanel({ accessToken }: { accessToken: string }) {
   const [items, setItems] = useState<FinanceSubscription[] | null>(null);
   const [names, setNames] = useState<Record<string, string>>({});
   const [planNames, setPlanNames] = useState<Record<string, string>>({});
+  const [renewing, setRenewing] = useState(false);
+
+  async function load() {
+    try {
+      const [subs, studentsRes, plans] = await Promise.all([
+        financeApi.subscriptions(accessToken),
+        listAlunos(accessToken, { pageSize: '200' }).catch(() => ({ items: [] as never[] })),
+        salesApi.plans(accessToken).catch(() => []),
+      ]);
+      setItems(subs);
+      const byStudent: Record<string, string> = {};
+      for (const s of studentsRes.items || []) byStudent[s.id] = s.fullName;
+      setNames(byStudent);
+      const byPlan: Record<string, string> = {};
+      for (const p of plans) byPlan[p.id] = p.name;
+      setPlanNames(byPlan);
+    } catch (e) {
+      push(e instanceof Error ? e.message : 'Falha', 'error');
+      setItems([]);
+    }
+  }
 
   useEffect(() => {
-    void (async () => {
-      try {
-        const [subs, studentsRes, plans] = await Promise.all([
-          financeApi.subscriptions(accessToken),
-          listAlunos(accessToken, { pageSize: '200' }).catch(() => ({ items: [] as never[] })),
-          salesApi.plans(accessToken).catch(() => []),
-        ]);
-        setItems(subs);
-        const byStudent: Record<string, string> = {};
-        for (const s of studentsRes.items || []) byStudent[s.id] = s.fullName;
-        setNames(byStudent);
-        const byPlan: Record<string, string> = {};
-        for (const p of plans) byPlan[p.id] = p.name;
-        setPlanNames(byPlan);
-      } catch (e) {
-        push(e instanceof Error ? e.message : 'Falha', 'error');
-        setItems([]);
-      }
-    })();
-  }, [accessToken, push]);
+    void load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accessToken]);
+
+  async function onRenewDue() {
+    setRenewing(true);
+    try {
+      const res = await financeApi.renewDue(accessToken);
+      push(
+        res.renewed > 0
+          ? `${res.renewed} mensalidade(s) renovada(s).`
+          : 'Nenhuma mensalidade vencida para renovar.',
+      );
+      await load();
+    } catch (e) {
+      push(e instanceof Error ? e.message : 'Falha ao renovar', 'error');
+    } finally {
+      setRenewing(false);
+    }
+  }
 
   if (!items) return <TableSkeleton />;
-  if (items.length === 0) {
-    return (
-      <p className="text-sm text-[var(--muted)]">
-        Nenhuma assinatura ainda. Cadastre um aluno com plano (ex.: Mensal) ou vincule um plano no
-        perfil do aluno — a assinatura é gerada automaticamente.
-      </p>
-    );
-  }
+
   return (
-    <ul className="athena-list" data-testid="subscriptions-list">
-      {items.map((s) => (
-        <li key={s.id} className="athena-list-item">
-          <span>
-            {names[s.studentId] || 'Aluno'} · {planNames[s.planId] || 'Plano'} ·{' '}
-            {RECURRENCE[String(s.recurrence)] || s.recurrence} ·{' '}
-            {s.amount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} · próximo{' '}
-            {s.nextDueDate || '—'} · {SUB_STATUS[String(s.status)] || s.status}
-          </span>
-        </li>
-      ))}
-    </ul>
+    <div className="space-y-4" data-testid="subscriptions-panel">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="text-sm text-[var(--muted)]">Assinaturas ativas e cobranças recorrentes.</p>
+        <Button
+          type="button"
+          onClick={() => void onRenewDue()}
+          loading={renewing}
+          loadingLabel="Renovando…"
+          data-testid="renew-due-btn"
+        >
+          Renovar vencidas
+        </Button>
+      </div>
+      {items.length === 0 ? (
+        <p className="text-sm text-[var(--muted)]">
+          Nenhuma assinatura ainda. Cadastre um aluno com plano (ex.: Mensal) ou vincule um plano no
+          perfil do aluno — a assinatura é gerada automaticamente.
+        </p>
+      ) : (
+        <ul className="athena-list" data-testid="subscriptions-list">
+          {items.map((s) => (
+            <li key={s.id} className="athena-list-item">
+              <span>
+                {names[s.studentId] || 'Aluno'} · {planNames[s.planId] || 'Plano'} ·{' '}
+                {RECURRENCE[String(s.recurrence)] || s.recurrence} ·{' '}
+                {s.amount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} · próximo{' '}
+                {s.nextDueDate || '—'} · {SUB_STATUS[String(s.status)] || s.status}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
 
 export function CashflowPanel({ accessToken }: { accessToken: string }) {
   const { push } = useToast();
+  const confirm = useConfirm();
   const [points, setPoints] = useState<CashflowPoint[] | null>(null);
   const [deletingDate, setDeletingDate] = useState<string | null>(null);
 
@@ -191,9 +294,13 @@ export function CashflowPanel({ accessToken }: { accessToken: string }) {
   }, [accessToken]);
 
   async function onDelete(date: string) {
-    if (!window.confirm(`Excluir os lançamentos do dia ${date} do fluxo de caixa?`)) {
-      return;
-    }
+    const ok = await confirm({
+      title: `Excluir lançamentos do dia ${date}?`,
+      message: 'Os lançamentos deste dia serão removidos do fluxo de caixa.',
+      confirmLabel: 'Excluir',
+      danger: true,
+    });
+    if (!ok) return;
     setDeletingDate(date);
     try {
       await financeApi.deleteCashflowDay(accessToken, date);
@@ -294,6 +401,7 @@ export function SettingsPanel({ accessToken }: { accessToken: string }) {
   const [account, setAccount] = useState('');
   const [pixKey, setPixKey] = useState('');
   const [saving, setSaving] = useState(false);
+  const [centerName, setCenterName] = useState('');
 
   async function load() {
     try {
@@ -359,38 +467,61 @@ export function SettingsPanel({ accessToken }: { accessToken: string }) {
     }
   }
 
+  async function onCreateCenter(e: FormEvent) {
+    e.preventDefault();
+    if (!centerName.trim()) return;
+    try {
+      await financeApi.createCostCenter(accessToken, { name: centerName.trim() });
+      push('Centro de custo criado');
+      setCenterName('');
+      await load();
+    } catch (err) {
+      push(err instanceof Error ? err.message : 'Erro', 'error');
+    }
+  }
+
   return (
     <div className="grid gap-6 md:grid-cols-2">
       <Card>
         <h2 className="athena-title mb-3 text-sm">Contas bancárias / PIX</h2>
         <form onSubmit={onSave} className="mb-4 grid gap-2" data-testid="bank-account-form">
-          <input
-            required
-            value={bankName}
-            onChange={(e) => setBankName(e.target.value)}
-            className="athena-input"
-            placeholder="Banco (ex.: Itaú, Nubank)"
-          />
+          <label className="block text-sm">
+            <span className="athena-label">Banco</span>
+            <input
+              required
+              value={bankName}
+              onChange={(e) => setBankName(e.target.value)}
+              className="athena-input mt-1"
+              placeholder="Ex.: Itaú, Nubank"
+            />
+          </label>
           <div className="grid gap-2 sm:grid-cols-2">
-            <input
-              value={agency}
-              onChange={(e) => setAgency(e.target.value)}
-              className="athena-input"
-              placeholder="Agência"
-            />
-            <input
-              value={account}
-              onChange={(e) => setAccount(e.target.value)}
-              className="athena-input"
-              placeholder="Conta"
-            />
+            <label className="block text-sm">
+              <span className="athena-label">Agência</span>
+              <input
+                value={agency}
+                onChange={(e) => setAgency(e.target.value)}
+                className="athena-input mt-1"
+              />
+            </label>
+            <label className="block text-sm">
+              <span className="athena-label">Conta</span>
+              <input
+                value={account}
+                onChange={(e) => setAccount(e.target.value)}
+                className="athena-input mt-1"
+              />
+            </label>
           </div>
-          <input
-            value={pixKey}
-            onChange={(e) => setPixKey(e.target.value)}
-            className="athena-input"
-            placeholder="Chave PIX (e-mail, CPF, telefone ou aleatória)"
-          />
+          <label className="block text-sm">
+            <span className="athena-label">Chave PIX</span>
+            <input
+              value={pixKey}
+              onChange={(e) => setPixKey(e.target.value)}
+              className="athena-input mt-1"
+              placeholder="E-mail, CPF, telefone ou aleatória"
+            />
+          </label>
           <div className="flex flex-wrap gap-2">
             <Button type="submit" disabled={saving}>
               {saving ? 'Salvando…' : editingId ? 'Salvar alterações' : 'Cadastrar conta'}
@@ -429,6 +560,20 @@ export function SettingsPanel({ accessToken }: { accessToken: string }) {
       </Card>
       <Card>
         <h2 className="athena-title mb-3 text-sm">Centros de custo</h2>
+        <form onSubmit={onCreateCenter} className="mb-3 flex flex-wrap gap-2">
+          <label className="block min-w-[180px] flex-1 text-sm">
+            <span className="athena-label">Nome</span>
+            <input
+              value={centerName}
+              onChange={(e) => setCenterName(e.target.value)}
+              className="athena-input mt-1"
+              required
+            />
+          </label>
+          <div className="flex items-end">
+            <Button type="submit">Adicionar</Button>
+          </div>
+        </form>
         <ul className="divide-y divide-[var(--border)] text-sm">
           {centers.map((c) => (
             <li key={c.id} className="py-2">
@@ -462,20 +607,26 @@ export function ReconciliationPanel({ accessToken }: { accessToken: string }) {
 
   return (
     <form onSubmit={onImport} className="space-y-3">
-      <select
-        value={format}
-        onChange={(e) => setFormat(e.target.value as 'csv' | 'ofx')}
-        className="athena-input w-auto"
-      >
-        <option value="csv">CSV</option>
-        <option value="ofx">OFX</option>
-      </select>
-      <textarea
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        rows={8}
-        className="athena-input font-mono text-xs"
-      />
+      <label className="block text-sm">
+        <span className="athena-label">Formato</span>
+        <select
+          value={format}
+          onChange={(e) => setFormat(e.target.value as 'csv' | 'ofx')}
+          className="athena-input mt-1 w-auto"
+        >
+          <option value="csv">CSV</option>
+          <option value="ofx">OFX</option>
+        </select>
+      </label>
+      <label className="block text-sm">
+        <span className="athena-label">Conteúdo do extrato</span>
+        <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          rows={8}
+          className="athena-input mt-1 font-mono text-xs"
+        />
+      </label>
       <Button type="submit">Importar e conciliar</Button>
     </form>
   );

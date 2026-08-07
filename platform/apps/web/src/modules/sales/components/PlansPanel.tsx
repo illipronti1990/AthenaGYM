@@ -6,9 +6,11 @@ import { Button } from '@athena/ui';
 import { salesApi } from '../services/salesApi';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
+import { useConfirm } from '@/components/ux/ConfirmProvider';
 
 export function PlansPanel({ accessToken }: { accessToken: string }) {
   const { push } = useToast();
+  const confirm = useConfirm();
   const [plans, setPlans] = useState<Plan[] | null>(null);
   const [name, setName] = useState('');
   const [durationDays, setDurationDays] = useState(30);
@@ -66,7 +68,13 @@ export function PlansPanel({ accessToken }: { accessToken: string }) {
   }
 
   async function onDelete(plan: Plan) {
-    if (!window.confirm(`Excluir o plano "${plan.name}"?`)) return;
+    const ok = await confirm({
+      title: `Excluir o plano "${plan.name}"?`,
+      message: 'Essa ação não poderá ser desfeita.',
+      confirmLabel: 'Excluir',
+      danger: true,
+    });
+    if (!ok) return;
     setBusyId(plan.id);
     try {
       await salesApi.deletePlan(accessToken, plan.id);

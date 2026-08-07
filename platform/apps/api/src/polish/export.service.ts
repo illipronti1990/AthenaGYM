@@ -132,7 +132,7 @@ export class ExportService {
     ];
     const pdf = await buildPdf({
       title: `Exportação — ${name}`,
-      subtitle: `ATHENA · ${rows.length} registros`,
+      subtitle: `Movvo · ${rows.length} registros`,
       lines,
     });
     return new StreamableFile(pdf, {

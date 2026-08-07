@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { APP_VERSION } from '@/config/navigation';
+import { MOVVO_PRODUCT } from '@athena/shared';
+import { APP_VERSION, APP_BUILD_LABEL } from '@/config/navigation';
 import { polishApi } from '@/modules/polish/services/polishApi';
 
 export function Footer() {
@@ -30,11 +31,16 @@ export function Footer() {
     };
   }, []);
 
+  const version = APP_VERSION || MOVVO_PRODUCT.version;
+  const build = APP_BUILD_LABEL || MOVVO_PRODUCT.buildLabel;
+
   return (
     <footer className="athena-footer" data-testid="app-footer">
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-        <span className="font-semibold tracking-wide text-[var(--gold)]">ATHENA ERP</span>
-        <span className="athena-caption">Versão {APP_VERSION}</span>
+        <span className="font-semibold tracking-wide text-[var(--gold)]">Movvo ERP</span>
+        <span className="athena-caption" data-testid="app-footer-version">
+          v{version} · Build {build}
+        </span>
         <StatusDot label="API" online={apiOnline} />
         <StatusDot label="Banco" online={dbOnline} />
       </div>

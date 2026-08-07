@@ -1,4 +1,4 @@
-# ATHENA PLATFORM — Sprint 8 (BI, Analytics e IA)
+# Movvo ERP — Platform
 
 Produto oficial: **Next.js + NestJS + Supabase + Worker BullMQ/Redis**.  
 Excel/VBA = import/export. FastAPI em `cloud/api` = **congelado**.
@@ -73,3 +73,15 @@ Worker: `analytics`, `predictions`, `warehouse`, `exports` (+ `reports` existent
 
 Schema `analytics`: `fact_checkins`, `fact_revenue`, `fact_workouts`, `fact_sales`.  
 ETL leve via worker outbox `analytics.warehouse.*` (CDC completo = evolução).
+
+## Branding & feature flags (M-1+)
+
+- **Produção:** https://movvoerp.com.br · API https://api.movvoerp.com.br
+- Design tokens: `@athena/theme` → `DesignTokens` (spacing, motion, icons, charts, zIndex).
+- Brand book: `Documentacao/MOVVO_BRAND_BOOK.md`
+- `GET /api/v1/branding` — produto Movvo (+ tenant via `X-Company-Id`)
+- `GET /api/v1/platform/features` — flags comerciais (`inventory`, `crm`, `ai`, `bi`, `pdv`, `marketplace`, `whiteLabel`, `mobile`)
+- Override: `MOVVO_FF_INVENTORY=0`, `MOVVO_FF_WHITE_LABEL=false`, etc.
+- Versão produto: `0.7.0-beta` · Build `2026.08` (footer / `MOVVO_PRODUCT`)
+- Deploy: ver [DEPLOY.md](./DEPLOY.md)
+- **Landing M-2:** https://movvoerp.com.br — ver [`Documentacao/MOVVO_LANDING_M2.md`](../Documentacao/MOVVO_LANDING_M2.md)

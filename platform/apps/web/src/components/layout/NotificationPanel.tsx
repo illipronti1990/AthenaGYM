@@ -1,11 +1,22 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { Bell, Check } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
+import { Bell, Check, CheckCheck } from 'lucide-react';
 import type { AppNotification } from '@athena/shared';
-import { EmptyState, Tooltip } from '@athena/ui';
+import { EmptyStatePreset, ErrorState, Tooltip } from '@athena/ui';
 import { engagementApi } from '@/modules/engagement/services/engagementApi';
 import { useLayout } from './LayoutProvider';
+
+const DOMAIN_FILTERS = [
+  { id: 'all', label: 'Todas' },
+  { id: 'finance', label: 'Financeiro' },
+  { id: 'student', label: 'Alunos' },
+  { id: 'checkin', label: 'Check-ins' },
+  { id: 'inventory', label: 'Estoque' },
+  { id: 'agenda', label: 'Agenda' },
+  { id: 'integration', label: 'Integrações' },
+] as const;
 
 function relativeTime(iso: string) {
   const diff = Date.now() - new Date(iso).getTime();
@@ -24,28 +35,66 @@ function isToday(iso: string) {
   return d.toDateString() === now.toDateString();
 }
 
+function domainOf(n: AppNotification): string {
+  const t = `${n.type} ${n.title} ${n.body}`.toLowerCase();
+  if (/finance|receb|pagar|mensal|cobran/.test(t)) return 'finance';
+  if (/aluno|student|matríc/.test(t)) return 'student';
+  if (/check.?in|acesso|catraca/.test(t)) return 'checkin';
+  if (/estoque|produto|invent/.test(t)) return 'inventory';
+  if (/agenda|aula|reserva/.test(t)) return 'agenda';
+  if (/integra|wellhub|totalpass|webhook/.test(t)) return 'integration';
+  return 'all';
+}
+
+function hrefFor(n: AppNotification): string | null {
+  const d = domainOf(n);
+  if (d === 'finance') return '/app/financeiro/receber';
+  if (d === 'student') return '/app/alunos';
+  if (d === 'checkin') return '/app/acesso';
+  if (d === 'inventory') return '/app/estoque';
+  if (d === 'agenda') return '/app/agenda';
+  if (d === 'integration') return '/app/integracoes';
+  return null;
+}
+
 export function NotificationPanel({ accessToken }: { accessToken: string }) {
   const { notificationsOpen, setNotificationsOpen } = useLayout();
   const [items, setItems] = useState<AppNotification[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [filter, setFilter] = useState<(typeof DOMAIN_FILTERS)[number]['id']>('all');
+  const [busy, setBusy] = useState(false);
 
   async function load() {
     try {
+      setError(null);
       setItems(await engagementApi.notifications(accessToken));
-    } catch {
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Falha ao carregar notificações');
       setItems([]);
     }
   }
 
   useEffect(() => {
     void load();
-    const id = setInterval(() => void load(), 60_000);
-    return () => clearInterval(id);
+    const tick = () => {
+      if (document.visibilityState === 'visible') void load();
+    };
+    const id = setInterval(tick, 60_000);
+    document.addEventListener('visibilitychange', tick);
+    return () => {
+      clearInterval(id);
+      document.removeEventListener('visibilitychange', tick);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accessToken]);
 
+  const filtered = useMemo(
+    () => (filter === 'all' ? items : items.filter((n) => domainOf(n) === filter)),
+    [items, filter],
+  );
   const unread = items.filter((n) => !n.readAt).length;
-  const today = items.filter((n) => isToday(n.createdAt));
-  const earlier = items.filter((n) => !isToday(n.createdAt));
+  const today = filtered.filter((n) => isToday(n.createdAt));
+  const earlier = filtered.filter((n) => !isToday(n.createdAt));
 
   async function mark(id: string) {
     try {
@@ -53,6 +102,18 @@ export function NotificationPanel({ accessToken }: { accessToken: string }) {
       await load();
     } catch {
       /* ignore */
+    }
+  }
+
+  async function markAll() {
+    setBusy(true);
+    try {
+      await engagementApi.markAllRead(accessToken);
+      await load();
+    } catch {
+      /* ignore */
+    } finally {
+      setBusy(false);
     }
   }
 
@@ -81,25 +142,56 @@ export function NotificationPanel({ accessToken }: { accessToken: string }) {
             aria-label="Fechar notificações"
             onClick={() => setNotificationsOpen(false)}
           />
-          <aside className="athena-notification-drawer" data-testid="notification-panel">
-            <header className="flex items-center justify-between border-b border-[var(--border)] px-4 py-3">
+          <aside className="athena-notification-drawer" data-testid="notification-panel" aria-label="Central de notificações">
+            <header className="flex items-center justify-between border-b border-[var(--border)] px-4 py-3 gap-2">
               <div>
                 <h2 className="athena-h3">Notificações</h2>
                 <p className="athena-caption">{unread} não lidas</p>
               </div>
-              <button
-                type="button"
-                className="athena-btn athena-btn-secondary athena-btn-sm"
-                onClick={() => setNotificationsOpen(false)}
-              >
-                Fechar
-              </button>
+              <div className="flex gap-2">
+                {unread > 0 ? (
+                  <button
+                    type="button"
+                    className="athena-btn athena-btn-secondary athena-btn-sm"
+                    onClick={() => void markAll()}
+                    disabled={busy}
+                    data-testid="notifications-mark-all"
+                  >
+                    <CheckCheck size={14} /> Marcar todas
+                  </button>
+                ) : null}
+                <button
+                  type="button"
+                  className="athena-btn athena-btn-secondary athena-btn-sm"
+                  onClick={() => setNotificationsOpen(false)}
+                >
+                  Fechar
+                </button>
+              </div>
             </header>
+            <div className="flex flex-wrap gap-1 border-b border-[var(--border)] px-3 py-2">
+              {DOMAIN_FILTERS.map((f) => (
+                <button
+                  key={f.id}
+                  type="button"
+                  className={`athena-btn athena-btn-sm ${filter === f.id ? 'athena-btn-primary' : 'athena-btn-secondary'}`}
+                  onClick={() => setFilter(f.id)}
+                  data-testid={`notif-filter-${f.id}`}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
             <div className="flex-1 overflow-y-auto p-3">
-              {items.length === 0 ? (
-                <EmptyState
-                  title="Nenhuma notificação"
-                  description="Check-ins, pagamentos e matrículas aparecem aqui."
+              {error ? (
+                <ErrorState title="Falha ao carregar" description={error} action={
+                  <button type="button" className="athena-btn athena-btn-secondary" onClick={() => void load()}>
+                    Tentar de novo
+                  </button>
+                } />
+              ) : filtered.length === 0 ? (
+                <EmptyStatePreset
+                  preset="noNotifications"
                   icon={<Bell size={36} strokeWidth={1.5} />}
                 />
               ) : (
@@ -134,33 +226,29 @@ export function NotificationPanel({ accessToken }: { accessToken: string }) {
   );
 }
 
-function NotificationRow({
-  n,
-  onMark,
-}: {
-  n: AppNotification;
-  onMark: () => void;
-}) {
+function NotificationRow({ n, onMark }: { n: AppNotification; onMark: () => void }) {
+  const href = hrefFor(n);
   return (
     <li
-      className={`rounded-[12px] border border-[var(--border)] bg-[var(--card)] p-3 text-sm transition duration-150 hover:border-[var(--gold)] ${
-        n.readAt ? 'opacity-70' : ''
-      }`}
+      className={`rounded-xl border border-[var(--border)] p-3 ${n.readAt ? 'opacity-70' : 'bg-[var(--surface)]'}`}
+      data-testid={`notification-${n.id}`}
     >
-      <div className="flex items-start gap-2">
-        <Check size={16} className="mt-0.5 shrink-0 text-[var(--success)]" aria-hidden />
-        <div className="min-w-0 flex-1">
-          <div className="flex items-start justify-between gap-2">
-            <p className="font-medium text-[var(--text)]">{n.title}</p>
-            <span className="shrink-0 text-xs text-[var(--muted)]">{relativeTime(n.createdAt)}</span>
-          </div>
-          {n.body ? <p className="mt-1 text-xs text-[var(--muted)]">{n.body}</p> : null}
-          {!n.readAt ? (
-            <button type="button" className="mt-2 text-xs text-[var(--gold)] underline" onClick={onMark}>
-              Marcar lida
-            </button>
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <p className="text-sm font-medium text-[var(--text)]">{n.title}</p>
+          <p className="text-xs text-[var(--muted)] mt-1">{n.body}</p>
+          <p className="text-xs text-[var(--muted)] mt-2">{relativeTime(n.createdAt)}</p>
+          {href ? (
+            <Link href={href} className="text-xs text-[var(--gold)] mt-2 inline-block" onClick={onMark}>
+              Abrir
+            </Link>
           ) : null}
         </div>
+        {!n.readAt ? (
+          <button type="button" className="athena-icon-btn" aria-label="Marcar como lida" onClick={onMark}>
+            <Check size={16} />
+          </button>
+        ) : null}
       </div>
     </li>
   );

@@ -13,7 +13,14 @@ export function WorkoutsDashboardPanel({ accessToken }: { accessToken: string })
     workoutsApi
       .dashboard(accessToken)
       .then(setData)
-      .catch((e) => setError(e instanceof Error ? e.message : 'erro'));
+      .catch((e) => {
+        const raw = e instanceof Error ? e.message : 'erro';
+        setError(
+          /^Failed to fetch$/i.test(raw)
+            ? 'Não foi possível conectar à API. Verifique se o servidor está online (porta 3001) e recarregue a página.'
+            : raw,
+        );
+      });
   }, [accessToken]);
 
   if (error) return <p className="text-sm text-[var(--primary-hover)]">{error}</p>;

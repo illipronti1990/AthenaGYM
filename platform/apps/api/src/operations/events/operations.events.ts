@@ -6,6 +6,9 @@ export const WAITLIST_PROMOTED = 'operations.waitlist_promoted';
 export const ACCESS_DENIED = 'operations.access_denied';
 export const ACCESS_ALLOWED = 'operations.access_allowed';
 export const SCHEDULE_CREATED = 'operations.schedule_created';
+export const SCHEDULE_CANCELLED = 'operations.schedule_cancelled';
+export const ATTENDANCE_MARKED = 'operations.attendance_marked';
+export const CLASS_COMPLETED = 'operations.class_completed';
 
 export type CheckinCreatedEvent = {
   companyId: string;
@@ -29,4 +32,18 @@ export type WaitlistPromotedEvent = {
   scheduleId: string;
   studentId: string;
   enrollmentId: string;
+};
+
+export type AttendanceMarkedEvent = {
+  companyId: string;
+  scheduleId: string;
+  count: number;
+  actorId: string;
+};
+
+export type ClassCompletedEvent = {
+  companyId: string;
+  scheduleId: string;
+  actorId: string;
+  partnerLogId: string;
 };

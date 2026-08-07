@@ -6,10 +6,13 @@
     "dev": "next dev --port 3000",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lighthouse:m4": "node scripts/lighthouse-m4.mjs"
   },
   "dependencies": {
+    "@athena/branding": "workspace:*",
     "@athena/shared": "workspace:*",
+    "@athena/theme": "workspace:*",
     "@athena/ui": "workspace:*",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",

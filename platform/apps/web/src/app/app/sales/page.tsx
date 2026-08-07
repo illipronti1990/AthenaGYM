@@ -16,9 +16,9 @@ export default async function SalesDashboardPage() {
           {[
             ['Leads', '/app/sales/leads'],
             ['Pipeline', '/app/sales/pipeline'],
-            ['Planos', '/app/sales/plans'],
-            ['Matrículas', '/app/sales/enrollments'],
-            ['Contratos', '/app/sales/contracts'],
+            ['Planos', '/app/matriculas/planos'],
+            ['Matrículas', '/app/matriculas'],
+            ['Contratos', '/app/matriculas/contratos'],
           ].map(([label, href]) => (
             <Link key={href} href={href} className="athena-chip-nav">
               {label}

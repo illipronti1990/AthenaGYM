@@ -24,6 +24,9 @@ import {
   UserCog,
   Users,
   Wallet,
+  Package,
+  ShoppingCart,
+  Store,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -60,6 +63,9 @@ export const athenaIcons = {
   profile: User,
   logout: LogOut,
   admin: Building2,
+  inventory: Package,
+  pdv: ShoppingCart,
+  store: Store,
 } as const satisfies Record<string, LucideIcon>;
 
 export type AthenaIconName = keyof typeof athenaIcons;

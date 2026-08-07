@@ -6,6 +6,7 @@ import { Button } from '@athena/ui';
 import { apiChangePassword, apiUpdateProfile } from '@/services/api';
 import { useToast } from '@/components/ui/Toast';
 import { useTheme } from '@/components/ThemeProvider';
+import { useUiPreferences } from '@/hooks/useUiPreferences';
 
 export function ProfileForm({
   profile,
@@ -16,6 +17,7 @@ export function ProfileForm({
 }) {
   const { push } = useToast();
   const { setTheme } = useTheme();
+  const { prefs, setPrefs } = useUiPreferences();
   const [fullName, setFullName] = useState(profile.fullName || '');
   const [phone, setPhone] = useState(profile.phone || '');
   const [avatarUrl, setAvatarUrl] = useState(profile.avatarUrl || '');
@@ -124,6 +126,49 @@ export function ProfileForm({
         <input type="checkbox" checked={notifyPush} onChange={(e) => setNotifyPush(e.target.checked)} />
         Notificações no app
       </label>
+      <fieldset className="space-y-2 rounded-xl border border-[var(--border)] p-3" data-testid="ui-preferences">
+        <legend className="px-1 text-sm text-[var(--gold)]">Preferências de interface</legend>
+        <label className="flex items-center gap-2 text-sm text-[var(--muted)]">
+          <input
+            type="checkbox"
+            checked={prefs.denseLayout}
+            onChange={(e) => setPrefs({ denseLayout: e.target.checked })}
+            data-testid="pref-dense"
+          />
+          Densidade compacta
+        </label>
+        <label className="flex items-center gap-2 text-sm text-[var(--muted)]">
+          <input
+            type="checkbox"
+            checked={prefs.widgetsCompact}
+            onChange={(e) => setPrefs({ widgetsCompact: e.target.checked })}
+            data-testid="pref-widgets-compact"
+          />
+          Widgets compactos no dashboard
+        </label>
+        <label className="block text-sm">
+          <span className="mb-1 block text-[var(--muted)]">Formato de data</span>
+          <select
+            className="athena-input"
+            value={prefs.dateFormat}
+            onChange={(e) => setPrefs({ dateFormat: e.target.value as 'dd/MM/yyyy' | 'yyyy-MM-dd' })}
+          >
+            <option value="dd/MM/yyyy">dd/MM/yyyy</option>
+            <option value="yyyy-MM-dd">yyyy-MM-dd</option>
+          </select>
+        </label>
+        <p className="text-xs text-[var(--muted)]">
+          Atalhos: Ctrl+K busca · Ctrl+B sidebar · Esc fecha painéis
+        </p>
+        <button
+          type="button"
+          className="athena-btn athena-btn-secondary text-sm"
+          data-testid="restart-tour"
+          onClick={() => window.dispatchEvent(new Event('movvo:restart-tour'))}
+        >
+          Ver tour guiado novamente
+        </button>
+      </fieldset>
       <Field
         label="Nova senha (opcional)"
         value={newPassword}

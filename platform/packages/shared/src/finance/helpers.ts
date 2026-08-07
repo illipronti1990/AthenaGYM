@@ -1,14 +1,22 @@
 export type ReceivableStatus =
   | 'open'
+  | 'partial'
   | 'paid'
   | 'cancelled'
   | 'overdue'
   | 'refunded'
   | 'pix_generated';
 
+/** Display / filter statuses including computed due_today */
+export type ReceivableDisplayStatus =
+  | ReceivableStatus
+  | 'due_today';
+
 export const RECEIVABLE_STATUS_LABELS: Record<string, string> = {
   open: 'A receber',
-  overdue: 'A receber',
+  partial: 'Parcial',
+  due_today: 'Vence hoje',
+  overdue: 'Vencido',
   pix_generated: 'Gerado PIX',
   cancelled: 'Cancelado',
   paid: 'Pago',
@@ -18,13 +26,62 @@ export const RECEIVABLE_STATUS_LABELS: Record<string, string> = {
 export function receivableStatusLabel(status: string): string {
   return RECEIVABLE_STATUS_LABELS[status] || status;
 }
+
+export function resolveReceivableDisplayStatus(
+  status: string,
+  dueDate: string,
+  today = new Date().toISOString().slice(0, 10),
+): ReceivableDisplayStatus {
+  if (status === 'paid' || status === 'cancelled' || status === 'refunded' || status === 'partial') {
+    return status as ReceivableDisplayStatus;
+  }
+  if (status === 'overdue' || (['open', 'pix_generated'].includes(status) && dueDate < today)) {
+    return 'overdue';
+  }
+  if (['open', 'pix_generated'].includes(status) && dueDate === today) {
+    return 'due_today';
+  }
+  return (status as ReceivableDisplayStatus) || 'open';
+}
+
 export type PayableStatus = 'open' | 'paid' | 'cancelled';
+export type PayableCategory =
+  | 'agua'
+  | 'luz'
+  | 'internet'
+  | 'salarios'
+  | 'marketing'
+  | 'equipamentos'
+  | 'manutencao'
+  | 'limpeza'
+  | 'impostos'
+  | 'outros';
+
+export const PAYABLE_CATEGORY_LABELS: Record<PayableCategory, string> = {
+  agua: 'Água',
+  luz: 'Luz',
+  internet: 'Internet',
+  salarios: 'Salários',
+  marketing: 'Marketing',
+  equipamentos: 'Equipamentos',
+  manutencao: 'Manutenção',
+  limpeza: 'Limpeza',
+  impostos: 'Impostos',
+  outros: 'Outros',
+};
+
+export const PAYABLE_CATEGORIES = Object.keys(PAYABLE_CATEGORY_LABELS) as PayableCategory[];
+
 export type SubscriptionStatus = 'active' | 'paused' | 'cancelled' | 'past_due';
-export type SubscriptionRecurrence = 'monthly' | 'quarterly' | 'yearly';
+export type SubscriptionRecurrence = 'monthly' | 'weekly' | 'quarterly' | 'yearly';
 export type PaymentGateway = 'stub' | 'asaas' | 'mercadopago' | 'stripe' | 'pagseguro' | 'pagarme' | 'iugu';
 export type PaymentTxStatus = 'pending' | 'paid' | 'failed' | 'cancelled' | 'refunded';
 export type CashDirection = 'in' | 'out';
 export type OutboxStatus = 'pending' | 'processing' | 'done' | 'failed';
+export type CashSessionStatus = 'open' | 'closed';
+export type CashSessionMovementType = 'sale' | 'sangria' | 'supply' | 'adjustment';
+
+export type FinancialHealthLevel = 'excelente' | 'positivo' | 'atencao' | 'critico' | 'controladas';
 
 export interface FinancialAccount {
   id: string;
@@ -42,6 +99,7 @@ export interface CostCenter {
   companyId: string;
   name: string;
   description: string | null;
+  category: string | null;
   active: boolean;
 }
 
@@ -61,6 +119,9 @@ export interface Supplier {
   document: string | null;
   email: string | null;
   phone: string | null;
+  contactName?: string | null;
+  address?: string | null;
+  notes?: string | null;
   active: boolean;
 }
 
@@ -85,20 +146,32 @@ export interface Receivable {
   companyId: string;
   unitId: string | null;
   studentId: string | null;
+  enrollmentId: string | null;
+  planId: string | null;
+  trainerId: string | null;
   contractId: string | null;
   subscriptionId: string | null;
   costCenterId: string | null;
   paymentMethodId: string | null;
+  cashSessionId: string | null;
+  cashierUserId: string | null;
   description: string;
   amount: number;
   discount: number;
+  addition: number;
   interest: number;
   fine: number;
+  amountPaid: number;
   dueDate: string;
   paidAt: string | null;
   status: ReceivableStatus | string;
+  displayStatus?: ReceivableDisplayStatus | string;
   competenceMonth: string | null;
+  notes: string | null;
   createdAt: string;
+  studentName?: string | null;
+  studentPhone?: string | null;
+  planName?: string | null;
 }
 
 export interface Payable {
@@ -109,10 +182,16 @@ export interface Payable {
   costCenterId: string | null;
   description: string;
   amount: number;
+  category: PayableCategory | string;
+  competenceMonth: string | null;
+  installmentLabel: string | null;
+  notes: string | null;
+  attachmentUrl: string | null;
   dueDate: string;
   paidAt: string | null;
   status: PayableStatus | string;
   createdAt: string;
+  supplierName?: string | null;
 }
 
 export interface PaymentTransaction {
@@ -120,6 +199,8 @@ export interface PaymentTransaction {
   companyId: string;
   receivableId: string | null;
   subscriptionId: string | null;
+  paymentMethodId: string | null;
+  cashSessionId: string | null;
   gateway: PaymentGateway | string;
   externalId: string | null;
   idempotencyKey: string;
@@ -128,7 +209,57 @@ export interface PaymentTransaction {
   paidAt: string | null;
   qrCode: string | null;
   copyPaste: string | null;
+  nsu: string | null;
+  authorizationCode: string | null;
+  cardBrand: string | null;
+  installments: number;
   createdAt: string;
+}
+
+export interface CashSession {
+  id: string;
+  companyId: string;
+  unitId: string | null;
+  operatorUserId: string;
+  openedAt: string;
+  closedAt: string | null;
+  openingAmount: number;
+  expectedAmount: number;
+  countedAmount: number | null;
+  difference: number | null;
+  status: CashSessionStatus | string;
+  notes: string | null;
+}
+
+export interface CashSessionMovement {
+  id: string;
+  sessionId: string;
+  companyId: string;
+  movementType: CashSessionMovementType | string;
+  amount: number;
+  paymentMethodId: string | null;
+  receivableId: string | null;
+  notes: string | null;
+  createdBy: string | null;
+  createdAt: string;
+}
+
+export interface CashSessionReport {
+  session: CashSession;
+  movements: CashSessionMovement[];
+  salesTotal: number;
+  sangriaTotal: number;
+  supplyTotal: number;
+}
+
+export interface CashflowSummary {
+  from: string;
+  to: string;
+  openingBalance: number;
+  inflow: number;
+  outflow: number;
+  closingBalance: number;
+  points: CashflowPoint[];
 }
 
 export interface CashflowPoint {
@@ -151,12 +282,54 @@ export interface DreReport {
   result: number;
 }
 
+export interface FinancialHealthScore {
+  score: number;
+  revenue: FinancialHealthLevel | string;
+  delinquency: FinancialHealthLevel | string;
+  cashflow: FinancialHealthLevel | string;
+  expenses: FinancialHealthLevel | string;
+}
+
 export interface FinanceDashboard {
   monthRevenue: number;
   received: number;
   toReceive: number;
   delinquencyRate: number;
   cashflowBalance: number;
+  profit: number;
+  expenses: number;
+  averageTicket: number;
+  mrr: number;
+  receivedToday: number;
+  cashSessionBalance: number;
+  health: FinancialHealthScore;
+}
+
+export interface DelinquencyItem {
+  studentId: string;
+  studentName: string;
+  phone: string | null;
+  email: string | null;
+  daysOverdue: number;
+  amount: number;
+  receivableIds: string[];
+}
+
+export interface DelinquencyReport {
+  count: number;
+  totalAmount: number;
+  revenueAtRiskPercent: number;
+  items: DelinquencyItem[];
+}
+
+export interface DueAlertItem {
+  id: string;
+  studentId: string | null;
+  studentName: string | null;
+  description: string;
+  amount: number;
+  dueDate: string;
+  daysUntilDue: number;
 }
 
 export interface OutboxEvent {
@@ -170,17 +343,32 @@ export interface OutboxEvent {
   createdAt: string;
 }
 
-/** Net amount after discount + interest + fine */
+/** Net amount after discount + addition + interest + fine */
 export function calcReceivableNet(input: {
   amount: number;
   discount?: number;
+  addition?: number;
   interest?: number;
   fine?: number;
 }): number {
   const discount = input.discount ?? 0;
+  const addition = input.addition ?? 0;
   const interest = input.interest ?? 0;
   const fine = input.fine ?? 0;
-  return Math.round((input.amount - discount + interest + fine) * 100) / 100;
+  return Math.round((input.amount - discount + addition + interest + fine) * 100) / 100;
+}
+
+export function calcReceivableRemaining(rec: {
+  amount: number;
+  discount?: number;
+  addition?: number;
+  interest?: number;
+  fine?: number;
+  amountPaid?: number;
+}): number {
+  const net = calcReceivableNet(rec);
+  const paid = rec.amountPaid ?? 0;
+  return Math.max(0, Math.round((net - paid) * 100) / 100);
 }
 
 /** Simple daily interest as percent of principal for overdue days */
@@ -254,4 +442,77 @@ export function buildDre(input: {
 export function calcDelinquencyRate(overdue: number, totalOpen: number): number {
   if (totalOpen <= 0) return 0;
   return Math.round((overdue / totalOpen) * 1000) / 10;
+}
+
+export function calcFinancialHealth(input: {
+  monthRevenue: number;
+  delinquencyRate: number;
+  cashflowBalance: number;
+  expenses: number;
+  profit: number;
+}): FinancialHealthScore {
+  let score = 70;
+  let revenue: FinancialHealthLevel = 'positivo';
+  let delinquency: FinancialHealthLevel = 'positivo';
+  let cashflow: FinancialHealthLevel = 'positivo';
+  let expenses: FinancialHealthLevel = 'controladas';
+
+  if (input.monthRevenue >= 20000) {
+    revenue = 'excelente';
+    score += 15;
+  } else if (input.monthRevenue >= 8000) {
+    revenue = 'positivo';
+    score += 8;
+  } else if (input.monthRevenue >= 2000) {
+    revenue = 'atencao';
+    score -= 5;
+  } else {
+    revenue = 'critico';
+    score -= 15;
+  }
+
+  if (input.delinquencyRate <= 5) {
+    delinquency = 'excelente';
+    score += 10;
+  } else if (input.delinquencyRate <= 12) {
+    delinquency = 'atencao';
+    score -= 5;
+  } else {
+    delinquency = 'critico';
+    score -= 15;
+  }
+
+  if (input.cashflowBalance > 0) {
+    cashflow = 'positivo';
+    score += 8;
+  } else if (input.cashflowBalance === 0) {
+    cashflow = 'atencao';
+    score -= 5;
+  } else {
+    cashflow = 'critico';
+    score -= 12;
+  }
+
+  const expenseRatio =
+    input.monthRevenue > 0 ? input.expenses / input.monthRevenue : input.expenses > 0 ? 1 : 0;
+  if (expenseRatio <= 0.55) {
+    expenses = 'controladas';
+    score += 7;
+  } else if (expenseRatio <= 0.8) {
+    expenses = 'atencao';
+    score -= 5;
+  } else {
+    expenses = 'critico';
+    score -= 12;
+  }
+
+  if (input.profit < 0) score -= 10;
+
+  return {
+    score: Math.max(0, Math.min(100, Math.round(score))),
+    revenue,
+    delinquency,
+    cashflow,
+    expenses,
+  };
 }

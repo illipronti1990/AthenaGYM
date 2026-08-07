@@ -124,6 +124,13 @@ export class SettingsService {
 
     if (error) throw new BadRequestException(error.message);
 
+    // Keep companies branding in sync for BrandingProvider /auth/me consumers.
+    await this.mirrorBrandingToCompany(admin, companyId, {
+      name: dto.name,
+      primary_color: dto.primaryColor,
+      secondary_color: dto.secondaryColor,
+    });
+
     await this.audit.log({
       companyId,
       userId: user.id,
@@ -169,6 +176,10 @@ export class SettingsService {
       .is('deleted_at', null);
     if (error) throw new BadRequestException(error.message);
 
+    await this.mirrorBrandingToCompany(admin, companyId, {
+      logo_url: pub.publicUrl,
+    });
+
     await this.audit.log({
       companyId,
       userId: user.id,
@@ -180,6 +191,47 @@ export class SettingsService {
     });
 
     return this.getSettings(auth);
+  }
+
+  /**
+   * Mirror gym_settings branding fields onto companies so runtime white-label
+   * (BrandingProvider via Company from /auth/me) stays aligned with settings UI.
+   */
+  private async mirrorBrandingToCompany(
+    admin: ReturnType<SupabaseService['getAdmin']>,
+    companyId: string,
+    fields: {
+      name?: string;
+      logo_url?: string;
+      primary_color?: string;
+      secondary_color?: string;
+      favicon_url?: string;
+      background_login?: string;
+    },
+  ): Promise<void> {
+    const companyPatch: Record<string, unknown> = {};
+    if (fields.name !== undefined) companyPatch.name = fields.name;
+    if (fields.logo_url !== undefined) companyPatch.logo_url = fields.logo_url;
+    if (fields.primary_color !== undefined) {
+      companyPatch.primary_color = fields.primary_color;
+    }
+    if (fields.secondary_color !== undefined) {
+      companyPatch.secondary_color = fields.secondary_color;
+    }
+    if (fields.favicon_url !== undefined) {
+      companyPatch.favicon_url = fields.favicon_url;
+    }
+    if (fields.background_login !== undefined) {
+      companyPatch.background_login = fields.background_login;
+    }
+    if (Object.keys(companyPatch).length === 0) return;
+
+    const { error } = await admin
+      .from('companies')
+      .update(companyPatch)
+      .eq('id', companyId)
+      .is('deleted_at', null);
+    if (error) throw new BadRequestException(error.message);
   }
 
   async dashboard(auth: AuthContext): Promise<OpsDashboard> {

@@ -42,7 +42,7 @@ export function Logo({
       }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt="ATHENA" style={style} />
+      <img src={src} alt="Movvo ERP" style={style} data-testid="ui-logo" />
     </div>
   );
 }

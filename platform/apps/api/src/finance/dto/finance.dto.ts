@@ -56,6 +56,41 @@ export class CreateReceivableDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsUuidString()
+  enrollmentId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUuidString()
+  planId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUuidString()
+  trainerId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  addition?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  interest?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  fine?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  notes?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUuidString()
   companyId?: string;
 }
 
@@ -83,6 +118,11 @@ export class UpdateReceivableDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
+  addition?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
   interest?: number;
 
   @ApiPropertyOptional()
@@ -94,6 +134,65 @@ export class UpdateReceivableDto {
   @IsOptional()
   @IsString()
   status?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  notes?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUuidString()
+  paymentMethodId?: string;
+}
+
+export class ReceivePaymentDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Min(0.01)
+  amount?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUuidString()
+  paymentMethodId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  interest?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  fine?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  nsu?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  authorizationCode?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  cardBrand?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  installments?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  notes?: string;
 }
 
 export class RenegotiateDto {
@@ -150,8 +249,122 @@ export class CreatePayableDto {
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsString()
+  category?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsDateString()
+  competenceMonth?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  installmentLabel?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  notes?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  attachmentUrl?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsUUID()
   companyId?: string;
+}
+
+export class UpdatePayableDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  amount?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsDateString()
+  dueDate?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  category?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUuidString()
+  costCenterId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsDateString()
+  competenceMonth?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  installmentLabel?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  notes?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  attachmentUrl?: string;
+}
+
+export class OpenCashSessionDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  openingAmount?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUuidString()
+  unitId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  notes?: string;
+}
+
+export class CashSessionAmountDto {
+  @ApiProperty()
+  @IsNumber()
+  @Min(0.01)
+  amount!: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  notes?: string;
+}
+
+export class CloseCashSessionDto {
+  @ApiProperty()
+  @IsNumber()
+  @Min(0)
+  countedAmount!: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  notes?: string;
 }
 
 export class CreateSubscriptionDto {
@@ -285,8 +498,34 @@ export class CreateCostCenterDto {
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsString()
+  category?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsUUID()
   companyId?: string;
+}
+
+export class UpdateCostCenterDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  category?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  active?: boolean;
 }
 
 export class ReconciliationImportDto {

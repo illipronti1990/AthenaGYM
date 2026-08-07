@@ -79,7 +79,7 @@ export function DashboardGrid({
   );
 
   const visibleIds = layout
-    .filter((i) => i.visible)
+    .filter((i) => i.visible && !i.collapsed)
     .sort((a, b) => a.order - b.order)
     .map((i) => i.id);
 

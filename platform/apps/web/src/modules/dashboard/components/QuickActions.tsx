@@ -7,17 +7,19 @@ import {
   Dumbbell,
   FileText,
   MessageCircle,
+  QrCode,
   UserPlus,
   Wallet,
 } from 'lucide-react';
 
 const ACTIONS = [
   { href: '/app/alunos/novo', label: 'Novo Aluno', icon: UserPlus },
-  { href: '/app/sales/enrollments', label: 'Nova Matrícula', icon: CreditCard },
-  { href: '/app/finance/receivables', label: 'Receber', icon: Wallet },
-  { href: '/app/operations/agenda', label: 'Agendar', icon: CalendarPlus },
+  { href: '/app/matriculas/nova', label: 'Nova Matrícula', icon: CreditCard },
+  { href: '/app/financeiro/receber', label: 'Receber', icon: Wallet },
+  { href: '/app/acesso/checkin', label: 'Check-in', icon: QrCode },
+  { href: '/app/acesso/agenda', label: 'Agendar', icon: CalendarPlus },
   { href: '/app/workouts/assessments', label: 'Nova Avaliação', icon: Dumbbell },
-  { href: '/app/sales/contracts', label: 'Gerar Contrato', icon: FileText },
+  { href: '/app/matriculas/contratos', label: 'Gerar Contrato', icon: FileText },
   { href: '/app/engagement', label: 'Enviar WhatsApp', icon: MessageCircle },
 ] as const;
 

@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -20,12 +21,19 @@ import {
 import { AuthUser } from '../auth/auth.types';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import {
+  CancelEnrollmentDto,
+  ChangePlanDto,
+  CompleteEnrollmentDto,
+  ConvertLeadDto,
   CreateActivityDto,
   CreateContractDto,
   CreateEnrollmentDto,
   CreateLeadDto,
   CreatePlanDto,
+  FreezeEnrollmentDto,
   MoveLeadStageDto,
+  RenewEnrollmentDto,
+  SignContractDto,
   UpdateLeadDto,
   UpdatePlanDto,
 } from './dto/sales.dto';
@@ -86,6 +94,18 @@ export class SalesController {
     @Param('id') id: string,
   ) {
     return this.sales.deleteLead(user, auth, id);
+  }
+
+  @Post('leads/:id/convert')
+  @Permissions('sales.create')
+  @ApiOperation({ summary: 'Convert lead to student and mark stage as Matrícula' })
+  convertLead(
+    @CurrentUser() user: AuthUser,
+    @CurrentAuth() auth: AuthContext,
+    @Param('id') id: string,
+    @Body() dto: ConvertLeadDto,
+  ) {
+    return this.sales.convertLead(user, auth, id, dto);
   }
 
   @Patch('leads/:id/stage')
@@ -166,10 +186,40 @@ export class SalesController {
     return this.sales.deletePlan(user, auth, id);
   }
 
+  @Get('enrollments/renewals-due')
+  @Permissions('sales.read')
+  @ApiOperation({ summary: 'Enrollments expiring in N days' })
+  renewalsDue(@CurrentAuth() auth: AuthContext, @Query('days') days?: string) {
+    return this.sales.listRenewalsDue(auth, days);
+  }
+
+  @Post('enrollments/complete')
+  @Permissions('sales.create')
+  @ApiOperation({ summary: 'Complete enrollment wizard (student + plan + contract + sign)' })
+  completeEnrollment(
+    @CurrentUser() user: AuthUser,
+    @CurrentAuth() auth: AuthContext,
+    @Body() dto: CompleteEnrollmentDto,
+  ) {
+    return this.sales.completeEnrollment(user, auth, dto);
+  }
+
   @Get('enrollments')
   @Permissions('sales.read')
   listEnrollments(@CurrentAuth() auth: AuthContext) {
     return this.sales.listEnrollments(auth);
+  }
+
+  @Get('enrollments/:id')
+  @Permissions('sales.read')
+  getEnrollment(@CurrentAuth() auth: AuthContext, @Param('id') id: string) {
+    return this.sales.getEnrollment(auth, id);
+  }
+
+  @Get('enrollments/:id/events')
+  @Permissions('sales.read')
+  enrollmentEvents(@CurrentAuth() auth: AuthContext, @Param('id') id: string) {
+    return this.sales.listEnrollmentEvents(auth, id);
   }
 
   @Post('enrollments')
@@ -180,6 +230,60 @@ export class SalesController {
     @Body() dto: CreateEnrollmentDto,
   ) {
     return this.sales.createEnrollment(user, auth, dto);
+  }
+
+  @Post('enrollments/:id/renew')
+  @Permissions('sales.update')
+  renewEnrollment(
+    @CurrentUser() user: AuthUser,
+    @CurrentAuth() auth: AuthContext,
+    @Param('id') id: string,
+    @Body() dto: RenewEnrollmentDto,
+  ) {
+    return this.sales.renewEnrollment(user, auth, id, dto);
+  }
+
+  @Post('enrollments/:id/freeze')
+  @Permissions('sales.update')
+  freezeEnrollment(
+    @CurrentUser() user: AuthUser,
+    @CurrentAuth() auth: AuthContext,
+    @Param('id') id: string,
+    @Body() dto: FreezeEnrollmentDto,
+  ) {
+    return this.sales.freezeEnrollment(user, auth, id, dto);
+  }
+
+  @Post('enrollments/:id/unfreeze')
+  @Permissions('sales.update')
+  unfreezeEnrollment(
+    @CurrentUser() user: AuthUser,
+    @CurrentAuth() auth: AuthContext,
+    @Param('id') id: string,
+  ) {
+    return this.sales.unfreezeEnrollment(user, auth, id);
+  }
+
+  @Post('enrollments/:id/cancel')
+  @Permissions('sales.update')
+  cancelEnrollment(
+    @CurrentUser() user: AuthUser,
+    @CurrentAuth() auth: AuthContext,
+    @Param('id') id: string,
+    @Body() dto: CancelEnrollmentDto,
+  ) {
+    return this.sales.cancelEnrollment(user, auth, id, dto);
+  }
+
+  @Post('enrollments/:id/change-plan')
+  @Permissions('sales.update')
+  changePlan(
+    @CurrentUser() user: AuthUser,
+    @CurrentAuth() auth: AuthContext,
+    @Param('id') id: string,
+    @Body() dto: ChangePlanDto,
+  ) {
+    return this.sales.changePlan(user, auth, id, dto);
   }
 
   @Get('contracts')
@@ -210,7 +314,8 @@ export class SalesController {
     @CurrentUser() user: AuthUser,
     @CurrentAuth() auth: AuthContext,
     @Param('id') id: string,
+    @Body() dto: SignContractDto,
   ) {
-    return this.sales.signContract(user, auth, id);
+    return this.sales.signContract(user, auth, id, dto);
   }
 }

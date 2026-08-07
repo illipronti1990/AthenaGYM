@@ -9,18 +9,22 @@ import {
   type ReactNode,
 } from 'react';
 
-export type ToastTone = 'ok' | 'error' | 'warn' | 'info';
+export type ToastTone = 'ok' | 'success' | 'error' | 'warn' | 'warning' | 'info';
 
 const ToastCtx = createContext<{
   push: (message: string, tone?: ToastTone) => void;
 } | null>(null);
 
+function pushToast(message: string, tone: ToastTone = 'ok') {
+  if (tone === 'error') toast.error(message);
+  else if (tone === 'warn' || tone === 'warning') toast.warning(message);
+  else if (tone === 'info') toast.info(message);
+  else toast.success(message);
+}
+
 export function ToastProvider({ children }: { children: ReactNode }) {
   const push = useCallback((message: string, tone: ToastTone = 'ok') => {
-    if (tone === 'error') toast.error(message);
-    else if (tone === 'warn') toast.warning(message);
-    else if (tone === 'info') toast.info(message);
-    else toast.success(message);
+    pushToast(message, tone);
   }, []);
 
   const value = useMemo(() => ({ push }), [push]);

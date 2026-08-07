@@ -580,6 +580,45 @@ export class StudentsService {
         ? companyIds
         : ['11111111-1111-1111-1111-111111111111'];
     const rows = await this.repo.exportRows(ids);
+    return this.formatStudentCsv(rows);
+  }
+
+  /** Alunos do professor: trainer_name bate com o perfil OU têm treino com trainer_id = user. */
+  async exportMyStudentsCsv(auth: AuthContext) {
+    const rows = await this.exportMyStudentsRows(auth);
+    return this.formatStudentCsv(rows);
+  }
+
+  async exportMyStudentsRows(auth: AuthContext): Promise<Record<string, unknown>[]> {
+    const companyIds = this.companyScope(auth);
+    const ids =
+      companyIds.length > 0
+        ? companyIds
+        : ['11111111-1111-1111-1111-111111111111'];
+    const { data: profile } = await this.supabase
+      .getAdmin()
+      .from('profiles')
+      .select('id, full_name, email')
+      .eq('id', auth.userId)
+      .maybeSingle();
+    const fullName = String(profile?.full_name || '').trim();
+    const emailLocal = String(auth.email || profile?.email || '')
+      .split('@')[0]
+      .replace(/[._]/g, ' ')
+      .trim();
+    const nameHints = [
+      fullName,
+      fullName.split(/\s+/)[0] || '',
+      emailLocal,
+      emailLocal.split(/\s+/)[0] || '',
+    ].filter((h, i, arr) => h.length >= 2 && arr.indexOf(h) === i);
+    return this.repo.exportRowsForTrainer(ids, {
+      trainerUserId: auth.userId,
+      nameHints,
+    });
+  }
+
+  private formatStudentCsv(rows: Array<Record<string, unknown>>) {
     const header =
       'registration_number,full_name,cpf,email,phone,status,plan_name,trainer_name,unit_id';
     const lines = rows.map((r) =>
@@ -594,7 +633,7 @@ export class StudentsService {
         r.trainer_name || '',
         r.unit_id,
       ]
-        .map((v) => `"${String(v).replace(/"/g, '""')}"`)
+        .map((v) => `"${String(v ?? '').replace(/"/g, '""')}"`)
         .join(','),
     );
     return [header, ...lines].join('\n');

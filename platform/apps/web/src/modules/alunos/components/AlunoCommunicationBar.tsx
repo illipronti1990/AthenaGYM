@@ -47,7 +47,7 @@ export function AlunoCommunicationBar({
           size="sm"
           variant="secondary"
           onClick={() => {
-            window.location.href = `mailto:${email}?subject=ATHENA - ${fullName}`;
+            window.location.href = `mailto:${email}?subject=Movvo - ${fullName}`;
           }}
         >
           <Mail size={14} className="mr-1 inline" />

@@ -22,8 +22,8 @@ async function apiFetch<T>(path: string, token: string, init?: RequestInit): Pro
 }
 
 export const polishApi = {
-  search: (t: string, q: string) =>
-    apiFetch<GlobalSearchResult>(`/search?q=${encodeURIComponent(q)}`, t),
+  search: (t: string, q: string, signal?: AbortSignal) =>
+    apiFetch<GlobalSearchResult>(`/search?q=${encodeURIComponent(q)}`, t, { signal }),
   favorites: (t: string) => apiFetch<UserFavorite[]>('/favorites', t),
   addFavorite: (t: string, body: { href: string; label: string }) =>
     apiFetch<UserFavorite>('/favorites', t, { method: 'POST', body: JSON.stringify(body) }),

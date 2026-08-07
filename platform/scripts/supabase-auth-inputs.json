@@ -1,0 +1,20 @@
+[
+  {
+    "tag": "INPUT",
+    "type": "email",
+    "name": "email",
+    "id": "email",
+    "placeholder": "you@example.com",
+    "aria": null,
+    "value": "illipronti1990@hot"
+  },
+  {
+    "tag": "INPUT",
+    "type": "password",
+    "name": "password",
+    "id": "password",
+    "placeholder": "••••••••",
+    "aria": null,
+    "value": ""
+  }
+]

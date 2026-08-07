@@ -22,7 +22,9 @@ export function usePrefetchRoutes(routes: string[], enabled = true) {
 }
 
 export const FINANCE_PREFETCH = [
-  '/app/finance/receivables',
-  '/app/finance/cashflow',
-  '/app/finance/payables',
+  '/app/financeiro/receber',
+  '/app/financeiro/caixa',
+  '/app/financeiro/fluxo-caixa',
+  '/app/financeiro/pagar',
+  '/app/financeiro/inadimplencia',
 ] as const;

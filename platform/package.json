@@ -23,6 +23,7 @@
     "start:web": "pnpm --filter @athena/web start",
     "test:api": "pnpm --filter @athena/api test",
     "test:e2e": "playwright test",
+    "lighthouse:m4": "pnpm --filter @athena/web lighthouse:m4",
     "test": "pnpm test:api"
   },
   "engines": {
@@ -32,6 +33,7 @@
   "devDependencies": {
     "@playwright/test": "^1.49.1",
     "@types/node": "^26.1.1",
+    "sharp": "^0.35.3",
     "typescript": "^5.7.3"
   }
 }

@@ -1,85 +1,54 @@
-# Deploy agora (sessão guiada)
+# Deploy agora — Movvo ERP em produção
 
-Código já está no GitHub: https://github.com/illipronti1990/AthenaGYM
+**Status (2026-08-07): produção no ar.**
 
-Arquivos locais de produção (gitignored) já gerados:
-- `apps/api/.env.production.local`
-- `apps/web/.env.production.local`
+| App | URL | Status |
+|-----|-----|--------|
+| Site | https://movvoerp.com.br | 200 |
+| WWW | https://www.movvoerp.com.br | 200 |
+| API | https://api.movvoerp.com.br | health/branding/features 200 |
 
----
-
-## A) Conta Render (API) — 5 min
-
-1. Abra: https://dashboard.render.com/login  
-2. Entre com **GitHub** (mesmo usuário do repo).  
-3. **New → Blueprint**  
-4. Selecione o repo **AthenaGYM**  
-5. Blueprint Path: `render.yaml`  
-6. Preencha as variáveis pedidas (copie de `apps/api/.env`):
-
-| Variável | De onde copiar |
-|----------|----------------|
-| `SUPABASE_URL` | `apps/api/.env` |
-| `SUPABASE_ANON_KEY` | `apps/api/.env` |
-| `SUPABASE_SERVICE_ROLE_KEY` | `apps/api/.env` |
-| `SUPABASE_JWT_SECRET` | Supabase → Project Settings → API → JWT Secret |
-| `CORS_ORIGINS` | deixe `http://localhost:3000` por enquanto (atualiza depois) |
-| `PASSWORD_RESET_REDIRECT` | `http://localhost:3000/login` por enquanto |
-
-7. **Apply** / Deploy  
-8. Copie a URL da API (ex.: `https://athena-api-xxxx.onrender.com`)
-
-Teste: `https://SUA-API.onrender.com/api/v1/health`
+Projetos: `athena-gym` (web) · `athena-api` (API)  
+Repo: https://github.com/illipronti1990/AthenaGYM
 
 ---
 
-## B) Conta Vercel (site) — 5 min
+## Já configurado
 
-1. Abra: https://vercel.com/login  
-2. Entre com **GitHub**  
-3. **Add New… → Project** → importe **AthenaGYM**  
-4. Configure:
-   - **Root Directory:** `platform/apps/web` (Edit → selecione a pasta)
-   - Framework: Next.js
-5. Environment Variables (Production):
+- Vercel envs: `NEXT_PUBLIC_API_URL`, CORS apex+www, `PASSWORD_RESET_REDIRECT`, `DEV_AUTH=false`
+- Supabase Auth: Site URL `https://movvoerp.com.br` + redirect allow list (apex/www/legado/localhost)
+- Assets `/brand/*` e Brand API Movvo
 
-| Key | Valor |
-|-----|--------|
-| `NEXT_PUBLIC_SUPABASE_URL` | igual ao do `.env.local` |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | igual ao do `.env.local` |
-| `NEXT_PUBLIC_API_URL` | `https://SUA-API.onrender.com/api/v1` |
-| `NEXT_PUBLIC_DEV_AUTH` | `false` |
-| `NEXT_PUBLIC_GYM_INSTAGRAM` | `https://www.instagram.com/athenagym.oficial/` |
+Regenerar envs locais (gitignored):
 
-6. **Deploy**  
-7. Copie a URL do site (ex.: `https://athena-gym.vercel.app`)
-
----
-
-## C) Ajustes finais (obrigatório)
-
-### Render
-Atualize e faça Redeploy:
-- `CORS_ORIGINS` = `https://SEU-APP.vercel.app`
-- `PASSWORD_RESET_REDIRECT` = `https://SEU-APP.vercel.app/login`
-
-### Supabase
-Authentication → URL Configuration:
-- **Site URL:** `https://SEU-APP.vercel.app`
-- **Redirect URLs:** adicione `https://SEU-APP.vercel.app/**`
-
-### Local (opcional)
 ```bash
 cd platform
-node scripts/prepare-prod-env.mjs https://SUA-API.onrender.com https://SEU-APP.vercel.app
+node scripts/prepare-prod-env.mjs https://api.movvoerp.com.br https://movvoerp.com.br
 ```
 
 ---
 
-## D) Me avise
+## Contas demo (tenant Athena Academia)
 
-Quando terminar A e B, me mande:
-1. URL da API (Render)
-2. URL do site (Vercel)
+| Perfil | E-mail | Senha |
+|--------|--------|-------|
+| Admin | `admin.demo@movvoerp.com.br` | `Demo@123456` |
+| Aluno | `aluno.demo@movvoerp.com.br` | `Demo@123456` |
+| Professor | `professor.demo@movvoerp.com.br` | `Demo@123456` |
 
-Eu valido health, CORS e te digo o próximo ajuste fino.
+Seed idempotente: `cd platform/apps/api && ENV_FILE=.env.production.local node scripts/seed-demo-users.mjs`
+
+> Em **dev local** (DEV_AUTH=true) ainda valem: `teste@athena.local`, `renan.aluno@athena.local`, `bruna.professora@athena.local` / `teste123`.
+
+## Landing M-2
+
+Site comercial em `/` (route group marketing). Docs: [`../Documentacao/MOVVO_LANDING_M2.md`](../Documentacao/MOVVO_LANDING_M2.md)
+
+## Smoke manual restante
+
+1. Abrir https://movvoerp.com.br/ (landing) e https://movvoerp.com.br/login
+2. Login com usuário real Supabase
+3. Confirmar footer `v0.7.0-beta · Build 2026.08`
+4. Enviar formulário de demonstração em `/#contato`
+
+Guia completo: [DEPLOY.md](./DEPLOY.md)

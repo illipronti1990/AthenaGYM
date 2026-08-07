@@ -52,7 +52,8 @@ export function ThemeProvider({
     setResolved(r);
     applyDom(r);
     try {
-      localStorage.setItem('athena_theme', t);
+      localStorage.setItem('movvo_theme', t);
+      localStorage.removeItem('athena_theme');
     } catch {
       /* ignore */
     }
@@ -61,13 +62,26 @@ export function ThemeProvider({
   useEffect(() => {
     let initial: ThemePreference = initialTheme;
     try {
-      const saved = localStorage.getItem('athena_theme');
+      const saved =
+        localStorage.getItem('movvo_theme') || localStorage.getItem('athena_theme');
       if (saved === 'light' || saved === 'dark' || saved === 'system') initial = saved;
     } catch {
       /* ignore */
     }
     setThemeState(initial);
     apply(initial);
+
+    const mq = window.matchMedia('(prefers-color-scheme: light)');
+    const onChange = () => {
+      setThemeState((current) => {
+        if (current === 'system') {
+          apply('system');
+        }
+        return current;
+      });
+    };
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
   }, [apply, initialTheme]);
 
   const setTheme = useCallback(

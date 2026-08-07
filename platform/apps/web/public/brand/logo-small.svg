@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="none" role="img" aria-label="ATHENA">
-  <rect width="40" height="40" rx="10" fill="#090909"/>
-  <rect x="0.75" y="0.75" width="38.5" height="38.5" rx="9.25" stroke="#D4AF37" stroke-opacity="0.5"/>
-  <path d="M10 32 L20 6 L30 32 H24.8 L22.9 26 H17.1 L15.2 32 H10 Z M18.2 21.5 H21.8 L20 14.2 L18.2 21.5 Z" fill="#D4AF37"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 48" fill="none" role="img" aria-label="Movvo">
+  <rect x="0" y="0" width="48" height="48" rx="12" fill="#D90429"/>
+  <path d="M10 36V12h5.6l6.6 11.2L28.8 12H34.4v24h-4.8V21.6L24.2 34h-2.2L14.8 21.6V36H10z" fill="#FFFFFF"/>
+  <text x="60" y="32" font-family="Sora, Inter, Arial, sans-serif" font-size="26" font-weight="700" fill="currentColor" letter-spacing="-0.04em">Movvo</text>
 </svg>

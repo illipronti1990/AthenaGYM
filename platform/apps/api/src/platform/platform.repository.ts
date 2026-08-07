@@ -111,6 +111,17 @@ export class PlatformRepository {
     return this.mapClient(data as Record<string, unknown>);
   }
 
+  async updateClient(id: string, patch: Record<string, unknown>) {
+    const { data, error } = await this.admin()
+      .from('api_clients')
+      .update(patch)
+      .eq('id', id)
+      .select('*')
+      .single();
+    if (error) throw new Error(error.message);
+    return this.mapClient(data as Record<string, unknown>);
+  }
+
   async listClients(companyId: string) {
     const { data, error } = await this.admin()
       .from('api_clients')
@@ -218,6 +229,27 @@ export class PlatformRepository {
     return data as Record<string, unknown> | null;
   }
 
+  async updateWebhook(id: string, patch: Record<string, unknown>) {
+    const { data, error } = await this.admin()
+      .from('webhook_subscriptions')
+      .update(patch)
+      .eq('id', id)
+      .select('*')
+      .single();
+    if (error) throw new Error(error.message);
+    return this.mapWebhook(data as Record<string, unknown>);
+  }
+
+  async findDelivery(id: string) {
+    const { data, error } = await this.admin()
+      .from('webhook_deliveries')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    return data as Record<string, unknown> | null;
+  }
+
   async listActiveWebhooksForEvent(companyId: string, eventType: string, environment: string) {
     const { data, error } = await this.admin()
       .from('webhook_subscriptions')
@@ -301,6 +333,16 @@ export class PlatformRepository {
       .order('installed_at', { ascending: false });
     if (error) throw new Error(error.message);
     return (data || []).map((r) => this.mapInstallation(r as Record<string, unknown>));
+  }
+
+  async findInstallationById(id: string) {
+    const { data, error } = await this.admin()
+      .from('marketplace_installations')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    return data ? this.mapInstallation(data as Record<string, unknown>) : null;
   }
 
   async updateInstallation(id: string, patch: Record<string, unknown>) {

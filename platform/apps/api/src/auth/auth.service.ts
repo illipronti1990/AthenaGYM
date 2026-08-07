@@ -21,9 +21,23 @@ import {
   UpdateProfileDto,
 } from './dto/auth.dto';
 
-const DEV_TEST_EMAIL = 'teste@athena.local';
-const DEV_TEST_PASSWORD = 'teste123';
-const DEV_TEST_USER_ID = '99999999-9999-9999-9999-999999999999';
+const DEV_USERS: Record<
+  string,
+  { password: string; userId: string }
+> = {
+  'teste@athena.local': {
+    password: 'teste123',
+    userId: '99999999-9999-9999-9999-999999999999',
+  },
+  'renan.aluno@athena.local': {
+    password: 'teste123',
+    userId: '99999999-9999-9999-9999-999999999991',
+  },
+  'bruna.professora@athena.local': {
+    password: 'teste123',
+    userId: '99999999-9999-9999-9999-999999999993',
+  },
+};
 
 @Injectable()
 export class AuthService {
@@ -70,7 +84,8 @@ export class AuthService {
     }
 
     const email = dto.email.trim().toLowerCase();
-    if (email !== DEV_TEST_EMAIL || dto.password !== DEV_TEST_PASSWORD) {
+    const account = DEV_USERS[email];
+    if (!account || dto.password !== account.password) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
@@ -78,12 +93,12 @@ export class AuthService {
     const { data: profile, error } = await admin
       .from('profiles')
       .select('id, email, full_name, status, company_id, default_unit_id')
-      .eq('id', DEV_TEST_USER_ID)
+      .eq('id', account.userId)
       .is('deleted_at', null)
       .maybeSingle();
 
     if (error || !profile) {
-      throw new UnauthorizedException('DEV profile missing — apply migration 0006');
+      throw new UnauthorizedException('DEV profile missing — apply DEV user migration');
     }
     if (String(profile.status || 'active') === 'inactive') {
       throw new UnauthorizedException('User inactive');
@@ -97,7 +112,7 @@ export class AuthService {
     }
 
     const accessToken = await new SignJWT({
-      email: profile.email || DEV_TEST_EMAIL,
+      email: profile.email || email,
       role: 'authenticated',
       app_metadata: { provider: 'dev' },
       user_metadata: { full_name: profile.full_name },
@@ -238,7 +253,7 @@ export class AuthService {
     const email = params.email.trim().toLowerCase();
     const devAuth = this.config.get<string>('DEV_AUTH_ENABLED') === 'true';
     const password =
-      params.password || (devAuth ? DEV_TEST_PASSWORD : randomBytes(12).toString('base64url'));
+      params.password || (devAuth ? 'teste123' : randomBytes(12).toString('base64url'));
     const fullName = params.fullName || email.split('@')[0];
 
     let userId: string;

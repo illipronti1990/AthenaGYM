@@ -1,54 +1,135 @@
-/* Athena Design System 2.0 — dark (default) */
+/* Movvo Design System — dark (default) */
 :root,
 html.dark {
   color-scheme: dark;
-  --background: #0b0b0d;
-  --surface: #151515;
-  --card: #1b1b1f;
-  --primary: #a00018;
-  --primary-hover: #c1121f;
-  --primary-dark: #7a0012;
+  --background: #080808;
+  --surface: #131313;
+  --card: #1a1a1a;
+  --primary: #d90429;
+  --primary-hover: #f01d3f;
+  --primary-dark: #a0031f;
   --gold: #d4af37;
   --gold-light: #f4d35e;
   --text: #ffffff;
   --muted: #a1a1aa;
   --border: #2b2b2b;
-  --navbar: #0b0b0d;
-  --input-bg: #151515;
+  --navbar: #080808;
+  --input-bg: #131313;
   --input-border: #333333;
   --foreground: #ffffff;
-  --success: #16a34a;
-  --success-hover: #15803d;
-  --danger: #7a0012;
+  --success: #22c55e;
+  --success-hover: #16a34a;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --info: #3b82f6;
+  --danger: #a0031f;
   --danger-hover: #5c000e;
   --radius-btn: 10px;
   --radius-input: 10px;
   --radius-card: 16px;
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.28);
+  --shadow-card-hover: 0 8px 32px rgba(217, 4, 41, 0.18);
+  --shadow-focus: 0 0 0 3px rgba(212, 175, 55, 0.28);
+  --chart-revenue: #22c55e;
+  --chart-expense: #ef4444;
+  --chart-checkins: #d90429;
+  --chart-finance: #ef4444;
+  --chart-workouts: #f4d35e;
+  --chart-wellhub: #3b82f6;
+  --chart-totalpass: #f97316;
+  --chart-goal: #d4af37;
+  --space-4: 4px;
   --space-8: 8px;
+  --space-12: 12px;
   --space-16: 16px;
   --space-24: 24px;
   --space-32: 32px;
+  --space-40: 40px;
   --space-48: 48px;
   --space-64: 64px;
-  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.28);
-  --shadow-card-hover: 0 8px 32px rgba(160, 0, 24, 0.18);
-  --shadow-focus: 0 0 0 3px rgba(212, 175, 55, 0.28);
-  --chart-revenue: #d4af37;
-  --chart-checkins: #a00018;
-  --chart-finance: #e63946;
-  --chart-workouts: #f4d35e;
-  --font-athena: 'Manrope', system-ui, sans-serif;
+  --motion-fast: 150ms;
+  --motion-normal: 200ms;
+  --motion-slow: 400ms;
+  --motion-hover: 150ms;
+  --motion-dialog: 200ms;
+  --motion-toast: 250ms;
+  --motion-drawer: 300ms;
+  --motion-sidebar: 250ms;
+  --motion-page: 280ms;
+  --motion-loading: 800ms;
+  --motion-easing: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --z-sticky: 20;
+  --z-dropdown: 40;
+  --z-sidebar: 50;
+  --z-overlay: 60;
+  --z-modal: 70;
+  --z-toast: 80;
+  --z-command: 90;
+  --opacity-disabled: 0.45;
+  --font-athena: var(--font-body), 'Inter', system-ui, sans-serif;
+  --density-space: 1;
+  --density-font: 1;
+  --row-height: 44px;
+  --focus-ring: 0 0 0 3px rgba(212, 175, 55, 0.35);
 }
 
-/* Light theme (in development polish) */
+html.ui-dense {
+  --density-space: 0.85;
+  --density-font: 0.95;
+  --row-height: 36px;
+  --space-8: 6px;
+  --space-12: 10px;
+  --space-16: 12px;
+  --space-24: 18px;
+}
+
+.athena-skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 0 0 var(--radius-btn) 0;
+  font-weight: 600;
+}
+
+.athena-skip-link:focus {
+  left: 0;
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.athena-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.athena-shell .athena-main {
+  min-width: 0;
+}
+
+@media (max-width: 640px) {
+  .athena-shell-px2 .athena-main-inner {
+    padding-right: 1rem;
+  }
+
+  .athena-topbar-actions {
+    gap: 0.35rem;
+  }
+}
+
+/* Light theme */
 html.light {
   color-scheme: light;
   --background: #f7f7f8;
   --surface: #ffffff;
   --card: #ffffff;
-  --primary: #a00018;
-  --primary-hover: #c1121f;
-  --primary-dark: #7a0012;
+  --primary: #d90429;
+  --primary-hover: #f01d3f;
+  --primary-dark: #a0031f;
   --gold: #b8962e;
   --gold-light: #d4af37;
   --text: #18181b;
@@ -60,22 +141,54 @@ html.light {
   --foreground: #18181b;
   --success: #16a34a;
   --success-hover: #15803d;
-  --danger: #7a0012;
+  --warning: #d97706;
+  --error: #dc2626;
+  --info: #2563eb;
+  --danger: #a0031f;
   --danger-hover: #5c000e;
   --shadow-card: 0 4px 24px rgba(24, 24, 27, 0.08);
-  --shadow-card-hover: 0 8px 32px rgba(160, 0, 24, 0.12);
+  --shadow-card-hover: 0 8px 32px rgba(217, 4, 41, 0.12);
   --shadow-focus: 0 0 0 3px rgba(184, 150, 46, 0.28);
-  --chart-revenue: #b8962e;
-  --chart-checkins: #a00018;
-  --chart-finance: #e63946;
+  --chart-revenue: #16a34a;
+  --chart-expense: #dc2626;
+  --chart-checkins: #d90429;
+  --chart-finance: #dc2626;
   --chart-workouts: #d4af37;
+  --chart-wellhub: #2563eb;
+  --chart-totalpass: #ea580c;
+  --chart-goal: #b8962e;
+}
+
+@keyframes movvo-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes movvo-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+@keyframes movvo-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
 }
 
 .athena-shell {
   min-height: 100vh;
   background: var(--background);
   color: var(--text);
-  font-family: var(--font-athena);
+  font-family: var(--font-body), 'Inter', system-ui, sans-serif;
+}
+
+.athena-h1,
+.athena-h2,
+.athena-h3 {
+  font-family: var(--font-display), 'Sora', system-ui, sans-serif;
+}
+
+.tabular-nums,
+.athena-mono,
+[data-numeric] {
+  font-family: var(--font-mono), 'JetBrains Mono', ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Typography scale */
@@ -538,8 +651,32 @@ html.light .athena-badge-novo {
   background: var(--success);
 }
 
+.athena-toast-success {
+  background: var(--success);
+}
+
 .athena-toast-error {
-  background: var(--danger);
+  background: var(--error);
+}
+
+.athena-toast-warn,
+.athena-toast-warning {
+  background: var(--warning);
+  color: #111;
+}
+
+.athena-toast-info {
+  background: var(--info);
+}
+
+.athena-spinner {
+  display: inline-block;
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--primary) 25%, transparent);
+  border-top-color: var(--primary);
+  border-radius: 999px;
+  animation: movvo-spin var(--motion-loading) linear infinite;
+  flex-shrink: 0;
 }
 
 .athena-modal-overlay {
@@ -1303,6 +1440,24 @@ html.light .athena-badge-novo {
 
 .athena-sonner [data-sonner-toast] {
   font-family: var(--font-athena);
+  transition: transform var(--motion-toast) var(--motion-easing),
+    opacity var(--motion-toast) var(--motion-easing);
+}
+
+.athena-sonner [data-sonner-toast][data-type='success'] {
+  border-left: 3px solid var(--success);
+}
+
+.athena-sonner [data-sonner-toast][data-type='error'] {
+  border-left: 3px solid var(--error);
+}
+
+.athena-sonner [data-sonner-toast][data-type='warning'] {
+  border-left: 3px solid var(--warning);
+}
+
+.athena-sonner [data-sonner-toast][data-type='info'] {
+  border-left: 3px solid var(--info);
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {

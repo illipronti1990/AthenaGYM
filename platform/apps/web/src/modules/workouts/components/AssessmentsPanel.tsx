@@ -6,8 +6,10 @@ import { Button, Card } from '@athena/ui';
 import { workoutsApi } from '../services/workoutsApi';
 import { AlunoSelect } from '@/modules/alunos/components/AlunoSelect';
 import { useToast } from '@/components/ui/Toast';
+import { useConfirm } from '@/components/ux/ConfirmProvider';
 
 export function AssessmentsPanel({ accessToken }: { accessToken: string }) {
+  const confirm = useConfirm();
   const [items, setItems] = useState<Assessment[]>([]);
   const [studentId, setStudentId] = useState('');
   const [weight, setWeight] = useState('75');
@@ -58,7 +60,13 @@ export function AssessmentsPanel({ accessToken }: { accessToken: string }) {
   }
 
   async function onDelete(assessment: Assessment) {
-    if (!window.confirm('Excluir esta avaliação física?')) return;
+    const ok = await confirm({
+      title: 'Excluir esta avaliação física?',
+      message: 'Essa ação não poderá ser desfeita.',
+      confirmLabel: 'Excluir',
+      danger: true,
+    });
+    if (!ok) return;
     setDeletingId(assessment.id);
     setError(null);
     try {
@@ -139,6 +147,7 @@ export function AssessmentsPanel({ accessToken }: { accessToken: string }) {
 
 export function EvolutionPanel({ accessToken }: { accessToken: string }) {
   const { push } = useToast();
+  const confirm = useConfirm();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [studentId, setStudentId] = useState('');
   const [data, setData] = useState<ProgressSummary | null>(null);
@@ -213,7 +222,13 @@ export function EvolutionPanel({ accessToken }: { accessToken: string }) {
   }
 
   async function removePhoto(photoId: string) {
-    if (!window.confirm('Apagar esta foto da evolução?')) return;
+    const ok = await confirm({
+      title: 'Apagar esta foto da evolução?',
+      message: 'Essa ação não poderá ser desfeita.',
+      confirmLabel: 'Apagar',
+      danger: true,
+    });
+    if (!ok) return;
     setDeletingId(photoId);
     setError(null);
     try {

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { AuthContext } from '@athena/shared';
 import { CurrentAuth, CurrentUser } from '../common/decorators/current.decorators';
@@ -55,6 +55,26 @@ export class PlatformController {
     return this.platform.createApiClient(auth, user.id, dto);
   }
 
+  @Post('clients/:id/rotate')
+  @Permissions('platform.manage')
+  rotateClient(
+    @CurrentAuth() auth: AuthContext,
+    @CurrentUser() user: AuthUser,
+    @Param('id') id: string,
+  ) {
+    return this.platform.rotateApiClient(auth, user.id, id);
+  }
+
+  @Post('clients/:id/revoke')
+  @Permissions('platform.manage')
+  revokeClient(
+    @CurrentAuth() auth: AuthContext,
+    @CurrentUser() user: AuthUser,
+    @Param('id') id: string,
+  ) {
+    return this.platform.revokeApiClient(auth, user.id, id);
+  }
+
   @Get('webhooks')
   @Permissions('platform.webhooks')
   webhooks(@CurrentAuth() auth: AuthContext) {
@@ -71,6 +91,28 @@ export class PlatformController {
   @Permissions('platform.webhooks')
   deliveries(@CurrentAuth() auth: AuthContext) {
     return this.platform.listDeliveries(auth);
+  }
+
+  @Post('webhooks/deliveries/:id/replay')
+  @Permissions('platform.webhooks')
+  replay(@CurrentAuth() auth: AuthContext, @Param('id') id: string) {
+    return this.platform.replayDelivery(auth, id);
+  }
+
+  @Patch('webhooks/:id')
+  @Permissions('platform.webhooks')
+  patchWebhook(
+    @CurrentAuth() auth: AuthContext,
+    @Param('id') id: string,
+    @Body() body: { url?: string; events?: string[]; status?: string },
+  ) {
+    return this.platform.updateWebhook(auth, id, body);
+  }
+
+  @Delete('webhooks/:id')
+  @Permissions('platform.webhooks')
+  removeWebhook(@CurrentAuth() auth: AuthContext, @Param('id') id: string) {
+    return this.platform.deleteWebhook(auth, id);
   }
 
   @Get('sandbox')

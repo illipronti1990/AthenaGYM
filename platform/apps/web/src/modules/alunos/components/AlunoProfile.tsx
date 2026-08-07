@@ -15,6 +15,7 @@ import { AlunoAssessmentsPanel } from './AlunoAssessmentsPanel';
 import { AlunoProfile360 } from './AlunoProfile360';
 import { AlunoDocumentsPanel } from './AlunoDocumentsPanel';
 import { AlunoCommunicationBar } from './AlunoCommunicationBar';
+import { MinhaEvolucao } from '@/modules/treinos/evolucao/MinhaEvolucao';
 import { EntityTimeline } from '@/modules/polish/components/EntityTimeline';
 import {
   changeAlunoStatus,
@@ -30,7 +31,7 @@ import {
   whatsappChargeUrl,
 } from '@/components/ux/ContextualActions';
 
-type Tab = 'data' | 'history' | 'finance' | 'workouts' | 'assessments' | 'documents';
+type Tab = 'data' | 'history' | 'finance' | 'workouts' | 'assessments' | 'evolution' | 'documents';
 
 export function AlunoProfile({
   accessToken,
@@ -250,6 +251,7 @@ export function AlunoProfile({
             ['finance', 'Financeiro'],
             ['workouts', 'Treinos'],
             ['assessments', 'Avaliações'],
+            ['evolution', 'Minha Evolução'],
             ['documents', 'Documentos'],
           ] as const
         ).map(([id, label]) => (
@@ -341,6 +343,10 @@ export function AlunoProfile({
           studentId={student.id}
           unitId={unitId || student.unitId}
         />
+      )}
+
+      {tab === 'evolution' && (
+        <MinhaEvolucao accessToken={accessToken} studentId={student.id} />
       )}
 
       {tab === 'documents' && (

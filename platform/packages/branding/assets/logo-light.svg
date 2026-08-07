@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 64" fill="none" role="img" aria-label="Movvo ERP">
+  <rect x="0" y="0" width="64" height="64" rx="14" fill="#D90429"/>
+  <path d="M14 46V18h7.4l8.8 14.9L39 18h7.4v28h-6.4V28.8L32.8 44h-2.8L19.8 28.8V46H14z" fill="#FFFFFF"/>
+  <text x="80" y="42" font-family="Sora, Inter, Arial, sans-serif" font-size="34" font-weight="700" fill="#080808" letter-spacing="-0.04em">Movvo</text>
+  <text x="208" y="42" font-family="Sora, Inter, Arial, sans-serif" font-size="34" font-weight="600" fill="#B8962E" letter-spacing="-0.02em">ERP</text>
+</svg>

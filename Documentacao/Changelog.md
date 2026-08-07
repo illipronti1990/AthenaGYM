@@ -1,4 +1,35 @@
-# Changelog — ATHENAS GYM ERP / PLATFORM
+# Changelog — ATHENA GYM ERP / PLATFORM
+
+## Platform — 07/08/2026 — Sprint G-15 SaaS / White Label / Billing
+
+- Migration `20260809_0001_saas_g15.sql`: companies SaaS, domains, plans/features/limits, billing stub, flags, tickets
+- API `platform/tenants` + `saas-billing` + API key rotate/revoke + webhook replay; branding por Host
+- Web `/app/platform/*` (dashboard, tenants, plans, billing, portal, keys, webhooks, flags, reports)
+- Marketplace IDOR harden + CompanyGuard sync `companyId` + RLS PaaS
+- Playwright `saas.g15.smoke.spec.ts` · docs `MOVVO_SAAS_G15.md`
+
+## Platform — 07/08/2026 — Sprint G-14 Backoffice Admin
+
+- Migration `20260808_0001_admin_g14.sql`: employees/HR, escalas, patrimônio, OS, docs, ocorrências, mural, settings + `admin.*` perms + bucket `admin-documents`
+- Nest `AdminModule` (`/api/v1/admin/*`) + roles write/matriz + cost centers PATCH/soft-delete/category
+- Web `/app/admin/*` (dashboard, colaboradores, cargos, escalas, patrimônio, manutenções, documentos, ocorrências, comunicados, calendário, centros-custo, config, relatórios)
+- `/app/roles` → redirect `/app/admin/cargos`
+- Playwright `admin.g14.smoke.spec.ts` · docs `MOVVO_ADMIN_G14.md`
+
+## Platform — 07/08/2026 — Fase M-4 UX / Qualidade
+
+- PageState + ConfirmProvider (sem `window.confirm`); densidade/skip-link
+- Palette AbortController; notificações com filtros/mark-all; busca ampliada
+- Dashboard lazy charts + prefs; tour guiado staff; Playwright `ux.m4.smoke`
+- Docs `MOVVO_UX_M4.md`
+
+## Platform — 07/08/2026 — Fase M-3 Comercial
+
+- Planos enriquecidos + `/demonstracao` → obrigado; leads com status CRM e campos comerciais
+- Conteúdo público: `/ajuda`, `/blog`, `/sobre`, `/status`, `/developers` + sitemap
+- CRM ops `/app/commercial` (+ analytics, onboarding, templates) + Resend mailer
+- Materiais em `Documentacao/comercial/` + PDF one-pager autenticado
+- Playwright `commercial.m3.smoke.spec.ts` · docs `MOVVO_COMMERCIAL_M3.md`
 
 ## Platform 0.5.0 — 22/07/2026 — Sprint 4 Financeiro Enterprise
 
@@ -40,7 +71,7 @@
 
 ## Platform 0.1.0 — 22/07/2026 — Sprint 0 Fundação SaaS
 
-- Monorepo `platform/` — Next.js (`apps/web`) + NestJS (`apps/api`) + `@athenas/shared`
+- Monorepo `platform/` — Next.js (`apps/web`) + NestJS (`apps/api`) + `@athena/shared`
 - Schema canônico UUID: `companies`, `units`, `profiles`, `memberships` + RLS
 - API oficial `/api/v1` (health, me, companies, units) + Swagger `/api/v1/docs`
 - Auth: JWT Supabase · shell login Next.js `/login` + `/app`
@@ -111,7 +142,7 @@ Portal do Aluno + API Cloud + App Mobile (fundação) **e evolução SQL**:
 - `BD_CHAT`, `BD_METAS_ALUNO`, `BD_PORTAL_TOKENS`, `BD_DESAFIOS`, `BD_PUSH`
 - `modPortal` — login portal, chat, push, sync JSON
 - Cloud API **com SQLAlchemy**: SQLite (dev) / PostgreSQL (docker compose)
-- Fonte da verdade cloud: `cloud/api/data/athenas.db` (ou Postgres)
+- Fonte da verdade cloud: `cloud/api/data/athena.db` (ou Postgres)
 - `POST /sync/import` — Excel JSON → upsert SQL
 - Portal Web e Flutter consomem a mesma API
 

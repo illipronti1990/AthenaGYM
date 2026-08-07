@@ -16,20 +16,38 @@ import { AuthUser } from '../auth/auth.types';
 import {
   AiChatDto,
   AwardPointsDto,
+  CreateAutomationFlowDto,
   CreateCampaignDto,
   CreateChallengeDto,
   CreateConversationDto,
   CreateMessageDto,
   CreateNotificationDto,
+  CreateNpsResponseDto,
+  CreateNpsSurveyDto,
+  CreateReferralDto,
+  CreateSegmentDto,
+  CreateTemplateDto,
+  EarnLoyaltyDto,
   JoinChallengeDto,
+  PortalNpsResponseDto,
+  PortalReferralDto,
+  RedeemLoyaltyDto,
+  RewardReferralDto,
+  SendTemplateDto,
+  UpdateAutomationFlowDto,
+  UpdateSegmentDto,
+  UpdateTemplateDto,
 } from './dto/engagement.dto';
 import {
   ACHIEVEMENT_EARNED,
+  AUTOMATION_RUN_STARTED,
   CAMPAIGN_SENT,
   LOYALTY_POINTS_EARNED,
   MESSAGE_READ,
   MESSAGE_SENT,
   NOTIFICATION_SENT,
+  NPS_RESPONSE_RECEIVED,
+  REFERRAL_REWARDED,
 } from './events/engagement.events';
 import { EngagementRepository } from './engagement.repository';
 
@@ -98,7 +116,11 @@ export class EngagementService {
   }
 
   markNotificationRead(auth: AuthContext, id: string) {
-    return this.repo.markNotificationRead(this.companyId(auth), id);
+    return this.repo.markNotificationRead(this.companyId(auth), id, auth.userId);
+  }
+
+  markAllNotificationsRead(auth: AuthContext) {
+    return this.repo.markAllNotificationsRead(this.companyId(auth), auth.userId);
   }
 
   listConversations(auth: AuthContext) {
@@ -172,6 +194,13 @@ export class EngagementService {
       schedule_at: dto.scheduleAt || null,
       audience: { profileIds: dto.audienceProfileIds || [] },
       requires_marketing_consent: dto.requiresMarketingConsent !== false,
+      starts_at: dto.startsAt || null,
+      ends_at: dto.endsAt || null,
+      goal_value: dto.goalValue ?? null,
+      owner_id: dto.ownerId || null,
+      discount_pct: dto.discountPct ?? null,
+      segment_id: dto.segmentId || null,
+      budget: dto.budget ?? null,
       created_by: user.id,
     });
   }
@@ -337,7 +366,7 @@ export class EngagementService {
       return {
         provider: 'stub-assistant',
         sources,
-        answer: `Há ${count} treino(s) publicados na academia. Abra o app ATHENA Student em Treinos para ver o treino do dia.`,
+        answer: `Há ${count} treino(s) publicados na academia. Abra o app Movvo Student em Treinos para ver o treino do dia.`,
       };
     }
 
@@ -378,7 +407,398 @@ export class EngagementService {
       provider: 'stub-assistant',
       sources: [],
       answer:
-        'Sou o assistente ATHENA (stub). Pergunte sobre treino do dia, avaliações atrasadas, ranking ou inadimplência.',
+        'Sou o assistente Movvo AI (stub). Pergunte sobre treino do dia, avaliações atrasadas, ranking ou inadimplência.',
     };
+  }
+
+  // ---------- G-9: Templates ----------
+
+  listTemplates(auth: AuthContext) {
+    return this.repo.listTemplates(this.companyId(auth));
+  }
+
+  async getTemplate(auth: AuthContext, id: string) {
+    const t = await this.repo.getTemplate(this.companyId(auth), id);
+    if (!t) throw new NotFoundException('Template não encontrado');
+    return t;
+  }
+
+  async createTemplate(user: AuthUser, auth: AuthContext, dto: CreateTemplateDto) {
+    const companyId = this.companyId(auth);
+    return this.repo.insertTemplate({
+      company_id: companyId,
+      channel: dto.channel || 'whatsapp',
+      slug: dto.slug,
+      name: dto.name,
+      subject: dto.subject || null,
+      body: dto.body,
+      variables: dto.variables || [],
+      active: true,
+      created_by: user.id,
+    });
+  }
+
+  async updateTemplate(auth: AuthContext, id: string, dto: UpdateTemplateDto) {
+    const companyId = this.companyId(auth);
+    await this.getTemplate(auth, id);
+    return this.repo.updateTemplate(companyId, id, {
+      name: dto.name,
+      subject: dto.subject,
+      body: dto.body,
+      variables: dto.variables,
+      active: dto.active,
+      updated_at: new Date().toISOString(),
+    });
+  }
+
+  async sendTemplate(auth: AuthContext, id: string, dto: SendTemplateDto) {
+    const companyId = this.companyId(auth);
+    const template = await this.getTemplate(auth, id);
+    let body = template.body;
+    if (dto.variables) {
+      for (const [k, v] of Object.entries(dto.variables)) {
+        body = body.replace(new RegExp(`{{${k}}}`, 'g'), v);
+      }
+    }
+    const channel = template.channel as NotificationChannel;
+    const provider = getNotificationProvider(channel);
+    const result = await provider.send({ to: dto.recipientId, title: template.subject || template.name, body, channel });
+    await this.repo.createNotification({
+      company_id: companyId,
+      user_id: dto.recipientId,
+      title: template.subject || template.name,
+      body,
+      type: 'template',
+      channel,
+      status: result.ok ? 'sent' : 'failed',
+      sent_at: result.ok ? new Date().toISOString() : null,
+      payload: { templateId: id, provider: result.provider },
+    });
+    return { ok: result.ok, templateId: id };
+  }
+
+  // ---------- G-9: Referrals ----------
+
+  listReferrals(auth: AuthContext) {
+    return this.repo.listReferrals(this.companyId(auth));
+  }
+
+  async createReferral(user: AuthUser, auth: AuthContext, dto: CreateReferralDto) {
+    const companyId = this.companyId(auth);
+    const settings = await this.repo.getReferralProgramSettings(companyId);
+    return this.repo.insertReferral({
+      company_id: companyId,
+      referrer_student_id: dto.referrerStudentId,
+      referred_lead_id: dto.referredLeadId || null,
+      referred_student_id: dto.referredStudentId || null,
+      status: 'pending',
+      benefit_type: settings ? String(settings.benefit_type) : 'discount',
+      benefit_value: settings ? Number(settings.benefit_value) : 30,
+      notes: dto.notes || null,
+      created_by: user.id,
+    });
+  }
+
+  async rewardReferral(auth: AuthContext, id: string, dto: RewardReferralDto) {
+    const companyId = this.companyId(auth);
+    const referrals = await this.repo.listReferrals(companyId);
+    const referral = referrals.find((r) => r.id === id);
+    if (!referral) throw new NotFoundException('Indicação não encontrada');
+    if (referral.status === 'rewarded') throw new BadRequestException('Indicação já recompensada');
+
+    const updated = await this.repo.updateReferral(companyId, id, {
+      status: 'rewarded',
+      rewarded_at: new Date().toISOString(),
+      benefit_type: dto.benefitType || referral.benefitType,
+      benefit_value: dto.benefitValue ?? referral.benefitValue,
+    });
+
+    this.events.emit(REFERRAL_REWARDED, {
+      companyId,
+      referralId: id,
+      referrerStudentId: referral.referrerStudentId,
+      benefitType: updated.benefitType,
+      benefitValue: updated.benefitValue,
+    });
+
+    return updated;
+  }
+
+  // ---------- G-9: Loyalty earn rules / rewards / redemptions ----------
+
+  listEarnRules(auth: AuthContext) {
+    return this.repo.listEarnRules(this.companyId(auth));
+  }
+
+  listRewards(auth: AuthContext) {
+    return this.repo.listRewards(this.companyId(auth));
+  }
+
+  async earnLoyalty(auth: AuthContext, dto: EarnLoyaltyDto) {
+    const companyId = this.companyId(auth);
+    const rules = await this.repo.listEarnRules(companyId);
+    const rule = rules.find((r) => r.event === dto.event);
+    if (!rule) throw new BadRequestException(`Regra de pontos não encontrada para evento "${dto.event}"`);
+
+    const account = await this.repo.getOrCreateLoyalty(companyId, dto.studentId);
+    const next = account.points + rule.points;
+    const tier = loyaltyTier(next);
+    const updated = await this.repo.updateLoyalty(account.id, next, tier);
+    await this.repo.insertLedger({
+      company_id: companyId,
+      student_id: dto.studentId,
+      points: rule.points,
+      reason: dto.event,
+    });
+
+    this.events.emit(LOYALTY_POINTS_EARNED, {
+      companyId,
+      studentId: dto.studentId,
+      points: rule.points,
+      reason: dto.event,
+      total: next,
+    });
+
+    return updated;
+  }
+
+  async redeemLoyalty(auth: AuthContext, dto: RedeemLoyaltyDto) {
+    const companyId = this.companyId(auth);
+    const [account, reward] = await Promise.all([
+      this.repo.getOrCreateLoyalty(companyId, dto.studentId),
+      this.repo.getReward(companyId, dto.rewardId),
+    ]);
+    if (!reward) throw new NotFoundException('Recompensa não encontrada');
+    if (account.points < reward.pointsCost) {
+      throw new BadRequestException(`Pontos insuficientes. Necessário: ${reward.pointsCost}, disponível: ${account.points}`);
+    }
+
+    const newPoints = account.points - reward.pointsCost;
+    const tier = loyaltyTier(newPoints);
+    await this.repo.updateLoyalty(account.id, newPoints, tier);
+    await this.repo.insertLedger({
+      company_id: companyId,
+      student_id: dto.studentId,
+      points: -reward.pointsCost,
+      reason: `redeem:${reward.slug}`,
+    });
+
+    return this.repo.insertRedemption({
+      company_id: companyId,
+      student_id: dto.studentId,
+      reward_id: dto.rewardId,
+      points_spent: reward.pointsCost,
+      status: 'pending',
+    });
+  }
+
+  // ---------- G-9: NPS ----------
+
+  listNpsSurveys(auth: AuthContext) {
+    return this.repo.listNpsSurveys(this.companyId(auth));
+  }
+
+  async createNpsSurvey(user: AuthUser, auth: AuthContext, dto: CreateNpsSurveyDto) {
+    const companyId = this.companyId(auth);
+    return this.repo.insertNpsSurvey({
+      company_id: companyId,
+      title: dto.title || 'Pesquisa NPS',
+      question: dto.question || 'Quanto você indicaria a Athena para um amigo?',
+      active: true,
+      created_by: user.id,
+    });
+  }
+
+  async createNpsResponse(auth: AuthContext, dto: CreateNpsResponseDto) {
+    const companyId = this.companyId(auth);
+    const response = await this.repo.insertNpsResponse({
+      company_id: companyId,
+      survey_id: dto.surveyId,
+      student_id: dto.studentId || null,
+      score: dto.score,
+      comment: dto.comment || null,
+      channel: dto.channel || 'app',
+    });
+
+    this.events.emit(NPS_RESPONSE_RECEIVED, {
+      companyId,
+      responseId: response.id,
+      surveyId: dto.surveyId,
+      score: dto.score,
+      studentId: dto.studentId || null,
+    });
+
+    return response;
+  }
+
+  getNpsDashboard(auth: AuthContext) {
+    return this.repo.npsDashboard(this.companyId(auth));
+  }
+
+  // ---------- G-9: Segments ----------
+
+  listSegments(auth: AuthContext) {
+    return this.repo.listSegments(this.companyId(auth));
+  }
+
+  async createSegment(user: AuthUser, auth: AuthContext, dto: CreateSegmentDto) {
+    const companyId = this.companyId(auth);
+    return this.repo.insertSegment({
+      company_id: companyId,
+      name: dto.name,
+      slug: dto.slug,
+      rules: dto.rules || {},
+      active: true,
+      created_by: user.id,
+    });
+  }
+
+  async updateSegment(auth: AuthContext, id: string, dto: UpdateSegmentDto) {
+    const companyId = this.companyId(auth);
+    const seg = await this.repo.getSegment(companyId, id);
+    if (!seg) throw new NotFoundException('Segmento não encontrado');
+    return this.repo.updateSegment(companyId, id, {
+      name: dto.name,
+      rules: dto.rules,
+      active: dto.active,
+      updated_at: new Date().toISOString(),
+    });
+  }
+
+  async deleteSegment(auth: AuthContext, id: string) {
+    const companyId = this.companyId(auth);
+    const seg = await this.repo.getSegment(companyId, id);
+    if (!seg) throw new NotFoundException('Segmento não encontrado');
+    await this.repo.softDeleteSegment(companyId, id);
+    return { ok: true };
+  }
+
+  async resolveSegment(auth: AuthContext, id: string) {
+    const companyId = this.companyId(auth);
+    const seg = await this.repo.getSegment(companyId, id);
+    if (!seg) throw new NotFoundException('Segmento não encontrado');
+    return this.repo.resolveSegmentStudents(companyId);
+  }
+
+  // ---------- G-9: Automations ----------
+
+  listAutomationFlows(auth: AuthContext) {
+    return this.repo.listAutomationFlows(this.companyId(auth));
+  }
+
+  async createAutomationFlow(user: AuthUser, auth: AuthContext, dto: CreateAutomationFlowDto) {
+    const companyId = this.companyId(auth);
+    return this.repo.insertAutomationFlow({
+      company_id: companyId,
+      name: dto.name,
+      trigger_event: dto.triggerEvent,
+      steps: dto.steps || [],
+      active: true,
+      created_by: user.id,
+    });
+  }
+
+  async updateAutomationFlow(auth: AuthContext, id: string, dto: UpdateAutomationFlowDto) {
+    const companyId = this.companyId(auth);
+    const flow = await this.repo.getAutomationFlow(companyId, id);
+    if (!flow) throw new NotFoundException('Automação não encontrada');
+    return this.repo.updateAutomationFlow(companyId, id, {
+      name: dto.name,
+      steps: dto.steps,
+      active: dto.active,
+      updated_at: new Date().toISOString(),
+    });
+  }
+
+  async deleteAutomationFlow(auth: AuthContext, id: string) {
+    const companyId = this.companyId(auth);
+    const flow = await this.repo.getAutomationFlow(companyId, id);
+    if (!flow) throw new NotFoundException('Automação não encontrada');
+    await this.repo.softDeleteAutomationFlow(companyId, id);
+    return { ok: true };
+  }
+
+  async runAutomationFlow(auth: AuthContext, id: string) {
+    const companyId = this.companyId(auth);
+    const flow = await this.repo.getAutomationFlow(companyId, id);
+    if (!flow) throw new NotFoundException('Automação não encontrada');
+    if (!flow.active) throw new BadRequestException('Automação inativa');
+
+    const run = await this.repo.insertAutomationRun({
+      company_id: companyId,
+      flow_id: id,
+      status: 'running',
+      context: { manual: true, triggeredAt: new Date().toISOString() },
+      steps_log: [],
+    });
+
+    const stepsLog = flow.steps.map((step, i) => ({
+      step: i,
+      type: (step as Record<string, unknown>).type,
+      status: 'stub_ok',
+      at: new Date().toISOString(),
+    }));
+
+    const finished = await this.repo.updateAutomationRun(run.id, {
+      status: 'completed',
+      steps_log: stepsLog,
+      finished_at: new Date().toISOString(),
+    });
+
+    this.events.emit(AUTOMATION_RUN_STARTED, { companyId, flowId: id, runId: run.id });
+
+    return finished;
+  }
+
+  // ---------- G-9: Portal (student-facing) ----------
+
+  async portalGetActiveSurvey(auth: AuthContext) {
+    return this.repo.getActiveSurvey(this.companyId(auth));
+  }
+
+  async portalSubmitNps(auth: AuthContext, dto: PortalNpsResponseDto) {
+    const companyId = this.companyId(auth);
+    const survey = await this.repo.getActiveSurvey(companyId);
+    if (!survey) throw new NotFoundException('Nenhuma pesquisa NPS ativa');
+
+    const student = await this.repo.getStudentByEmail(companyId, auth.email || '');
+
+    const response = await this.repo.insertNpsResponse({
+      company_id: companyId,
+      survey_id: survey.id,
+      student_id: student ? String(student.id) : null,
+      score: dto.score,
+      comment: dto.comment || null,
+      channel: 'portal',
+    });
+
+    this.events.emit(NPS_RESPONSE_RECEIVED, {
+      companyId,
+      responseId: response.id,
+      surveyId: survey.id,
+      score: dto.score,
+      studentId: student ? String(student.id) : null,
+    });
+
+    return response;
+  }
+
+  async portalCreateReferral(user: AuthUser, auth: AuthContext, dto: PortalReferralDto) {
+    const companyId = this.companyId(auth);
+    const student = await this.repo.getStudentByEmail(companyId, auth.email || '');
+    if (!student) throw new NotFoundException('Aluno não encontrado para este usuário');
+
+    const settings = await this.repo.getReferralProgramSettings(companyId);
+    return this.repo.insertReferral({
+      company_id: companyId,
+      referrer_student_id: String(student.id),
+      referred_lead_id: null,
+      referred_student_id: null,
+      status: 'pending',
+      benefit_type: settings ? String(settings.benefit_type) : 'discount',
+      benefit_value: settings ? Number(settings.benefit_value) : 30,
+      notes: dto.notes || (dto.referredName ? `Indicado: ${dto.referredName} (${dto.referredPhone || '—'})` : null),
+      created_by: user.id,
+    });
   }
 }

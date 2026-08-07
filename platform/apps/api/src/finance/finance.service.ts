@@ -10,24 +10,35 @@ import {
   buildCashflow,
   buildDre,
   calcReceivableNet,
+  calcReceivableRemaining,
+  resolveReceivableDisplayStatus,
   splitInstallments,
   type AuthContext,
   type CashDirection,
+  type CashflowSummary,
+  type DelinquencyReport,
+  type DueAlertItem,
 } from '@athena/shared';
 import { AuditService } from '../audit/audit.service';
 import { AuthUser } from '../auth/auth.types';
 import { ContractSignedEvent } from '../sales/events/sales.events';
 import {
+  CashSessionAmountDto,
+  CloseCashSessionDto,
   CreateAccountDto,
   CreateCostCenterDto,
+  UpdateCostCenterDto,
   UpdateAccountDto,
   CreatePayableDto,
   CreatePixDto,
   CreateReceivableDto,
   CreateSubscriptionDto,
   InstallmentsDto,
+  OpenCashSessionDto,
+  ReceivePaymentDto,
   ReconciliationImportDto,
   RenegotiateDto,
+  UpdatePayableDto,
   UpdateReceivableDto,
 } from './dto/finance.dto';
 import {
@@ -119,16 +130,44 @@ export class FinanceService {
       company_id: companyId,
       name: dto.name,
       description: dto.description || null,
+      category: dto.category || null,
       active: true,
     });
+  }
+
+  async updateCostCenter(auth: AuthContext, id: string, dto: UpdateCostCenterDto) {
+    const patch: Record<string, unknown> = {};
+    if (dto.name !== undefined) patch.name = dto.name;
+    if (dto.description !== undefined) patch.description = dto.description;
+    if (dto.category !== undefined) patch.category = dto.category;
+    if (dto.active !== undefined) patch.active = dto.active;
+    return this.repo.updateCostCenter(id, this.companyIds(auth), patch);
+  }
+
+  softDeleteCostCenter(auth: AuthContext, id: string) {
+    return this.repo.softDeleteCostCenter(id, this.companyIds(auth));
   }
 
   listMethods() {
     return this.repo.listMethods();
   }
 
-  listReceivables(auth: AuthContext, studentId?: string) {
-    return this.repo.listReceivables(this.companyIds(auth), studentId);
+  listReceivables(
+    auth: AuthContext,
+    filters?: {
+      studentId?: string;
+      planId?: string;
+      paymentMethodId?: string;
+      trainerId?: string;
+      unitId?: string;
+      status?: string;
+      from?: string;
+      to?: string;
+    },
+  ) {
+    const ids = this.companyIds(auth);
+    void this.repo.markOverdueReceivables(ids, new Date().toISOString().slice(0, 10));
+    return this.repo.listReceivables(ids, filters);
   }
 
   async createReceivable(user: AuthUser, auth: AuthContext, dto: CreateReceivableDto) {
@@ -138,14 +177,21 @@ export class FinanceService {
       company_id: companyId,
       unit_id: dto.unitId || auth.defaultUnitId || DEV_UNIT,
       student_id: dto.studentId || null,
+      enrollment_id: dto.enrollmentId || null,
+      plan_id: dto.planId || null,
+      trainer_id: dto.trainerId || null,
       contract_id: dto.contractId || null,
       subscription_id: dto.subscriptionId || null,
       cost_center_id: dto.costCenterId || null,
       description: dto.description,
       amount: dto.amount,
       discount: dto.discount || 0,
+      addition: dto.addition || 0,
+      interest: dto.interest || 0,
+      fine: dto.fine || 0,
       due_date: due,
       competence_month: `${due.slice(0, 8)}01`,
+      notes: dto.notes || null,
       status: 'open',
       created_by: user.id,
     });
@@ -157,7 +203,10 @@ export class FinanceService {
       entity: 'receivable',
       entityId: rec.id,
     });
-    return rec;
+    return {
+      ...rec,
+      displayStatus: resolveReceivableDisplayStatus(rec.status, rec.dueDate),
+    };
   }
 
   async updateReceivable(auth: AuthContext, id: string, dto: UpdateReceivableDto) {
@@ -169,43 +218,118 @@ export class FinanceService {
       amount: dto.amount ?? existing.amount,
       due_date: dto.dueDate ?? existing.dueDate,
       discount: dto.discount ?? existing.discount,
+      addition: dto.addition ?? existing.addition,
       interest: dto.interest ?? existing.interest,
       fine: dto.fine ?? existing.fine,
       status: dto.status ?? existing.status,
+      notes: dto.notes ?? existing.notes,
+      payment_method_id: dto.paymentMethodId ?? existing.paymentMethodId,
     });
   }
 
-  async receiveManual(user: AuthUser, auth: AuthContext, id: string) {
+  async receiveManual(user: AuthUser, auth: AuthContext, id: string, dto: ReceivePaymentDto = {}) {
     const rec = await this.repo.getReceivable(id);
     if (!rec) throw new NotFoundException('Receivable not found');
     this.companyIds(auth, rec.companyId);
-    if (rec.status === 'paid') throw new BadRequestException('Already paid');
-    const paidAt = new Date().toISOString();
-    const amount = calcReceivableNet(rec);
-    const updated = await this.repo.updateReceivable(id, {
-      status: 'paid',
-      paid_at: paidAt,
+    if (rec.status === 'paid' || rec.status === 'cancelled' || rec.status === 'refunded') {
+      throw new BadRequestException('Receivable cannot be paid');
+    }
+
+    const interest = dto.interest ?? rec.interest;
+    const fine = dto.fine ?? rec.fine;
+    const net = calcReceivableNet({
+      amount: rec.amount,
+      discount: rec.discount,
+      addition: rec.addition,
+      interest,
+      fine,
     });
+    const remaining = Math.max(0, Math.round((net - rec.amountPaid) * 100) / 100);
+    if (remaining <= 0) throw new BadRequestException('Nothing left to receive');
+
+    const payAmount =
+      dto.amount != null ? Math.round(dto.amount * 100) / 100 : remaining;
+    if (payAmount <= 0) throw new BadRequestException('Invalid payment amount');
+    if (payAmount > remaining + 0.001) {
+      throw new BadRequestException('Amount exceeds remaining balance');
+    }
+
+    const paidAt = new Date().toISOString();
+    const newPaid = Math.round((rec.amountPaid + payAmount) * 100) / 100;
+    const fullyPaid = newPaid >= net - 0.001;
+    const unitId = rec.unitId || auth.defaultUnitId || DEV_UNIT;
+    const session = await this.repo.getOpenCashSession(rec.companyId, unitId);
+
+    const updated = await this.repo.updateReceivable(id, {
+      interest,
+      fine,
+      amount_paid: newPaid,
+      status: fullyPaid ? 'paid' : 'partial',
+      paid_at: fullyPaid ? paidAt : rec.paidAt,
+      payment_method_id: dto.paymentMethodId || rec.paymentMethodId,
+      cashier_user_id: user.id,
+      cash_session_id: session?.id || rec.cashSessionId,
+      notes: dto.notes ?? rec.notes,
+    });
+
     await this.repo.insertCashMovement({
       company_id: rec.companyId,
       unit_id: rec.unitId,
       cost_center_id: rec.costCenterId,
       movement_date: paidAt.slice(0, 10),
       direction: 'in',
-      amount,
+      amount: payAmount,
       description: `Recebimento ${rec.description}`,
       source_type: 'receivable',
       source_id: id,
     });
-    await this.emitPaymentConfirmed({
-      companyId: rec.companyId,
-      receivableId: id,
-      transactionId: id,
-      studentId: rec.studentId,
-      subscriptionId: rec.subscriptionId,
-      amount,
-      paidAt,
+
+    if (session) {
+      await this.repo.insertCashSessionMovement({
+        session_id: session.id,
+        company_id: rec.companyId,
+        movement_type: 'sale',
+        amount: payAmount,
+        payment_method_id: dto.paymentMethodId || null,
+        receivable_id: id,
+        notes: dto.notes || null,
+        created_by: user.id,
+      });
+      await this.repo.updateCashSession(session.id, {
+        expected_amount: Math.round((session.expectedAmount + payAmount) * 100) / 100,
+      });
+    }
+
+    const idempotencyKey = `manual:${id}:${paidAt}:${payAmount}`;
+    await this.repo.insertTransaction({
+      company_id: rec.companyId,
+      receivable_id: id,
+      subscription_id: rec.subscriptionId,
+      payment_method_id: dto.paymentMethodId || null,
+      cash_session_id: session?.id || null,
+      gateway: 'stub',
+      external_id: null,
+      idempotency_key: idempotencyKey,
+      status: 'paid',
+      amount: payAmount,
+      paid_at: paidAt,
+      nsu: dto.nsu || null,
+      authorization_code: dto.authorizationCode || null,
+      card_brand: dto.cardBrand || null,
+      installments: dto.installments || 1,
     });
+
+    if (fullyPaid) {
+      await this.emitPaymentConfirmed({
+        companyId: rec.companyId,
+        receivableId: id,
+        transactionId: id,
+        studentId: rec.studentId,
+        subscriptionId: rec.subscriptionId,
+        amount: payAmount,
+        paidAt,
+      });
+    }
     await this.audit.log({
       companyId: rec.companyId,
       userId: user.id,
@@ -213,8 +337,12 @@ export class FinanceService {
       action: 'receive',
       entity: 'receivable',
       entityId: id,
+      metadata: { payAmount, fullyPaid },
     });
-    return updated;
+    return {
+      ...updated,
+      displayStatus: resolveReceivableDisplayStatus(updated.status, updated.dueDate),
+    };
   }
 
   async cancelReceivable(user: AuthUser, auth: AuthContext, id: string) {
@@ -328,6 +456,7 @@ export class FinanceService {
       });
       supplierId = s.id;
     }
+    const due = dto.dueDate.slice(0, 10);
     const pay = await this.repo.insertPayable({
       company_id: companyId,
       unit_id: dto.unitId || auth.defaultUnitId || DEV_UNIT,
@@ -335,17 +464,51 @@ export class FinanceService {
       cost_center_id: dto.costCenterId || null,
       description: dto.description,
       amount: dto.amount,
-      due_date: dto.dueDate.slice(0, 10),
+      due_date: due,
+      category: dto.category || 'outros',
+      competence_month: dto.competenceMonth
+        ? dto.competenceMonth.slice(0, 10)
+        : `${due.slice(0, 8)}01`,
+      installment_label: dto.installmentLabel || null,
+      notes: dto.notes || null,
+      attachment_url: dto.attachmentUrl || null,
       status: 'open',
       created_by: user.id,
     });
     return pay;
   }
 
+  async updatePayable(auth: AuthContext, id: string, dto: UpdatePayableDto) {
+    const pay = await this.repo.getPayable(id);
+    if (!pay) throw new NotFoundException('Payable not found');
+    this.companyIds(auth, pay.companyId);
+    if (pay.status === 'paid') throw new BadRequestException('Cannot edit paid payable');
+    return this.repo.updatePayable(id, {
+      description: dto.description ?? pay.description,
+      amount: dto.amount ?? pay.amount,
+      due_date: dto.dueDate ?? pay.dueDate,
+      category: dto.category ?? pay.category,
+      cost_center_id: dto.costCenterId ?? pay.costCenterId,
+      competence_month: dto.competenceMonth ?? pay.competenceMonth,
+      installment_label: dto.installmentLabel ?? pay.installmentLabel,
+      notes: dto.notes ?? pay.notes,
+      attachment_url: dto.attachmentUrl ?? pay.attachmentUrl,
+    });
+  }
+
+  async cancelPayable(user: AuthUser, auth: AuthContext, id: string) {
+    const pay = await this.repo.getPayable(id);
+    if (!pay) throw new NotFoundException('Payable not found');
+    this.companyIds(auth, pay.companyId);
+    if (pay.status === 'paid') throw new BadRequestException('Cannot cancel paid payable');
+    return this.repo.updatePayable(id, { status: 'cancelled' });
+  }
+
   async payPayable(user: AuthUser, auth: AuthContext, id: string) {
     const pay = await this.repo.getPayable(id);
     if (!pay) throw new NotFoundException('Payable not found');
     this.companyIds(auth, pay.companyId);
+    if (pay.status !== 'open') throw new BadRequestException('Payable is not open');
     const paidAt = new Date().toISOString();
     const updated = await this.repo.updatePayable(id, { status: 'paid', paid_at: paidAt });
     await this.repo.insertCashMovement({
@@ -642,18 +805,262 @@ export class FinanceService {
   }
 
   async cashflow(auth: AuthContext, from?: string, to?: string) {
+    const summary = await this.cashflowSummary(auth, undefined, from, to);
+    return summary.points;
+  }
+
+  private resolveCashRange(
+    range?: string,
+    from?: string,
+    to?: string,
+  ): { start: string; end: string } {
+    const today = new Date();
+    const endDefault = today.toISOString().slice(0, 10);
+    if (from && to) return { start: from.slice(0, 10), end: to.slice(0, 10) };
+    const r = range || 'month';
+    if (r === 'today') return { start: endDefault, end: endDefault };
+    if (r === 'week') {
+      const start = new Date(today);
+      start.setDate(start.getDate() - 6);
+      return { start: start.toISOString().slice(0, 10), end: endDefault };
+    }
+    if (r === 'year') {
+      return {
+        start: `${today.getFullYear()}-01-01`,
+        end: endDefault,
+      };
+    }
+    // month
+    return {
+      start: new Date(today.getFullYear(), today.getMonth(), 1).toISOString().slice(0, 10),
+      end: endDefault,
+    };
+  }
+
+  async cashflowSummary(
+    auth: AuthContext,
+    range?: string,
+    from?: string,
+    to?: string,
+  ): Promise<CashflowSummary> {
     const ids = this.companyIds(auth);
-    const start =
-      from || new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().slice(0, 10);
-    const end = to || new Date().toISOString().slice(0, 10);
+    const { start, end } = this.resolveCashRange(range, from, to);
+    const openingBalance = await this.repo.sumCashBefore(ids, start);
     const rows = await this.repo.listCashMovements(ids, start, end);
-    return buildCashflow(
+    const points = buildCashflow(
       rows.map((r) => ({
         date: String(r.movement_date),
         direction: r.direction as CashDirection,
         amount: Number(r.amount),
       })),
+      openingBalance,
     );
+    let inflow = 0;
+    let outflow = 0;
+    for (const r of rows) {
+      if (r.direction === 'in') inflow += Number(r.amount);
+      else outflow += Number(r.amount);
+    }
+    return {
+      from: start,
+      to: end,
+      openingBalance,
+      inflow: Math.round(inflow * 100) / 100,
+      outflow: Math.round(outflow * 100) / 100,
+      closingBalance: Math.round((openingBalance + inflow - outflow) * 100) / 100,
+      points,
+    };
+  }
+
+  async openCashSession(user: AuthUser, auth: AuthContext, dto: OpenCashSessionDto) {
+    const companyId = this.primaryCompany(auth, auth.companyId);
+    const unitId = dto.unitId || auth.defaultUnitId || DEV_UNIT;
+    const existing = await this.repo.getOpenCashSession(companyId, unitId);
+    if (existing) throw new BadRequestException('Already have an open cash session');
+    const opening = dto.openingAmount ?? 0;
+    return this.repo.insertCashSession({
+      company_id: companyId,
+      unit_id: unitId,
+      operator_user_id: user.id,
+      opening_amount: opening,
+      expected_amount: opening,
+      status: 'open',
+      notes: dto.notes || null,
+    });
+  }
+
+  async currentCashSession(auth: AuthContext, unitId?: string) {
+    const companyId = this.primaryCompany(auth, auth.companyId);
+    return this.repo.getOpenCashSession(companyId, unitId || auth.defaultUnitId || DEV_UNIT);
+  }
+
+  async sangriaCashSession(
+    user: AuthUser,
+    auth: AuthContext,
+    id: string,
+    dto: CashSessionAmountDto,
+  ) {
+    return this.addSessionMovement(user, auth, id, 'sangria', dto);
+  }
+
+  async supplyCashSession(
+    user: AuthUser,
+    auth: AuthContext,
+    id: string,
+    dto: CashSessionAmountDto,
+  ) {
+    return this.addSessionMovement(user, auth, id, 'supply', dto);
+  }
+
+  private async addSessionMovement(
+    user: AuthUser,
+    auth: AuthContext,
+    id: string,
+    type: 'sangria' | 'supply',
+    dto: CashSessionAmountDto,
+  ) {
+    const session = await this.repo.getCashSession(id);
+    if (!session) throw new NotFoundException('Cash session not found');
+    this.companyIds(auth, session.companyId);
+    if (session.status !== 'open') throw new BadRequestException('Session is closed');
+    const delta = type === 'sangria' ? -dto.amount : dto.amount;
+    const movement = await this.repo.insertCashSessionMovement({
+      session_id: id,
+      company_id: session.companyId,
+      movement_type: type,
+      amount: dto.amount,
+      notes: dto.notes || null,
+      created_by: user.id,
+    });
+    await this.repo.insertCashMovement({
+      company_id: session.companyId,
+      unit_id: session.unitId,
+      movement_date: new Date().toISOString().slice(0, 10),
+      direction: type === 'sangria' ? 'out' : 'in',
+      amount: dto.amount,
+      description: type === 'sangria' ? 'Sangria de caixa' : 'Suprimento de caixa',
+      source_type: 'cash_session',
+      source_id: id,
+    });
+    const updated = await this.repo.updateCashSession(id, {
+      expected_amount: Math.round((session.expectedAmount + delta) * 100) / 100,
+    });
+    return { session: updated, movement };
+  }
+
+  async closeCashSession(user: AuthUser, auth: AuthContext, id: string, dto: CloseCashSessionDto) {
+    const session = await this.repo.getCashSession(id);
+    if (!session) throw new NotFoundException('Cash session not found');
+    this.companyIds(auth, session.companyId);
+    if (session.status !== 'open') throw new BadRequestException('Session already closed');
+    const difference = Math.round((dto.countedAmount - session.expectedAmount) * 100) / 100;
+    return this.repo.updateCashSession(id, {
+      status: 'closed',
+      closed_at: new Date().toISOString(),
+      counted_amount: dto.countedAmount,
+      difference,
+      notes: dto.notes ?? session.notes,
+    });
+  }
+
+  async cashSessionReport(auth: AuthContext, id: string) {
+    const session = await this.repo.getCashSession(id);
+    if (!session) throw new NotFoundException('Cash session not found');
+    this.companyIds(auth, session.companyId);
+    const movements = await this.repo.listCashSessionMovements(id);
+    let salesTotal = 0;
+    let sangriaTotal = 0;
+    let supplyTotal = 0;
+    for (const m of movements) {
+      if (m.movementType === 'sale') salesTotal += m.amount;
+      if (m.movementType === 'sangria') sangriaTotal += m.amount;
+      if (m.movementType === 'supply') supplyTotal += m.amount;
+    }
+    return {
+      session,
+      movements,
+      salesTotal: Math.round(salesTotal * 100) / 100,
+      sangriaTotal: Math.round(sangriaTotal * 100) / 100,
+      supplyTotal: Math.round(supplyTotal * 100) / 100,
+    };
+  }
+
+  async delinquency(auth: AuthContext): Promise<DelinquencyReport> {
+    const ids = this.companyIds(auth);
+    const today = new Date().toISOString().slice(0, 10);
+    await this.repo.markOverdueReceivables(ids, today);
+    const rows = await this.repo.delinquencyRows(ids, today);
+    const dash = await this.repo.dashboardStats(ids);
+    const byStudent = new Map<
+      string,
+      { amount: number; days: number; receivableIds: string[] }
+    >();
+    for (const r of rows) {
+      if (!r.studentId) continue;
+      const remaining = calcReceivableRemaining(r);
+      if (remaining <= 0) continue;
+      const days = Math.max(
+        1,
+        Math.floor((new Date(today).getTime() - new Date(r.dueDate).getTime()) / 86400000),
+      );
+      const cur = byStudent.get(r.studentId) || { amount: 0, days: 0, receivableIds: [] };
+      cur.amount += remaining;
+      cur.days = Math.max(cur.days, days);
+      cur.receivableIds.push(r.id);
+      byStudent.set(r.studentId, cur);
+    }
+    const students = await this.repo.getStudentsByIds([...byStudent.keys()]);
+    const studentMap = new Map(students.map((s) => [s.id, s]));
+    const items = [...byStudent.entries()]
+      .map(([studentId, v]) => {
+        const s = studentMap.get(studentId);
+        return {
+          studentId,
+          studentName: s?.full_name || 'Aluno',
+          phone: s?.phone || null,
+          email: s?.email || null,
+          daysOverdue: v.days,
+          amount: Math.round(v.amount * 100) / 100,
+          receivableIds: v.receivableIds,
+        };
+      })
+      .sort((a, b) => b.amount - a.amount);
+    const totalAmount = items.reduce((a, i) => a + i.amount, 0);
+    return {
+      count: items.length,
+      totalAmount: Math.round(totalAmount * 100) / 100,
+      revenueAtRiskPercent:
+        dash.monthRevenue > 0
+          ? Math.round((totalAmount / dash.monthRevenue) * 1000) / 10
+          : 0,
+      items,
+    };
+  }
+
+  async dueAlerts(auth: AuthContext, daysCsv?: string): Promise<DueAlertItem[]> {
+    const days = (daysCsv || '30,15,7,3,1')
+      .split(',')
+      .map((d) => Number(d.trim()))
+      .filter((n) => Number.isFinite(n) && n >= 0);
+    const rows = await this.repo.dueAlertReceivables(
+      this.companyIds(auth),
+      days.length ? days : [30, 15, 7, 3, 1],
+    );
+    const studentIds = [...new Set(rows.map((r) => r.studentId).filter(Boolean))] as string[];
+    const students = await this.repo.getStudentsByIds(studentIds);
+    const map = new Map(students.map((s) => [s.id, s.full_name]));
+    const today = new Date().toISOString().slice(0, 10);
+    return rows.map((r) => ({
+      id: r.id,
+      studentId: r.studentId,
+      studentName: r.studentId ? map.get(r.studentId) || null : null,
+      description: r.description,
+      amount: calcReceivableRemaining(r),
+      dueDate: r.dueDate,
+      daysUntilDue: Math.floor(
+        (new Date(r.dueDate).getTime() - new Date(today).getTime()) / 86400000,
+      ),
+    }));
   }
 
   async deleteCashflowDay(user: AuthUser, auth: AuthContext, date: string) {
@@ -808,14 +1215,15 @@ export class FinanceService {
     return matched;
   }
 
-  /** Called from ContractSigned — creates subscription + first receivable */
+  /** Called from ContractSigned — creates subscription + first receivable (+ enrollment fee) */
   async onContractSigned(payload: ContractSignedEvent) {
     if (!payload.studentId || !payload.planId) return null;
     const plan = await this.repo.getPlan(payload.planId);
     if (!plan) return null;
     const amount = Number(plan.price);
+    const enrollmentFee = Number(plan.enrollment_fee || 0);
     const nextDue = new Date();
-    nextDue.setDate(nextDue.getDate() + 30);
+    nextDue.setDate(nextDue.getDate() + Number(plan.duration_days || 30));
     const sub = await this.repo.insertSubscription({
       company_id: payload.companyId,
       student_id: payload.studentId,
@@ -832,6 +1240,8 @@ export class FinanceService {
     const rec = await this.repo.insertReceivable({
       company_id: payload.companyId,
       student_id: payload.studentId,
+      enrollment_id: payload.enrollmentId,
+      plan_id: payload.planId,
       contract_id: payload.contractId,
       subscription_id: sub.id,
       description: `Mensalidade ${String(plan.name)}`,
@@ -840,12 +1250,33 @@ export class FinanceService {
       competence_month: `${due.slice(0, 8)}01`,
       status: 'open',
     });
+    let feeRec = null;
+    if (enrollmentFee > 0) {
+      feeRec = await this.repo.insertReceivable({
+        company_id: payload.companyId,
+        student_id: payload.studentId,
+        enrollment_id: payload.enrollmentId,
+        plan_id: payload.planId,
+        contract_id: payload.contractId,
+        subscription_id: sub.id,
+        description: `Taxa de matrícula ${String(plan.name)}`,
+        amount: enrollmentFee,
+        due_date: due,
+        competence_month: `${due.slice(0, 8)}01`,
+        status: 'open',
+      });
+    }
     await this.repo.insertOutbox({
       company_id: payload.companyId,
       aggregate_type: 'subscription',
       aggregate_id: sub.id,
       event_type: SUBSCRIPTION_CREATED,
-      payload: { ...payload, subscriptionId: sub.id, receivableId: rec.id },
+      payload: {
+        ...payload,
+        subscriptionId: sub.id,
+        receivableId: rec.id,
+        enrollmentFeeReceivableId: feeRec?.id || null,
+      },
       status: 'pending',
     });
     this.events.emit(SUBSCRIPTION_CREATED, {
@@ -855,26 +1286,70 @@ export class FinanceService {
       planId: payload.planId,
       contractId: payload.contractId,
     });
-    return { subscription: sub, receivable: rec };
+    return { subscription: sub, receivable: rec, enrollmentFeeReceivable: feeRec };
+  }
+
+  /** Used by SalesService.renewEnrollment — keeps finance as source of truth */
+  async createReceivableForEnrollmentRenewal(input: {
+    companyId: string;
+    unitId?: string | null;
+    studentId: string;
+    enrollmentId: string;
+    planId: string;
+    planName: string;
+    amount: number;
+    dueDate: string;
+    createdBy?: string;
+    description?: string;
+  }) {
+    const rec = await this.repo.insertReceivable({
+      company_id: input.companyId,
+      unit_id: input.unitId || DEV_UNIT,
+      student_id: input.studentId,
+      enrollment_id: input.enrollmentId,
+      plan_id: input.planId,
+      description: input.description || `Renovação — ${input.planName}`,
+      amount: input.amount,
+      due_date: input.dueDate.slice(0, 10),
+      competence_month: `${input.dueDate.slice(0, 8)}01`,
+      status: 'open',
+      created_by: input.createdBy || null,
+    });
+    const existing = await this.repo.findActiveSubscription(input.companyId, input.studentId);
+    if (existing && !input.description) {
+      const next = new Date(input.dueDate);
+      next.setMonth(next.getMonth() + 1);
+      await this.repo.updateSubscription(existing.id, {
+        next_due_date: next.toISOString().slice(0, 10),
+        amount: input.amount,
+        enrollment_id: input.enrollmentId,
+        plan_id: input.planId,
+      });
+    }
+    return rec;
   }
 
   async renewDueSubscriptions(asOf = new Date().toISOString().slice(0, 10)) {
     const due = await this.repo.dueSubscriptions(asOf);
     const created = [];
     for (const sub of due) {
+      const plan = await this.repo.getPlan(sub.planId);
       const rec = await this.repo.insertReceivable({
         company_id: sub.companyId,
         unit_id: sub.unitId,
         student_id: sub.studentId,
+        enrollment_id: sub.enrollmentId,
+        plan_id: sub.planId,
         contract_id: sub.contractId,
         subscription_id: sub.id,
-        description: `Renovação assinatura`,
+        description: `Renovação ${plan ? String(plan.name) : 'assinatura'}`,
         amount: sub.amount,
         due_date: asOf,
         status: 'open',
       });
       const next = new Date(asOf);
       if (sub.recurrence === 'yearly') next.setFullYear(next.getFullYear() + 1);
+      else if (sub.recurrence === 'weekly') next.setDate(next.getDate() + 7);
       else if (sub.recurrence === 'quarterly') next.setMonth(next.getMonth() + 3);
       else next.setMonth(next.getMonth() + 1);
       await this.repo.updateSubscription(sub.id, {
@@ -892,5 +1367,81 @@ export class FinanceService {
       created.push(rec);
     }
     return created;
+  }
+
+  /** Loja cost center for PDV / purchases (seed G-5). */
+  async resolveLojaCostCenterId(companyId: string): Promise<string | null> {
+    const centers = await this.repo.listCostCenters([companyId]);
+    const loja = centers.find((c) => /loja/i.test(c.name));
+    return loja?.id || centers[0]?.id || null;
+  }
+
+  /**
+   * PDV sale payment: creates receivable + receives immediately (cash/card/pix/voucher)
+   * or leaves receivable open for internal_credit.
+   */
+  async registerPosSalePayment(
+    user: AuthUser,
+    auth: AuthContext,
+    input: {
+      studentId?: string | null;
+      description: string;
+      amount: number;
+      discount?: number;
+      unitId?: string | null;
+      paymentMethod: 'pix' | 'card' | 'cash' | 'internal_credit' | 'voucher';
+      notes?: string;
+    },
+  ) {
+    const companyId = this.primaryCompany(auth, auth.companyId);
+    const costCenterId = await this.resolveLojaCostCenterId(companyId);
+    const today = new Date().toISOString().slice(0, 10);
+    const rec = await this.createReceivable(user, auth, {
+      description: input.description,
+      amount: input.amount,
+      discount: input.discount || 0,
+      dueDate: today,
+      studentId: input.studentId || undefined,
+      unitId: input.unitId || auth.defaultUnitId || DEV_UNIT,
+      costCenterId: costCenterId || undefined,
+      notes: input.notes || `PDV:${input.paymentMethod}`,
+    });
+
+    if (input.paymentMethod === 'internal_credit') {
+      return { receivable: rec, paid: false };
+    }
+
+    const paid = await this.receiveManual(user, auth, rec.id, {});
+    return { receivable: paid, paid: true };
+  }
+
+  async createPayableForPurchase(
+    user: AuthUser,
+    auth: AuthContext,
+    input: {
+      supplierId: string;
+      description: string;
+      amount: number;
+      unitId?: string | null;
+      dueDate?: string;
+      notes?: string;
+    },
+  ) {
+    const costCenterId = await this.resolveLojaCostCenterId(
+      this.primaryCompany(auth, auth.companyId),
+    );
+    const due =
+      input.dueDate ||
+      new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
+    return this.createPayable(user, auth, {
+      description: input.description,
+      amount: input.amount,
+      dueDate: due,
+      supplierId: input.supplierId,
+      unitId: input.unitId || auth.defaultUnitId || DEV_UNIT,
+      costCenterId: costCenterId || undefined,
+      category: 'estoque',
+      notes: input.notes,
+    });
   }
 }

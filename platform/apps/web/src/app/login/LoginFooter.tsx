@@ -1,13 +1,14 @@
 import Link from 'next/link';
-import { ATHENA_PRODUCT, ATHENA_TENANT_NAME, ATHENA_VERSION, ATHENA_YEAR } from './constants';
+import { PRODUCT_NAME, PRODUCT_VERSION, PRODUCT_YEAR, TENANT_DEMO_NAME } from './constants';
+import { MOVVO_PRODUCT } from '@athena/shared';
 
 export function LoginFooter() {
   return (
     <footer className="athena-login-footer" data-testid="login-footer">
       <p>
-        {ATHENA_PRODUCT} · Versão {ATHENA_VERSION} · © {ATHENA_YEAR}
+        {PRODUCT_NAME} · v{PRODUCT_VERSION} · Build {MOVVO_PRODUCT.buildLabel} · © {PRODUCT_YEAR}
       </p>
-      <p className="athena-login-footer-tenant">Case: {ATHENA_TENANT_NAME}</p>
+      <p className="athena-login-footer-tenant">Cliente demo: {TENANT_DEMO_NAME}</p>
       <nav aria-label="Institucional">
         <Link href="/privacy">Política de Privacidade</Link>
         <span aria-hidden>·</span>

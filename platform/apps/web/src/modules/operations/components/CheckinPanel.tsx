@@ -7,16 +7,21 @@ import { StudentSelect } from './StudentSelect';
 import { ExportButtons } from '@/modules/polish/components/ExportButtons';
 import { useToast } from '@/components/ui/Toast';
 import { apiGetMe } from '@/services/api';
+import { DenialReasonBanner } from '@/modules/acesso/components/DenialReasonBanner';
+import { acessoApi } from '@/modules/acesso/services/acessoApi';
 
 export function CheckinPanel({ accessToken }: { accessToken: string }) {
   const { push } = useToast();
   const [studentId, setStudentId] = useState('');
   const [unitId, setUnitId] = useState<string | undefined>();
+  const [cpf, setCpf] = useState('');
+  const [code, setCode] = useState('');
   const [qr, setQr] = useState<string | null>(null);
   const [qrInput, setQrInput] = useState('');
   const [expiresAt, setExpiresAt] = useState<string | null>(null);
   const [history, setHistory] = useState<Awaited<ReturnType<typeof operationsApi.checkins>>>([]);
-  const [busy, setBusy] = useState<'manual' | 'qr' | 'validate' | null>(null);
+  const [busy, setBusy] = useState<'manual' | 'qr' | 'validate' | 'cpf' | 'code' | null>(null);
+  const [deny, setDeny] = useState<string | null>(null);
 
   async function refreshHistory() {
     setHistory(await operationsApi.checkins(accessToken));
@@ -41,19 +46,63 @@ export function CheckinPanel({ accessToken }: { accessToken: string }) {
       return;
     }
     setBusy('manual');
+    setDeny(null);
     try {
-      const c = await operationsApi.createCheckin(accessToken, {
+      await operationsApi.createCheckin(accessToken, {
         studentId,
         method: 'manual',
         ...(unitId ? { unitId } : {}),
       });
-      push(`Check-in manual realizado`);
+      push('Check-in manual realizado');
       setQr(null);
       setQrInput('');
       await refreshHistory();
-      void c;
     } catch (err) {
-      push(err instanceof Error ? err.message : 'Falha no check-in', 'error');
+      const msg = err instanceof Error ? err.message : 'Falha no check-in';
+      setDeny(msg);
+      push(msg, 'error');
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function onCpf() {
+    if (!cpf.trim()) {
+      push('Informe o CPF', 'error');
+      return;
+    }
+    setBusy('cpf');
+    setDeny(null);
+    try {
+      await acessoApi.checkinByCpf(accessToken, cpf, unitId);
+      push('Check-in por CPF realizado');
+      setCpf('');
+      await refreshHistory();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Falha no check-in CPF';
+      setDeny(msg);
+      push(msg, 'error');
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function onCode() {
+    if (!code.trim()) {
+      push('Informe o código', 'error');
+      return;
+    }
+    setBusy('code');
+    setDeny(null);
+    try {
+      await acessoApi.checkinByCode(accessToken, code, unitId);
+      push('Check-in por código realizado');
+      setCode('');
+      await refreshHistory();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Falha no check-in código';
+      setDeny(msg);
+      push(msg, 'error');
     } finally {
       setBusy(null);
     }
@@ -84,14 +133,11 @@ export function CheckinPanel({ accessToken }: { accessToken: string }) {
       push('Gere ou cole um QR Code para validar', 'error');
       return;
     }
-    if (!studentId) {
-      push('Selecione o aluno', 'error');
-      return;
-    }
     setBusy('validate');
+    setDeny(null);
     try {
       await operationsApi.createCheckin(accessToken, {
-        studentId,
+        ...(studentId ? { studentId } : {}),
         method: 'qr',
         qrToken: token,
         ...(unitId ? { unitId } : {}),
@@ -102,7 +148,9 @@ export function CheckinPanel({ accessToken }: { accessToken: string }) {
       setExpiresAt(null);
       await refreshHistory();
     } catch (err) {
-      push(err instanceof Error ? err.message : 'Falha ao validar QR', 'error');
+      const msg = err instanceof Error ? err.message : 'Falha ao validar QR';
+      setDeny(msg);
+      push(msg, 'error');
     } finally {
       setBusy(null);
     }
@@ -118,10 +166,12 @@ export function CheckinPanel({ accessToken }: { accessToken: string }) {
         <ExportButtons accessToken={accessToken} resource="checkins" />
       </div>
 
+      <DenialReasonBanner message={deny} />
+
       <form onSubmit={onManual} className="space-y-4">
         <StudentSelect accessToken={accessToken} value={studentId} onChange={setStudentId} />
         <div className="flex flex-wrap gap-2">
-          <Button type="submit" disabled={busy !== null || !studentId}>
+          <Button type="submit" disabled={busy !== null || !studentId} data-testid="checkin-manual">
             {busy === 'manual' ? 'Salvando…' : 'Check-in manual'}
           </Button>
           <Button
@@ -136,7 +186,7 @@ export function CheckinPanel({ accessToken }: { accessToken: string }) {
           <Button
             type="button"
             variant="secondary"
-            disabled={busy !== null || !studentId || !(qrInput.trim() || qr)}
+            disabled={busy !== null || !(qrInput.trim() || qr)}
             onClick={() => void onCheckinQr()}
             data-testid="validate-qr"
           >
@@ -144,6 +194,39 @@ export function CheckinPanel({ accessToken }: { accessToken: string }) {
           </Button>
         </div>
       </form>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <label className="block text-sm text-[var(--muted)]">
+          CPF
+          <div className="mt-1 flex gap-2">
+            <input
+              value={cpf}
+              onChange={(e) => setCpf(e.target.value)}
+              placeholder="Somente números"
+              className="athena-input block w-full"
+              data-testid="checkin-cpf"
+            />
+            <Button type="button" disabled={busy !== null} onClick={() => void onCpf()}>
+              {busy === 'cpf' ? '…' : 'Entrar'}
+            </Button>
+          </div>
+        </label>
+        <label className="block text-sm text-[var(--muted)]">
+          Código / cartão
+          <div className="mt-1 flex gap-2">
+            <input
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              placeholder="Código de acesso"
+              className="athena-input block w-full"
+              data-testid="checkin-code"
+            />
+            <Button type="button" disabled={busy !== null} onClick={() => void onCode()}>
+              {busy === 'code' ? '…' : 'Entrar'}
+            </Button>
+          </div>
+        </label>
+      </div>
 
       {qrImageUrl ? (
         <div className="flex flex-wrap items-start gap-4 rounded-[10px] border border-[var(--border)] bg-[var(--card)] p-4">
@@ -189,6 +272,7 @@ export function CheckinPanel({ accessToken }: { accessToken: string }) {
                 <span>
                   {h.method === 'qr' ? 'QR' : h.method === 'manual' ? 'Manual' : h.method} ·{' '}
                   {h.direction === 'in' ? 'Entrada' : 'Saída'}
+                  {h.partner ? ` · ${h.partner}` : ''}
                 </span>
                 <span className="text-[var(--muted)]">
                   {new Date(h.createdAt).toLocaleString('pt-BR')}

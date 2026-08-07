@@ -31,6 +31,8 @@ export const engagementApi = {
     apiFetch<AppNotification>('/notifications', t, { method: 'POST', body: JSON.stringify(body) }),
   markRead: (t: string, id: string) =>
     apiFetch<AppNotification>(`/notifications/${id}/read`, t, { method: 'PATCH', body: '{}' }),
+  markAllRead: (t: string) =>
+    apiFetch<{ updated: number }>('/notifications/read-all', t, { method: 'PATCH', body: '{}' }),
   conversations: (t: string) => apiFetch<Conversation[]>('/conversations', t),
   createConversation: (t: string, body: Record<string, unknown>) =>
     apiFetch<Conversation>('/conversations', t, { method: 'POST', body: JSON.stringify(body) }),

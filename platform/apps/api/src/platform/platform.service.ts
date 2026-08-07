@@ -373,6 +373,85 @@ export class PlatformService {
     return this.repo.listDeliveries(this.companyId(auth));
   }
 
+  async updateWebhook(
+    auth: AuthContext,
+    id: string,
+    patch: { url?: string; events?: string[]; status?: string },
+  ) {
+    const companyId = this.companyId(auth);
+    const existing = await this.repo.findWebhookRaw(id);
+    if (!existing || String(existing.company_id) !== companyId) {
+      throw new NotFoundException('Webhook not found');
+    }
+    const row: Record<string, unknown> = { updated_at: new Date().toISOString() };
+    if (patch.url) row.url = patch.url;
+    if (patch.events) row.events = patch.events;
+    if (patch.status) row.status = patch.status;
+    return this.repo.updateWebhook(id, row);
+  }
+
+  async deleteWebhook(auth: AuthContext, id: string) {
+    return this.updateWebhook(auth, id, { status: 'disabled' });
+  }
+
+  async replayDelivery(auth: AuthContext, deliveryId: string) {
+    const companyId = this.companyId(auth);
+    const delivery = await this.repo.findDelivery(deliveryId);
+    if (!delivery || String(delivery.company_id) !== companyId) {
+      throw new NotFoundException('Delivery not found');
+    }
+    return this.repo.insertDelivery({
+      company_id: companyId,
+      subscription_id: delivery.subscription_id,
+      event_type: delivery.event_type,
+      payload: delivery.payload,
+      status: 'pending',
+      attempts: 0,
+      next_retry_at: new Date().toISOString(),
+    });
+  }
+
+  async rotateApiClient(auth: AuthContext, userId: string, clientDbId: string) {
+    const companyId = this.companyId(auth);
+    const client = await this.repo.findClientById(clientDbId);
+    if (!client || client.mapped.companyId !== companyId) {
+      throw new NotFoundException('API client not found');
+    }
+    const clientSecret = `ats_${randomBytes(24).toString('hex')}`;
+    await this.repo.updateClient(clientDbId, {
+      client_secret_hash: this.hash(clientSecret),
+      secret_hint: clientSecret.slice(-6),
+      updated_at: new Date().toISOString(),
+    });
+    await this.audit.log({
+      companyId,
+      userId,
+      module: 'platform',
+      action: 'rotate',
+      entity: 'api_client',
+      entityId: clientDbId,
+    });
+    return { id: clientDbId, clientId: client.mapped.clientId, clientSecret };
+  }
+
+  async revokeApiClient(auth: AuthContext, userId: string, clientDbId: string) {
+    const companyId = this.companyId(auth);
+    const client = await this.repo.findClientById(clientDbId);
+    if (!client || client.mapped.companyId !== companyId) {
+      throw new NotFoundException('API client not found');
+    }
+    await this.repo.updateClient(clientDbId, { status: 'revoked' });
+    await this.audit.log({
+      companyId,
+      userId,
+      module: 'platform',
+      action: 'revoke',
+      entity: 'api_client',
+      entityId: clientDbId,
+    });
+    return { ok: true };
+  }
+
   /** Verify partner HMAC (for webhook tester) */
   verifyPartnerSignature(secret: string, body: string, signature: string): boolean {
     const expected = this.hmac(secret, body);
@@ -474,18 +553,24 @@ export class PlatformService {
 
   async configurePlugin(auth: AuthContext, installationId: string, config: Record<string, unknown>) {
     const companyId = this.companyId(auth);
-    const updated = await this.repo.updateInstallation(installationId, {
+    const existing = await this.repo.findInstallationById(installationId);
+    if (!existing) throw new NotFoundException('Installation not found');
+    if (existing.companyId !== companyId && !auth.isSuperAdmin) {
+      throw new ForbiddenException('Installation not in company');
+    }
+    return this.repo.updateInstallation(installationId, {
       config,
       status: 'configured',
     });
-    if (updated.companyId !== companyId && !auth.isSuperAdmin) {
-      throw new ForbiddenException('Installation not in company');
-    }
-    return updated;
   }
 
   async removePlugin(auth: AuthContext, userId: string, installationId: string) {
     const companyId = this.companyId(auth);
+    const existing = await this.repo.findInstallationById(installationId);
+    if (!existing) throw new NotFoundException('Installation not found');
+    if (existing.companyId !== companyId && !auth.isSuperAdmin) {
+      throw new ForbiddenException('Installation not in company');
+    }
     const updated = await this.repo.updateInstallation(installationId, { status: 'removed' });
     this.events.emit(PLUGIN_REMOVED, { companyId, installationId });
     await this.audit.log({

@@ -4,7 +4,7 @@
  * ajustando flags de produção. Não imprime segredos.
  *
  * Uso: node scripts/prepare-prod-env.mjs [API_PUBLIC_URL] [WEB_PUBLIC_URL]
- * Ex.: node scripts/prepare-prod-env.mjs https://athena-api.onrender.com https://athena-gym.vercel.app
+ * Ex.: node scripts/prepare-prod-env.mjs https://api.movvoerp.com.br https://movvoerp.com.br
  */
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
@@ -16,6 +16,16 @@ const webEnvPath = resolve(root, 'apps/web/.env.local');
 
 const apiPublic = (process.argv[2] || '').replace(/\/$/, '');
 const webPublic = (process.argv[3] || '').replace(/\/$/, '');
+
+function withWww(origin) {
+  try {
+    const u = new URL(origin);
+    if (!u.hostname.startsWith('www.')) u.hostname = `www.${u.hostname}`;
+    return u.origin;
+  } catch {
+    return origin;
+  }
+}
 
 function parseEnv(text) {
   const out = {};
@@ -49,7 +59,11 @@ const apiOut = {
   HOST: '0.0.0.0',
   PORT: api.PORT || '3001',
   DEV_AUTH_ENABLED: 'false',
-  CORS_ORIGINS: webPublic || api.CORS_ORIGINS || 'http://localhost:3000',
+  CORS_ORIGINS: webPublic
+    ? [webPublic, withWww(webPublic), 'https://athena-gym.vercel.app']
+        .filter((v, i, a) => a.indexOf(v) === i)
+        .join(',')
+    : api.CORS_ORIGINS || 'http://localhost:3000',
   PASSWORD_RESET_REDIRECT: webPublic
     ? `${webPublic}/login`
     : api.PASSWORD_RESET_REDIRECT || 'http://localhost:3000/login',
@@ -77,14 +91,12 @@ console.log(' - apps/api/.env.production.local');
 console.log(' - apps/web/.env.production.local');
 console.log('');
 console.log('Checklist rápido:');
-console.log(' 1) Render: https://dashboard.render.com/blueprints');
-console.log('    Repo: https://github.com/illipronti1990/AthenaGYM');
-console.log('    Blueprint: render.yaml (raiz)');
-console.log(' 2) Vercel: https://vercel.com/new');
-console.log('    Root Directory: platform/apps/web');
-console.log(' 3) Depois rode de novo com as URLs reais:');
-console.log('    node scripts/prepare-prod-env.mjs https://SUA-API.onrender.com https://SEU-APP.vercel.app');
-console.log(' 4) Supabase Auth URLs → Site URL = URL do Vercel');
+console.log(' 1) Domínios: https://movvoerp.com.br  ·  API https://api.movvoerp.com.br');
+console.log(' 2) DNS: nameservers Vercel ou A 76.76.21.21 (ver DEPLOY.md)');
+console.log(' 3) Vercel env: NEXT_PUBLIC_API_URL + CORS_ORIGINS + PASSWORD_RESET_REDIRECT');
+console.log(' 4) Supabase Auth Site URL = https://movvoerp.com.br');
+console.log(' 5) Regenerar com URLs oficiais:');
+console.log('    node scripts/prepare-prod-env.mjs https://api.movvoerp.com.br https://movvoerp.com.br');
 if (!apiPublic || !webPublic) {
   console.log('');
   console.log('Aviso: URLs de produção ainda não informadas; CORS/API apontam para placeholders.');

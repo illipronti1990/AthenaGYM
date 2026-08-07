@@ -4,8 +4,9 @@ import { FormEvent, useEffect, useMemo, useState } from 'react';
 import type { Role, UserListItem } from '@athena/shared';
 import { Button } from '@athena/ui';
 import { apiDeleteUser, apiInviteUser, apiListRoles, apiListUsers } from '@/services/api';
-import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
+import { useConfirm } from '@/components/ux/ConfirmProvider';
+import { PageState } from '@/components/ux/PageState';
 
 const TRAINER_SLUGS = new Set(['trainer', 'personal', 'professor', 'treinador']);
 
@@ -27,6 +28,7 @@ function roleLabel(roles: Role[], slug: string) {
 
 export function TrainersPanel({ accessToken }: { accessToken: string }) {
   const { push } = useToast();
+  const confirm = useConfirm();
   const [trainers, setTrainers] = useState<UserListItem[] | null>(null);
   const [roles, setRoles] = useState<Role[]>([]);
   const [email, setEmail] = useState('');
@@ -68,9 +70,13 @@ export function TrainersPanel({ accessToken }: { accessToken: string }) {
 
   async function onDelete(trainer: UserListItem) {
     const name = trainer.fullName || trainer.email || 'este professor';
-    if (!window.confirm(`Excluir ${name}? Esta ação remove o professor da lista.`)) {
-      return;
-    }
+    const ok = await confirm({
+      title: `Excluir ${name}?`,
+      message: 'Esta ação remove o professor da lista.',
+      confirmLabel: 'Excluir',
+      danger: true,
+    });
+    if (!ok) return;
     setDeletingId(trainer.id);
     try {
       await apiDeleteUser(accessToken, trainer.id);
@@ -119,12 +125,13 @@ export function TrainersPanel({ accessToken }: { accessToken: string }) {
     <div className="space-y-8">
       <section>
         <h2 className="athena-title mb-3 text-lg">Professores cadastrados</h2>
-        {!trainers ? (
-          <TableSkeleton />
-        ) : trainers.length === 0 ? (
-          <p className="text-sm text-[var(--muted)]">Nenhum professor cadastrado ainda.</p>
-        ) : (
-          <div className="athena-list overflow-x-auto">
+        <PageState
+          state={!trainers ? 'loading' : trainers.length === 0 ? 'empty' : 'ready'}
+          emptyTitle="Nenhum professor cadastrado"
+          emptyDescription="Convide a equipe para começar."
+          onRetry={() => void load()}
+        >
+          <div className="athena-list athena-table-scroll overflow-x-auto">
             <table className="athena-table" data-testid="trainers-table">
               <thead>
                 <tr>
@@ -137,7 +144,7 @@ export function TrainersPanel({ accessToken }: { accessToken: string }) {
                 </tr>
               </thead>
               <tbody>
-                {trainers.map((t) => (
+                {(trainers || []).map((t) => (
                   <tr key={t.id}>
                     <td>{t.fullName || '—'}</td>
                     <td>{t.email || '—'}</td>
@@ -165,7 +172,7 @@ export function TrainersPanel({ accessToken }: { accessToken: string }) {
               </tbody>
             </table>
           </div>
-        )}
+        </PageState>
       </section>
 
       <section>

@@ -3,24 +3,24 @@ import { LoginBackground } from './LoginBackground';
 import { LoginHeader } from './LoginHeader';
 import { LoginCard } from './LoginCard';
 import { LoginFooter } from './LoginFooter';
-import { ATHENA_PRODUCT, ATHENA_SLOGAN, ATHENA_VERSION } from './constants';
+import { PRODUCT_NAME, PRODUCT_SLOGAN, PRODUCT_VERSION } from './constants';
 import './login.css';
 
 export const metadata: Metadata = {
-  title: `Entrar · ${ATHENA_PRODUCT}`,
-  description: ATHENA_SLOGAN,
+  title: `Entrar · ${PRODUCT_NAME}`,
+  description: PRODUCT_SLOGAN,
 };
 
 export default function LoginPage() {
   return (
-    <main className="athena-login-page" data-testid="login-page">
+    <main className="athena-login-page movvo-login-page" data-testid="login-page">
       <LoginBackground />
       <LoginHeader />
       <div className="athena-login-panel">
         <LoginCard />
         <LoginFooter />
         <p className="sr-only">
-          {ATHENA_PRODUCT} versão {ATHENA_VERSION}
+          {PRODUCT_NAME} versão {PRODUCT_VERSION}
         </p>
       </div>
     </main>

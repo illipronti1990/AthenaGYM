@@ -19,7 +19,13 @@ import {
   type WorkPanel,
 } from '@athena/ui';
 import { financeApi } from '../services/financeApi';
-import { isReceivableOpen, receivableStatusLabel } from '../utils/statusLabels';
+import {
+  isReceivableOpen,
+  receivableBadgeTone,
+  receivableDisplayStatus,
+  receivableStatusLabel,
+} from '../utils/statusLabels';
+import { PaymentModal } from './PaymentModal';
 import { useToast } from '@/components/ui/Toast';
 import { ExportButtons } from '@/modules/polish/components/ExportButtons';
 import { useDataGridPrefs } from '@/modules/datagrid/hooks/useDataGridPrefs';
@@ -71,7 +77,7 @@ export function ReceivablesPanel({ accessToken }: { accessToken: string }) {
   const [amount, setAmount] = useState(129);
   const [dueDate, setDueDate] = useState(todayIso());
   const [saving, setSaving] = useState(false);
-  const [receivingId, setReceivingId] = useState<string | null>(null);
+  const [payTarget, setPayTarget] = useState<Receivable | null>(null);
 
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState<Record<string, string>>({});
@@ -118,29 +124,20 @@ export function ReceivablesPanel({ accessToken }: { accessToken: string }) {
     }
   }
 
-  async function onReceive(id: string) {
-    setReceivingId(id);
-    try {
-      await financeApi.receive(accessToken, id);
-      push('Recebimento registrado.');
-      await load();
-    } catch (e) {
-      push(e instanceof Error ? e.message : 'Falha ao receber', 'error');
-    } finally {
-      setReceivingId(null);
-    }
-  }
-
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    const today = todayIso();
     const month = monthPrefix();
     let rows = [...allItems];
 
     if (filters.panel === 'due-today') {
-      rows = rows.filter((r) => r.dueDate === today && isReceivableOpen(String(r.status)));
+      rows = rows.filter(
+        (r) =>
+          receivableDisplayStatus(String(r.status), r.dueDate, r.displayStatus) === 'due_today',
+      );
     } else if (filters.panel === 'overdue') {
-      rows = rows.filter((r) => isReceivableOpen(String(r.status)) && r.dueDate < today);
+      rows = rows.filter(
+        (r) => receivableDisplayStatus(String(r.status), r.dueDate, r.displayStatus) === 'overdue',
+      );
     } else if (filters.panel === 'month') {
       rows = rows.filter(
         (r) =>
@@ -152,20 +149,32 @@ export function ReceivablesPanel({ accessToken }: { accessToken: string }) {
       rows = rows.filter((r) => isReceivableOpen(String(r.status)));
     } else if (filters.status === 'paid') {
       rows = rows.filter((r) => r.status === 'paid');
+    } else if (filters.status === 'partial') {
+      rows = rows.filter((r) => r.status === 'partial');
+    } else if (filters.status === 'due_today') {
+      rows = rows.filter(
+        (r) =>
+          receivableDisplayStatus(String(r.status), r.dueDate, r.displayStatus) === 'due_today',
+      );
     } else if (filters.status === 'overdue') {
-      rows = rows.filter((r) => isReceivableOpen(String(r.status)) && r.dueDate < today);
+      rows = rows.filter(
+        (r) => receivableDisplayStatus(String(r.status), r.dueDate, r.displayStatus) === 'overdue',
+      );
     } else if (filters.status) {
       rows = rows.filter((r) => String(r.status) === filters.status);
     }
 
     if (q) {
-      rows = rows.filter(
-        (r) =>
+      rows = rows.filter((r) => {
+        const ds = receivableDisplayStatus(String(r.status), r.dueDate, r.displayStatus);
+        return (
           r.description.toLowerCase().includes(q) ||
           String(r.amount).includes(q) ||
           r.dueDate.includes(q) ||
-          receivableStatusLabel(String(r.status)).toLowerCase().includes(q),
-      );
+          receivableStatusLabel(ds).toLowerCase().includes(q) ||
+          (r.studentName || '').toLowerCase().includes(q)
+        );
+      });
     }
 
     if (sort) {
@@ -201,6 +210,8 @@ export function ReceivablesPanel({ accessToken }: { accessToken: string }) {
       type: 'select',
       options: [
         { value: 'open', label: 'Em aberto' },
+        { value: 'partial', label: 'Parcial' },
+        { value: 'due_today', label: 'Vence hoje' },
         { value: 'paid', label: 'Pago' },
         { value: 'overdue', label: 'Vencido' },
         { value: 'cancelled', label: 'Cancelado' },
@@ -250,19 +261,21 @@ export function ReceivablesPanel({ accessToken }: { accessToken: string }) {
       sortable: true,
       width: 140,
       cell: (r) => {
-        const open = isReceivableOpen(String(r.status));
-        const overdue = open && r.dueDate < todayIso();
-        return (
-          <Badge tone={r.status === 'paid' ? 'ativo' : overdue ? 'inadimplente' : 'novo'}>
-            {overdue && open ? 'Vencido' : receivableStatusLabel(String(r.status))}
-          </Badge>
-        );
+        const ds = receivableDisplayStatus(String(r.status), r.dueDate, r.displayStatus);
+        return <Badge tone={receivableBadgeTone(ds)}>{receivableStatusLabel(ds)}</Badge>;
       },
     },
   ];
 
   return (
     <div className="space-y-4">
+      <PaymentModal
+        open={!!payTarget}
+        accessToken={accessToken}
+        receivable={payTarget}
+        onClose={() => setPayTarget(null)}
+        onSuccess={() => void load()}
+      />
       <Form onSubmit={onCreate} data-testid="receivable-create-form">
         <FormSection title="Nova cobrança" description="Recebimento rápido na recepção.">
           <FormRow cols={3}>
@@ -343,16 +356,11 @@ export function ReceivablesPanel({ accessToken }: { accessToken: string }) {
             id: 'receive',
             label: 'Receber selecionados',
             onClick: (ids) => {
-              void (async () => {
-                for (const id of ids) {
-                  const row = allItems.find((r) => r.id === id);
-                  if (row && isReceivableOpen(String(row.status))) {
-                    await financeApi.receive(accessToken, id).catch(() => undefined);
-                  }
-                }
-                push('Recebimentos processados.');
-                await load();
-              })();
+              const first = allItems.find(
+                (r) => ids.includes(r.id) && isReceivableOpen(String(r.status)),
+              );
+              if (first) setPayTarget(first);
+              else push('Nenhuma cobrança aberta selecionada.', 'error');
             },
           },
         ]}
@@ -360,8 +368,8 @@ export function ReceivablesPanel({ accessToken }: { accessToken: string }) {
           {
             id: 'receive',
             label: 'Receber',
-            hidden: (r) => !isReceivableOpen(String(r.status)) || receivingId === r.id,
-            onClick: (r) => void onReceive(r.id),
+            hidden: (r) => !isReceivableOpen(String(r.status)),
+            onClick: (r) => setPayTarget(r),
           },
           {
             id: 'pix',

@@ -1,4 +1,4 @@
-# ATHENA PLATFORM — Supabase (Sprint 0)
+# Movvo ERP — Supabase
 
 Migrations live in `migrations/`.
 

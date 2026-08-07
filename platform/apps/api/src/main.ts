@@ -12,7 +12,12 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
-  const origins = (process.env.CORS_ORIGINS || 'http://localhost:3000')
+  const origins = (
+    process.env.CORS_ORIGINS ||
+    (process.env.NODE_ENV === 'production'
+      ? 'https://movvoerp.com.br,https://www.movvoerp.com.br,https://athena-gym.vercel.app'
+      : 'http://localhost:3000')
+  )
     .split(',')
     .map((s) => s.trim())
     .filter(Boolean);
@@ -20,7 +25,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api/v1');
 
   const config = new DocumentBuilder()
-    .setTitle('ATHENA PLATFORM API')
+    .setTitle('Movvo ERP API')
     .setDescription(
       'PaaS official API — Sprint 9 Open Platform. Public API under /api/v1/public (gateway alias /api/public/v1). OAuth2 at /api/v1/oauth/token.',
     )
@@ -37,7 +42,7 @@ async function bootstrap() {
   const host = process.env.HOST || '0.0.0.0';
   await app.listen(port, host);
   // eslint-disable-next-line no-console
-  console.log(`ATHENA API listening on http://${host}:${port}/api/v1`);
+  console.log(`Movvo API listening on http://${host}:${port}/api/v1`);
   // eslint-disable-next-line no-console
   console.log(`Swagger: http://${host}:${port}/api/v1/docs`);
 }

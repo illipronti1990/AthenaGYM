@@ -6,6 +6,7 @@ import { Button } from '@athena/ui';
 import { operationsApi } from '../services/operationsApi';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
+import { useConfirm } from '@/components/ux/ConfirmProvider';
 
 const PROVIDER_LABEL: Record<PartnerProvider, string> = {
   wellhub: 'Wellhub',
@@ -16,6 +17,7 @@ type Filter = 'pending' | 'all' | 'approved' | 'rejected';
 
 export function PartnersPanel({ accessToken }: { accessToken: string }) {
   const { push } = useToast();
+  const confirm = useConfirm();
   const [integrations, setIntegrations] = useState<PartnerIntegration[] | null>(null);
   const [requests, setRequests] = useState<PartnerAccessRequest[] | null>(null);
   const [filter, setFilter] = useState<Filter>('pending');
@@ -80,7 +82,13 @@ export function PartnersPanel({ accessToken }: { accessToken: string }) {
   }
 
   async function onReject(id: string) {
-    if (!window.confirm('Recusar este login externo?')) return;
+    const ok = await confirm({
+      title: 'Recusar este login externo?',
+      message: 'O beneficiário não poderá acessar até uma nova solicitação.',
+      confirmLabel: 'Recusar',
+      danger: true,
+    });
+    if (!ok) return;
     setBusyId(id);
     try {
       await operationsApi.rejectPartnerAccess(accessToken, id, 'Recusado na recepção');

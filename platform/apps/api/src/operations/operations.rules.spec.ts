@@ -1,4 +1,9 @@
 import {
+  canCancelClassReservation,
+  classCancelBlockMessage,
+  CLASS_CANCEL_CUTOFF_MINUTES,
+} from '@athena/shared';
+import {
   assertStudentActive,
   assertUnitMatch,
   buildQrPayload,
@@ -53,5 +58,23 @@ describe('operations.rules', () => {
     const token = signQrToken(buildQrPayload('s1', 'c1', 'u1'), secret) + 'x';
     const res = verifyQrToken(token, secret);
     expect(res.ok).toBe(false);
+  });
+});
+
+describe('class cancel cutoff', () => {
+  it(`allows cancel only before ${CLASS_CANCEL_CUTOFF_MINUTES} minutes`, () => {
+    const now = new Date('2026-08-06T12:00:00.000Z');
+    const okStart = new Date(now.getTime() + 11 * 60_000).toISOString();
+    const blockedStart = new Date(now.getTime() + 5 * 60_000).toISOString();
+    const started = new Date(now.getTime() - 60_000).toISOString();
+
+    expect(canCancelClassReservation(okStart, now)).toBe(true);
+    expect(classCancelBlockMessage(okStart, now)).toBeNull();
+
+    expect(canCancelClassReservation(blockedStart, now)).toBe(false);
+    expect(classCancelBlockMessage(blockedStart, now)).toMatch(/10 minutos/);
+
+    expect(canCancelClassReservation(started, now)).toBe(false);
+    expect(classCancelBlockMessage(started, now)).toMatch(/já começou/);
   });
 });

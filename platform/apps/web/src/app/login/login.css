@@ -1,13 +1,13 @@
 /* Sprint G-1 — Premium Login */
 
 .athena-login-page {
-  --login-bg: #090909;
-  --login-card: #171717;
-  --login-red: #b10018;
+  --login-bg: #080808;
+  --login-card: #131313;
+  --login-red: #d90429;
   --login-gold: #d4af37;
   --login-text: #ffffff;
   --login-muted: #a1a1aa;
-  --login-border: #2c2c2c;
+  --login-border: #2b2b2b;
   position: relative;
   min-height: 100vh;
   min-height: 100dvh;
@@ -30,9 +30,23 @@
   inset: 0;
   width: 52%;
   background:
-    radial-gradient(circle at 30% 40%, rgba(177, 0, 24, 0.55), transparent 55%),
-    linear-gradient(160deg, #b10018 0%, #5a000c 55%, #090909 100%);
-  filter: blur(0px);
+    radial-gradient(circle at 30% 40%, rgba(217, 4, 41, 0.55), transparent 55%),
+    linear-gradient(160deg, #d90429 0%, #5a0012 55%, #080808 100%);
+  animation: movvo-login-glow 8s ease-in-out infinite alternate;
+}
+
+@keyframes movvo-login-glow {
+  from { filter: brightness(1); }
+  to { filter: brightness(1.08); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .athena-login-bg-red {
+    animation: none;
+  }
+  .athena-login-brand-inner {
+    animation: none !important;
+  }
 }
 
 .athena-login-bg-blur {
@@ -40,7 +54,7 @@
   inset: 0;
   width: 55%;
   backdrop-filter: blur(28px);
-  background: rgba(9, 9, 9, 0.35);
+  background: rgba(8, 8, 8, 0.35);
 }
 
 .athena-login-bg-gradient {
@@ -80,11 +94,11 @@
 
 .athena-login-brand-name {
   margin: 20px 0 0;
-  font-size: clamp(2.6rem, 5vw, 3.6rem);
+  font-size: clamp(2rem, 4vw, 2.8rem);
   font-weight: 800;
-  letter-spacing: 0.14em;
+  letter-spacing: -0.03em;
   color: var(--login-text);
-  line-height: 1;
+  line-height: 1.05;
 }
 
 .athena-login-tenant {

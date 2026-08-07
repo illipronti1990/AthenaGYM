@@ -55,13 +55,19 @@ export class CompanyGuard implements CanActivate {
     const req = context.switchToHttp().getRequest<RequestAuth>();
     const auth = req[AUTH_CONTEXT_KEY];
     if (!auth) throw new ForbiddenException('No auth context');
-    if (auth.isSuperAdmin) return true;
+    if (auth.isSuperAdmin) {
+      const header = req.headers['x-company-id'];
+      const companyId = Array.isArray(header) ? header[0] : header;
+      if (companyId) auth.companyId = String(companyId);
+      return true;
+    }
     const header = req.headers['x-company-id'];
     const companyId = Array.isArray(header) ? header[0] : header;
     if (!companyId) return true;
     if (!auth.companyIds.includes(String(companyId))) {
       throw new ForbiddenException('Company not allowed for this user');
     }
+    auth.companyId = String(companyId);
     return true;
   }
 }

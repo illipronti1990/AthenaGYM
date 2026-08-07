@@ -80,6 +80,15 @@ export class StudentsController {
     return this.students.exportCsv(auth);
   }
 
+  @Get('export/mine')
+  @Permissions('students.read', 'reports.export')
+  @ApiOperation({ summary: 'Export CSV dos alunos do professor logado' })
+  @Header('Content-Type', 'text/csv; charset=utf-8')
+  @Header('Content-Disposition', 'attachment; filename="meus-alunos.csv"')
+  exportMyStudentsCsv(@CurrentAuth() auth: AuthContext) {
+    return this.students.exportMyStudentsCsv(auth);
+  }
+
   @Post('import')
   @Permissions('students.create')
   @ApiOperation({ summary: 'Import students CSV' })

@@ -8,12 +8,16 @@ export type UiPreferences = {
   language: 'pt-BR' | 'en';
   denseLayout: boolean;
   widgetsCompact: boolean;
+  dateFormat: 'dd/MM/yyyy' | 'yyyy-MM-dd';
+  tourCompletedV1: boolean;
 };
 
 const defaults: UiPreferences = {
   language: 'pt-BR',
   denseLayout: false,
   widgetsCompact: false,
+  dateFormat: 'dd/MM/yyyy',
+  tourCompletedV1: false,
 };
 
 export function useUiPreferences() {

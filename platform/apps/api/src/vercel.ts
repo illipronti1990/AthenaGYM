@@ -23,7 +23,12 @@ async function createApp(): Promise<ExpressApp> {
     }),
   );
 
-  const origins = (process.env.CORS_ORIGINS || 'http://localhost:3000')
+  const origins = (
+    process.env.CORS_ORIGINS ||
+    (process.env.NODE_ENV === 'production'
+      ? 'https://movvoerp.com.br,https://www.movvoerp.com.br,https://athena-gym.vercel.app'
+      : 'http://localhost:3000')
+  )
     .split(',')
     .map((s) => s.trim())
     .filter(Boolean);
@@ -31,7 +36,7 @@ async function createApp(): Promise<ExpressApp> {
   app.setGlobalPrefix('api/v1');
 
   const config = new DocumentBuilder()
-    .setTitle('ATHENA PLATFORM API')
+    .setTitle('Movvo ERP API')
     .setDescription('PaaS official API')
     .setVersion('0.10.0')
     .addBearerAuth()

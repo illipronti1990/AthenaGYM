@@ -1,0 +1,15 @@
+export const BI_LINKS = [
+  ['Hub', '/app/bi'],
+  ['Executivo', '/app/bi/executivo'],
+  ['KPIs', '/app/bi/kpis'],
+  ['Insights', '/app/bi/insights'],
+  ['Previsões', '/app/bi/previsoes'],
+  ['Heatmaps', '/app/bi/heatmaps'],
+  ['Comparativos', '/app/bi/comparativos'],
+  ['Churn', '/app/bi/churn'],
+  ['Comercial', '/app/bi/comercial'],
+  ['Metas', '/app/bi/metas'],
+  ['Alertas', '/app/bi/alertas'],
+  ['Benchmark', '/app/bi/benchmark'],
+  ['Relatórios', '/app/bi/relatorios'],
+] as const;

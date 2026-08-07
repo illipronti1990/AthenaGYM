@@ -70,6 +70,13 @@ export class EngagementRepository {
       status: String(row.status),
       scheduleAt: row.schedule_at ? String(row.schedule_at) : null,
       sentAt: row.sent_at ? String(row.sent_at) : null,
+      startsAt: row.starts_at ? String(row.starts_at) : null,
+      endsAt: row.ends_at ? String(row.ends_at) : null,
+      goalValue: row.goal_value != null ? Number(row.goal_value) : null,
+      ownerId: row.owner_id ? String(row.owner_id) : null,
+      discountPct: row.discount_pct != null ? Number(row.discount_pct) : null,
+      segmentId: row.segment_id ? String(row.segment_id) : null,
+      budget: row.budget != null ? Number(row.budget) : null,
     };
   }
 
@@ -120,16 +127,29 @@ export class EngagementRepository {
     return this.mapNotification(data as Record<string, unknown>);
   }
 
-  async markNotificationRead(companyId: string, id: string) {
+  async markNotificationRead(companyId: string, id: string, userId: string) {
     const { data, error } = await this.admin()
       .from('notifications')
       .update({ read_at: new Date().toISOString(), status: 'read' })
       .eq('company_id', companyId)
+      .eq('user_id', userId)
       .eq('id', id)
       .select('*')
       .single();
     if (error) throw error;
     return this.mapNotification(data as Record<string, unknown>);
+  }
+
+  async markAllNotificationsRead(companyId: string, userId: string) {
+    const { data, error } = await this.admin()
+      .from('notifications')
+      .update({ read_at: new Date().toISOString(), status: 'read' })
+      .eq('company_id', companyId)
+      .eq('user_id', userId)
+      .is('read_at', null)
+      .select('id');
+    if (error) throw error;
+    return { updated: (data || []).length };
   }
 
   async getPrefs(companyId: string, profileId: string) {
@@ -492,5 +512,449 @@ export class EngagementRepository {
       if (new Date(at) < cutoff) stale += 1;
     }
     return stale;
+  }
+
+  // ---------- G-9: Templates ----------
+
+  async listTemplates(companyId: string) {
+    const { data, error } = await this.admin()
+      .from('message_templates')
+      .select('*')
+      .eq('company_id', companyId)
+      .is('deleted_at', null)
+      .order('name');
+    if (error) throw error;
+    return (data || []).map((r) => this.mapTemplate(r as Record<string, unknown>));
+  }
+
+  async getTemplate(companyId: string, id: string) {
+    const { data } = await this.admin()
+      .from('message_templates')
+      .select('*')
+      .eq('company_id', companyId)
+      .eq('id', id)
+      .is('deleted_at', null)
+      .maybeSingle();
+    return data ? this.mapTemplate(data as Record<string, unknown>) : null;
+  }
+
+  async insertTemplate(row: Record<string, unknown>) {
+    const { data, error } = await this.admin().from('message_templates').insert(row).select('*').single();
+    if (error) throw error;
+    return this.mapTemplate(data as Record<string, unknown>);
+  }
+
+  async updateTemplate(companyId: string, id: string, patch: Record<string, unknown>) {
+    const { data, error } = await this.admin()
+      .from('message_templates')
+      .update(patch)
+      .eq('company_id', companyId)
+      .eq('id', id)
+      .select('*')
+      .single();
+    if (error) throw error;
+    return this.mapTemplate(data as Record<string, unknown>);
+  }
+
+  mapTemplate(row: Record<string, unknown>) {
+    return {
+      id: String(row.id),
+      companyId: String(row.company_id),
+      channel: String(row.channel),
+      slug: String(row.slug),
+      name: String(row.name),
+      subject: row.subject ? String(row.subject) : null,
+      body: String(row.body),
+      variables: (row.variables as string[]) || [],
+      active: Boolean(row.active),
+      createdAt: String(row.created_at),
+      updatedAt: String(row.updated_at),
+    };
+  }
+
+  // ---------- G-9: Referrals ----------
+
+  async listReferrals(companyId: string) {
+    const { data, error } = await this.admin()
+      .from('referrals')
+      .select('*')
+      .eq('company_id', companyId)
+      .is('deleted_at', null)
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    return (data || []).map((r) => this.mapReferral(r as Record<string, unknown>));
+  }
+
+  async insertReferral(row: Record<string, unknown>) {
+    const { data, error } = await this.admin().from('referrals').insert(row).select('*').single();
+    if (error) throw error;
+    return this.mapReferral(data as Record<string, unknown>);
+  }
+
+  async updateReferral(companyId: string, id: string, patch: Record<string, unknown>) {
+    const { data, error } = await this.admin()
+      .from('referrals')
+      .update(patch)
+      .eq('company_id', companyId)
+      .eq('id', id)
+      .select('*')
+      .single();
+    if (error) throw error;
+    return this.mapReferral(data as Record<string, unknown>);
+  }
+
+  async getReferralProgramSettings(companyId: string) {
+    const { data } = await this.admin()
+      .from('referral_program_settings')
+      .select('*')
+      .eq('company_id', companyId)
+      .maybeSingle();
+    return data as Record<string, unknown> | null;
+  }
+
+  mapReferral(row: Record<string, unknown>) {
+    return {
+      id: String(row.id),
+      companyId: String(row.company_id),
+      referrerStudentId: String(row.referrer_student_id),
+      referredLeadId: row.referred_lead_id ? String(row.referred_lead_id) : null,
+      referredStudentId: row.referred_student_id ? String(row.referred_student_id) : null,
+      status: String(row.status),
+      benefitType: (row.benefit_type as string) || null,
+      benefitValue: row.benefit_value != null ? Number(row.benefit_value) : null,
+      rewardedAt: row.rewarded_at ? String(row.rewarded_at) : null,
+      notes: (row.notes as string) || null,
+      createdAt: String(row.created_at),
+      updatedAt: String(row.updated_at),
+    };
+  }
+
+  // ---------- G-9: Loyalty earn rules / rewards / redemptions ----------
+
+  async listEarnRules(companyId: string) {
+    const { data, error } = await this.admin()
+      .from('loyalty_earn_rules')
+      .select('*')
+      .eq('company_id', companyId)
+      .eq('active', true)
+      .order('event');
+    if (error) throw error;
+    return (data || []).map((r) => this.mapEarnRule(r as Record<string, unknown>));
+  }
+
+  mapEarnRule(row: Record<string, unknown>) {
+    return {
+      id: String(row.id),
+      companyId: String(row.company_id),
+      event: String(row.event),
+      points: Number(row.points),
+      active: Boolean(row.active),
+      createdAt: String(row.created_at),
+    };
+  }
+
+  async listRewards(companyId: string) {
+    const { data, error } = await this.admin()
+      .from('loyalty_rewards')
+      .select('*')
+      .eq('company_id', companyId)
+      .eq('active', true)
+      .is('deleted_at', null)
+      .order('points_cost');
+    if (error) throw error;
+    return (data || []).map((r) => this.mapReward(r as Record<string, unknown>));
+  }
+
+  async getReward(companyId: string, id: string) {
+    const { data } = await this.admin()
+      .from('loyalty_rewards')
+      .select('*')
+      .eq('company_id', companyId)
+      .eq('id', id)
+      .is('deleted_at', null)
+      .maybeSingle();
+    return data ? this.mapReward(data as Record<string, unknown>) : null;
+  }
+
+  mapReward(row: Record<string, unknown>) {
+    return {
+      id: String(row.id),
+      companyId: String(row.company_id),
+      name: String(row.name),
+      slug: String(row.slug),
+      pointsCost: Number(row.points_cost),
+      description: (row.description as string) || null,
+      active: Boolean(row.active),
+      stock: row.stock != null ? Number(row.stock) : null,
+      createdAt: String(row.created_at),
+      updatedAt: String(row.updated_at),
+    };
+  }
+
+  async insertRedemption(row: Record<string, unknown>) {
+    const { data, error } = await this.admin().from('loyalty_redemptions').insert(row).select('*').single();
+    if (error) throw error;
+    return this.mapRedemption(data as Record<string, unknown>);
+  }
+
+  mapRedemption(row: Record<string, unknown>) {
+    return {
+      id: String(row.id),
+      companyId: String(row.company_id),
+      studentId: String(row.student_id),
+      rewardId: String(row.reward_id),
+      pointsSpent: Number(row.points_spent),
+      status: String(row.status),
+      createdAt: String(row.created_at),
+      fulfilledAt: row.fulfilled_at ? String(row.fulfilled_at) : null,
+    };
+  }
+
+  // ---------- G-9: NPS ----------
+
+  async listNpsSurveys(companyId: string) {
+    const { data, error } = await this.admin()
+      .from('nps_surveys')
+      .select('*')
+      .eq('company_id', companyId)
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    return (data || []).map((r) => this.mapNpsSurvey(r as Record<string, unknown>));
+  }
+
+  async getActiveSurvey(companyId: string) {
+    const { data } = await this.admin()
+      .from('nps_surveys')
+      .select('*')
+      .eq('company_id', companyId)
+      .eq('active', true)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    return data ? this.mapNpsSurvey(data as Record<string, unknown>) : null;
+  }
+
+  async insertNpsSurvey(row: Record<string, unknown>) {
+    const { data, error } = await this.admin().from('nps_surveys').insert(row).select('*').single();
+    if (error) throw error;
+    return this.mapNpsSurvey(data as Record<string, unknown>);
+  }
+
+  mapNpsSurvey(row: Record<string, unknown>) {
+    return {
+      id: String(row.id),
+      companyId: String(row.company_id),
+      title: String(row.title),
+      question: String(row.question),
+      active: Boolean(row.active),
+      createdAt: String(row.created_at),
+      updatedAt: String(row.updated_at),
+    };
+  }
+
+  async insertNpsResponse(row: Record<string, unknown>) {
+    const { data, error } = await this.admin().from('nps_responses').insert(row).select('*').single();
+    if (error) throw error;
+    return this.mapNpsResponse(data as Record<string, unknown>);
+  }
+
+  mapNpsResponse(row: Record<string, unknown>) {
+    return {
+      id: String(row.id),
+      companyId: String(row.company_id),
+      surveyId: String(row.survey_id),
+      studentId: row.student_id ? String(row.student_id) : null,
+      score: Number(row.score),
+      comment: (row.comment as string) || null,
+      channel: String(row.channel || 'app'),
+      createdAt: String(row.created_at),
+    };
+  }
+
+  async npsDashboard(companyId: string) {
+    const { data, error } = await this.admin()
+      .from('nps_responses')
+      .select('score')
+      .eq('company_id', companyId);
+    if (error) throw error;
+    const scores = (data || []).map((r) => Number(r.score));
+    const promoters = scores.filter((s) => s >= 9).length;
+    const passives = scores.filter((s) => s >= 7 && s <= 8).length;
+    const detractors = scores.filter((s) => s <= 6).length;
+    const total = scores.length;
+    const npsScore = total ? Math.round(((promoters - detractors) / total) * 100) : 0;
+    const avgScore = total ? scores.reduce((a, b) => a + b, 0) / total : 0;
+    return { totalResponses: total, promoters, passives, detractors, npsScore, avgScore: Math.round(avgScore * 10) / 10 };
+  }
+
+  // ---------- G-9: Segments ----------
+
+  async listSegments(companyId: string) {
+    const { data, error } = await this.admin()
+      .from('audience_segments')
+      .select('*')
+      .eq('company_id', companyId)
+      .is('deleted_at', null)
+      .order('name');
+    if (error) throw error;
+    return (data || []).map((r) => this.mapSegment(r as Record<string, unknown>));
+  }
+
+  async getSegment(companyId: string, id: string) {
+    const { data } = await this.admin()
+      .from('audience_segments')
+      .select('*')
+      .eq('company_id', companyId)
+      .eq('id', id)
+      .is('deleted_at', null)
+      .maybeSingle();
+    return data ? this.mapSegment(data as Record<string, unknown>) : null;
+  }
+
+  async insertSegment(row: Record<string, unknown>) {
+    const { data, error } = await this.admin().from('audience_segments').insert(row).select('*').single();
+    if (error) throw error;
+    return this.mapSegment(data as Record<string, unknown>);
+  }
+
+  async updateSegment(companyId: string, id: string, patch: Record<string, unknown>) {
+    const { data, error } = await this.admin()
+      .from('audience_segments')
+      .update(patch)
+      .eq('company_id', companyId)
+      .eq('id', id)
+      .select('*')
+      .single();
+    if (error) throw error;
+    return this.mapSegment(data as Record<string, unknown>);
+  }
+
+  async softDeleteSegment(companyId: string, id: string) {
+    return this.updateSegment(companyId, id, { deleted_at: new Date().toISOString(), active: false });
+  }
+
+  async resolveSegmentStudents(companyId: string) {
+    const { data: students, count } = await this.admin()
+      .from('students')
+      .select('id', { count: 'exact' })
+      .eq('company_id', companyId)
+      .is('deleted_at', null)
+      .limit(500);
+    return { count: count || 0, studentIds: (students || []).map((s) => String((s as Record<string, unknown>).id)) };
+  }
+
+  mapSegment(row: Record<string, unknown>) {
+    return {
+      id: String(row.id),
+      companyId: String(row.company_id),
+      name: String(row.name),
+      slug: String(row.slug),
+      rules: (row.rules as Record<string, unknown>) || {},
+      active: Boolean(row.active),
+      createdAt: String(row.created_at),
+      updatedAt: String(row.updated_at),
+    };
+  }
+
+  // ---------- G-9: Automations ----------
+
+  async listAutomationFlows(companyId: string) {
+    const { data, error } = await this.admin()
+      .from('automation_flows')
+      .select('*')
+      .eq('company_id', companyId)
+      .is('deleted_at', null)
+      .order('name');
+    if (error) throw error;
+    return (data || []).map((r) => this.mapAutomationFlow(r as Record<string, unknown>));
+  }
+
+  async getAutomationFlow(companyId: string, id: string) {
+    const { data } = await this.admin()
+      .from('automation_flows')
+      .select('*')
+      .eq('company_id', companyId)
+      .eq('id', id)
+      .is('deleted_at', null)
+      .maybeSingle();
+    return data ? this.mapAutomationFlow(data as Record<string, unknown>) : null;
+  }
+
+  async insertAutomationFlow(row: Record<string, unknown>) {
+    const { data, error } = await this.admin().from('automation_flows').insert(row).select('*').single();
+    if (error) throw error;
+    return this.mapAutomationFlow(data as Record<string, unknown>);
+  }
+
+  async updateAutomationFlow(companyId: string, id: string, patch: Record<string, unknown>) {
+    const { data, error } = await this.admin()
+      .from('automation_flows')
+      .update(patch)
+      .eq('company_id', companyId)
+      .eq('id', id)
+      .select('*')
+      .single();
+    if (error) throw error;
+    return this.mapAutomationFlow(data as Record<string, unknown>);
+  }
+
+  async softDeleteAutomationFlow(companyId: string, id: string) {
+    return this.updateAutomationFlow(companyId, id, { deleted_at: new Date().toISOString(), active: false });
+  }
+
+  async insertAutomationRun(row: Record<string, unknown>) {
+    const { data, error } = await this.admin().from('automation_runs').insert(row).select('*').single();
+    if (error) throw error;
+    return this.mapAutomationRun(data as Record<string, unknown>);
+  }
+
+  async updateAutomationRun(id: string, patch: Record<string, unknown>) {
+    const { data, error } = await this.admin()
+      .from('automation_runs')
+      .update(patch)
+      .eq('id', id)
+      .select('*')
+      .single();
+    if (error) throw error;
+    return this.mapAutomationRun(data as Record<string, unknown>);
+  }
+
+  mapAutomationFlow(row: Record<string, unknown>) {
+    return {
+      id: String(row.id),
+      companyId: String(row.company_id),
+      name: String(row.name),
+      triggerEvent: String(row.trigger_event),
+      steps: (row.steps as unknown[]) || [],
+      active: Boolean(row.active),
+      createdAt: String(row.created_at),
+      updatedAt: String(row.updated_at),
+    };
+  }
+
+  mapAutomationRun(row: Record<string, unknown>) {
+    return {
+      id: String(row.id),
+      companyId: String(row.company_id),
+      flowId: String(row.flow_id),
+      status: String(row.status),
+      context: (row.context as Record<string, unknown>) || {},
+      stepsLog: (row.steps_log as unknown[]) || [],
+      startedAt: String(row.started_at),
+      finishedAt: row.finished_at ? String(row.finished_at) : null,
+    };
+  }
+
+  // ---------- G-9: Portal student lookup ----------
+
+  async getStudentByEmail(companyId: string, email: string) {
+    const { data } = await this.admin()
+      .from('students')
+      .select('id, full_name, email, company_id')
+      .eq('company_id', companyId)
+      .ilike('email', email)
+      .is('deleted_at', null)
+      .maybeSingle();
+    return data as Record<string, unknown> | null;
   }
 }

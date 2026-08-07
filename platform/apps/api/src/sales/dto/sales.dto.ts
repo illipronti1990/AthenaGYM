@@ -9,6 +9,7 @@ import {
   Min,
   MinLength,
 } from 'class-validator';
+import { IsUuidString } from '../../common/validators/is-uuid-string';
 
 export class CreateLeadDto {
   @ApiProperty()
@@ -18,7 +19,7 @@ export class CreateLeadDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   unitId?: string;
 
   @ApiPropertyOptional()
@@ -38,17 +39,17 @@ export class CreateLeadDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   sourceId?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   stageId?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   assignedTo?: string;
 
   @ApiPropertyOptional()
@@ -63,8 +64,23 @@ export class CreateLeadDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   companyId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  objective?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsDateString()
+  firstContactAt?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  goal?: string;
 }
 
 export class UpdateLeadDto {
@@ -90,12 +106,12 @@ export class UpdateLeadDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   sourceId?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   assignedTo?: string;
 
   @ApiPropertyOptional()
@@ -110,14 +126,41 @@ export class UpdateLeadDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsUuidString()
   unitId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  objective?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsDateString()
+  firstContactAt?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  goal?: string;
 }
 
 export class MoveLeadStageDto {
   @ApiProperty()
-  @IsUUID()
+  @IsUuidString()
   stageId!: string;
+}
+
+export class ConvertLeadDto {
+  @ApiPropertyOptional({ description: 'Existing studentId to link (optional – creates new if omitted)' })
+  @IsOptional()
+  @IsUUID()
+  studentId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUUID()
+  planId?: string;
 }
 
 export class CreateActivityDto {
@@ -146,6 +189,11 @@ export class CreatePlanDto {
   @IsString()
   category?: string;
 
+  @ApiPropertyOptional({ example: 'mensal' })
+  @IsOptional()
+  @IsString()
+  planType?: string;
+
   @ApiProperty({ example: 30 })
   @IsNumber()
   @Min(1)
@@ -164,6 +212,42 @@ export class CreatePlanDto {
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsString()
+  frequency?: string;
+
+  @ApiPropertyOptional({ type: [Number] })
+  @IsOptional()
+  allowedDays?: number[];
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  allowedHours?: Record<string, unknown>;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  fidelityDays?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  graceDays?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  discountPercent?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  notes?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsUUID()
   companyId?: string;
 }
@@ -173,6 +257,16 @@ export class UpdatePlanDto {
   @IsOptional()
   @IsString()
   name?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  category?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  planType?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -188,6 +282,39 @@ export class UpdatePlanDto {
   @IsOptional()
   @IsNumber()
   durationDays?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  frequency?: string;
+
+  @ApiPropertyOptional({ type: [Number] })
+  @IsOptional()
+  allowedDays?: number[];
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  allowedHours?: Record<string, unknown>;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  fidelityDays?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  graceDays?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  discountPercent?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  notes?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -210,13 +337,193 @@ export class CreateEnrollmentDto {
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsUUID()
+  trainerId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsDateString()
   startDate?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsNumber()
+  discountPercent?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  discountAmount?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  paymentMethod?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  notes?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsUUID()
   companyId?: string;
+}
+
+export class CompleteEnrollmentDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUUID()
+  studentId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  fullName?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  phone?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  cpf?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUUID()
+  unitId?: string;
+
+  @ApiProperty()
+  @IsUUID()
+  planId!: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUUID()
+  trainerId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  discountPercent?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  discountAmount?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  paymentMethod?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsDateString()
+  startDate?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  signatureData?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  signedName?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  notes?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUUID()
+  companyId?: string;
+}
+
+export class SignContractDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  signatureData?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  signedName?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  signedIp?: string;
+}
+
+export class FreezeEnrollmentDto {
+  @ApiProperty()
+  @IsDateString()
+  startDate!: string;
+
+  @ApiProperty()
+  @IsDateString()
+  endDate!: string;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(2)
+  reason!: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  notes?: string;
+}
+
+export class CancelEnrollmentDto {
+  @ApiProperty({ example: 'mudanca' })
+  @IsString()
+  @MinLength(2)
+  reason!: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  notes?: string;
+}
+
+export class RenewEnrollmentDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsDateString()
+  startDate?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  paymentMethod?: string;
+}
+
+export class ChangePlanDto {
+  @ApiProperty()
+  @IsUUID()
+  planId!: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsDateString()
+  effectiveDate?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  notes?: string;
 }
 
 export class CreateContractDto {
