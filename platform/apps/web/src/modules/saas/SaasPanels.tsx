@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Card } from '@athena/ui';
 import { PageState } from '@/components/ux/PageState';
 import { useToast } from '@/components/ui/Toast';
