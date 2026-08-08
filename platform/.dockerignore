@@ -8,7 +8,6 @@
 **/test-results
 **/screenshots
 apps/web
-apps/worker
 apps/mobile
 apps/ai-service
 apps/analytics-service
