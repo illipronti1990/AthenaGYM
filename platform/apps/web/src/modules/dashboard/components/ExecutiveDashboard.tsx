@@ -13,13 +13,11 @@ import {
   pageQualityAttrs,
 } from '@movvo/ui';
 import { Settings2 } from 'lucide-react';
-import { useBranding } from '@/components/BrandingProvider';
 import { dashboardApi } from '../services/dashboardApi';
 import { useToast } from '@/components/ui/Toast';
 import { SkeletonDashboard } from '@/components/ui/Skeleton';
 import { CACHE_TTL } from '@/lib/queryKeys';
 import { useUiPreferences } from '@/hooks/useUiPreferences';
-import { greetingEmoji } from '../utils/format';
 import { QuickActions } from './QuickActions';
 import { KpiCard } from './KpiCard';
 import { DaySummaryCard } from './DaySummaryCard';
@@ -82,7 +80,7 @@ function normalizeDashboard(raw: CommandDashboard, firstName: string): CommandDa
 export function ExecutiveDashboard({
   accessToken,
   userName,
-  unitName,
+  unitName: _unitName,
 }: {
   accessToken: string;
   userName?: string | null;
@@ -90,7 +88,6 @@ export function ExecutiveDashboard({
 }) {
   const { push } = useToast();
   const qc = useQueryClient();
-  const { branding } = useBranding();
   const { prefs } = useUiPreferences();
   const [period, setPeriod] = useState<DashboardChartPeriod>('30d');
   const [customOpen, setCustomOpen] = useState(false);
@@ -215,21 +212,12 @@ export function ExecutiveDashboard({
     );
   }
 
-  const brandName = branding.displayName || 'Athena Academia';
-  const unitLabel = unitName || 'Unidade';
-
   return (
     <div className={prefs.widgetsCompact ? 'widgets-compact' : undefined}>
     <Page {...pageQualityAttrs()} data-testid="executive-dashboard">
       <PageHeader
-        title={brandName}
-        icon={
-          branding.logoUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={branding.logoUrl} alt="" className="h-9 w-auto object-contain" />
-          ) : undefined
-        }
-        description={`${unitLabel} · ${data?.greetingHint?.split('·')[0]?.trim() || `Olá, ${firstName}`} ${greetingEmoji()} · ${dateLabel}`}
+        title="Dashboard"
+        description={dateLabel}
         actions={
           <Button
             type="button"

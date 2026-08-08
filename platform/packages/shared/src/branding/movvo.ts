@@ -43,12 +43,12 @@ export const MOVVO_PRODUCT = {
 } as const;
 
 /**
- * Demo tenant — first real client. Product is Movvo ERP; this is the academy brand.
- * Name "Athena Academia" is intentional and must remain.
+ * Demo tenant — academy brand (not the Movvo product wordmark).
+ * Uses the mark so in-app headers never read as "Movvo ERP + tenant name".
  */
 export const ATHENA_ACADEMIA_BRANDING: ResolvedCompanyBranding = {
   displayName: 'Athena Academia',
-  logoUrl: MOVVO_PRODUCT.assets.logo,
+  logoUrl: MOVVO_PRODUCT.assets.mark,
   faviconUrl: MOVVO_PRODUCT.assets.favicon,
   primaryColor: MOVVO_PRODUCT.colors.primary,
   secondaryColor: MOVVO_PRODUCT.colors.secondary,
