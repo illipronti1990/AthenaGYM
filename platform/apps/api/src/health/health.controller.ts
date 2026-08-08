@@ -1,13 +1,5 @@
-import {
-  Controller,
-  Get,
-  Headers,
-  Post,
-  Res,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
-import { timingSafeEqual } from 'crypto';
+import { Controller, Get, Res } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
 import type { SystemHealth } from '@movvo/shared';
 import { ConfigService } from '@nestjs/config';
@@ -28,29 +20,6 @@ export class HealthController {
     const body = await this.buildHealth();
     if (body.status === 'down') res.status(503);
     return body;
-  }
-
-  /** One-shot bootstrap to sync worker envs — remove after use. */
-  @Post('bootstrap-worker-env')
-  @ApiExcludeEndpoint()
-  bootstrapWorkerEnv(@Headers('x-bootstrap-secret') secret?: string) {
-    const expected = this.config.get<string>('BOOTSTRAP_WORKER_SECRET') || '';
-    if (!expected || !secret) throw new UnauthorizedException();
-    const a = Buffer.from(secret);
-    const b = Buffer.from(expected);
-    if (a.length !== b.length || !timingSafeEqual(a, b)) {
-      throw new UnauthorizedException();
-    }
-    const supabaseUrl = this.config.get<string>('SUPABASE_URL') || '';
-    const serviceRole =
-      this.config.get<string>('SUPABASE_SERVICE_ROLE_KEY') || '';
-    if (!supabaseUrl || !serviceRole) {
-      throw new UnauthorizedException('missing supabase envs');
-    }
-    return {
-      SUPABASE_URL: supabaseUrl,
-      SUPABASE_SERVICE_ROLE_KEY: serviceRole,
-    };
   }
 
   @Get('db')
