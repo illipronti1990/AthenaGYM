@@ -80,7 +80,6 @@ function normalizeDashboard(raw: CommandDashboard, firstName: string): CommandDa
 export function ExecutiveDashboard({
   accessToken,
   userName,
-  unitName: _unitName,
 }: {
   accessToken: string;
   userName?: string | null;
