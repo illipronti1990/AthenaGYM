@@ -101,15 +101,6 @@
   line-height: 1.05;
 }
 
-.movvo-login-tenant {
-  margin: 8px 0 0;
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--login-gold);
-}
-
 .movvo-login-slogan {
   margin: 14px 0 0;
   font-size: clamp(1.15rem, 2vw, 1.45rem);

@@ -1,13 +1,8 @@
-import {
-  ATHENA_ACADEMIA_BRANDING,
-  MOVVO_PRODUCT,
-} from '@movvo/shared';
+import { MOVVO_PRODUCT } from '@movvo/shared';
 
-/** Product is Movvo; demo tenant remains Athena Academia. */
 export const PRODUCT_NAME = MOVVO_PRODUCT.name;
 export const PRODUCT_SLOGAN = MOVVO_PRODUCT.slogan;
 export const PRODUCT_VERSION = MOVVO_PRODUCT.version;
-export const TENANT_DEMO_NAME = ATHENA_ACADEMIA_BRANDING.displayName;
 export const PRODUCT_YEAR = 2026;
 
 export const LOGIN_FEATURES = [

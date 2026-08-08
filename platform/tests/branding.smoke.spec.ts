@@ -14,7 +14,8 @@ test.describe('Movvo branding M-1+ smoke', () => {
     await expect(page.getByTestId('login-footer')).toContainText(/Movvo ERP/i);
     await expect(page.getByTestId('login-footer')).toContainText(/0\.7\.0-beta/i);
     await expect(page.getByTestId('login-footer')).toContainText(/Build 2026\.08/i);
-    await expect(page.getByTestId('login-footer')).toContainText(/Athena Academia/i);
+    await expect(page.getByTestId('login-brand')).not.toContainText(/Athena Academia/i);
+    await expect(page.getByTestId('login-footer')).not.toContainText(/Athena Academia/i);
   });
 
   test('document title is Movvo ERP', async ({ page }) => {

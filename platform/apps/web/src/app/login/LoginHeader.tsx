@@ -1,5 +1,5 @@
 import { LogoMovvo } from './LogoMovvo';
-import { LOGIN_FEATURES, PRODUCT_NAME, PRODUCT_SLOGAN, TENANT_DEMO_NAME } from './constants';
+import { LOGIN_FEATURES, PRODUCT_NAME, PRODUCT_SLOGAN } from './constants';
 
 export function LoginHeader() {
   return (
@@ -7,7 +7,6 @@ export function LoginHeader() {
       <div className="movvo-login-brand-inner">
         <LogoMovvo tone="mark" size="mark" />
         <p className="movvo-login-brand-name font-display">{PRODUCT_NAME}</p>
-        <p className="movvo-login-tenant">Case: {TENANT_DEMO_NAME}</p>
         <h1 className="movvo-login-slogan font-display">{PRODUCT_SLOGAN}</h1>
         <p className="movvo-login-brand-desc">
           Tecnologia moderna, simples e inteligente para academias que querem crescer com controle.
