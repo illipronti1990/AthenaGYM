@@ -129,7 +129,8 @@ Fallback: `https://athena-gym.vercel.app` · `https://athena-api-seven.vercel.ap
 - [x] `DEV_AUTH` / `NEXT_PUBLIC_DEV_AUTH` = false
 - [x] Landing M-2 em `/` (marketing) — ver `Documentacao/MOVVO_LANDING_M2.md`
 - [x] Redis Upstash (`movvo-redis`) ligado a `athena-api` + `athena-gym` — `/health/cache` → ok
-- [ ] Worker BullMQ no Render (`movvo-worker`) + `WORKER_HEALTH_URL` na API
+- [x] Worker BullMQ no Render (`movvo-worker`) + `WORKER_HEALTH_URL` na API — `/health` worker=ok
+- [ ] `SUPABASE_SERVICE_ROLE_KEY` no Render `movvo-worker` (processadores DB; health/filas Redis já ok)
 - [ ] Login real com usuário Supabase (smoke manual no browser)
 - [ ] Footer: `v0.7.0-beta · Build 2026.08` (conferir no login)
 - [ ] Formulário demo → `POST /marketing/demo-requests` (após redeploy API)
