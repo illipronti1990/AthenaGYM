@@ -184,7 +184,7 @@ test.describe('Inventory G-13 smoke', () => {
 
     const page = await request.get(`${WEB}/app/estoque`, {
       maxRedirects: 0,
-      headers: { Cookie: `athena_access_token=${token}` },
+      headers: { Cookie: `movvo_access_token=${token}` },
     });
     // Middleware may redirect or show blocked — accept redirect/forbidden/ok with login
     expect([200, 302, 303, 307, 308, 403]).toContain(page.status());

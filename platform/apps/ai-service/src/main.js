@@ -35,5 +35,5 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, () => {
   // eslint-disable-next-line no-console
-  console.log(`ATHENA AI service stub on :${PORT}`);
+  console.log(`MOVVO AI service stub on :${PORT}`);
 });

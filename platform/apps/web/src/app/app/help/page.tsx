@@ -12,7 +12,7 @@ export default async function HelpPage() {
       <div>
         <h1 className="movvo-title text-3xl">Central de Ajuda</h1>
         <p className="mt-1 text-sm text-[var(--muted)]">
-          Manual rápido do Athena para academias de bairro.
+          Manual rápido do Movvo para academias de bairro.
         </p>
       </div>
       <div className="grid gap-3 sm:grid-cols-2">

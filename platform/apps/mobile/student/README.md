@@ -1,4 +1,4 @@
-# ATHENA Student (scaffold)
+# MOVVO Student (scaffold)
 
 App oficial do aluno. Consome a API `platform/apps/api` (`/api/v1`).
 

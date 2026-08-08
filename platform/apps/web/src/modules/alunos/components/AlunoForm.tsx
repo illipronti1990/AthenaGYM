@@ -333,8 +333,8 @@ export function AlunoForm({
     function onSave() {
       void save();
     }
-    window.addEventListener('athena:save', onSave);
-    return () => window.removeEventListener('athena:save', onSave);
+    window.addEventListener('movvo:save', onSave);
+    return () => window.removeEventListener('movvo:save', onSave);
   }, [save]);
 
   async function onSubmit(e: FormEvent) {

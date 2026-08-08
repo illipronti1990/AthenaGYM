@@ -1,5 +1,5 @@
 import {
-  Skeleton as AthenaSkeleton,
+  Skeleton as MovvoSkeleton,
   SkeletonTable,
   SkeletonDashboard,
   SkeletonForm,
@@ -8,7 +8,7 @@ import {
 } from '@movvo/ui';
 
 export function Skeleton({ className = '' }: { className?: string }) {
-  return <AthenaSkeleton className={className} />;
+  return <MovvoSkeleton className={className} />;
 }
 
 export function TableSkeleton({ rows = 5 }: { rows?: number }) {

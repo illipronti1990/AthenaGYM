@@ -104,17 +104,17 @@ export { PAGE_QUALITY_CHECKLIST, pageQualityAttrs, type PageQualityFlag } from '
 export {
   movvoColorsLegacy,
   movvoColorsLegacyLight,
-  athenaSpacing,
+  movvoSpacing,
   space,
-  athenaTypography,
-  athenaRadius,
-  athenaShadows,
-  athenaShadowsLight,
-  athenaIcons,
-  getAthenaIcon,
+  movvoTypography,
+  movvoRadius,
+  movvoShadows,
+  movvoShadowsLight,
+  movvoIcons,
+  getMovvoIcon,
 } from '../theme';
 
-export type { AthenaIconName, MovvoColorPalette, AthenaSpacing, AthenaTypographyKey } from '../theme';
+export type { MovvoIconName, MovvoColorPalette, MovvoSpacing, MovvoTypographyKey } from '../theme';
 
 export const chartColors = {
   revenue: '#22C55E',

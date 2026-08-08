@@ -17,11 +17,11 @@ import {
   type ExportFormat,
 } from '@movvo/sdk-bi';
 import {
-  athenaOllamaAnswer,
+  movvoOllamaAnswer,
   isOllamaConfigured,
 } from '@movvo/ai-sdk';
 import type {
-  AthenaAiChatResponse,
+  MovvoAiChatResponse,
   AuthContext,
   BenchmarkResponse,
   BiInsight,
@@ -687,7 +687,7 @@ export class AnalyticsService {
     question: string,
     m: Awaited<ReturnType<AnalyticsRepository['computeMetrics']>>,
     context: Record<string, unknown>,
-  ): AthenaAiChatResponse {
+  ): MovvoAiChatResponse {
     const q = question.toLowerCase();
 
     if (q.includes('fatur') || q.includes('receita') || (q.includes('quanto') && q.includes('mês'))) {
@@ -877,7 +877,7 @@ export class AnalyticsService {
     if (!isOllamaConfigured()) return base;
 
     try {
-      const llm = await athenaOllamaAnswer({
+      const llm = await movvoOllamaAnswer({
         question:
           dto.question || 'Com base nos indicadores e insights, priorize 3 ações.',
         context: { metrics: m, ruleInsights: filtered },
@@ -905,7 +905,7 @@ export class AnalyticsService {
     }
   }
 
-  async aiChat(auth: AuthContext, dto: AiChatDto): Promise<AthenaAiChatResponse> {
+  async aiChat(auth: AuthContext, dto: AiChatDto): Promise<MovvoAiChatResponse> {
     const companyId = this.companyId(auth);
     const roles = auth.roles || [];
     const persona: 'admin' | 'professor' | 'aluno' =
@@ -968,7 +968,7 @@ export class AnalyticsService {
     if (!isOllamaConfigured()) return fallback;
 
     try {
-      const llm = await athenaOllamaAnswer({
+      const llm = await movvoOllamaAnswer({
         question: dto.question,
         persona,
         history: (dto.history || []).map((h) => ({ role: h.role, content: h.content })),
@@ -1004,7 +1004,7 @@ export class AnalyticsService {
     auth: AuthContext,
     question: string,
     sources: string[],
-  ): Promise<AthenaAiChatResponse> {
+  ): Promise<MovvoAiChatResponse> {
     sources.push('agenda');
     const unitId = auth.defaultUnitId || auth.unitIds?.[0] || null;
     if (!unitId) {
@@ -1115,7 +1115,7 @@ export class AnalyticsService {
     persona: 'admin' | 'professor',
     question: string,
     sources: string[],
-  ): Promise<AthenaAiChatResponse> {
+  ): Promise<MovvoAiChatResponse> {
     sources.push('agenda');
     if (!auth.permissions?.includes('operations.update') && !auth.isSuperAdmin) {
       return {
@@ -1266,7 +1266,7 @@ export class AnalyticsService {
     question: string,
     context: Record<string, unknown>,
     sources: string[],
-  ): Promise<AthenaAiChatResponse | null> {
+  ): Promise<MovvoAiChatResponse | null> {
     const wantsAgenda =
       isAgendaQuestion(question) ||
       isReserveIntent(question) ||

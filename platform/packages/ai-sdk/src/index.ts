@@ -193,13 +193,13 @@ export async function ollamaChat(
   }
 }
 
-export type AthenaAiPersona = 'admin' | 'professor' | 'aluno';
+export type MovvoAiPersona = 'admin' | 'professor' | 'aluno';
 
-export async function athenaOllamaAnswer(input: {
+export async function movvoOllamaAnswer(input: {
   question: string;
   context: Record<string, unknown>;
   systemExtra?: string;
-  persona?: AthenaAiPersona;
+  persona?: MovvoAiPersona;
   history?: OllamaChatMessage[];
 }): Promise<OllamaChatResult> {
   const persona = input.persona || 'admin';

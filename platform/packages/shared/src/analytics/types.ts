@@ -192,7 +192,7 @@ export type CommercialInsight = {
   note?: string;
 };
 
-export type AthenaAiChatResponse = {
+export type MovvoAiChatResponse = {
   provider: string;
   llm: string;
   answer: string;

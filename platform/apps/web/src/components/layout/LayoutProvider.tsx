@@ -98,7 +98,7 @@ export function LayoutProvider({ children }: { children: ReactNode }) {
         setNotificationsOpen(false);
         setShortcutsOpen(false);
         setMobileOpen(false);
-        window.dispatchEvent(new CustomEvent('athena:escape'));
+        window.dispatchEvent(new CustomEvent('movvo:escape'));
         return;
       }
 
@@ -137,7 +137,7 @@ export function LayoutProvider({ children }: { children: ReactNode }) {
 
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
         e.preventDefault();
-        window.dispatchEvent(new CustomEvent('athena:save'));
+        window.dispatchEvent(new CustomEvent('movvo:save'));
       }
     }
     window.addEventListener('keydown', onKey);

@@ -1,3 +1,3 @@
-# ATHENA Manager / Reception (scaffold)
+# MOVVO Manager / Reception (scaffold)
 
 Dashboard, financeiro, check-ins, KPIs, CRM, aprovações, auditoria e notificações.

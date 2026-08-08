@@ -10,7 +10,7 @@ const Ctx = createContext<A11yCtx | null>(null);
 
 export function AccessibilityProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
-    document.documentElement.dataset.athenaA11y = 'wcag-2.2';
+    document.documentElement.dataset.movvoA11y = 'wcag-2.2';
   }, []);
 
   function announce(message: string, politeness: 'polite' | 'assertive' = 'polite') {

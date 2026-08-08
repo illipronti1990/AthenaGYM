@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Avatar, athenaIcons } from '@movvo/ui';
+import { Avatar, movvoIcons } from '@movvo/ui';
 import { ChevronDown, Moon, Sun } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { DEV_TOKEN_COOKIE } from '@/lib/auth/constants';
@@ -35,10 +35,10 @@ export function UserMenu({ userName }: { userName?: string | null }) {
     router.refresh();
   }
 
-  const Profile = athenaIcons.profile;
-  const Settings = athenaIcons.settings;
-  const Help = athenaIcons.help;
-  const Logout = athenaIcons.logout;
+  const Profile = movvoIcons.profile;
+  const Settings = movvoIcons.settings;
+  const Help = movvoIcons.help;
+  const Logout = movvoIcons.logout;
 
   return (
     <div className="relative" ref={ref}>

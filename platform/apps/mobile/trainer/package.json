@@ -2,7 +2,7 @@
   "name": "@movvo/mobile-trainer",
   "version": "0.8.0",
   "private": true,
-  "description": "ATHENA Trainer mobile scaffold",
+  "description": "MOVVO Trainer mobile scaffold",
   "scripts": {
     "lint": "node -e \"console.log('mobile-trainer scaffold — wire Expo/RN next')\""
   }

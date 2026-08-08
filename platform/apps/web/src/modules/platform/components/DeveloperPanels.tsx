@@ -145,7 +145,7 @@ export function ApiClientsPanel({ accessToken }: { accessToken: string }) {
 
 export function WebhooksPanel({ accessToken }: { accessToken: string }) {
   const [hooks, setHooks] = useState<WebhookSubscription[]>([]);
-  const [url, setUrl] = useState('https://example.com/hooks/athena');
+  const [url, setUrl] = useState('https://example.com/hooks/movvo');
   const [secret, setSecret] = useState<string | null>(null);
 
   useEffect(() => {

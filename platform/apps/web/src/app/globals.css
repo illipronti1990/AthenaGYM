@@ -27,7 +27,7 @@ body {
   box-shadow: var(--shadow-focus);
 }
 
-/* Athena AI floating conversation button — above footer, clear of content */
+/* Movvo AI floating conversation button — above footer, clear of content */
 .movvo-shell-px2 .movvo-main-inner {
   padding-bottom: 5.5rem; /* espaço reservado para o FAB */
   padding-right: 4.5rem; /* evita botões à direita sob o FAB */

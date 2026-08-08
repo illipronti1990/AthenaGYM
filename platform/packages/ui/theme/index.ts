@@ -1,6 +1,6 @@
 export { movvoColorsLegacy, movvoColorsLegacyLight, type MovvoColorPalette } from './colors';
-export { athenaSpacing, space, type AthenaSpacing } from './spacing';
-export { athenaTypography, type AthenaTypographyKey } from './typography';
-export { athenaRadius } from './radius';
-export { athenaShadows, athenaShadowsLight } from './shadows';
-export { athenaIcons, getAthenaIcon, type AthenaIconName } from './icons';
+export { movvoSpacing, space, type MovvoSpacing } from './spacing';
+export { movvoTypography, type MovvoTypographyKey } from './typography';
+export { movvoRadius } from './radius';
+export { movvoShadows, movvoShadowsLight } from './shadows';
+export { movvoIcons, getMovvoIcon, type MovvoIconName } from './icons';

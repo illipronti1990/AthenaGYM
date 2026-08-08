@@ -273,8 +273,8 @@ function startWorkers() {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'X-Athena-Signature': `sha256=${signature}`,
-              'X-Athena-Event': String(data.eventType || ''),
+              'X-Movvo-Signature': `sha256=${signature}`,
+              'X-Movvo-Event': String(data.eventType || ''),
               'User-Agent': 'Movvo-Webhooks/0.13',
             },
             body,

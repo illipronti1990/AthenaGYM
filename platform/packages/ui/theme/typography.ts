@@ -1,4 +1,4 @@
-export const athenaTypography = {
+export const movvoTypography = {
   h1: {
     fontSize: '2rem',
     lineHeight: 1.2,
@@ -37,4 +37,4 @@ export const athenaTypography = {
   },
 } as const;
 
-export type AthenaTypographyKey = keyof typeof athenaTypography;
+export type MovvoTypographyKey = keyof typeof movvoTypography;

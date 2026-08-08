@@ -20,6 +20,15 @@ const DENY = [
   { re: /AthenaDataGrid\b/, label: 'AthenaDataGrid' },
   { re: /AthenaLoader\b/, label: 'AthenaLoader' },
   { re: /\bathenaColors\b/, label: 'athenaColors' },
+  { re: /\bathenaIcons\b/, label: 'athenaIcons' },
+  { re: /\bAthenaIconName\b/, label: 'AthenaIconName' },
+  { re: /\bgetAthenaIcon\b/, label: 'getAthenaIcon' },
+  { re: /\bathenaSpacing\b/, label: 'athenaSpacing' },
+  { re: /\bAthenaPlugin\b/, label: 'AthenaPlugin' },
+  { re: /\bathenaOllamaAnswer\b/, label: 'athenaOllamaAnswer' },
+  { re: /\bAthenaAiChatResponse\b/, label: 'AthenaAiChatResponse' },
+  { re: /['"]athena:save['"]/, label: 'athena:save event' },
+  { re: /['"]athena:escape['"]/, label: 'athena:escape event' },
   { re: /"name"\s*:\s*"@athena\//, label: '@athena package name' },
 ];
 
@@ -50,6 +59,15 @@ const ALLOW_LINE = [
   /athena_ui_prefs/,
   /athena_sidebar_collapsed/,
   /athena\.rememberEmail/,
+  /athena_theme/,
+  /rename-athena-mixed/,
+  /ATHENA_E2E_/,
+  /fallback ATHENA_/,
+  /themeRaw === 'athena'/,
+  /\^athena-\//,
+  /athenagym/i,
+  /ATHENA GYM/,
+  /Administrador Athena/,
 ];
 
 function isAllowed(file, line) {
@@ -59,6 +77,9 @@ function isAllowed(file, line) {
   }
   // Historical SQL migrations keep original headers
   if (norm.includes('/supabase/migrations/')) return true;
+  if (norm.includes('rename-athena-mixed') || norm.includes('rename-athena-to-movvo')) {
+    return true;
+  }
   if (ALLOW_LINE.some((re) => re.test(line))) return true;
   return false;
 }

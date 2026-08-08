@@ -55,7 +55,7 @@ export function whatsappChargeUrl(phone: string | null | undefined, studentName:
   const digits = (phone || '').replace(/\D/g, '');
   if (!digits) return null;
   const text = encodeURIComponent(
-    `Olá ${studentName}! Identificamos mensalidade em atraso na ATHENA GYM. Podemos ajudar a regularizar?`,
+    `Olá ${studentName}! Identificamos mensalidade em atraso na Athena Academia. Podemos ajudar a regularizar?`,
   );
   return `https://wa.me/55${digits.replace(/^55/, '')}?text=${text}`;
 }

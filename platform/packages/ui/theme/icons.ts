@@ -31,7 +31,7 @@ import {
 } from 'lucide-react';
 
 /** Semantic nav / product icons → Lucide. */
-export const athenaIcons = {
+export const movvoIcons = {
   dashboard: House,
   student: User,
   students: Users,
@@ -68,8 +68,8 @@ export const athenaIcons = {
   store: Store,
 } as const satisfies Record<string, LucideIcon>;
 
-export type AthenaIconName = keyof typeof athenaIcons;
+export type MovvoIconName = keyof typeof movvoIcons;
 
-export function getAthenaIcon(name: AthenaIconName): LucideIcon {
-  return athenaIcons[name];
+export function getMovvoIcon(name: MovvoIconName): LucideIcon {
+  return movvoIcons[name];
 }

@@ -2,7 +2,7 @@
   "name": "@movvo/ai-service",
   "version": "0.8.0",
   "private": true,
-  "description": "ATHENA AI assistant microservice stub",
+  "description": "MOVVO AI assistant microservice stub",
   "main": "src/main.js",
   "scripts": {
     "dev": "node src/main.js",

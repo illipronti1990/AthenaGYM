@@ -32,7 +32,7 @@ export function reportClientError(
     w.__MOVVO_ERRORS__.push(payload);
     if (process.env.NODE_ENV !== 'production') {
       // eslint-disable-next-line no-console
-      console.error('[Athena RUM]', payload);
+      console.error('[Movvo RUM]', payload);
     }
   } catch {
     /* ignore */

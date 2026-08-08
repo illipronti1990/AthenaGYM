@@ -2,7 +2,7 @@
   "name": "@movvo/analytics-service",
   "version": "0.9.0",
   "private": true,
-  "description": "ATHENA analytics microservice stub — Nest still owns /analytics/*",
+  "description": "MOVVO analytics microservice stub — Nest still owns /analytics/*",
   "scripts": {
     "dev": "node src/main.js",
     "start": "node src/main.js"

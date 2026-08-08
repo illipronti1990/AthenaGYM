@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { athenaIcons } from '@movvo/ui';
+import { movvoIcons } from '@movvo/ui';
 
 export function SidebarFooter({
   userName,
@@ -12,7 +12,7 @@ export function SidebarFooter({
   collapsed: boolean;
   onNavigate?: () => void;
 }) {
-  const ProfileIcon = athenaIcons.profile;
+  const ProfileIcon = movvoIcons.profile;
   return (
     <div className="border-t border-[var(--border)] p-2">
       <Link

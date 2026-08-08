@@ -1,4 +1,4 @@
-import { athenaIcons } from '@movvo/ui';
+import { movvoIcons } from '@movvo/ui';
 import type { NavGroup, NavItem } from './navigation';
 import { navGroups } from './navigation';
 
@@ -35,31 +35,31 @@ export const studentNavGroups: NavGroup[] = [
   {
     id: 'portal',
     label: 'Início',
-    icon: athenaIcons.dashboard,
+    icon: movvoIcons.dashboard,
     href: '/app/portal',
     items: [],
   },
   {
     id: 'meu-treino',
     label: 'Meu treino',
-    icon: athenaIcons.workouts,
+    icon: movvoIcons.workouts,
     items: [
       {
         href: '/app/portal/treinos',
         label: 'Treinos',
-        icon: athenaIcons.workouts,
+        icon: movvoIcons.workouts,
         keywords: ['treino', 'ficha'],
       },
       {
         href: '/app/portal/evolucao',
         label: 'Minha evolução',
-        icon: athenaIcons.assessments,
+        icon: movvoIcons.assessments,
         keywords: ['evolução', 'avaliação'],
       },
       {
         href: '/app/portal/agenda',
         label: 'Minha agenda',
-        icon: athenaIcons.agenda,
+        icon: movvoIcons.agenda,
         keywords: ['agenda', 'aula', 'reserva'],
       },
     ],
@@ -67,18 +67,18 @@ export const studentNavGroups: NavGroup[] = [
   {
     id: 'comunidade',
     label: 'Comunidade',
-    icon: athenaIcons.engagement,
+    icon: movvoIcons.engagement,
     items: [
       {
         href: '/app/portal/indicacao',
         label: 'Indicar amigo',
-        icon: athenaIcons.users,
+        icon: movvoIcons.users,
         keywords: ['indicação', 'amigo', 'referral'],
       },
       {
         href: '/app/portal/nps',
         label: 'Avaliar academia',
-        icon: athenaIcons.assessments,
+        icon: movvoIcons.assessments,
         keywords: ['nps', 'avaliação', 'satisfação'],
       },
     ],
@@ -86,18 +86,18 @@ export const studentNavGroups: NavGroup[] = [
   {
     id: 'conta',
     label: 'Conta',
-    icon: athenaIcons.users,
+    icon: movvoIcons.users,
     items: [
       {
         href: '/app/profile',
         label: 'Meu perfil',
-        icon: athenaIcons.student,
+        icon: movvoIcons.student,
         keywords: ['perfil', 'conta'],
       },
       {
         href: '/app/help',
         label: 'Ajuda',
-        icon: athenaIcons.help,
+        icon: movvoIcons.help,
         keywords: ['ajuda', 'faq'],
       },
     ],

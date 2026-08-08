@@ -1,6 +1,6 @@
 import type {
   AnalyticsDashboard,
-  AthenaAiChatResponse,
+  MovvoAiChatResponse,
   BenchmarkResponse,
   BiAlert,
   BiConnector,
@@ -62,7 +62,7 @@ export const biApi = {
     question: string,
     history?: Array<{ role: 'user' | 'assistant'; content: string }>,
   ) =>
-    apiFetch<AthenaAiChatResponse>('/analytics/ai/chat', t, {
+    apiFetch<MovvoAiChatResponse>('/analytics/ai/chat', t, {
       method: 'POST',
       body: JSON.stringify({ question, history }),
     }),

@@ -1,4 +1,4 @@
-# ATHENA AI Service (stub)
+# MOVVO AI Service (stub)
 
 Microserviço separado para o assistente IA. Enquanto o stub roda aqui, o Nest já expõe `POST /api/v1/ai/chat`.
 

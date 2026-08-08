@@ -8,7 +8,7 @@ export default function AcceptInvitePage() {
       <div>
         <Logo variant="horizontal" className="!justify-start !px-0 !py-0" />
         <h1 className="movvo-h2 mt-4">Aceitar convite</h1>
-        <p className="movvo-caption mt-2">ATHENA GYM Plataforma</p>
+        <p className="movvo-caption mt-2">Movvo Plataforma</p>
       </div>
       <Suspense fallback={<p className="movvo-muted text-sm">Carregando…</p>}>
         <AcceptInviteForm />

@@ -26,12 +26,12 @@ export type PluginHooks = {
   onEvent?: (ctx: PluginContext, eventType: string, payload: Record<string, unknown>) => Promise<void> | void;
 };
 
-export type AthenaPlugin = {
+export type MovvoPlugin = {
   manifest: PluginManifest;
   hooks: PluginHooks;
 };
 
-export function definePlugin(plugin: AthenaPlugin): AthenaPlugin {
+export function definePlugin(plugin: MovvoPlugin): MovvoPlugin {
   if (!plugin.manifest.id || !plugin.manifest.name || !plugin.manifest.version) {
     throw new Error('Plugin manifest requires id, name and version');
   }
@@ -67,7 +67,7 @@ export const nutritionPluginExample = definePlugin({
     name: 'Nutrição',
     version: '1.0.0',
     description: 'Planos alimentares integrados ao aluno',
-    publisher: 'ATHENA Labs',
+    publisher: 'Movvo Labs',
     category: 'health',
     menu: 'Nutrição',
     permissions: ['students.read', 'workouts.read'],

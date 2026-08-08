@@ -1,4 +1,4 @@
-export const athenaRadius = {
+export const movvoRadius = {
   btn: '10px',
   input: '10px',
   card: '16px',
