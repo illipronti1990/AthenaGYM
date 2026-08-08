@@ -128,9 +128,19 @@ Fallback: `https://athena-gym.vercel.app` · `https://athena-api-seven.vercel.ap
 - [x] Supabase Site URL + Redirect URLs produção
 - [x] `DEV_AUTH` / `NEXT_PUBLIC_DEV_AUTH` = false
 - [x] Landing M-2 em `/` (marketing) — ver `Documentacao/MOVVO_LANDING_M2.md`
+- [x] Redis Upstash (`movvo-redis`) ligado a `athena-api` + `athena-gym` — `/health/cache` → ok
+- [ ] Worker BullMQ no Render (`movvo-worker`) + `WORKER_HEALTH_URL` na API
 - [ ] Login real com usuário Supabase (smoke manual no browser)
 - [ ] Footer: `v0.7.0-beta · Build 2026.08` (conferir no login)
 - [ ] Formulário demo → `POST /marketing/demo-requests` (após redeploy API)
+
+### Worker no Render (1×)
+
+1. https://dashboard.render.com/select-repo?type=blueprint → repo `AthenaGYM` → blueprint `render.yaml`
+2. Envs: `REDIS_URL` (copiar de Vercel → athena-api → `REDIS_URL`), `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`
+3. Após deploy: `https://movvo-worker.onrender.com/health`
+4. Na Vercel `athena-api`: `WORKER_HEALTH_URL=https://movvo-worker.onrender.com/health` → redeploy API
+
 
 ---
 

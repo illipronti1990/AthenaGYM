@@ -13,7 +13,9 @@ const SUPABASE_URL = process.env.SUPABASE_URL || '';
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 const API_URL = process.env.API_URL || 'http://localhost:3001/api/v1';
 const DRAIN_MS = Number(process.env.OUTBOX_DRAIN_MS || 5000);
-const WORKER_PORT = Number(process.env.WORKER_PORT || 3011);
+const WORKER_PORT = Number(
+  process.env.PORT || process.env.WORKER_PORT || 3011,
+);
 const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
 const EMAIL_FROM = process.env.MARKETING_EMAIL_FROM || 'Movvo <noreply@movvoerp.com.br>';
 

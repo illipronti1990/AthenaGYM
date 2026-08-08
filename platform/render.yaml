@@ -1,41 +1,29 @@
-# Render Blueprint — API NestJS
+# Render Blueprint — worker BullMQ (API fica na Vercel)
 # Docs: https://render.com/docs/blueprint-spec
-# Root Directory no painel: platform  (ou deixe vazio se o serviço apontar para este arquivo)
+# Root Directory no painel: platform
 
 services:
   - type: web
-    name: athena-api
+    name: movvo-worker
     runtime: docker
     plan: free
     region: oregon
-    dockerfilePath: ./apps/api/Dockerfile
+    dockerfilePath: ./apps/worker/Dockerfile
     dockerContext: .
-    healthCheckPath: /api/v1/health
+    healthCheckPath: /health
     autoDeploy: true
     envVars:
       - key: NODE_ENV
         value: production
       - key: HOST
         value: 0.0.0.0
-      - key: PORT
-        value: 3001
-      - key: DEV_AUTH_ENABLED
-        value: "false"
-      - key: SUPABASE_URL
+      - key: REDIS_URL
         sync: false
-      - key: SUPABASE_ANON_KEY
+      - key: SUPABASE_URL
         sync: false
       - key: SUPABASE_SERVICE_ROLE_KEY
         sync: false
-      - key: SUPABASE_JWT_SECRET
-        sync: false
-      - key: CORS_ORIGINS
-        sync: false
-      - key: PASSWORD_RESET_REDIRECT
-        sync: false
-      - key: QR_SIGNING_SECRET
-        generateValue: true
-      - key: FINANCE_WEBHOOK_SECRET
-        generateValue: true
-      - key: REDIS_URL
-        sync: false
+      - key: API_URL
+        value: https://api.movvoerp.com.br/api/v1
+      - key: OTEL_SERVICE_NAME
+        value: movvo-worker
